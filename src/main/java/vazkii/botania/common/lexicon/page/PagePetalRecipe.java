@@ -80,6 +80,7 @@ public class PagePetalRecipe<T extends RecipePetals> extends PageRecipe {
 			Object input = obj;
 			if(input instanceof String) {
 				List<ItemStack> ores = OreDictionary.getOres((String) input);
+				if (ores.size() == 0) continue;
 				input = ores.get(oredictCounter % ores.size());
 			}
 
