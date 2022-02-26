@@ -131,7 +131,7 @@ public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
 				if(recipe == null)
 					continue;
 
-				if(NEIServerUtils.areStacksSameTypeCraftingWithNBT(recipe.getOutput(), result))
+				if(NEIServerUtils.areStacksSameTypeCrafting(recipe.getOutput(), result))
 					arecipes.add(new CachedElvenTradeRecipe(recipe));
 			}
 		}
@@ -145,7 +145,7 @@ public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
 					continue;
 
 				CachedElvenTradeRecipe crecipe = new CachedElvenTradeRecipe(recipe);
-				if(crecipe.containsWithNBT(crecipe.inputs, ingredient))
+				if(crecipe.contains(crecipe.inputs, ingredient))
 					arecipes.add(crecipe);
 			}
 		}

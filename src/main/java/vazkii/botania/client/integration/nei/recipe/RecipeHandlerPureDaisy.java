@@ -57,6 +57,17 @@ public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
 			return otherStacks;
 		}
 
+		@Override
+		public boolean contains(Collection<PositionedStack> ingredients, ItemStack ingredient) {
+			if(ingredients == inputs) {
+				for(PositionedStack stack : ingredients)
+					if(stack.contains(ingredient))
+						return true;
+			}
+
+			return super.contains(ingredients, ingredient);
+		}
+
 	}
 
 	@Override
@@ -106,7 +117,7 @@ public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
 			if(recipe == null)
 				continue;
 
-			if(NEIServerUtils.areStacksSameTypeCraftingWithNBT(new ItemStack(recipe.getOutput()), result))
+			if(NEIServerUtils.areStacksSameTypeCrafting(new ItemStack(recipe.getOutput()), result))
 				arecipes.add(new CachedPureDaisyRecipe(recipe));
 		}
 	}
@@ -118,7 +129,7 @@ public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
 				continue;
 
 			CachedPureDaisyRecipe crecipe = new CachedPureDaisyRecipe(recipe);
-			if(crecipe.containsWithNBT(crecipe.getIngredients(), ingredient) || crecipe.containsWithNBT(crecipe.getOtherStacks(), ingredient))
+			if(crecipe.contains(crecipe.getIngredients(), ingredient) || crecipe.contains(crecipe.getOtherStacks(), ingredient))
 				arecipes.add(crecipe);
 		}
 	}
