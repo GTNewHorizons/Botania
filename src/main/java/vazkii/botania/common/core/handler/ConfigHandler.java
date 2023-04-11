@@ -81,7 +81,7 @@ public final class ConfigHandler {
 	public static boolean enderPickpocketEnabled = true;
 
 	public static boolean fallenKanadeEnabled = true;
-	public static boolean darkQuartzEnabled = true;
+	public static boolean darkQuartzEnabled = false;
 	public static boolean enchanterEnabled = true;
 	public static boolean fluxfieldEnabled = true;
 	public static boolean relicsEnabled = true;
