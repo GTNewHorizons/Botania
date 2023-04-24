@@ -144,12 +144,12 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 					Block markedBlock = player.worldObj.getBlock(x, y, z);
 					Boolean wasActivated = markedBlock.onBlockActivated(player.worldObj, x, y, z, player, lookPos.sideHit, hitX,hitY,hitZ);
 					
-					if(heldItemStack.stackSize == 0 ) {
+					if (heldItemStack.stackSize == 0 ) {
 						event.setCanceled(true);
 						recursion = false;
 						return;
 					}
-					if(!wasActivated){
+					if (!wasActivated) {
 						item.onItemUse(player.capabilities.isCreativeMode ? heldItemStack.copy() : heldItemStack, player, player.worldObj, x, y, z, lookPos.sideHit, (float) lookPos.hitVec.xCoord - x, (float) lookPos.hitVec.yCoord - y, (float) lookPos.hitVec.zCoord - z);						
 						if(heldItemStack.stackSize == 0) {
 							event.setCanceled(true);
@@ -157,7 +157,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 							return;
 						}
 					}
-					}
+				}
 			}
 			recursion = false;
 		}
