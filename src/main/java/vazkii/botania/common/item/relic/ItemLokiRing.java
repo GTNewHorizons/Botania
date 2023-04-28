@@ -71,7 +71,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if(recursion) return;
-
+		
 		EntityPlayer player = event.entityPlayer;
 		ItemStack lokiRing = getLokiRing(player);
 		if (lokiRing == null || player.worldObj.isRemote)
@@ -140,9 +140,10 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				int z = lookPos.blockZ + cursor.posZ;
 				Item item = heldItemStack.getItem();
 				if (!player.worldObj.isAirBlock(x, y, z) && ManaItemHandler.requestManaExact(lokiRing, player, cost, true)) {
-					player.posX = x;
-					player.posY = y;
-					player.posZ = z;
+					player.posX = cursor.posX+oldPosX;
+					player.posY = cursor.posY+oldPosY;
+					player.posZ = cursor.posZ+oldPosZ;
+
 					float hitX = (float) (lookPos.hitVec.xCoord - lookPos.blockX);
 					float hitY = (float) (lookPos.hitVec.yCoord - lookPos.blockY);
 					float hitZ = (float) (lookPos.hitVec.zCoord - lookPos.blockZ);
@@ -154,8 +155,8 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 						event.setCanceled(true);
 						break;
 					}
-					if (!wasActivated) {
-						item.onItemUse(player.capabilities.isCreativeMode ? heldItemStack.copy() : heldItemStack, player, player.worldObj, x, y, z, lookPos.sideHit, (float) lookPos.hitVec.xCoord - x, (float) lookPos.hitVec.yCoord - y, (float) lookPos.hitVec.zCoord - z);						
+					if (!wasActivated) {						
+						item.onItemUse(player.capabilities.isCreativeMode ? heldItemStack.copy() : heldItemStack, player, player.worldObj, x, y, z, lookPos.sideHit, (float) lookPos.hitVec.xCoord - x, (float) lookPos.hitVec.yCoord - y, (float) lookPos.hitVec.zCoord - z);												
 						if(heldItemStack.stackSize == 0) {
 							event.setCanceled(true);
 							break;
