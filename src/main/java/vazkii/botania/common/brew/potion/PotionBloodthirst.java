@@ -34,13 +34,11 @@ public class PotionBloodthirst extends PotionMod {
 
 	@SubscribeEvent
 	public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
-		if(event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
-			List<EntityPlayer> players = event.world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(event.x - RANGE, event.y - RANGE, event.z - RANGE, event.x + RANGE, event.y + RANGE, event.z + RANGE));
-			for(EntityPlayer player : players)
-				if(hasEffect(player) && !hasEffect(player, ModPotions.emptiness)) {
-					event.setResult(Result.ALLOW);
-					return;
-				}
+		if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
+			EntityPlayer player = event.world.getClosestPlayerToEntity(event.entityLiving, RANGE);
+			if (player != null && hasEffect(player) && !hasEffect(player, ModPotions.emptiness)) {
+				event.setResult(Result.ALLOW);
+			}
 		}
 	}
 
