@@ -11,6 +11,7 @@
 package vazkii.botania.common.brew.potion;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,14 +34,18 @@ public class PotionEmptiness extends PotionMod {
 
 	@SubscribeEvent
 	public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
-		if(event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
-			List<EntityPlayer> players = event.world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(event.x - RANGE, event.y - RANGE, event.z - RANGE, event.x + RANGE, event.y + RANGE, event.z + RANGE));
-			for(EntityPlayer player : players)
-				if(hasEffect(player)) {
+		if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
+			double rangeSq = RANGE * RANGE;
+			List<EntityPlayer> players = (List<EntityPlayer>) event.world.playerEntities.stream()
+					.filter(player -> ((EntityPlayer) player).getDistanceSq(event.x, event.y, event.z) <= rangeSq)
+					.map(player -> (EntityPlayer) player)
+					.collect(Collectors.toList());
+			for (EntityPlayer player : players) {
+				if (hasEffect(player)) {
 					event.setResult(Result.DENY);
 					return;
 				}
+			}
 		}
 	}
-
 }
