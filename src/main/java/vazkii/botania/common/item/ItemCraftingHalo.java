@@ -198,15 +198,17 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 			ItemStack stackAt = inv.getStackInSlot(i);
 			if(stackAt != null && stack.isItemEqual(stackAt) && ItemStack.areItemStackTagsEqual(stack, stackAt)) {
 				boolean consume = true;
-
-				ItemStack container = stackAt.getItem().getContainerItem(stackAt);
-				if(container != null) {
-					if(container == stackAt)
-						consume = false;
-					else {
-						InventoryHelper.insertItemIntoInventory(inv, container);
-						if(container.stackSize != 0 && player != null)
-							player.dropPlayerItemWithRandomChoice(container, false);
+				if(stackAt.getItem().hasContainerItem()) {
+					//there are monsters in this world that will return false above but not null below
+					ItemStack container = stackAt.getItem().getContainerItem(stackAt);
+					if (container != null) {
+						if (container == stackAt)
+							consume = false;
+						else {
+							InventoryHelper.insertItemIntoInventory(inv, container);
+							if (container.stackSize != 0 && player != null)
+								player.dropPlayerItemWithRandomChoice(container, false);
+						}
 					}
 				}
 
