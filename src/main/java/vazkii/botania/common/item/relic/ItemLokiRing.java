@@ -79,7 +79,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	}
 
 	@SubscribeEvent
-    public void onBlockBreak(BlockEvent.BreakEvent event) {
+	public void onBlockBreak(BlockEvent.BreakEvent event) {
         EntityPlayer player = event.getPlayer();
         int x = event.x;
         int y = event.y;
