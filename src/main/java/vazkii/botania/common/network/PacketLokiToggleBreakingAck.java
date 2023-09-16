@@ -1,5 +1,6 @@
 package vazkii.botania.common.network;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 
 import net.minecraft.client.Minecraft;
@@ -11,7 +12,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class PacketLokiToggleAck implements IMessage, IMessageHandler<PacketLokiToggleAck, IMessage> {
+public class PacketLokiToggleBreakingAck implements IMessage, IMessageHandler<PacketLokiToggleBreakingAck, IMessage> {
 
     public boolean state;
 
@@ -27,12 +28,12 @@ public class PacketLokiToggleAck implements IMessage, IMessageHandler<PacketLoki
 
     @SideOnly(Side.CLIENT)
     @Override
-    public IMessage onMessage(PacketLokiToggleAck message, MessageContext ctx) {
+    public IMessage onMessage(PacketLokiToggleBreakingAck message, MessageContext ctx) {
         Minecraft mc = Minecraft.getMinecraft();
         final ItemStack aRing = ItemLokiRing.getLokiRing(mc.thePlayer) ;
         if (aRing != null) {
-            ItemLokiRing.setMode(aRing, message.state);
-            ItemLokiRing.renderHUDNotification("mode");
+            ItemLokiRing.setBreakingMode(aRing, message.state);
+            ItemLokiRing.renderHUDNotification("breaking");
         }
 
         return null;

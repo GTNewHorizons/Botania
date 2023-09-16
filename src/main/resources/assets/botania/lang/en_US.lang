@@ -156,8 +156,10 @@ botaniamisc.santaweaveInfo=Manaweave, changed up for the &cs&fe&ca&fs&co&fn
 botaniamisc.enterToView=^ Press ENTER to view ^
 botaniamisc.keyCategory=Botania
 botaniamisc.toggleLoki=Toggle Ring of Loki
+botaniamisc.toggleLokiBreaking=Toggle Ring of Loki Breaking
 botaniamisc.lokiOn=On
 botaniamisc.lokiOff=Off
+botaniamisc.breaking=Breaking
 
 # NEI INTEGRATION
 botania.nei.brewery=Botanical Brewery
