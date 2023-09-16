@@ -33,7 +33,7 @@ public class PacketLokiToggleBreakingAck implements IMessage, IMessageHandler<Pa
         final ItemStack aRing = ItemLokiRing.getLokiRing(mc.thePlayer) ;
         if (aRing != null) {
             ItemLokiRing.setBreakingMode(aRing, message.state);
-            ItemLokiRing.renderHUDNotification("breaking");
+            ItemLokiRing.renderHUDNotification(ItemLokiRing.HUD_MESSAGE.BREAKING);
         }
 
         return null;

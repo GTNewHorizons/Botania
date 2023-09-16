@@ -69,6 +69,10 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	private static final String TAG_BREAKING_MODE = "breaking";
 	private boolean recursion = false;
 
+	public static enum HUD_MESSAGE  {
+		MODE, BREAKING
+	}
+
 	public ItemLokiRing() {
 		super(LibItemNames.LOKI_RING);
 		MinecraftForge.EVENT_BUS.register(this);
@@ -77,18 +81,14 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	@SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         EntityPlayer player = event.getPlayer();
-
-
-            int x = event.x;
-            int y = event.y;
-            int z = event.z;
-            int side = event.blockMetadata;
-            ItemStack stack = player.getCurrentEquippedItem();
-			if(stack == null) return;
-            Item item = player.getCurrentEquippedItem().getItem();
-
-            breakOnAllCursors(player, item, stack, x, y, z, side);
-        
+        int x = event.x;
+        int y = event.y;
+        int z = event.z;
+        int side = event.blockMetadata;
+        ItemStack stack = player.getCurrentEquippedItem();
+		if(stack == null) return;
+        Item item = player.getCurrentEquippedItem().getItem();
+        breakOnAllCursors(player, item, stack, x, y, z, side);   
     }
 	
 
@@ -205,14 +205,14 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 
 	@SideOnly(Side.CLIENT)
-	public static void renderHUDNotification(String type){
+	public static void renderHUDNotification(HUD_MESSAGE type){
 		Minecraft mc = Minecraft.getMinecraft();
 		String text;
 		switch (type) {
-			case  ("mode"):
+			case MODE:
 				text = getLokiModeText(getLokiRing(mc.thePlayer));
 				break;
-			case ("breaking"):
+			case BREAKING:
 				text = getLokiBreakingModeText(getLokiRing(mc.thePlayer));
 				break;
 			default:
@@ -247,15 +247,14 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		ItemStack lokiRing = getLokiRing(player);
 		if(lokiRing == null || player.worldObj.isRemote || !isRingEnabled(lokiRing) || !isRingBreakingEnabled(lokiRing))
 			return;
-		boolean isISequentalBreaker = item instanceof ISequentialBreaker;
 		List<ChunkCoordinates> cursors = getCursorList(lokiRing);
 		ISequentialBreaker breaker  = null;
-		if(isISequentalBreaker)
-		breaker = (ISequentialBreaker) item;
+		if(item instanceof ISequentialBreaker)
+			breaker = (ISequentialBreaker) item;
 		World world = player.worldObj;
 		boolean silk = EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack) > 0;
 		int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
-		 boolean dispose = isISequentalBreaker ? breaker.disposeOfTrashBlocks(stack) : true;
+		boolean dispose = breaker == null? true : breaker.disposeOfTrashBlocks(stack);
 
 		for(int i = 0; i < cursors.size(); i++) {
 			ChunkCoordinates coords = cursors.get(i);
@@ -263,8 +262,8 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			int yp = y + coords.posY;
 			int zp = z + coords.posZ;
 			Block block = world.getBlock(xp, yp, zp);
-			if(isISequentalBreaker)
-			 breaker.breakOtherBlock(player, stack, xp, yp, zp, x, y, z, side);
+			if(breaker != null)
+				breaker.breakOtherBlock(player, stack, xp, yp, zp, x, y, z, side);
 			ToolCommons.removeBlockWithDrops(player, stack, player.worldObj, xp, yp, zp, x, y, z, block, new Material[] { block.getMaterial() }, silk, fortune, block.getBlockHardness(world, xp, yp, zp), true);
 		}
 	}

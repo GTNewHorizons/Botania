@@ -32,7 +32,7 @@ public class PacketLokiToggleAck implements IMessage, IMessageHandler<PacketLoki
         final ItemStack aRing = ItemLokiRing.getLokiRing(mc.thePlayer) ;
         if (aRing != null) {
             ItemLokiRing.setMode(aRing, message.state);
-            ItemLokiRing.renderHUDNotification("mode");
+            ItemLokiRing.renderHUDNotification(ItemLokiRing.HUD_MESSAGE.MODE);
         }
 
         return null;
