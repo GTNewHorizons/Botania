@@ -24,7 +24,6 @@ public class KeyHandler {
         ClientRegistry.registerKeyBinding(keyToggleRingOfLokiBreaking);  
         ClientRegistry.registerKeyBinding(keyRingOfLokiClear);
 
-
     }
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
@@ -51,6 +50,7 @@ public class KeyHandler {
     private static void toggleRingLokiBreaking() {
         PacketHandler.INSTANCE.sendToServer(new PacketLokiToggleBreaking());
     }
+
     private static void ringOfLokiClear() {
         PacketHandler.INSTANCE.sendToServer(new PacketLokiClear());
     }

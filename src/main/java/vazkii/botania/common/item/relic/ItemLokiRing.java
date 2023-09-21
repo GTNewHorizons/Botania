@@ -327,6 +327,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	public static void clearCursors(ItemStack stack){
 		setCursorList(stack, null);
 	}
+	
 	public static void clearMasterCursor(ItemStack stack){
 		setOriginPos(stack, 0, -1, 0);
 	}

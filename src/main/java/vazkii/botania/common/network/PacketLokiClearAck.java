@@ -31,7 +31,6 @@ public class PacketLokiClearAck implements IMessage, IMessageHandler<PacketLokiC
         Minecraft mc = Minecraft.getMinecraft();
         final ItemStack aRing = ItemLokiRing.getLokiRing(mc.thePlayer) ;
         if (aRing != null) {
-           
             ItemLokiRing.renderHUDNotification(ItemLokiRing.HUD_MESSAGE.CLEAR);
         }
 
