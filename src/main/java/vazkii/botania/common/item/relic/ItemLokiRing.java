@@ -70,7 +70,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	private boolean recursion = false;
 
 	public static enum HUD_MESSAGE  {
-		MODE, BREAKING
+		MODE, BREAKING, CLEAR
 	}
 
 	public ItemLokiRing() {
@@ -122,12 +122,12 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		if (heldItemStack == null && event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking() && isRingEnabled(lokiRing)) {
 			if(originCoords.posY == -1 && lookPos != null) {
 				setOriginPos(lokiRing, lookPos.blockX, lookPos.blockY, lookPos.blockZ);
-				setCursorList(lokiRing, null);
+				clearCursors(lokiRing);
 				if(player instanceof EntityPlayerMP)
 					PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
 			} else if(lookPos != null) {
 				if(originCoords.posX == lookPos.blockX && originCoords.posY == lookPos.blockY && originCoords.posZ == lookPos.blockZ) {
-					setOriginPos(lokiRing, 0, -1, 0);
+					clearMasterCursor(lokiRing);
 					if(player instanceof EntityPlayerMP)
 						PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
 				} else {
@@ -215,6 +215,9 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			case BREAKING:
 				text = getLokiBreakingModeText(getLokiRing(mc.thePlayer));
 				break;
+			case CLEAR:
+				text = getLokiCearText(getLokiRing(mc.thePlayer));
+			break;
 			default:
 				return;
 				
@@ -222,6 +225,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		 
 		GTNHLib.proxy.printMessageAboveHotbar(text, 60, true, true);
 	}
+
 	public static String getLokiModeText(ItemStack stack){
 		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("item.botania:lokiRing.name") + " " + (isRingEnabled(stack) ?
 				EnumChatFormatting.GREEN + StatCollector.translateToLocal("botaniamisc.lokiOn") :
@@ -233,6 +237,11 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				StatCollector.translateToLocal("botaniamisc.breaking") + " " + (isRingBreakingEnabled(stack) ?
 				EnumChatFormatting.GREEN + StatCollector.translateToLocal("botaniamisc.lokiOn") :
 				EnumChatFormatting.RED + StatCollector.translateToLocal("botaniamisc.lokiOff"));
+	}
+
+	public static String getLokiCearText(ItemStack stack){
+		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("botaniamisc.lokiClear") ;
+				
 	}
 
 	public static boolean isRingEnabled (final ItemStack stack){
@@ -275,13 +284,15 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 	@Override
 	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
-		setCursorList(stack, null);
+		clearCursors(stack);
 	}
+
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public List<ChunkCoordinates> getWireframesToDraw(EntityPlayer player, ItemStack stack) {
-		if(getLokiRing(player) != stack)
+		ItemStack lokiRing = getLokiRing(player);
+		if(lokiRing != stack || !isRingEnabled(lokiRing) )
 			return null;
 
 		MovingObjectPosition lookPos = Minecraft.getMinecraft().objectMouseOver;
@@ -310,7 +321,14 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 	@Override
 	public ChunkCoordinates getSourceWireframe(EntityPlayer player, ItemStack stack) {
-		return getLokiRing(player) == stack ? getOriginPos(stack) : null;
+		return getLokiRing(player) == stack && isRingEnabled(stack) ? getOriginPos(stack) : null;
+	}
+
+	public static void clearCursors(ItemStack stack){
+		setCursorList(stack, null);
+	}
+	public static void clearMasterCursor(ItemStack stack){
+		setOriginPos(stack, 0, -1, 0);
 	}
 
 	public static ItemStack getLokiRing(EntityPlayer player) {

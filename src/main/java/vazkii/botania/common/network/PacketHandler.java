@@ -17,5 +17,7 @@ public class PacketHandler {
         INSTANCE.registerMessage(PacketLokiToggleAck.class, PacketLokiToggleAck.class, 2, Side.CLIENT);
         INSTANCE.registerMessage(PacketLokiToggleBreaking.class, PacketLokiToggleBreaking.class, 3, Side.SERVER);
         INSTANCE.registerMessage(PacketLokiToggleBreakingAck.class, PacketLokiToggleBreakingAck.class, 4, Side.CLIENT);
+        INSTANCE.registerMessage(PacketLokiClear.class, PacketLokiClear.class, 5, Side.SERVER);
+        INSTANCE.registerMessage(PacketLokiClearAck.class, PacketLokiClearAck.class, 6, Side.CLIENT);
     }
 }

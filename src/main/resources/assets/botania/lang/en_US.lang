@@ -157,9 +157,12 @@ botaniamisc.enterToView=^ Press ENTER to view ^
 botaniamisc.keyCategory=Botania
 botaniamisc.toggleLoki=Toggle Ring of Loki
 botaniamisc.toggleLokiBreaking=Toggle Ring of Loki Breaking
+botaniamisc.ringOfLokiClear=Clear Ring of Loki Selection
 botaniamisc.lokiOn=On
 botaniamisc.lokiOff=Off
 botaniamisc.breaking=Breaking
+botaniamisc.lokiClear=Successfully cleared all selection
+
 
 # NEI INTEGRATION
 botania.nei.brewery=Botanical Brewery

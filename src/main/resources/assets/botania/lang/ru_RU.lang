@@ -157,9 +157,11 @@ botaniamisc.enterToView=^ Нажмите ENTER для просмотра ^
 botaniamisc.keyCategory=Botania
 botaniamisc.toggleLoki=Переключение режимов Кольца Локи
 botaniamisc.toggleLokiBreaking=Переключение режимов ломания Кольца Локи
+botaniamisc.ringOfLokiClear=Очистить выделения для кольца локи
 botaniamisc.lokiOn=Вкл.
 botaniamisc.lokiOff=Выкл.
 botaniamisc.breaking=Ломание 
+botaniamisc.lokiClear=Успешно удален все выделения
 
 # NEI INTEGRATION
 botania.nei.brewery=Ботаническая зельеварка
