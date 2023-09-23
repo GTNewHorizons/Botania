@@ -217,7 +217,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				break;
 			case CLEAR:
 				text = getLokiCearText(getLokiRing(mc.thePlayer));
-			break;
+				break;
 			default:
 				return;
 				
@@ -240,8 +240,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	}
 
 	public static String getLokiCearText(ItemStack stack){
-		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("botaniamisc.lokiClear") ;
-				
+		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("botaniamisc.lokiClear");		
 	}
 
 	public static boolean isRingEnabled (final ItemStack stack){
