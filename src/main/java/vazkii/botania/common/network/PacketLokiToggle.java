@@ -42,7 +42,5 @@ public class PacketLokiToggle implements IMessage, IMessageHandler<PacketLokiTog
             }
         }
         return null;
-    }
-
-  
+    }  
 }
