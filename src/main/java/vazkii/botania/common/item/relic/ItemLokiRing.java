@@ -225,18 +225,19 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		 
 		GTNHLib.proxy.printMessageAboveHotbar(text, 60, true, true);
 	}
+	
+	public static String getOnOffString(boolean state){
+		return state ? EnumChatFormatting.GREEN + StatCollector.translateToLocal("botaniamisc.lokiOn") :
+				EnumChatFormatting.RED + StatCollector.translateToLocal("botaniamisc.lokiOff");
+	}
 
 	public static String getLokiModeText(ItemStack stack){
-		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("item.botania:lokiRing.name") + " " + (isRingEnabled(stack) ?
-				EnumChatFormatting.GREEN + StatCollector.translateToLocal("botaniamisc.lokiOn") :
-				EnumChatFormatting.RED + StatCollector.translateToLocal("botaniamisc.lokiOff"));
+		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("item.botania:lokiRing.name") + " " + getOnOffString(isRingEnabled(stack));
 	}
 
 	public static String getLokiBreakingModeText(ItemStack stack){
 		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("item.botania:lokiRing.name") + " "+
-				StatCollector.translateToLocal("botaniamisc.breaking") + " " + (isRingBreakingEnabled(stack) ?
-				EnumChatFormatting.GREEN + StatCollector.translateToLocal("botaniamisc.lokiOn") :
-				EnumChatFormatting.RED + StatCollector.translateToLocal("botaniamisc.lokiOff"));
+				StatCollector.translateToLocal("botaniamisc.breaking") + " " + getOnOffString(isRingBreakingEnabled(stack));
 	}
 
 	public static String getLokiCearText(ItemStack stack){
@@ -286,6 +287,19 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		clearCursors(stack);
 	}
 
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean adv) {
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiDescription"), list);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiDescription2"), list);
+		addStringToTooltip("", list);
+		addStringToTooltip(EnumChatFormatting.WHITE +StatCollector.translateToLocal("botaniamisc.lokiCurrent"), list);		
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiState") + ": " + getOnOffString(isRingEnabled(stack)), list);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.breaking") + ": " + getOnOffString(isRingBreakingEnabled(stack)), list);
+		addStringToTooltip("", list);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiToggleDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET + "/"+ getOnOffString(false), list);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiBreakingDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET+"/" + getOnOffString(false), list);	
+		super.addInformation(stack, player, list, adv);
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)

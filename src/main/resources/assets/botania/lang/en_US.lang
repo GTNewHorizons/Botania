@@ -155,13 +155,20 @@ botaniamisc.altarRefill1=add back the last recipe
 botaniamisc.santaweaveInfo=Manaweave, changed up for the &cs&fe&ca&fs&co&fn
 botaniamisc.enterToView=^ Press ENTER to view ^
 botaniamisc.keyCategory=Botania
-botaniamisc.toggleLoki=Toggle Ring of Loki
-botaniamisc.toggleLokiBreaking=Toggle Ring of Loki Breaking
+
+#LOKI
+botaniamisc.toggleLoki=Ring of Loki Switch Key
 botaniamisc.ringOfLokiClear=Clear Ring of Loki Selection
 botaniamisc.lokiOn=On
 botaniamisc.lokiOff=Off
 botaniamisc.breaking=Breaking
 botaniamisc.lokiClear=Successfully cleared all selection
+botaniamisc.lokiDescription=Builder's wand but §c§oC§6§oo§e§oo§a§ol§9§oe§1§or
+botaniamisc.lokiDescription2=Can Place/Interact/Break with multiple blocks at once!
+botaniamisc.lokiToggleDescription=Mode Switch Key to turn ring
+botaniamisc.lokiBreakingDescription=Mode Switch Key + Shift to toggle breaking
+botaniamisc.lokiCurrent=Current
+botaniamisc.lokiState=Ring
 
 # NEI INTEGRATION
 botania.nei.brewery=Botanical Brewery

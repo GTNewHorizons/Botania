@@ -106,7 +106,7 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.hasPhantomInk"), par3List);
 	}
 
-	void addStringToTooltip(String s, List<String> tooltip) {
+	public void addStringToTooltip(String s, List<String> tooltip) {
 		tooltip.add(s.replaceAll("&", "\u00a7"));
 	}
 

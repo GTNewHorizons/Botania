@@ -25,12 +25,24 @@ public class PacketLokiToggle implements IMessage, IMessageHandler<PacketLokiTog
         EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         final ItemStack aRing = ItemLokiRing.getLokiRing(player);
         if (aRing != null) {
-            boolean ringState = !ItemLokiRing.isRingEnabled(aRing);
-            ItemLokiRing.setMode(aRing, ringState);
-            PacketLokiToggleAck ackMessage = new PacketLokiToggleAck();
-            ackMessage.state = ringState;
-            PacketHandler.INSTANCE.sendTo(ackMessage, player);
+            if(player.isSneaking()){
+                boolean ringState = !ItemLokiRing.isRingBreakingEnabled(aRing);
+                ItemLokiRing.setBreakingMode(aRing, ringState);
+                PacketLokiToggleBreakingAck ackMessage = new PacketLokiToggleBreakingAck();
+                ackMessage.state = ringState;
+                PacketHandler.INSTANCE.sendTo(ackMessage, player);
+            }
+            else
+            {     
+                boolean ringState = !ItemLokiRing.isRingEnabled(aRing);
+                ItemLokiRing.setMode(aRing, ringState);
+                PacketLokiToggleAck ackMessage = new PacketLokiToggleAck();
+                ackMessage.state = ringState;
+                PacketHandler.INSTANCE.sendTo(ackMessage, player);
+            }
         }
         return null;
     }
+
+  
 }
