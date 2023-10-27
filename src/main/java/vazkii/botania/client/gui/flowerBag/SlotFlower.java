@@ -8,7 +8,7 @@
  * 
  * File Created @ [Mar 16, 2015, 7:20:05 PM (GMT)]
  */
-package vazkii.botania.client.gui.bag;
+package vazkii.botania.client.gui.flowerBag;
 
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;

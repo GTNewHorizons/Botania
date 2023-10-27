@@ -8,7 +8,7 @@
  * 
  * File Created @ [Mar 16, 2015, 6:42:43 PM (GMT)]
  */
-package vazkii.botania.client.gui.bag;
+package vazkii.botania.client.gui.flowerBag;
 
 import java.util.List;
 

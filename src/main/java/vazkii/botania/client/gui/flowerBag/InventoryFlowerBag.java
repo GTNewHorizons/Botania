@@ -8,7 +8,7 @@
  * 
  * File Created @ [Mar 16, 2015, 6:42:56 PM (GMT)]
  */
-package vazkii.botania.client.gui.bag;
+package vazkii.botania.client.gui.flowerBag;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -33,7 +33,7 @@ public class InventoryFlowerBag implements IInventory {
 		this.slot = slot;
 	}
 
-	public static boolean isFlowerBag(ItemStack stack) {
+	public boolean isFlowerBag(ItemStack stack) {
 		return stack != null && stack.getItem() == ModItems.flowerBag;
 	}
 

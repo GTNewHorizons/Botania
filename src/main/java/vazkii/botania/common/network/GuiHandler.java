@@ -12,8 +12,8 @@ package vazkii.botania.common.network;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import vazkii.botania.client.gui.bag.ContainerFlowerBag;
-import vazkii.botania.client.gui.bag.GuiFlowerBag;
+import vazkii.botania.client.gui.flowerBag.ContainerFlowerBag;
+import vazkii.botania.client.gui.flowerBag.GuiFlowerBag;
 import vazkii.botania.client.gui.box.ContainerBaubleBox;
 import vazkii.botania.client.gui.box.GuiBaubleBox;
 import vazkii.botania.client.gui.crafting.ContainerCraftingHalo;
