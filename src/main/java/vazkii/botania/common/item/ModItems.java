@@ -15,6 +15,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.BotaniaAPI;
+import vazkii.botania.common.item.bag.ItemFlowerBag;
+import vazkii.botania.common.item.bag.ItemShroomBag;
 import vazkii.botania.common.item.brew.ItemBrewFlask;
 import vazkii.botania.common.item.brew.ItemBrewVial;
 import vazkii.botania.common.item.brew.ItemIncenseStick;
@@ -232,6 +234,7 @@ public final class ModItems {
 	public static Item cosmetic;
 	public static Item swapRing;
 	public static Item flowerBag;
+	public static Item shroomBag;
 	public static Item phantomInk;
 	public static Item poolMinecart;
 	public static Item pinkinator;
@@ -381,6 +384,7 @@ public final class ModItems {
 		cosmetic = new ItemBaubleCosmetic();
 		swapRing = new ItemSwapRing();
 		flowerBag = new ItemFlowerBag();
+		shroomBag = new ItemShroomBag();
 		phantomInk = new ItemPhantomInk();
 		poolMinecart = new ItemPoolMinecart();
 		pinkinator = new ItemPinkinator();

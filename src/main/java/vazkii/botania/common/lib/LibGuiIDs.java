@@ -17,4 +17,6 @@ public final class LibGuiIDs {
 	public static final int FLOWER_BAG = 2;
 	public static final int BAUBLE_BOX = 3;
 
+	public static final int SHROOM_BAG = 4;
+
 }

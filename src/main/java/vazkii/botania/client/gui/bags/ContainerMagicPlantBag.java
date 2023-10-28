@@ -6,37 +6,34 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.client.gui.SlotLocked;
-import vazkii.botania.client.gui.flowerBag.InventoryFlowerBag;
-import vazkii.botania.client.gui.flowerBag.SlotFlower;
 
 public abstract class ContainerMagicPlantBag extends Container {
 
-    InventoryMagicPlant magicPlantInv;
+    protected InventoryMagicPlantBag magicPlantInv;
     public ContainerMagicPlantBag(EntityPlayer player) {
         int i;
         int j;
 
-        int slot = player.inventory.currentItem;
         IInventory playerInv = player.inventory;
-        magicPlantInv = new InventoryMagicPlant(player, slot);
 
-        for(i = 0; i < 2; ++i)
-            for(j = 0; j < 8; ++j) {
-                int k = j + i * 8;
-                addSlotToContainer(new SlotMagicPlant(magicPlantInv, k, 17 + j * 18, 26 + i * 18, k));
-            }
+        addMagicPlantSlots(player);
 
-        for(i = 0; i < 3; ++i)
-            for(j = 0; j < 9; ++j)
+        for(i = 0; i < 3; ++i) {
+            for(j = 0; j < 9; ++j) {
                 addSlotToContainer(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-
-        for(i = 0; i < 9; ++i) {
-            if(player.inventory.currentItem == i)
-                addSlotToContainer(new SlotLocked(playerInv, i, 8 + i * 18, 142));
-            else addSlotToContainer(new Slot(playerInv, i, 8 + i * 18, 142));
+            }
         }
 
+
+        for(i = 0; i < 9; ++i) {
+            if(player.inventory.currentItem == i) {
+                addSlotToContainer(new SlotLocked(playerInv, i, 8 + i * 18, 142));
+            }
+            else addSlotToContainer(new Slot(playerInv, i, 8 + i * 18, 142));
+        }
     }
+
+    public abstract void  addMagicPlantSlots(EntityPlayer player);
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {

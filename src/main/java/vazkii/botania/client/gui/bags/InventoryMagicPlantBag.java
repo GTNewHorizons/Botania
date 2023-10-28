@@ -3,10 +3,9 @@ package vazkii.botania.client.gui.bags;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import vazkii.botania.common.item.ItemFlowerBag;
-import vazkii.botania.common.item.ModItems;
+import vazkii.botania.common.item.bag.ItemBagBase;
 
-public abstract class InventoryMagicPlant implements IInventory {
+public abstract class InventoryMagicPlantBag implements IInventory {
 
     private static final ItemStack[] FALLBACK_INVENTORY = new ItemStack[16];
 
@@ -17,7 +16,7 @@ public abstract class InventoryMagicPlant implements IInventory {
     boolean invPushed = false;
     ItemStack storedInv = null;
 
-    public InventoryMagicPlant(EntityPlayer player, int slot) {
+    public InventoryMagicPlantBag(EntityPlayer player, int slot) {
         this.player = player;
         this.slot = slot;
     }
@@ -40,14 +39,10 @@ public abstract class InventoryMagicPlant implements IInventory {
 
         if(stack != null) {
             ItemStack[] inv = getInventory();
-            ItemFlowerBag.setStacks(stack, inv);
+            ItemBagBase.setStacks(stack, inv);
         }
 
         invPushed = true;
-    }
-
-    public boolean isMagicPlantBag(ItemStack stack) {
-        return stack != null && stack.getItem() == ModItems.flowerBag;
     }
 
     ItemStack[] getInventory() {
@@ -56,12 +51,13 @@ public abstract class InventoryMagicPlant implements IInventory {
 
         ItemStack stack = getStack();
         if(isMagicPlantBag(getStack())) {
-            stacks = ItemFlowerBag.loadStacks(stack);
+            stacks = ItemBagBase.loadStacks(stack);
             return stacks;
         }
 
         return FALLBACK_INVENTORY;
     }
+
     @Override
     public int getSizeInventory() {
         return 16;
@@ -69,27 +65,46 @@ public abstract class InventoryMagicPlant implements IInventory {
 
     @Override
     public ItemStack getStackInSlot(int slotIn) {
-        return null;
+        return getInventory()[slotIn];
     }
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
+        ItemStack[] inventorySlots = getInventory();
+        if (inventorySlots[index] != null) {
+            ItemStack stackAt;
+
+            if (inventorySlots[index].stackSize <= count) {
+                stackAt = inventorySlots[index];
+                inventorySlots[index] = null;
+                return stackAt;
+            } else {
+                stackAt = inventorySlots[index].splitStack(count);
+
+                if (inventorySlots[index].stackSize == 0)
+                    inventorySlots[index] = null;
+
+                return stackAt;
+            }
+        }
+
         return null;
     }
 
     @Override
     public ItemStack getStackInSlotOnClosing(int index) {
-        return null;
+        return getStackInSlot(index);
     }
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-
+        ItemStack[] inventorySlots = getInventory();
+        inventorySlots[index] = stack;
     }
 
     @Override
     public String getInventoryName() {
-        return null;
+        return getBagName();
     }
 
     @Override
@@ -99,31 +114,35 @@ public abstract class InventoryMagicPlant implements IInventory {
 
     @Override
     public int getInventoryStackLimit() {
-        return 0;
+        return isMagicPlantBag(getStack()) ? 64 : 0;
     }
 
     @Override
     public void markDirty() {
-
+        // NO-OP
     }
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer player) {
-        return false;
+        return isMagicPlantBag(getStack());
     }
 
     @Override
     public void openInventory() {
-
+        // NO-OP
     }
 
     @Override
     public void closeInventory() {
-
+        // NO-OP
     }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return false;
+        return isMagicPlantBag(getStack());
     }
+
+    protected abstract String getBagName();
+
+    public abstract boolean isMagicPlantBag(ItemStack stack);
 }
