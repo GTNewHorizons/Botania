@@ -301,10 +301,8 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiDescription2"), list);
 		addStringToTooltip("", list);
 		addStringToTooltip(EnumChatFormatting.WHITE +StatCollector.translateToLocal("botaniamisc.lokiCurrent"), list);
-		if (stack.hasTagCompound()) {
-			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiState") + ": " + getOnOffString(isRingEnabled(stack)), list);
-			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.breaking") + ": " + getOnOffString(isRingBreakingEnabled(stack)), list);
-		}
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiState") + ": " + getOnOffString(isRingEnabled(stack)), list);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.breaking") + ": " + getOnOffString(isRingBreakingEnabled(stack)), list);
 		addStringToTooltip("", list);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiToggleDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET + "/"+ getOnOffString(false), list);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiBreakingDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET+"/" + getOnOffString(false), list);	
