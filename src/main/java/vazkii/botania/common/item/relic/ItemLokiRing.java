@@ -245,11 +245,19 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	}
 
 	public static boolean isRingEnabled (final ItemStack stack){
-		return stack.stackTagCompound.getBoolean(TAG_MODE);
+		if (stack.hasTagCompound())
+		{
+			return stack.stackTagCompound.getBoolean(TAG_MODE);
+		}
+		return false;
 	}
 
 	public static boolean isRingBreakingEnabled (final ItemStack stack){
-		return stack.stackTagCompound.getBoolean(TAG_BREAKING_MODE);
+		if (stack.hasTagCompound())
+		{
+			return stack.stackTagCompound.getBoolean(TAG_BREAKING_MODE);
+		}
+		return false;
 	}
 
 	public static void breakOnAllCursors(EntityPlayer player, Item item, ItemStack stack, int x, int y, int z, int side) {
