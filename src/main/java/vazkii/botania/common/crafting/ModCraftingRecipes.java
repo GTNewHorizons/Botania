@@ -257,6 +257,7 @@ public final class ModCraftingRecipes {
 	public static IRecipe recipeSwapRing;
 	public static IRecipe recipeSnowHorn;
 	public static IRecipe recipeFlowerBag;
+	public static IRecipe recipeShroomBag;
 	public static IRecipe recipePhantomInk;
 	public static IRecipe recipePoolCart;
 	public static IRecipe recipePump;
@@ -1767,6 +1768,13 @@ public final class ModCraftingRecipes {
 				'P', new ItemStack(ModItems.petal, 1, Short.MAX_VALUE),
 				'W', new ItemStack(Blocks.wool, 1, Short.MAX_VALUE));
 		recipeFlowerBag = BotaniaAPI.getLatestAddedRecipe();
+
+		// Mushroom Pouch Recipe
+		GameRegistry.addShapedRecipe(new ItemStack(ModItems.shroomBag),
+				"WPW", "W W", " W ",
+				'P', new ItemStack(ModBlocks.mushroom, 1, Short.MAX_VALUE),
+				'W', new ItemStack(Blocks.wool, 1, Short.MAX_VALUE));
+		recipeShroomBag = BotaniaAPI.getLatestAddedRecipe();
 
 		// Phantom Ink Recipe
 		addShapelessOreDictRecipe(new ItemStack(ModItems.phantomInk, 4), LibOreDict.MANA_PEARL, "dye", "blockGlass", new ItemStack(Items.glass_bottle), new ItemStack(Items.glass_bottle), new ItemStack(Items.glass_bottle), new ItemStack(Items.glass_bottle));
