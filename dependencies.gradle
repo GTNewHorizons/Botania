@@ -8,7 +8,7 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:Railcraft:9.15.0:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:StorageDrawers:1.12.0-GTNH:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:ForgeMultipart:1.3.4:dev') {transitive=false}
-    compile('com.github.GTNewHorizons:NotEnoughItems:2.4.3-GTNH:dev')
+    compileOnly('com.github.GTNewHorizons:NotEnoughItems:2.4.3-GTNH:dev')
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.36:api') {transitive=false}
     compile('com.github.GTNewHorizons:GTNHLib:0.0.13:dev')
 
