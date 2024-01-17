@@ -165,8 +165,8 @@ botaniamisc.breaking=Breaking
 botaniamisc.lokiClear=Successfully cleared all selection
 botaniamisc.lokiDescription=Builder's wand but §c§oC§6§oo§e§oo§a§ol§9§oe§5§or
 botaniamisc.lokiDescription2=Can Place/Interact/Break with multiple blocks at once!
-botaniamisc.lokiToggleDescription=Mode Switch Key to turn ring
-botaniamisc.lokiBreakingDescription=Mode Switch Key + Shift to toggle breaking
+botaniamisc.lokiToggleDescription=Loki Switch Key to turn ring
+botaniamisc.lokiBreakingDescription=Loki Switch Key + Shift to toggle breaking
 botaniamisc.lokiCurrent=Current
 botaniamisc.lokiState=Ring
 
