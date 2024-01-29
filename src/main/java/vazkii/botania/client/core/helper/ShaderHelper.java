@@ -14,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.minecraft.client.renderer.OpenGlHelper;
 
 import org.apache.logging.log4j.Level;
@@ -32,6 +34,8 @@ public final class ShaderHelper {
 
 	private static final int VERT = ARBVertexShader.GL_VERTEX_SHADER_ARB;
 	private static final int FRAG = ARBFragmentShader.GL_FRAGMENT_SHADER_ARB;
+
+	private static final Int2IntMap TIME_UNIFORM_LOCATIONS = new Int2IntOpenHashMap();
 
 	public static int pylonGlow = 0;
 	public static int enchanterRune = 0;
@@ -67,8 +71,8 @@ public final class ShaderHelper {
 		ARBShaderObjects.glUseProgramObjectARB(shader);
 
 		if(shader != 0) {
-			int time = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
-			ARBShaderObjects.glUniform1iARB(time, ClientTickHandler.ticksInGame);
+			int timeUniform = TIME_UNIFORM_LOCATIONS.computeIfAbsent(shader, s -> ARBShaderObjects.glGetUniformLocationARB(shader, "time"));
+			ARBShaderObjects.glUniform1iARB(timeUniform, ClientTickHandler.ticksInGame);
 
 			if(callback != null)
 				callback.call(shader);
