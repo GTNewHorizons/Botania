@@ -122,7 +122,6 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		if (heldItemStack == null && event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking() && isRingEnabled(lokiRing)) {
 			if(originCoords.posY == -1 && lookPos != null) {
 				setOriginPos(lokiRing, lookPos.blockX, lookPos.blockY, lookPos.blockZ);
-				clearCursors(lokiRing);
 				if(player instanceof EntityPlayerMP)
 					PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
 			} else if(lookPos != null) {
