@@ -154,6 +154,8 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			double oldPosX = player.posX;
 			double oldPosY = player.posY;
 			double oldPosZ = player.posZ;
+			float oldPitch = player.rotationPitch;
+			float oldYaw = player.rotationYaw;
 
 			int masterOffsetX = lookPos.blockX - originCoords.posX;
 			int masterOffsetY = lookPos.blockY - originCoords.posY;
@@ -168,14 +170,21 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				int x = lookPos.blockX + cursor.getX();
 				int y = lookPos.blockY + cursor.getY();
 				int z = lookPos.blockZ + cursor.getZ();
+				player.rotationYaw = oldYaw;
 				if(cursor.isXmirrored()){
 					x -= 2*masterOffsetX;
+					player.rotationYaw = 180 - (Math.abs(player.rotationYaw));
+					if(oldYaw < 0){
+						player.rotationYaw *= -1;
+					}
 				}
 				if(cursor.isYmirrored()){
 					y -= 2*masterOffsetY;
+					player.rotationPitch = oldPitch * (-1);
 				}
 				if(cursor.isZmirrored()){
 					z -= 2*masterOffsetZ;
+					player.rotationYaw = player.rotationYaw * (-1);
 				}
 
 				Item item = heldItemStack.getItem();
@@ -240,6 +249,8 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			player.posX = oldPosX;
 			player.posY = oldPosY;
 			player.posZ = oldPosZ;
+			player.rotationPitch = oldPitch;
+			player.rotationYaw = oldYaw;
 		}
 	}
 	
