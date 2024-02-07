@@ -142,7 +142,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 							break addCursor;
 						}
 
-					addCursor(lokiRing, relX, relY, relZ, byte(0));
+					addCursor(lokiRing, relX, relY, relZ, (byte)0 );
 					if(player instanceof EntityPlayerMP)
 						PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
 				}
