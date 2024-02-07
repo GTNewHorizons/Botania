@@ -40,6 +40,7 @@ import vazkii.botania.api.mana.IManaUsingItem;
 import vazkii.botania.api.mana.ManaItemHandler;
 import vazkii.botania.common.achievement.ModAchievements;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
+import vazkii.botania.common.core.helper.LokiCursor;
 import vazkii.botania.common.item.ItemTemperanceStone;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
@@ -59,9 +60,6 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	private static final String TAG_CURSOR_LIST = "cursorList";
 	private static final String TAG_CURSOR_PREFIX = "cursor";
 	private static final String TAG_CURSOR_COUNT = "cursorCount";
-	private static final String TAG_X_OFFSET = "xOffset";
-	private static final String TAG_Y_OFFSET = "yOffset";
-	private static final String TAG_Z_OFFSET = "zOffset";
 	private static final String TAG_X_ORIGIN = "xOrigin";
 	private static final String TAG_Y_ORIGIN = "yOrigin";
 	private static final String TAG_Z_ORIGIN = "zOrigin";
@@ -114,7 +112,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		ItemStack heldItemStack = player.getCurrentEquippedItem();
 		ChunkCoordinates originCoords = getOriginPos(lokiRing);
 		MovingObjectPosition lookPos = ToolCommons.raytraceFromEntity(player.worldObj, player, true, 10F);
-		List<ChunkCoordinates> cursors = getCursorList(lokiRing);
+		List<LokiCursor> cursors = getCursorList(lokiRing);
 		int cursorCount = cursors.size();
 
 		int cost = Math.min(cursorCount, (int) Math.pow(Math.E, cursorCount * 0.25));
@@ -135,8 +133,8 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 					int relY = lookPos.blockY - originCoords.posY;
 					int relZ = lookPos.blockZ - originCoords.posZ;
 
-					for(ChunkCoordinates cursor : cursors)
-						if(cursor.posX == relX && cursor.posY == relY && cursor.posZ == relZ) {
+					for(LokiCursor cursor : cursors)
+						if(cursor.getX() == relX && cursor.getY() == relY && cursor.getZ() == relZ) {
 							cursors.remove(cursor);
 							setCursorList(lokiRing, cursors);
 							if(player instanceof EntityPlayerMP)
@@ -144,7 +142,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 							break addCursor;
 						}
 
-					addCursor(lokiRing, relX, relY, relZ);
+					addCursor(lokiRing, relX, relY, relZ, byte(0));
 					if(player instanceof EntityPlayerMP)
 						PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
 				}
@@ -157,29 +155,80 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			double oldPosY = player.posY;
 			double oldPosZ = player.posZ;
 
-			for(ChunkCoordinates cursor : cursors) {
-				int x = lookPos.blockX + cursor.posX;
-				int y = lookPos.blockY + cursor.posY;
-				int z = lookPos.blockZ + cursor.posZ;
+			int masterOffsetX = lookPos.blockX - originCoords.posX;
+			int masterOffsetY = lookPos.blockY - originCoords.posY;
+			int masterOffsetZ = lookPos.blockZ - originCoords.posZ;
+
+			double playerOffsetX = player.posX - originCoords.posX;
+			double playerOffsetY = player.posY - originCoords.posY;
+			double playerOffsetZ = player.posZ - originCoords.posZ;
+
+			for(LokiCursor cursor : cursors) {
+
+				int x = lookPos.blockX + cursor.getX();
+				int y = lookPos.blockY + cursor.getY();
+				int z = lookPos.blockZ + cursor.getZ();
+				if(cursor.isXmirrored()){
+					x -= 2*masterOffsetX;
+				}
+				if(cursor.isYmirrored()){
+					y -= 2*masterOffsetY;
+				}
+				if(cursor.isZmirrored()){
+					z -= 2*masterOffsetZ;
+				}
+
 				Item item = heldItemStack.getItem();
 				if (!player.worldObj.isAirBlock(x, y, z) && ManaItemHandler.requestManaExact(lokiRing, player, cost, true)) {
-					player.posX = cursor.posX+oldPosX;
-					player.posY = cursor.posY+oldPosY;
-					player.posZ = cursor.posZ+oldPosZ;
+					player.posX = cursor.getX()+oldPosX;
+					player.posY = cursor.getY()+oldPosY;
+					player.posZ = cursor.getZ()+oldPosZ;
+					if(cursor.isXmirrored()){
+						player.posX -= 2*playerOffsetX;
+					}
+					if(cursor.isYmirrored()){
+						player.posY -= 2*playerOffsetY;
+					}
+					if(cursor.isZmirrored()){
+						player.posZ -= 2*playerOffsetZ;
+					}
+
 
 					float hitX = (float) (lookPos.hitVec.xCoord - lookPos.blockX);
 					float hitY = (float) (lookPos.hitVec.yCoord - lookPos.blockY);
 					float hitZ = (float) (lookPos.hitVec.zCoord - lookPos.blockZ);
+					if(cursor.isXmirrored()){
+						hitX = 1-hitX;
+					}
+					if(cursor.isYmirrored()){
+						hitY = 1-hitY;
+					}
+					if(cursor.isZmirrored()){
+						hitZ = 1-hitZ;
+					}
+
+					int hitSide = lookPos.sideHit;
+
+					if(cursor.isXmirrored() && (hitSide == ForgeDirection.EAST.ordinal() || hitSide == ForgeDirection.WEST.ordinal()) ){
+						hitSide = hitSide ^ 1;
+					}
+					if(cursor.isYmirrored() && (hitSide == ForgeDirection.DOWN.ordinal() || hitSide == ForgeDirection.UP.ordinal()) ){
+						hitSide = hitSide ^ 1;
+					}
+					if(cursor.isZmirrored() && (hitSide == ForgeDirection.NORTH.ordinal() || hitSide == ForgeDirection.SOUTH.ordinal()) ){
+						hitSide = hitSide ^ 1;
+					}
+
 					
 					Block markedBlock = player.worldObj.getBlock(x, y, z);
-					boolean wasActivated = markedBlock.onBlockActivated(player.worldObj, x, y, z, player, lookPos.sideHit, hitX,hitY,hitZ);
+					boolean wasActivated = markedBlock.onBlockActivated(player.worldObj, x, y, z, player, hitSide, hitX,hitY,hitZ);
 					
 					if (heldItemStack.stackSize == 0 ) {
 						event.setCanceled(true);
 						break;
 					}
 					if (!wasActivated) {						
-						item.onItemUse(player.capabilities.isCreativeMode ? heldItemStack.copy() : heldItemStack, player, player.worldObj, x, y, z, lookPos.sideHit, (float) lookPos.hitVec.xCoord - x, (float) lookPos.hitVec.yCoord - y, (float) lookPos.hitVec.zCoord - z);												
+						item.onItemUse(player.capabilities.isCreativeMode ? heldItemStack.copy() : heldItemStack, player, player.worldObj, x, y, z, hitSide, (float) lookPos.hitVec.xCoord - x, (float) lookPos.hitVec.yCoord - y, (float) lookPos.hitVec.zCoord - z);
 						if(heldItemStack.stackSize == 0) {
 							event.setCanceled(true);
 							break;
@@ -263,7 +312,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		ItemStack lokiRing = getLokiRing(player);
 		if(lokiRing == null || player.worldObj.isRemote || !isRingEnabled(lokiRing) || !isRingBreakingEnabled(lokiRing))
 			return;
-		List<ChunkCoordinates> cursors = getCursorList(lokiRing);
+		List<LokiCursor> cursors = getCursorList(lokiRing);
 		ISequentialBreaker breaker  = null;
 		if(item instanceof ISequentialBreaker)
 			breaker = (ISequentialBreaker) item;
@@ -272,11 +321,39 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
 		boolean dispose = breaker == null? true : breaker.disposeOfTrashBlocks(stack);
 
+		ChunkCoordinates originCoords = getOriginPos(lokiRing);
+
+		int masterOffsetX = x - originCoords.posX;
+		int masterOffsetY = y - originCoords.posY;
+		int masterOffsetZ = z - originCoords.posZ;
+
 		for(int i = 0; i < cursors.size(); i++) {
-			ChunkCoordinates coords = cursors.get(i);
-			int xp = x + coords.posX;
-			int yp = y + coords.posY;
-			int zp = z + coords.posZ;
+			LokiCursor cursor = cursors.get(i);
+			int xp = x + cursor.getX();
+			int yp = y + cursor.getY();
+			int zp = z + cursor.getZ();
+			if(cursor.isXmirrored()){
+				xp -= 2*masterOffsetX;
+			}
+			if(cursor.isYmirrored()){
+				yp -= 2*masterOffsetY;
+			}
+			if(cursor.isZmirrored()){
+				zp -= 2*masterOffsetZ;
+			}
+
+			if(cursor.isXmirrored() && (side == ForgeDirection.EAST.ordinal() || side == ForgeDirection.WEST.ordinal()) ){
+				side = side ^ 1;
+			}
+			if(cursor.isYmirrored() && (side == ForgeDirection.DOWN.ordinal() || side == ForgeDirection.UP.ordinal()) ){
+				side = side ^ 1;
+			}
+			if(cursor.isZmirrored() && (side == ForgeDirection.NORTH.ordinal() || side == ForgeDirection.SOUTH.ordinal()) ){
+				side = side ^ 1;
+			}
+
+
+
 			Block block = world.getBlock(xp, yp, zp);
 			if(breaker != null)
 				breaker.breakOtherBlock(player, stack, xp, yp, zp, x, y, z, side);
@@ -318,22 +395,27 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		MovingObjectPosition lookPos = Minecraft.getMinecraft().objectMouseOver;
 
 		if(lookPos != null && !player.worldObj.isAirBlock(lookPos.blockX, lookPos.blockY, lookPos.blockZ) && lookPos.entityHit == null) {
-			List<ChunkCoordinates> list = getCursorList(stack);
+			List<LokiCursor> list = getCursorList(stack);
 			ChunkCoordinates origin = getOriginPos(stack);
+			List<ChunkCoordinates> toDraw = new ArrayList<>();
 
 			if(origin.posY != -1) {
-				for(ChunkCoordinates coords : list) {
+				for(LokiCursor cursor : list) {
+					ChunkCoordinates coords = cursor.getCoordinates();
 					coords.posX += origin.posX;
 					coords.posY += origin.posY;
 					coords.posZ += origin.posZ;
+					toDraw.add(coords);
 				}
-			} else for(ChunkCoordinates coords : list) {
+			} else for(LokiCursor cursor : list) {
+				ChunkCoordinates coords = cursor.getCoordinates();
 				coords.posX += lookPos.blockX;
 				coords.posY += lookPos.blockY;
 				coords.posZ += lookPos.blockZ;
+				toDraw.add(coords);
 			}
 
-			return list;
+			return toDraw;
 		}
 
 		return null;
@@ -376,28 +458,26 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		ItemNBTHelper.setInt(stack, TAG_Z_ORIGIN, z);
 	}
 
-	private static List<ChunkCoordinates> getCursorList(ItemStack stack) {
+	private static List<LokiCursor> getCursorList(ItemStack stack) {
 		NBTTagCompound cmp = ItemNBTHelper.getCompound(stack, TAG_CURSOR_LIST, false);
-		List<ChunkCoordinates> cursors = new ArrayList();
+		List<LokiCursor> cursors = new ArrayList();
 
 		int count = cmp.getInteger(TAG_CURSOR_COUNT);
 		for(int i = 0; i < count; i++) {
 			NBTTagCompound cursorCmp = cmp.getCompoundTag(TAG_CURSOR_PREFIX + i);
-			int x = cursorCmp.getInteger(TAG_X_OFFSET);
-			int y = cursorCmp.getInteger(TAG_Y_OFFSET);
-			int z = cursorCmp.getInteger(TAG_Z_OFFSET);
-			cursors.add(new ChunkCoordinates(x, y, z));
+			cursors.add(LokiCursor.fromNBT(cursorCmp));
+
 		}
 
 		return cursors;
 	}
 
-	private static void setCursorList(ItemStack stack, List<ChunkCoordinates> cursors) {
+	private static void setCursorList(ItemStack stack, List<LokiCursor> cursors) {
 		NBTTagCompound cmp = new NBTTagCompound();
 		if(cursors != null) {
 			int i = 0;
-			for(ChunkCoordinates cursor : cursors) {
-				NBTTagCompound cursorCmp = cursorToCmp(cursor.posX, cursor.posY, cursor.posZ);
+			for(LokiCursor cursor : cursors) {
+				NBTTagCompound cursorCmp = cursor.toNBT();
 				cmp.setTag(TAG_CURSOR_PREFIX + i, cursorCmp);
 				i++;
 			}
@@ -407,18 +487,12 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		ItemNBTHelper.setCompound(stack, TAG_CURSOR_LIST, cmp);
 	}
 
-	private static NBTTagCompound cursorToCmp(int x, int y, int z) {
-		NBTTagCompound cmp = new NBTTagCompound();
-		cmp.setInteger(TAG_X_OFFSET, x);
-		cmp.setInteger(TAG_Y_OFFSET, y);
-		cmp.setInteger(TAG_Z_OFFSET, z);
-		return cmp;
-	}
 
-	private static void addCursor(ItemStack stack, int x, int y, int z) {
+
+	private static void addCursor(ItemStack stack, int x, int y, int z, byte mirrorMode) {
 		NBTTagCompound cmp = ItemNBTHelper.getCompound(stack, TAG_CURSOR_LIST, false);
 		int count = cmp.getInteger(TAG_CURSOR_COUNT);
-		cmp.setTag(TAG_CURSOR_PREFIX + count, cursorToCmp(x, y, z));
+		cmp.setTag(TAG_CURSOR_PREFIX + count, new LokiCursor(x,y,z, mirrorMode).toNBT());
 		cmp.setInteger(TAG_CURSOR_COUNT, count + 1);
 		ItemNBTHelper.setCompound(stack, TAG_CURSOR_LIST, cmp);
 	}
