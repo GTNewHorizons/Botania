@@ -18,7 +18,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -71,7 +70,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	private boolean recursion = false;
 
 	public static enum HUD_MESSAGE  {
-		MODE, BREAKING, CLEAR, MIRROR
+		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA
 	}
 
 	public ItemLokiRing() {
@@ -152,8 +151,13 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				}
 			}
 		} else if (heldItemStack != null && event.action == Action.RIGHT_CLICK_BLOCK && lookPos != null && isRingEnabled(lokiRing)) {
-			
-			recursion = true;			
+			if(!ManaItemHandler.requestManaExact(lokiRing, player, cost, true)){
+				renderHUDNotification(HUD_MESSAGE.INSUFFICIENT_MANA);
+				return;
+			}
+
+			recursion = true;
+
 			double oldPosX = player.posX;
 			double oldPosY = player.posY;
 			double oldPosZ = player.posZ;
@@ -173,80 +177,83 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				int x = lookPos.blockX + cursor.getX();
 				int y = lookPos.blockY + cursor.getY();
 				int z = lookPos.blockZ + cursor.getZ();
-				player.rotationYaw = oldYaw;
+
 				if(cursor.isMirrorX()){
 					x -= 2*masterOffsetX;
-					player.rotationYaw = player.rotationYaw * (-1);
 				}
 				if(cursor.isMirrorY()){
 					y -= 2*masterOffsetY;
-					player.rotationPitch = oldPitch * (-1);
 				}
 				if(cursor.isMirrorZ()){
 					z -= 2*masterOffsetZ;
+				}
+
+				if (player.worldObj.isAirBlock(x, y, z) ) {
+					continue;
+				}
+
+				player.posX = cursor.getX()+oldPosX;
+				player.posY = cursor.getY()+oldPosY;
+				player.posZ = cursor.getZ()+oldPosZ;
+				player.rotationYaw = oldYaw;
+
+				if(cursor.isMirrorX()){
+					player.posX -= 2*playerOffsetX;
+					player.rotationYaw = player.rotationYaw * (-1);
+				}
+				if(cursor.isMirrorY()){
+					player.posY -= 2*playerOffsetY;
+					player.rotationPitch = oldPitch * (-1);
+				}
+				if(cursor.isMirrorZ()){
+					player.posZ -= 2*playerOffsetZ;
 					player.rotationYaw = 180 - (Math.abs(player.rotationYaw));
 					if(oldYaw < 0){
 						player.rotationYaw *= -1;
 					}
 				}
 
+				float hitX = (float) (lookPos.hitVec.xCoord - lookPos.blockX);
+				float hitY = (float) (lookPos.hitVec.yCoord - lookPos.blockY);
+				float hitZ = (float) (lookPos.hitVec.zCoord - lookPos.blockZ);
+				if(cursor.isMirrorX()){
+					hitX = 1-hitX;
+				}
+				if(cursor.isMirrorY()){
+					hitY = 1-hitY;
+				}
+				if(cursor.isMirrorZ()){
+					hitZ = 1-hitZ;
+				}
+
+				int hitSide = lookPos.sideHit;
+				if(cursor.isMirrorX() && (hitSide == ForgeDirection.EAST.ordinal() || hitSide == ForgeDirection.WEST.ordinal()) ){
+					hitSide = hitSide ^ 1;
+				}
+				if(cursor.isMirrorY() && (hitSide == ForgeDirection.DOWN.ordinal() || hitSide == ForgeDirection.UP.ordinal()) ){
+					hitSide = hitSide ^ 1;
+				}
+				if(cursor.isMirrorZ() && (hitSide == ForgeDirection.NORTH.ordinal() || hitSide == ForgeDirection.SOUTH.ordinal()) ){
+					hitSide = hitSide ^ 1;
+				}
+
 				Item item = heldItemStack.getItem();
-				if (!player.worldObj.isAirBlock(x, y, z) && ManaItemHandler.requestManaExact(lokiRing, player, cost, true)) {
-					player.posX = cursor.getX()+oldPosX;
-					player.posY = cursor.getY()+oldPosY;
-					player.posZ = cursor.getZ()+oldPosZ;
-					if(cursor.isMirrorX()){
-						player.posX -= 2*playerOffsetX;
-					}
-					if(cursor.isMirrorY()){
-						player.posY -= 2*playerOffsetY;
-					}
-					if(cursor.isMirrorZ()){
-						player.posZ -= 2*playerOffsetZ;
-					}
+				Block markedBlock = player.worldObj.getBlock(x, y, z);
 
+				boolean wasActivated = markedBlock.onBlockActivated(player.worldObj, x, y, z, player, hitSide, hitX,hitY,hitZ);
 
-					float hitX = (float) (lookPos.hitVec.xCoord - lookPos.blockX);
-					float hitY = (float) (lookPos.hitVec.yCoord - lookPos.blockY);
-					float hitZ = (float) (lookPos.hitVec.zCoord - lookPos.blockZ);
-					if(cursor.isMirrorX()){
-						hitX = 1-hitX;
-					}
-					if(cursor.isMirrorY()){
-						hitY = 1-hitY;
-					}
-					if(cursor.isMirrorZ()){
-						hitZ = 1-hitZ;
-					}
-
-					int hitSide = lookPos.sideHit;
-
-					if(cursor.isMirrorX() && (hitSide == ForgeDirection.EAST.ordinal() || hitSide == ForgeDirection.WEST.ordinal()) ){
-						hitSide = hitSide ^ 1;
-					}
-					if(cursor.isMirrorY() && (hitSide == ForgeDirection.DOWN.ordinal() || hitSide == ForgeDirection.UP.ordinal()) ){
-						hitSide = hitSide ^ 1;
-					}
-					if(cursor.isMirrorZ() && (hitSide == ForgeDirection.NORTH.ordinal() || hitSide == ForgeDirection.SOUTH.ordinal()) ){
-						hitSide = hitSide ^ 1;
-					}
-
-					
-					Block markedBlock = player.worldObj.getBlock(x, y, z);
-					boolean wasActivated = markedBlock.onBlockActivated(player.worldObj, x, y, z, player, hitSide, hitX,hitY,hitZ);
-					
-					if (heldItemStack.stackSize == 0 ) {
+				if (heldItemStack.stackSize == 0 ) {
+					event.setCanceled(true);
+					break;
+				}
+				if (!wasActivated) {
+					item.onItemUse(player.capabilities.isCreativeMode ? heldItemStack.copy() : heldItemStack, player, player.worldObj, x, y, z, hitSide, (float) lookPos.hitVec.xCoord - x, (float) lookPos.hitVec.yCoord - y, (float) lookPos.hitVec.zCoord - z);
+					if(heldItemStack.stackSize == 0) {
 						event.setCanceled(true);
 						break;
 					}
-					if (!wasActivated) {						
-						item.onItemUse(player.capabilities.isCreativeMode ? heldItemStack.copy() : heldItemStack, player, player.worldObj, x, y, z, hitSide, (float) lookPos.hitVec.xCoord - x, (float) lookPos.hitVec.yCoord - y, (float) lookPos.hitVec.zCoord - z);
-						if(heldItemStack.stackSize == 0) {
-							event.setCanceled(true);
-							break;
-						}
-					}
 				}
+
 			}
 			recursion = false;
 			player.posX = oldPosX;
@@ -256,7 +263,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			player.rotationYaw = oldYaw;
 		}
 	}
-	
+
 	public static void setMode(ItemStack stack, boolean state) {
 		stack.stackTagCompound.setBoolean(TAG_MODE, state);
 	}
@@ -286,6 +293,9 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				break;
 			case MIRROR:
 				text = getLokiMirrorText(getLokiRing(mc.thePlayer));
+				break;
+			case INSUFFICIENT_MANA:
+				text = EnumChatFormatting.RED + StatCollector.translateToLocal("botaniamisc.insufficient_mana");
 				break;
 			default:
 				return;
