@@ -66,6 +66,8 @@ public final class ConfigHandler {
 	public static boolean enableArmorModels = true;
 	public static boolean enableFancySkybox = true;
 	public static boolean enableFancySkyboxInNormalWorlds = false;
+	public static boolean enableFancySkyboxInDimension = false;
+	public static int[] fancySkyboxDimension = new int[]{};
 	
 	public static int manaBarHeight = 29;
 	public static int flightBarHeight = 49;
@@ -197,7 +199,13 @@ public final class ConfigHandler {
 		
 		desc = "Set this to true to enable the fancy skybox in non Garden of Glass worlds. (Does not require Garden of Glass loaded to use, needs 'fancySkybox.enable' to be true as well)";
 		enableFancySkyboxInNormalWorlds = loadPropBool("fancySkybox.normalWorlds", desc, enableFancySkyboxInNormalWorlds);
-		
+
+		desc = "Set this to true to enable the fancy skybox in custom dimension. (Does not require Garden of Glass loaded to use, needs 'fancySkybox.enable' to be true as well)";
+		enableFancySkyboxInDimension = loadPropBool("fancySkybox.customDim", desc, enableFancySkyboxInDimension);
+
+		desc = "The ID of the dimension to use";
+		fancySkyboxDimension = loadPropIntArray("fancySkybox.customDimID", desc, fancySkyboxDimension);
+
 		desc = "The height of the mana display bar in above the XP bar. You can change this if you have a mod that changes where the XP bar is.";
 		manaBarHeight = loadPropInt("manaBar.height", desc, manaBarHeight);
 
