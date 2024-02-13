@@ -116,8 +116,8 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		MovingObjectPosition lookPos = ToolCommons.raytraceFromEntity(player.worldObj, player, true, 10F);
 		List<LokiCursor> cursors = getCursorList(lokiRing);
 		int cursorCount = cursors.size();
-
-		int cost = Math.min(cursorCount, (int) Math.pow(Math.E, cursorCount * 0.25));
+		//I don`t think mana for placing should be cruel , so I just made graph with funny line
+		int cost = (int)(50*Math.sin(0.04* cursorCount)+cursorCount+120+20*Math.cos(0.2*cursorCount));
 
 		if (heldItemStack == null && event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking() && isRingEnabled(lokiRing)) {
 			if(originCoords.posY == -1 && lookPos != null) {
@@ -365,6 +365,14 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		if(lokiRing == null || player.worldObj.isRemote || !isRingEnabled(lokiRing) || !isRingBreakingEnabled(lokiRing))
 			return;
 		List<LokiCursor> cursors = getCursorList(lokiRing);
+		//In case someone wants to mine ore veins with loki, this should make 1 manapool worth of mana last for 2 veins
+		int cost = 30 * cursors.size();
+
+		if(!ManaItemHandler.requestManaExact(lokiRing, player, cost, true)){
+			renderHUDNotification(HUD_MESSAGE.INSUFFICIENT_MANA);
+			return;
+		}
+
 		ISequentialBreaker breaker  = null;
 		if(item instanceof ISequentialBreaker)
 			breaker = (ISequentialBreaker) item;
