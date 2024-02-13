@@ -30,6 +30,15 @@ public class LokiCursor {
 
         return new LokiCursor(x,y,z,mirror);
     }
+    public static boolean isMirrorX(byte mirrorMode){
+        return (mirrorMode & xAxisBitmask) > 0;
+    }
+    public static boolean isMirrorY(byte mirrorMode){
+        return (mirrorMode & yAxisBitmask) > 0;
+    }
+    public static boolean isMirrorZ(byte mirrorMode){
+        return (mirrorMode & zAxisBitmask) > 0;
+    }
     public  NBTTagCompound toNBT() {
         NBTTagCompound cmp = new NBTTagCompound();
         cmp.setInteger(TAG_X_OFFSET, coordinates.posX);
@@ -55,13 +64,17 @@ public class LokiCursor {
         return coordinates;
     }
 
-    public boolean isXmirrored(){
-        return (mirrorMode & xAxisBitmask) > 0;
+    public boolean isMirrorX(){
+        return isMirrorX(mirrorMode);
     }
-    public boolean isYmirrored(){
-        return (mirrorMode & yAxisBitmask) > 0;
+    public boolean isMirrorY(){
+        return isMirrorY(mirrorMode);
     }
-    public boolean isZmirrored(){
-        return (mirrorMode & zAxisBitmask) > 0;
+    public boolean isMirrorZ(){
+        return isMirrorZ(mirrorMode);
+    }
+
+    public boolean isMirror(){
+        return mirrorMode!=0;
     }
 }

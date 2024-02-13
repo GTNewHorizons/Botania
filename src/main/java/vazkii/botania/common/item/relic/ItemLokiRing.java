@@ -10,12 +10,16 @@
  */
 package vazkii.botania.common.item.relic;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import com.gtnewhorizon.gtnhlib.GTNHLib;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,24 +28,22 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.BlockEvent;
+import org.lwjgl.opengl.GL11;
 import vazkii.botania.api.item.IExtendedWireframeCoordinateListProvider;
+import vazkii.botania.api.item.IInWorldRenderable;
 import vazkii.botania.api.item.ISequentialBreaker;
 import vazkii.botania.api.mana.IManaUsingItem;
 import vazkii.botania.api.mana.ManaItemHandler;
-import vazkii.botania.common.achievement.ModAchievements;
+import vazkii.botania.client.core.handler.BoundTileRenderer;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.core.helper.LokiCursor;
-import vazkii.botania.common.item.ItemTemperanceStone;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
 import vazkii.botania.common.lib.LibItemNames;
@@ -55,7 +57,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeCoordinateListProvider, IManaUsingItem {
+public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeCoordinateListProvider, IManaUsingItem, IInWorldRenderable {
 
 	private static final String TAG_CURSOR_LIST = "cursorList";
 	private static final String TAG_CURSOR_PREFIX = "cursor";
@@ -65,10 +67,11 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	private static final String TAG_Z_ORIGIN = "zOrigin";
 	private static final String TAG_MODE = "mode";
 	private static final String TAG_BREAKING_MODE = "breaking";
+	private static final String TAG_MIRROR_MODE = "mirror";
 	private boolean recursion = false;
 
 	public static enum HUD_MESSAGE  {
-		MODE, BREAKING, CLEAR
+		MODE, BREAKING, CLEAR, MIRROR
 	}
 
 	public ItemLokiRing() {
@@ -142,7 +145,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 							break addCursor;
 						}
 
-					addCursor(lokiRing, relX, relY, relZ, (byte)0 );
+					addCursor(lokiRing, relX, relY, relZ, getRingMirrorMode(lokiRing) );
 					if(player instanceof EntityPlayerMP)
 						PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
 				}
@@ -171,20 +174,20 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				int y = lookPos.blockY + cursor.getY();
 				int z = lookPos.blockZ + cursor.getZ();
 				player.rotationYaw = oldYaw;
-				if(cursor.isXmirrored()){
+				if(cursor.isMirrorX()){
 					x -= 2*masterOffsetX;
+					player.rotationYaw = player.rotationYaw * (-1);
+				}
+				if(cursor.isMirrorY()){
+					y -= 2*masterOffsetY;
+					player.rotationPitch = oldPitch * (-1);
+				}
+				if(cursor.isMirrorZ()){
+					z -= 2*masterOffsetZ;
 					player.rotationYaw = 180 - (Math.abs(player.rotationYaw));
 					if(oldYaw < 0){
 						player.rotationYaw *= -1;
 					}
-				}
-				if(cursor.isYmirrored()){
-					y -= 2*masterOffsetY;
-					player.rotationPitch = oldPitch * (-1);
-				}
-				if(cursor.isZmirrored()){
-					z -= 2*masterOffsetZ;
-					player.rotationYaw = player.rotationYaw * (-1);
 				}
 
 				Item item = heldItemStack.getItem();
@@ -192,13 +195,13 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 					player.posX = cursor.getX()+oldPosX;
 					player.posY = cursor.getY()+oldPosY;
 					player.posZ = cursor.getZ()+oldPosZ;
-					if(cursor.isXmirrored()){
+					if(cursor.isMirrorX()){
 						player.posX -= 2*playerOffsetX;
 					}
-					if(cursor.isYmirrored()){
+					if(cursor.isMirrorY()){
 						player.posY -= 2*playerOffsetY;
 					}
-					if(cursor.isZmirrored()){
+					if(cursor.isMirrorZ()){
 						player.posZ -= 2*playerOffsetZ;
 					}
 
@@ -206,25 +209,25 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 					float hitX = (float) (lookPos.hitVec.xCoord - lookPos.blockX);
 					float hitY = (float) (lookPos.hitVec.yCoord - lookPos.blockY);
 					float hitZ = (float) (lookPos.hitVec.zCoord - lookPos.blockZ);
-					if(cursor.isXmirrored()){
+					if(cursor.isMirrorX()){
 						hitX = 1-hitX;
 					}
-					if(cursor.isYmirrored()){
+					if(cursor.isMirrorY()){
 						hitY = 1-hitY;
 					}
-					if(cursor.isZmirrored()){
+					if(cursor.isMirrorZ()){
 						hitZ = 1-hitZ;
 					}
 
 					int hitSide = lookPos.sideHit;
 
-					if(cursor.isXmirrored() && (hitSide == ForgeDirection.EAST.ordinal() || hitSide == ForgeDirection.WEST.ordinal()) ){
+					if(cursor.isMirrorX() && (hitSide == ForgeDirection.EAST.ordinal() || hitSide == ForgeDirection.WEST.ordinal()) ){
 						hitSide = hitSide ^ 1;
 					}
-					if(cursor.isYmirrored() && (hitSide == ForgeDirection.DOWN.ordinal() || hitSide == ForgeDirection.UP.ordinal()) ){
+					if(cursor.isMirrorY() && (hitSide == ForgeDirection.DOWN.ordinal() || hitSide == ForgeDirection.UP.ordinal()) ){
 						hitSide = hitSide ^ 1;
 					}
-					if(cursor.isZmirrored() && (hitSide == ForgeDirection.NORTH.ordinal() || hitSide == ForgeDirection.SOUTH.ordinal()) ){
+					if(cursor.isMirrorZ() && (hitSide == ForgeDirection.NORTH.ordinal() || hitSide == ForgeDirection.SOUTH.ordinal()) ){
 						hitSide = hitSide ^ 1;
 					}
 
@@ -262,6 +265,10 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		stack.stackTagCompound.setBoolean(TAG_BREAKING_MODE, state);
 	}
 
+	public static void setMirrorMode (ItemStack stack, byte state) {
+		stack.stackTagCompound.setByte(TAG_MIRROR_MODE, state);
+	}
+
 
 	@SideOnly(Side.CLIENT)
 	public static void renderHUDNotification(HUD_MESSAGE type){
@@ -277,6 +284,9 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			case CLEAR:
 				text = getLokiCearText(getLokiRing(mc.thePlayer));
 				break;
+			case MIRROR:
+				text = getLokiMirrorText(getLokiRing(mc.thePlayer));
+				break;
 			default:
 				return;
 				
@@ -290,8 +300,25 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				EnumChatFormatting.RED + StatCollector.translateToLocal("botaniamisc.lokiOff");
 	}
 
+	public static String getAxisString(byte state) {
+		EnumChatFormatting x = LokiCursor.isMirrorX(state) ? EnumChatFormatting.GREEN : EnumChatFormatting.RED;
+		EnumChatFormatting y = LokiCursor.isMirrorY(state) ? EnumChatFormatting.GREEN : EnumChatFormatting.RED;
+		EnumChatFormatting z = LokiCursor.isMirrorZ(state) ? EnumChatFormatting.GREEN : EnumChatFormatting.RED;
+
+		return x + "X " + y + "Y " + z + "Z";
+	}
+
 	public static String getLokiModeText(ItemStack stack){
 		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("item.botania:lokiRing.name") + " " + getOnOffString(isRingEnabled(stack));
+	}
+
+	public static String getLokiMirrorText(ItemStack stack){
+		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("botaniamisc.lokiMirror") + " "+
+				getAxisString(getRingMirrorMode(stack));
+	}
+
+	public static String getLokiCearText(ItemStack stack){
+		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("botaniamisc.lokiClear");		
 	}
 
 	public static String getLokiBreakingModeText(ItemStack stack){
@@ -299,9 +326,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				StatCollector.translateToLocal("botaniamisc.breaking") + " " + getOnOffString(isRingBreakingEnabled(stack));
 	}
 
-	public static String getLokiCearText(ItemStack stack){
-		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("botaniamisc.lokiClear");		
-	}
+
 
 	public static boolean isRingEnabled (final ItemStack stack){
 		if (stack.hasTagCompound())
@@ -319,6 +344,12 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		return false;
 	}
 
+	public static byte getRingMirrorMode(final ItemStack stack){
+		if(stack.hasTagCompound()){
+			return stack.stackTagCompound.getByte(TAG_MIRROR_MODE);
+		}
+		return 0;
+	}
 	public static void breakOnAllCursors(EntityPlayer player, Item item, ItemStack stack, int x, int y, int z, int side) {
 		ItemStack lokiRing = getLokiRing(player);
 		if(lokiRing == null || player.worldObj.isRemote || !isRingEnabled(lokiRing) || !isRingBreakingEnabled(lokiRing))
@@ -343,23 +374,23 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			int xp = x + cursor.getX();
 			int yp = y + cursor.getY();
 			int zp = z + cursor.getZ();
-			if(cursor.isXmirrored()){
+			if(cursor.isMirrorX()){
 				xp -= 2*masterOffsetX;
 			}
-			if(cursor.isYmirrored()){
+			if(cursor.isMirrorY()){
 				yp -= 2*masterOffsetY;
 			}
-			if(cursor.isZmirrored()){
+			if(cursor.isMirrorZ()){
 				zp -= 2*masterOffsetZ;
 			}
 
-			if(cursor.isXmirrored() && (side == ForgeDirection.EAST.ordinal() || side == ForgeDirection.WEST.ordinal()) ){
+			if(cursor.isMirrorX() && (side == ForgeDirection.EAST.ordinal() || side == ForgeDirection.WEST.ordinal()) ){
 				side = side ^ 1;
 			}
-			if(cursor.isYmirrored() && (side == ForgeDirection.DOWN.ordinal() || side == ForgeDirection.UP.ordinal()) ){
+			if(cursor.isMirrorY() && (side == ForgeDirection.DOWN.ordinal() || side == ForgeDirection.UP.ordinal()) ){
 				side = side ^ 1;
 			}
-			if(cursor.isZmirrored() && (side == ForgeDirection.NORTH.ordinal() || side == ForgeDirection.SOUTH.ordinal()) ){
+			if(cursor.isMirrorZ() && (side == ForgeDirection.NORTH.ordinal() || side == ForgeDirection.SOUTH.ordinal()) ){
 				side = side ^ 1;
 			}
 
@@ -390,6 +421,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		addStringToTooltip(EnumChatFormatting.WHITE +StatCollector.translateToLocal("botaniamisc.lokiCurrent"), list);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiState") + ": " + getOnOffString(isRingEnabled(stack)), list);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.breaking") + ": " + getOnOffString(isRingBreakingEnabled(stack)), list);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiMirror") + getAxisString(getRingMirrorMode(stack)), list);
 		addStringToTooltip("", list);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiToggleDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET + "/"+ getOnOffString(false), list);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiBreakingDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET+"/" + getOnOffString(false), list);	
@@ -512,6 +544,115 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	public boolean usesMana(ItemStack stack) {
 		return true;
 	}
+
+	public void renderInWorld(EntityPlayer player, ItemStack stack){
+		renderMirrors(player,stack);
+	}
+
+	private void renderMirrors(EntityPlayer player,ItemStack stack) {
+		ItemStack lokiRing = getLokiRing(player);
+		if(lokiRing != stack || !isRingEnabled(lokiRing) )
+			return;
+
+		World world = Minecraft.getMinecraft().theWorld;
+		List<LokiCursor> cursors = getCursorList(stack);
+		ChunkCoordinates origin = getOriginPos(stack);
+		MovingObjectPosition lookPos = Minecraft.getMinecraft().objectMouseOver;
+
+
+		for(LokiCursor cursor : cursors) {
+			if(!cursor.isMirror()) {
+				continue;
+			}
+			ChunkCoordinates pos = cursor.getCoordinates();
+			if(origin.posY != -1){
+
+				pos.posX += origin.posX;
+				pos.posY += origin.posY;
+				pos.posZ += origin.posZ;
+			}else{
+				pos.posX += lookPos.blockX;
+				pos.posY += lookPos.blockY;
+				pos.posZ += lookPos.blockZ;
+			}
+
+
+			GL11.glPushMatrix();
+			GL11.glTranslated(pos.posX - RenderManager.renderPosX, pos.posY - RenderManager.renderPosY, pos.posZ - RenderManager.renderPosZ + 1);
+			Color colorRGB = new Color(BoundTileRenderer.getWireframeColor());
+			GL11.glColor4ub((byte) colorRGB.getRed(), (byte) colorRGB.getGreen(), (byte) colorRGB.getBlue(), (byte) 255);
+			Block block = world.getBlock(pos.posX, pos.posY, pos.posZ);
+
+			if (block != null) {
+				AxisAlignedBB axis = block.getSelectedBoundingBoxFromPool(world, pos.posX, pos.posY, pos.posZ);
+
+				if (axis != null) {
+					axis.minX -= pos.posX;
+					axis.maxX -= pos.posX;
+					axis.minY -= pos.posY;
+					axis.maxY -= pos.posY;
+					axis.minZ -= pos.posZ + 1;
+					axis.maxZ -= pos.posZ + 1;
+
+					GL11.glScalef(1F, 1F, 1F);
+
+					GL11.glLineWidth(1F);
+					Tessellator tessellator = Tessellator.instance;
+					tessellator.startDrawing(GL11.GL_LINES);
+					if (cursor.isMirrorX()) {
+
+						tessellator.addVertex(axis.minX,axis.minY,axis.minZ);
+						tessellator.addVertex(axis.minX,axis.maxY,axis.maxZ);
+
+						tessellator.addVertex(axis.minX,axis.maxY,axis.minZ);
+						tessellator.addVertex(axis.minX,axis.minY,axis.maxZ);
+
+						tessellator.addVertex(axis.maxX,axis.minY,axis.minZ);
+						tessellator.addVertex(axis.maxX,axis.maxY,axis.maxZ);
+
+						tessellator.addVertex(axis.maxX,axis.maxY,axis.minZ);
+						tessellator.addVertex(axis.maxX,axis.minY,axis.maxZ);
+
+					}
+					if (cursor.isMirrorY()) {
+
+						tessellator.addVertex(axis.minX,axis.minY,axis.minZ);
+						tessellator.addVertex(axis.maxX,axis.minY,axis.maxZ);
+
+						tessellator.addVertex(axis.maxX,axis.minY,axis.minZ);
+						tessellator.addVertex(axis.minX,axis.minY,axis.maxZ);
+
+						tessellator.addVertex(axis.minX,axis.maxY,axis.minZ);
+						tessellator.addVertex(axis.maxX,axis.maxY,axis.maxZ);
+
+						tessellator.addVertex(axis.maxX,axis.maxY,axis.minZ);
+						tessellator.addVertex(axis.minX,axis.maxY,axis.maxZ);
+
+					}
+					if (cursor.isMirrorZ()) {
+
+						tessellator.addVertex(axis.minX,axis.minY,axis.minZ);
+						tessellator.addVertex(axis.maxX,axis.maxY,axis.minZ);
+
+						tessellator.addVertex(axis.minX,axis.maxY,axis.minZ);
+						tessellator.addVertex(axis.maxX,axis.minY,axis.minZ);
+
+						tessellator.addVertex(axis.minX,axis.minY,axis.maxZ);
+						tessellator.addVertex(axis.maxX,axis.maxY,axis.maxZ);
+
+						tessellator.addVertex(axis.minX,axis.maxY,axis.maxZ);
+						tessellator.addVertex(axis.maxX,axis.minY,axis.maxZ);
+
+
+					}
+					tessellator.draw();
+				}
+			}
+
+			GL11.glPopMatrix();
+		}
+	}
+
 
 }
 

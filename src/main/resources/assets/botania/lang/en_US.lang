@@ -169,6 +169,7 @@ botaniamisc.lokiToggleDescription=Loki Switch Key to turn ring
 botaniamisc.lokiBreakingDescription=Loki Switch Key + Shift to toggle breaking
 botaniamisc.lokiCurrent=Current
 botaniamisc.lokiState=Ring
+botaniamisc.lokiMirror=Current mirror:
 
 # NEI INTEGRATION
 botania.nei.brewery=Botanical Brewery
