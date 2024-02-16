@@ -569,11 +569,13 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		return true;
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderInWorld(EntityPlayer player, ItemStack stack){
 		renderMirrors(player,stack);
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void renderMirrors(EntityPlayer player,ItemStack stack) {
 		ItemStack lokiRing = getLokiRing(player);
 		if(lokiRing != stack || !isRingEnabled(lokiRing) )
