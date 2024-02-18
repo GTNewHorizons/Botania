@@ -29,12 +29,17 @@ import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.item.IExtendedWireframeCoordinateListProvider;
+import vazkii.botania.api.item.IInWorldRenderable;
 import vazkii.botania.api.item.IWireframeCoordinateListProvider;
 import vazkii.botania.api.wand.ICoordBoundItem;
 import vazkii.botania.api.wand.IWireframeAABBProvider;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public final class BoundTileRenderer {
+
+	public static int getWireframeColor(){
+		return Color.HSBtoRGB(ClientTickHandler.ticksInGame % 200 / 200F, 0.6F, 1F);
+	}
 
 	@SubscribeEvent
 	public void onWorldRenderLast(RenderWorldLastEvent event) {
@@ -49,7 +54,7 @@ public final class BoundTileRenderer {
 
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		ItemStack stack = player.getCurrentEquippedItem();
-		int color = Color.HSBtoRGB(ClientTickHandler.ticksInGame % 200 / 200F, 0.6F, 1F);
+		int color = getWireframeColor();
 		if(stack != null && stack.getItem() instanceof ICoordBoundItem) {
 			ChunkCoordinates coords = ((ICoordBoundItem) stack.getItem()).getBinding(stack);
 			if(coords != null)
@@ -82,6 +87,11 @@ public final class BoundTileRenderer {
 						renderBlockOutlineAt(coords, color, 5F);
 				}
 			}
+			if(stackInSlot != null && stackInSlot.getItem() instanceof IInWorldRenderable) {
+				IInWorldRenderable provider = (IInWorldRenderable) stackInSlot.getItem();
+				provider.renderInWorld(player,stackInSlot);
+			}
+
 		}
 
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
