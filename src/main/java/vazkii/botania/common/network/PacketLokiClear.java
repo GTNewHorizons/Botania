@@ -1,5 +1,6 @@
 package vazkii.botania.common.network;
 
+import baubles.common.network.PacketSyncBauble;
 import io.netty.buffer.ByteBuf;
 
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,8 +28,8 @@ public class PacketLokiClear implements IMessage, IMessageHandler<PacketLokiClea
         if (aRing != null) {
             ItemLokiRing.clearCursors(aRing);
             ItemLokiRing.clearMasterCursor(aRing);
-            PacketLokiClearAck ackMessage = new PacketLokiClearAck();
-            PacketHandler.INSTANCE.sendTo(ackMessage, player);
+            ItemLokiRing.syncLokiRing(player);
+            PacketHandler.INSTANCE.sendTo(new PacketLokiHudNotificationAck(ItemLokiRing.HUD_MESSAGE.CLEAR), player);
         }
         return null;
     }

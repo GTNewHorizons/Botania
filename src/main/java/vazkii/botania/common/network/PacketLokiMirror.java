@@ -1,5 +1,6 @@
 package vazkii.botania.common.network;
 
+import baubles.common.network.PacketSyncBauble;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -26,8 +27,8 @@ public class PacketLokiMirror implements IMessage, IMessageHandler<PacketLokiMir
         if (aRing != null) {
             byte mode = ItemLokiRing.getRingMirrorMode(aRing);
             ItemLokiRing.setMirrorMode(aRing,(byte) ((mode+1)%8));
-            PacketLokiMirrorAck ackMessage = new PacketLokiMirrorAck();
-            PacketHandler.INSTANCE.sendTo(ackMessage, player);
+            ItemLokiRing.syncLokiRing(player);
+            PacketHandler.INSTANCE.sendTo(new PacketLokiHudNotificationAck(ItemLokiRing.HUD_MESSAGE.MIRROR), player);
         }
         return null;
     }

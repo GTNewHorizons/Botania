@@ -60,6 +60,7 @@ import baubles.common.network.PacketSyncBauble;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import vazkii.botania.common.network.PacketLokiHudNotificationAck;
 
 
 public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeCoordinateListProvider, IManaUsingItem, IInWorldRenderable {
@@ -129,12 +130,12 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			if(originCoords.posY == -1 && lookPos != null) {
 				setOriginPos(lokiRing, lookPos.blockX, lookPos.blockY, lookPos.blockZ);
 				if(player instanceof EntityPlayerMP)
-					PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
+					syncLokiRing(player);
 			} else if(lookPos != null) {
 				if(originCoords.posX == lookPos.blockX && originCoords.posY == lookPos.blockY && originCoords.posZ == lookPos.blockZ) {
 					clearMasterCursor(lokiRing);
 					if(player instanceof EntityPlayerMP)
-						PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
+						syncLokiRing(player);
 				} else {
 					addCursor : {
 					int relX = lookPos.blockX - originCoords.posX;
@@ -146,19 +147,25 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 							cursors.remove(cursor);
 							setCursorList(lokiRing, cursors);
 							if(player instanceof EntityPlayerMP)
-								PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
+								syncLokiRing(player);
 							break addCursor;
 						}
 
 					addCursor(lokiRing, relX, relY, relZ, getRingMirrorMode(lokiRing) );
 					if(player instanceof EntityPlayerMP)
-						PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, slot), (EntityPlayerMP) player);
+						syncLokiRing(player);
 				}
 				}
 			}
 		} else if (heldItemStack != null && event.action == Action.RIGHT_CLICK_BLOCK && lookPos != null && isRingEnabled(lokiRing)) {
 			if(!ManaItemHandler.requestManaExact(lokiRing, player, cost, true)){
-				renderHUDNotification(HUD_MESSAGE.INSUFFICIENT_MANA);
+				if(player instanceof EntityPlayerMP){
+					vazkii.botania.common.network.PacketHandler.INSTANCE.sendTo(new PacketLokiHudNotificationAck(HUD_MESSAGE.INSUFFICIENT_MANA),(EntityPlayerMP) player);
+				}
+				else
+				{
+					renderHUDNotification(HUD_MESSAGE.INSUFFICIENT_MANA);
+				}
 				return;
 			}
 
@@ -170,9 +177,9 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			float oldPitch = player.rotationPitch;
 			float oldYaw = player.rotationYaw;
 
-			int masterOffsetX = lookPos.blockX - originCoords.posX;
-			int masterOffsetY = lookPos.blockY - originCoords.posY;
-			int masterOffsetZ = lookPos.blockZ - originCoords.posZ;
+			int masterOffsetX = originCoords.posY == -1 ? 0 :lookPos.blockX - originCoords.posX;
+			int masterOffsetY = originCoords.posY == -1 ? 0 :lookPos.blockY - originCoords.posY;
+			int masterOffsetZ = originCoords.posY == -1 ? 0 :lookPos.blockZ - originCoords.posZ;
 
 			double playerOffsetX = player.posX - originCoords.posX;
 			double playerOffsetY = player.posY - originCoords.posY;
@@ -368,17 +375,19 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	}
 	public static void breakOnAllCursors(EntityPlayer player, Item item, ItemStack stack, int x, int y, int z, int side) {
 		ItemStack lokiRing = getLokiRing(player);
-		if(lokiRing == null || player.worldObj.isRemote || !isRingEnabled(lokiRing) || !isRingBreakingEnabled(lokiRing))
+		if (lokiRing == null || player.worldObj.isRemote || !isRingEnabled(lokiRing) || !isRingBreakingEnabled(lokiRing))
 			return;
 		List<LokiCursor> cursors = getCursorList(lokiRing);
 		//In case someone wants to mine ore veins with loki, this should make 1 manapool worth of mana last for 2 veins
 		int cost = 30 * cursors.size();
+		if (!ManaItemHandler.requestManaExact(lokiRing, player, cost, true)) {
 
-		if(!ManaItemHandler.requestManaExact(lokiRing, player, cost, true)){
+		if (player instanceof EntityPlayerMP) {
+			vazkii.botania.common.network.PacketHandler.INSTANCE.sendTo(new PacketLokiHudNotificationAck(HUD_MESSAGE.INSUFFICIENT_MANA), (EntityPlayerMP) player);
+		} else {
 			renderHUDNotification(HUD_MESSAGE.INSUFFICIENT_MANA);
-			return;
 		}
-
+		}
 		ISequentialBreaker breaker  = null;
 		if(item instanceof ISequentialBreaker)
 			breaker = (ISequentialBreaker) item;
@@ -389,9 +398,9 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 		ChunkCoordinates originCoords = getOriginPos(lokiRing);
 
-		int masterOffsetX = x - originCoords.posX;
-		int masterOffsetY = y - originCoords.posY;
-		int masterOffsetZ = z - originCoords.posZ;
+		int masterOffsetX = originCoords.posY == -1 ? 0 :x - originCoords.posX;
+		int masterOffsetY = originCoords.posY == -1 ? 0 :y - originCoords.posY;
+		int masterOffsetZ = originCoords.posY == -1 ? 0 :z - originCoords.posZ;
 
 		for(int i = 0; i < cursors.size(); i++) {
 			LokiCursor cursor = cursors.get(i);
@@ -461,7 +470,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 		MovingObjectPosition lookPos = Minecraft.getMinecraft().objectMouseOver;
 
-		if(lookPos != null && !player.worldObj.isAirBlock(lookPos.blockX, lookPos.blockY, lookPos.blockZ) && lookPos.entityHit == null) {
+		if(lookPos != null && lookPos.entityHit == null) {
 			List<LokiCursor> list = getCursorList(stack);
 			ChunkCoordinates origin = getOriginPos(stack);
 			List<ChunkCoordinates> toDraw = new ArrayList<>();
@@ -506,6 +515,17 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		ItemStack stack1 = baubles.getStackInSlot(1);
 		ItemStack stack2 = baubles.getStackInSlot(2);
 		return isLokiRing(stack1) ? stack1 : isLokiRing(stack2) ? stack2 : null;
+	}
+
+	public static int getLokiRingSlot(EntityPlayer player) {
+		InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
+		ItemStack stack1 = baubles.getStackInSlot(1);
+		ItemStack stack2 = baubles.getStackInSlot(2);
+		return isLokiRing(stack1) ? 1 : isLokiRing(stack2) ? 2 : null;
+	}
+
+	public static void syncLokiRing(EntityPlayer player){
+		baubles.common.network.PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, getLokiRingSlot(player)), (EntityPlayerMP) player);
 	}
 
 	private static boolean isLokiRing(ItemStack stack) {

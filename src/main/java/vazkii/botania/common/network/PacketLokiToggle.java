@@ -28,17 +28,15 @@ public class PacketLokiToggle implements IMessage, IMessageHandler<PacketLokiTog
             if(player.isSneaking()){
                 boolean ringState = !ItemLokiRing.isRingBreakingEnabled(aRing);
                 ItemLokiRing.setBreakingMode(aRing, ringState);
-                PacketLokiToggleBreakingAck ackMessage = new PacketLokiToggleBreakingAck();
-                ackMessage.state = ringState;
-                PacketHandler.INSTANCE.sendTo(ackMessage, player);
+                ItemLokiRing.syncLokiRing(player);
+                PacketHandler.INSTANCE.sendTo(new PacketLokiHudNotificationAck(ItemLokiRing.HUD_MESSAGE.BREAKING), player);
             }
             else
             {     
                 boolean ringState = !ItemLokiRing.isRingEnabled(aRing);
                 ItemLokiRing.setMode(aRing, ringState);
-                PacketLokiToggleAck ackMessage = new PacketLokiToggleAck();
-                ackMessage.state = ringState;
-                PacketHandler.INSTANCE.sendTo(ackMessage, player);
+                ItemLokiRing.syncLokiRing(player);
+                PacketHandler.INSTANCE.sendTo(new PacketLokiHudNotificationAck(ItemLokiRing.HUD_MESSAGE.MODE), player);
             }
         }
         return null;
