@@ -26,7 +26,7 @@ public final class SkyblockRenderEvents {
 
 		boolean renderFancySkybox = ConfigHandler.enableFancySkybox && (
 				(ConfigHandler.enableFancySkyboxInNormalWorlds && (world.provider.dimensionId == 0) ) ||
-				(ConfigHandler.enableFancySkyboxInDimension && (IntStream.of(ConfigHandler.fancySkyboxDimension).anyMatch(x -> x == world.provider.dimensionId))) ||
+				(ConfigHandler.enableFancySkyboxInDimension && ConfigHandler.fancySkyboxDimensions.contains(world.provider.dimensionId)) ||
 				(WorldTypeSkyblock.isWorldSkyblock(Minecraft.getMinecraft().theWorld))
 		);
 
