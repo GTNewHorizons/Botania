@@ -74,6 +74,6 @@ public class ModBrews {
 			}
 
 		if(warpWardPotion != null)
-			warpWard = new BrewMod(LibBrewNames.WARP_WARD, 0xFBBDFF, 25000, new PotionEffect(warpWardPotion.id, 12000, 0)).setNotBloodPendantInfusable();
+			warpWard = new BrewMod(LibBrewNames.WARP_WARD, 0xFBBDFF, 25000, new PotionEffect(warpWardPotion.id, 12000, 0));
 	}
 }
