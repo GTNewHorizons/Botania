@@ -178,6 +178,11 @@ public class TileAlfPortal extends TileMod {
 	}
 
 	private boolean validateItemUsage(ItemStack inputStack) {
+		if (inputStack.getItem() instanceof ILexicon) {
+			// lexicon does not formally have a recipe and is handled in a special branch
+			// in resolveRecipe(), therefore it needs a special branch here as well
+			return true;
+		}
 		for(RecipeElvenTrade recipe : BotaniaAPI.elvenTradeRecipes) {
 			for(Object o : recipe.getInputs()) {
 				if(o instanceof String) {
