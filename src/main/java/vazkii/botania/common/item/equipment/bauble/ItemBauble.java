@@ -39,6 +39,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAttachable, IPhantomInkable, IRunicArmor {
 
 	private static final String TAG_HASHCODE = "playerHashcode";
+	private static final String TAG_HASHCODE_CLIENT = "playerHashcodeClient";
 	private static final String TAG_BAUBLE_UUID_MOST = "baubleUUIDMost";
 	private static final String TAG_BAUBLE_UUID_LEAST = "baubleUUIDLeast";
 	private static final String TAG_COSMETIC_ITEM = "cosmeticItem";
@@ -122,9 +123,9 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
-		if(getLastPlayerHashcode(stack) != player.hashCode()) {
+		if(getLastPlayerHashcode(stack, player.worldObj.isRemote) != player.hashCode()) {
 			onEquippedOrLoadedIntoWorld(stack, player);
-			setLastPlayerHashcode(stack, player.hashCode());
+			setLastPlayerHashcode(stack, player.hashCode(), player.worldObj.isRemote);
 		}
 	}
 
@@ -138,7 +139,7 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 				((EntityPlayer) player).addStat(ModAchievements.baubleWear, 1);
 
 			onEquippedOrLoadedIntoWorld(stack, player);
-			setLastPlayerHashcode(stack, player.hashCode());
+			setLastPlayerHashcode(stack, player.hashCode(), player.worldObj.isRemote);
 		}
 	}
 
@@ -195,12 +196,12 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 		return new UUID(most, least);
 	}
 
-	public static int getLastPlayerHashcode(ItemStack stack) {
-		return ItemNBTHelper.getInt(stack, TAG_HASHCODE, 0);
+	public static int getLastPlayerHashcode(ItemStack stack, boolean remote) {
+		return ItemNBTHelper.getInt(stack, remote ? TAG_HASHCODE_CLIENT : TAG_HASHCODE, 0);
 	}
 
-	public static void setLastPlayerHashcode(ItemStack stack, int hash) {
-		ItemNBTHelper.setInt(stack, TAG_HASHCODE, hash);
+	public static void setLastPlayerHashcode(ItemStack stack, int hash, boolean remote) {
+		ItemNBTHelper.setInt(stack, remote ? TAG_HASHCODE_CLIENT : TAG_HASHCODE, hash);
 	}
 
 	@Override
