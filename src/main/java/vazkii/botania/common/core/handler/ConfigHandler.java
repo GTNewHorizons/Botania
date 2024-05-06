@@ -11,10 +11,13 @@
 package vazkii.botania.common.core.handler;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -66,6 +69,8 @@ public final class ConfigHandler {
 	public static boolean enableArmorModels = true;
 	public static boolean enableFancySkybox = true;
 	public static boolean enableFancySkyboxInNormalWorlds = false;
+	public static boolean enableFancySkyboxInDimension = false;
+	public static HashSet<Integer> fancySkyboxDimensions = new HashSet<Integer>() {};
 	
 	public static int manaBarHeight = 29;
 	public static int flightBarHeight = 49;
@@ -197,7 +202,13 @@ public final class ConfigHandler {
 		
 		desc = "Set this to true to enable the fancy skybox in non Garden of Glass worlds. (Does not require Garden of Glass loaded to use, needs 'fancySkybox.enable' to be true as well)";
 		enableFancySkyboxInNormalWorlds = loadPropBool("fancySkybox.normalWorlds", desc, enableFancySkyboxInNormalWorlds);
-		
+
+		desc = "Set this to true to enable the fancy skybox in custom dimension. (Does not require Garden of Glass loaded to use, needs 'fancySkybox.enable' to be true as well)";
+		enableFancySkyboxInDimension = loadPropBool("fancySkybox.customDim", desc, enableFancySkyboxInDimension);
+
+		desc = "The ID of the dimension to use";
+		fancySkyboxDimensions = loadPropIntSet("fancySkybox.customDimID", desc, fancySkyboxDimensions);
+
 		desc = "The height of the mana display bar in above the XP bar. You can change this if you have a mod that changes where the XP bar is.";
 		manaBarHeight = loadPropInt("manaBar.height", desc, manaBarHeight);
 
@@ -362,6 +373,19 @@ public final class ConfigHandler {
 			adaptor.adaptPropertyIntArray(prop, prop.getIntList());
 
 		return prop.getIntList();
+	}
+
+	public static HashSet<Integer> loadPropIntSet(String propName, String desc, HashSet<Integer> intSet) {
+		int[] defaultValues = intSet.stream().mapToInt(Number::intValue).toArray();
+		Property prop = config.get(Configuration.CATEGORY_GENERAL, propName, defaultValues);
+		prop.comment = desc;
+
+		if(adaptor != null)
+			adaptor.adaptPropertyIntArray(prop, prop.getIntList());
+
+		return Arrays.stream(prop.getIntList())
+				.boxed()
+				.collect(Collectors.toCollection(HashSet::new));
 	}
 
 	public static int loadPropPotionId(String propName, int default_) {
