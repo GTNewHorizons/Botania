@@ -40,11 +40,11 @@ public class RenderSpecialFlower implements ISimpleBlockRenderingHandler, IMulti
 	}
 
 	// Copied from RenderBlocks
-	public static boolean renderCrossedSquares(IBlockAccess blockAccess, Block par1Block, int par2, int par3, int par4, RenderBlocks render) {
+	public static boolean renderCrossedSquares(IBlockAccess blockAccess, Block block, int x, int y, int z, RenderBlocks render) {
 		Tessellator tessellator = Tessellator.instance;
-		tessellator.setBrightness(par1Block.getMixedBrightnessForBlock(blockAccess, par2, par3, par4));
+		tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x, y, z));
 		float f = 1.0F;
-		int l = par1Block.colorMultiplier(blockAccess, par2, par3, par4);
+		int l = block.colorMultiplier(blockAccess, x, y, z);
 		float f1 = (l >> 16 & 255) / 255.0F;
 		float f2 = (l >> 8 & 255) / 255.0F;
 		float f3 = (l & 255) / 255.0F;
@@ -59,12 +59,12 @@ public class RenderSpecialFlower implements ISimpleBlockRenderingHandler, IMulti
 		}
 
 		tessellator.setColorOpaque_F(f * f1, f * f2, f * f3);
-		double d1 = par2;
-		double d2 = par3;
-		double d0 = par4;
+		double d1 = x;
+		double d2 = y;
+		double d0 = z;
 		long sh;
 
-		sh = par2 * 3129871 ^ par4 * 116129781L ^ par3;
+		sh = x * 3129871 ^ z * 116129781L ^ y;
 		sh = sh * sh * 42317861L + sh * 11L;
 		d1 += ((sh >> 16 & 15L) / 15.0F - 0.5D) * 0.3D;
 		d2 += (sh >> 32 & 15L) / 15.0F * -0.15D;
@@ -72,8 +72,8 @@ public class RenderSpecialFlower implements ISimpleBlockRenderingHandler, IMulti
 
 
 		// Only change here, to use xyz rather than side/meta
-		IIcon icon = render.getBlockIcon(par1Block, blockAccess, par2, par3, par4, 0);
-		drawCrossedSquares(blockAccess, par1Block, icon, par2, par3, par4, d1, d2, d0, 1.0F, render);
+		IIcon icon = render.getBlockIcon(block, blockAccess, x, y, z, 0);
+		drawCrossedSquares(blockAccess, block, icon, x, y, z, d1, d2, d0, 1.0F, render);
 
 		return true;
 	}
