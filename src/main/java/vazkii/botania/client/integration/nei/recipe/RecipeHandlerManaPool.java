@@ -2,9 +2,10 @@ package vazkii.botania.client.integration.nei.recipe;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -20,7 +21,6 @@ import vazkii.botania.client.render.tile.RenderTilePool;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.mana.TilePool;
 import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
@@ -37,18 +37,18 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 		public CachedManaPoolRecipe(RecipeManaInfusion recipe) {
 			if(recipe == null)
 				return;
-			inputs.add(new PositionedStack(new ItemStack(ModBlocks.pool, 1, recipe.getOutput().getItem() == Item.getItemFromBlock(ModBlocks.pool) ? 2 : 0), 71, 37));
+			inputs.add(new PositionedStack(new ItemStack(ModBlocks.pool, 1, recipe.getOutput().getItem() == Item.getItemFromBlock(ModBlocks.pool) ? 2 : 0), 71, 20));
 
 			if(recipe.getInput() instanceof String)
-				inputs.add(new PositionedStack(OreDictionary.getOres((String) recipe.getInput()), 42, 37));
-			else inputs.add(new PositionedStack(recipe.getInput(), 42, 37));
+				inputs.add(new PositionedStack(OreDictionary.getOres((String) recipe.getInput()), 42, 20));
+			else inputs.add(new PositionedStack(recipe.getInput(), 42, 20));
 
 			if(recipe.isAlchemy())
-				otherStacks.add(new PositionedStack(new ItemStack(ModBlocks.alchemyCatalyst), 10, 37));
+				otherStacks.add(new PositionedStack(new ItemStack(ModBlocks.alchemyCatalyst), 10, 20));
 			else if (recipe.isConjuration())
-				otherStacks.add(new PositionedStack(new ItemStack(ModBlocks.conjurationCatalyst), 10, 37));
+				otherStacks.add(new PositionedStack(new ItemStack(ModBlocks.conjurationCatalyst), 10, 20));
 
-			output = new PositionedStack(recipe.getOutput(), 101, 37);
+			output = new PositionedStack(recipe.getOutput(), 101, 20);
 			mana = recipe.getManaToConsume();
 		}
 
@@ -86,17 +86,25 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 
 	@Override
 	public void loadTransferRects() {
-		transferRects.add(new RecipeTransferRect(new Rectangle(70, 36, 18, 18), "botania.manaPool"));
+		transferRects.add(new RecipeTransferRect(new Rectangle(70, 21, 18, 18), "botania.manaPool"));
 	}
 
 	@Override
 	public void drawBackground(int recipe) {
 		super.drawBackground(recipe);
+
+		int mana = ((CachedManaPoolRecipe) arecipes.get(recipe)).mana;
+        String manaRequired = Integer.toString(mana);
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
 		GuiDraw.changeTexture(LibResources.GUI_MANA_INFUSION_OVERLAY);
-		GuiDraw.drawTexturedModalRect(45, 20, 38, 35, 92, 50);
-		HUDHandler.renderManaBar(32, 80, 0x0000FF, 0.75F, ((CachedManaPoolRecipe) arecipes.get(recipe)).mana, TilePool.MAX_MANA / 10);
+
+		GuiDraw.drawTexturedModalRect(45, 5, 38, 35, 92, 50);
+		HUDHandler.renderManaBar(32, 63, 0x0000FF, 0.75F, mana, TilePool.MAX_MANA / 10);
+		font.drawString(manaRequired, 84 - font.getStringWidth(manaRequired) / 2, 71, 0xFF03737F);
+
 		RenderTilePool.forceMana = true;
 	}
 
