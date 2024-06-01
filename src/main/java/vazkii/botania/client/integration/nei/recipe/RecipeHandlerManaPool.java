@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -49,6 +52,7 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 				otherStacks.add(new PositionedStack(new ItemStack(ModBlocks.conjurationCatalyst), 10, 37));
 
 			output = new PositionedStack(recipe.getOutput(), 101, 37);
+			// This value is where the mana bar is stored initially
 			mana = recipe.getManaToConsume();
 		}
 
@@ -94,9 +98,16 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 		super.drawBackground(recipe);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+		// Mana infusion is the mana pool, super weird.
 		GuiDraw.changeTexture(LibResources.GUI_MANA_INFUSION_OVERLAY);
 		GuiDraw.drawTexturedModalRect(45, 20, 38, 35, 92, 50);
-		HUDHandler.renderManaBar(32, 80, 0x0000FF, 0.75F, ((CachedManaPoolRecipe) arecipes.get(recipe)).mana, TilePool.MAX_MANA / 10);
+		// Below is where the mana bar actually drawn.
+		int tempMana = ((CachedManaPoolRecipe) arecipes.get(recipe)).mana;
+		HUDHandler.renderManaBar(32, 80, 0x0000FF, 0.75F, GuiScreen.isShiftKeyDown() ? tempMana : tempMana * 10, TilePool.MAX_MANA / 10);
+		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+		String size = GuiScreen.isShiftKeyDown() ? "1x " : "10x ";
+		String localized = StatCollector.translateToLocal("botaniamisc.neiratio");
+		font.drawString(size + localized, 84 - font.getStringWidth(size + localized) / 2, 71, 0x000000);
 		RenderTilePool.forceMana = true;
 	}
 
