@@ -53,8 +53,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class BlockPool extends BlockModContainer implements IWandHUD, IWandable, ILexiconable, ICraftAchievement {
 
-	boolean lastFragile = false;
-
 	public static IIcon manaIcon;
 
 	public BlockPool() {
@@ -87,23 +85,6 @@ public class BlockPool extends BlockModContainer implements IWandHUD, IWandable,
 	@Override
 	public int damageDropped(int meta) {
 		return meta;
-	}
-
-	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
-		TilePool pool = (TilePool) par1World.getTileEntity(par2, par3, par4);
-		lastFragile = pool.fragile;
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
-	}
-
-	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		ArrayList<ItemStack> drops = new ArrayList();
-
-		if(!lastFragile)
-			drops.add(new ItemStack(this, 1, metadata));
-
-		return drops;
 	}
 
 	@Override
