@@ -10,14 +10,11 @@
  */
 package vazkii.botania.common.block.tile;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -125,23 +122,20 @@ public class TileCraftCrate extends TileOpenCrate {
 			craft.setInventorySlotContents(i, stack.copy());
 		}
 
-		List<IRecipe> recipes = CraftingManager.getInstance().getRecipeList();
-		for(IRecipe recipe : recipes)
-			if(recipe.matches(craft, worldObj)) {
-				setInventorySlotContents(9, recipe.getCraftingResult(craft));
+		ItemStack result = CraftingManager.getInstance().findMatchingRecipe(craft, worldObj);
+		if (result == null) return false;
+		
+		setInventorySlotContents(9, result);
+		for(int i = 0; i < 9; i++) {
+			ItemStack stack = getStackInSlot(i);
+			if(stack == null)
+				continue;
 
-				for(int i = 0; i < 9; i++) {
-					ItemStack stack = getStackInSlot(i);
-					if(stack == null)
-						continue;
-
-					ItemStack container = stack.getItem().getContainerItem(stack);
-					setInventorySlotContents(i, container);
-				}
-				return true;
-			}
-
-		return false;
+			ItemStack container = stack.getItem().getContainerItem(stack);
+			setInventorySlotContents(i, container);
+		}
+		
+		return true;
 	}
 
 	boolean isFull() {
