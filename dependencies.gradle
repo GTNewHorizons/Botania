@@ -5,15 +5,15 @@ dependencies {
 
     compile('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
 
-    compileOnly('com.github.GTNewHorizons:Railcraft:9.15.8:api') {transitive=false}
-    compileOnly('com.github.GTNewHorizons:StorageDrawers:1.13.5-GTNH:api') {transitive=false}
+    compileOnly('com.github.GTNewHorizons:Railcraft:9.15.11:api') {transitive=false}
+    compileOnly('com.github.GTNewHorizons:StorageDrawers:1.13.9-GTNH:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:ForgeMultipart:1.5.0:dev') {transitive=false}
-    compileOnly('com.github.GTNewHorizons:NotEnoughItems:2.6.1-GTNH:dev')
+    compileOnly('com.github.GTNewHorizons:NotEnoughItems:2.6.26-GTNH:dev')
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.39:api') {transitive=false}
-    compile('com.github.GTNewHorizons:GTNHLib:0.2.11:dev')
+    compile('com.github.GTNewHorizons:GTNHLib:0.4.3:dev')
 
     compileOnly('curse.maven:cofh-lib-220333:2388748')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
-    devOnlyNonPublishable('com.github.GTNewHorizons:NotEnoughItems:2.6.1-GTNH:dev')
+    devOnlyNonPublishable('com.github.GTNewHorizons:NotEnoughItems:2.6.26-GTNH:dev')
 }
 
