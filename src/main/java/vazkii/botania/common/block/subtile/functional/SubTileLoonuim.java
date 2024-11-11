@@ -63,7 +63,7 @@ public class SubTileLoonuim extends SubTileFunctional {
 
 	@Override
 	public int getMaxMana() {
-		return COST;
+		return COST*2;
 	}
 
 	@Override
