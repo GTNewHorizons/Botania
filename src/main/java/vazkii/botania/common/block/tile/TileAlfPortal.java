@@ -10,7 +10,9 @@
  */
 package vazkii.botania.common.block.tile;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -63,11 +65,14 @@ public class TileAlfPortal extends TileMod {
 
 	private static final String TAG_TICKS_OPEN = "ticksOpen";
 	private static final String TAG_TICKS_SINCE_LAST_ITEM = "ticksSinceLastItem";
-	private static final String TAG_STACK_COUNT = "stackCount";
+	private static final String TAG_STACK_COUNT = "stackCount"; // Input stacks
+	private static final String TAG_OUTPUT_COUNT = "outputStackCount";
 	private static final String TAG_STACK = "portalStack";
+	private static final String TAG_OUTPUT_STACK = "outputStack";
 	private static final String TAG_PORTAL_FLAG = "_elvenPortal";
 
-	List<ItemStack> stacksIn = new ArrayList();
+	List<ItemStack> stacksIn = new ArrayList<>();
+	Deque<ItemStack> stacksOut = new ArrayDeque<>();
 
 	public int ticksOpen = 0;
 	int ticksSinceLastItem = 0;
@@ -153,8 +158,10 @@ public class TileAlfPortal extends TileMod {
 					}
 
 				if(ticksSinceLastItem >= 4) {
-					if(!worldObj.isRemote)
+					if(!worldObj.isRemote) {
 						resolveRecipes();
+						spawnOutput();
+					}
 				}
 			}
 		} else closeNow = false;
@@ -244,12 +251,16 @@ public class TileAlfPortal extends TileMod {
 	}
 
 	void resolveRecipes() {
+		if (stacksIn.isEmpty()) {
+			return;
+		}
+
 		int i = 0;
 		for(ItemStack stack : stacksIn) {
 			if(stack != null && stack.getItem() instanceof ILexicon) {
 				((ILexicon) stack.getItem()).unlockKnowledge(stack, BotaniaAPI.elvenKnowledge);
 				ItemLexicon.setForcedPage(stack, LexiconData.elvenMessage.getUnlocalizedName());
-				spawnItem(stack);
+				addOutput(stack);
 				stacksIn.remove(i);
 				return;
 			}
@@ -258,9 +269,48 @@ public class TileAlfPortal extends TileMod {
 
 		for(RecipeElvenTrade recipe : BotaniaAPI.elvenTradeRecipes) {
 			if(recipe.matches(stacksIn, false)) {
-				recipe.matches(stacksIn, true);
-				spawnItem(recipe.getOutput().copy());
-				break;
+				ItemStack output = recipe.getOutput().copy();
+				int stackSize = output.stackSize;
+				output.stackSize = 0;
+				while (recipe.matches(stacksIn, true)) {
+					output.stackSize += stackSize;
+				}
+				addOutput(output);
+				if (stacksIn.isEmpty()) break;
+			}
+		}
+	}
+
+	void addOutput(ItemStack stack) {
+		if (stack == null) {
+			return;
+		}
+		if (stacksOut.isEmpty()) {
+			stacksOut.addLast(stack);
+			return;
+		}
+
+		ItemStack lastStack = stacksOut.getLast();
+		if (stack.isItemEqual(lastStack)) {
+			lastStack.stackSize += stack.stackSize;
+		} else {
+			stacksOut.addLast(stack);
+		}
+	}
+
+	void spawnOutput() {
+		if (!stacksOut.isEmpty()) {
+			ItemStack stack = stacksOut.getFirst();
+			if (stack.stackSize > 1) {
+				--stack.stackSize;
+				stack = stack.copy();
+				stack.stackSize = 1;
+				spawnItem(stack);
+			} else if (stack.stackSize == 1) {
+				stacksOut.removeFirst();
+				spawnItem(stack);
+			} else {
+				stacksOut.removeFirst();
 			}
 		}
 	}
@@ -284,6 +334,15 @@ public class TileAlfPortal extends TileMod {
 			cmp.setTag(TAG_STACK + i, stackcmp);
 			i++;
 		}
+
+		cmp.setInteger(TAG_OUTPUT_COUNT, stacksOut.size());
+		i = 0;
+		for(ItemStack stack : stacksOut) {
+			NBTTagCompound stackcmp = new NBTTagCompound();
+			stack.writeToNBT(stackcmp);
+			cmp.setTag(TAG_OUTPUT_STACK + i, stackcmp);
+			i++;
+		}
 	}
 
 	@Override
@@ -296,6 +355,14 @@ public class TileAlfPortal extends TileMod {
 			NBTTagCompound stackcmp = cmp.getCompoundTag(TAG_STACK + i);
 			ItemStack stack = ItemStack.loadItemStackFromNBT(stackcmp);
 			stacksIn.add(stack);
+		}
+
+		count = cmp.getInteger(TAG_OUTPUT_COUNT);
+		stacksOut.clear();
+		for(int i = 0; i < count; i++) {
+			NBTTagCompound stackcmp = cmp.getCompoundTag(TAG_OUTPUT_STACK + i);
+			ItemStack stack = ItemStack.loadItemStackFromNBT(stackcmp);
+			stacksOut.addLast(stack);
 		}
 	}
 
