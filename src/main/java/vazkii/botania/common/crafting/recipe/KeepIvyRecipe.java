@@ -28,6 +28,11 @@ public class KeepIvyRecipe implements IRecipe {
 		for(int i = 0; i < var1.getSizeInventory(); i++) {
 			ItemStack stack = var1.getStackInSlot(i);
 			if(stack != null) {
+				// Fixes GT tools playing their breaking sound too early
+				String stackName = stack.getUnlocalizedName();
+				if (stackName != null && stackName.startsWith("gt.metatool")) {
+					return false;
+				}
 				if(stack.getItem() == ModItems.keepIvy)
 					foundIvy = true;
 				else if(!foundItem && !(ItemNBTHelper.detectNBT(stack) && ItemNBTHelper.getBoolean(stack, ItemKeepIvy.TAG_KEEP, false)) && !stack.getItem().hasContainerItem(stack))
