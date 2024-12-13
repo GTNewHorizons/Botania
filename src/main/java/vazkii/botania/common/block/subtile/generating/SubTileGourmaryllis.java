@@ -35,40 +35,45 @@ public class SubTileGourmaryllis extends SubTileGenerating {
 	public void onUpdate() {
 		super.onUpdate();
 
-		if(cooldown > 0)
-			cooldown--;
-		if(cooldown == 0 && !supertile.getWorldObj().isRemote) {
-			mana = Math.min(getMaxMana(), mana + storedMana);
-			storedMana = 0;
-			sync();
+		//if(cooldown > 0)
+		//	cooldown--;
+		//if(cooldown == 0 && !supertile.getWorldObj().isRemote) {
+		//	mana = Math.min(getMaxMana(), mana + storedMana);
+		//	storedMana = 0;
+		//	sync();
+		//}
+		if (cooldown > 0) {
+			if (cooldown-- % 10 == 1) {
+				mana = Math.min(getMaxMana(), mana + storedMana);
+				sync();
+			}
 		}
-
 		int slowdown = getSlowdownFactor();
-		
+
 		boolean remote = supertile.getWorldObj().isRemote;
 		List<EntityItem> items = supertile.getWorldObj().getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(supertile.xCoord - RANGE, supertile.yCoord - RANGE, supertile.zCoord - RANGE, supertile.xCoord + RANGE + 1, supertile.yCoord + RANGE + 1, supertile.zCoord + RANGE + 1));
-		for(EntityItem item : items) {
+		for (EntityItem item : items) {
 			ItemStack stack = item.getEntityItem();
-			if(stack != null && stack.getItem() instanceof ItemFood && !item.isDead && item.age >= slowdown) {
-				if(cooldown == 0) {
-					if(!remote) {
-						int val = ((ItemFood) stack.getItem()).func_150905_g(stack);
-						storedMana = val * val * 64;
-						cooldown = val * 10;
+			if (stack != null && stack.getItem() instanceof ItemFood && !item.isDead && item.age >= slowdown) {
+				if (cooldown == 0) {
+					if (!remote) {
+						float val = ((ItemFood) stack.getItem()).func_150905_g(stack);
+						float satMod = ((ItemFood) stack.getItem()).func_150906_h(stack);
+						if (satMod > 0.5) // use saturation if higher
+							val *= 2 * satMod; // saturation bars = hunger bars * saturation modifier * 2
+						storedMana = (int) (val * 64 + 0.5); // round
+						cooldown = (int) (val * 10 + 0.5);
 						supertile.getWorldObj().playSoundEffect(supertile.xCoord, supertile.yCoord, supertile.zCoord, "random.eat", 0.2F, 0.5F + (float) Math.random() * 0.5F);
 						sync();
-					} else 
-						for(int i = 0; i < 10; i++) {
-							float m = 0.2F;
-							float mx = (float) (Math.random() - 0.5) * m;
-							float my = (float) (Math.random() - 0.5) * m;
-							float mz = (float) (Math.random() - 0.5) * m;
-							supertile.getWorldObj().spawnParticle("iconcrack_" + Item.getIdFromItem(stack.getItem()), item.posX, item.posY, item.posZ, mx, my, mz);
-						}
-							
+					} else for (int i = 0; i < 10; i++) {
+						float m = 0.2F;
+						float mx = (float) (Math.random() - 0.5) * m;
+						float my = (float) (Math.random() - 0.5) * m;
+						float mz = (float) (Math.random() - 0.5) * m;
+						supertile.getWorldObj().spawnParticle("iconcrack_" + Item.getIdFromItem(stack.getItem()), item.posX, item.posY, item.posZ, mx, my, mz);
+					}
 				}
-
-				if(!remote)
+				if (!remote)
 					item.setDead();
 			}
 		}
