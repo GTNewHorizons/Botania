@@ -11,14 +11,15 @@
 package vazkii.botania.common.lib;
 
 import net.minecraftforge.common.util.ForgeDirection;
+import vazkii.botania.common.Tags;
 
 public final class LibMisc {
 
 	// Mod Constants
 	public static final String MOD_ID = "Botania";
 	public static final String MOD_NAME = MOD_ID;
-	public static final String VERSION = "GRADLETOKEN_VERSION";
-	public static final String DEPENDENCIES = "required-after:Baubles;after:Thaumcraft";
+	public static final String VERSION = Tags.VERSION;
+	public static final String DEPENDENCIES = "required-after:Baubles;after:Thaumcraft;required-after:gtnhlib@[0.5.22,)";
 
 	// Network Contants
 	public static final String NETWORK_CHANNEL = MOD_ID;

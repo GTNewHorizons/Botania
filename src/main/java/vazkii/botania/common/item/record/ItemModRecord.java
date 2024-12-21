@@ -21,8 +21,9 @@ import vazkii.botania.common.core.BotaniaCreativeTab;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import com.gtnewhorizon.gtnhlib.api.MusicRecordMetadataProvider;
 
-public class ItemModRecord extends ItemRecord {
+public class ItemModRecord extends ItemRecord implements MusicRecordMetadataProvider {
 
 	private final String file;
 
@@ -55,4 +56,11 @@ public class ItemModRecord extends ItemRecord {
 		return new ResourceLocation(file);
 	}
 
+	@Override
+	public ResourceLocation getMusicRecordResource(ItemStack stack) {
+		if (stack == null || !(stack.getItem() instanceof ItemModRecord)) {
+			return null;
+		}
+		return new ResourceLocation(file);
+	}
 }
