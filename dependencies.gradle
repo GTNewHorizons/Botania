@@ -8,12 +8,12 @@ dependencies {
     compileOnly('com.github.GTNewHorizons:Railcraft:9.15.15:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:StorageDrawers:2.0.5-GTNH:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:ForgeMultipart:1.5.0:dev') {transitive=false}
-    compileOnly('com.github.GTNewHorizons:NotEnoughItems:2.6.51-GTNH:dev')
+    compileOnly('com.github.GTNewHorizons:NotEnoughItems:2.7.4-GTNH:dev')
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.39:api') {transitive=false}
-    api('com.github.GTNewHorizons:GTNHLib:0.5.22:dev')
+    api('com.github.GTNewHorizons:GTNHLib:0.6.0:dev')
 
     compileOnly('curse.maven:cofh-lib-220333:2388748')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
-    devOnlyNonPublishable('com.github.GTNewHorizons:NotEnoughItems:2.6.51-GTNH:dev')
+    devOnlyNonPublishable('com.github.GTNewHorizons:NotEnoughItems:2.7.4-GTNH:dev')
 }
 

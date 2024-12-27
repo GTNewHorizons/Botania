@@ -64,7 +64,19 @@ public class SubTileAgricarnation extends SubTileFunctional {
 
 	boolean isPlant(int x, int y, int z) {
 		Block block = supertile.getWorldObj().getBlock(x, y, z);
-		if(block == Blocks.grass || block == Blocks.leaves || block == Blocks.leaves2 || block instanceof BlockBush && !(block instanceof BlockCrops) && !(block instanceof BlockSapling))
+		String[] names = {"tile.ImmersiveEngineering.hemp", "tile.natura.crops", "tile.witchery:mandrake", "tile.witchery:belladonna", "tile.witchery:artichoke", "tile.witchery:snowbell", "tile.witchery:wormwood", "tile.witchery:mindrake", "tile.witchery:wolfsbane", "tile.witchery:garlic"};
+		boolean exit = false;
+		if(block instanceof BlockBush ) {
+			for(int a = 0; a < names.length; a++) {
+				if(block.getUnlocalizedName().equals(names[a])) {
+					exit = true;
+				}
+			}
+			if(!(block instanceof BlockCrops) && !(block instanceof BlockSapling) && !exit) {
+				return false;
+			}
+		}
+		if(block == Blocks.grass || block == Blocks.leaves || block == Blocks.leaves2)
 			return false;
 
 		Material mat = block.getMaterial();
