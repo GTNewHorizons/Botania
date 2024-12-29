@@ -5,7 +5,7 @@ dependencies {
 
     api('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
 
-    compileOnly('com.github.GTNewHorizons:Railcraft:9.15.15:api') {transitive=false}
+    compileOnly('com.github.GTNewHorizons:Railcraft:9.16.0:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:StorageDrawers:2.0.5-GTNH:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:ForgeMultipart:1.5.0:dev') {transitive=false}
     compileOnly('com.github.GTNewHorizons:NotEnoughItems:2.7.4-GTNH:dev')
