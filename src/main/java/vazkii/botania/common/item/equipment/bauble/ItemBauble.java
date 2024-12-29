@@ -10,9 +10,17 @@
  */
 package vazkii.botania.common.item.equipment.bauble;
 
-import java.util.List;
-import java.util.UUID;
-
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
+import baubles.common.container.InventoryBaubles;
+import baubles.common.lib.PlayerHandler;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import thaumcraft.api.IRunicArmor;
 import vazkii.botania.api.item.ICosmeticAttachable;
 import vazkii.botania.api.item.IPhantomInkable;
@@ -27,28 +36,41 @@ import vazkii.botania.common.achievement.ModAchievements;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.entity.EntityDoppleganger;
 import vazkii.botania.common.item.ItemMod;
-import baubles.api.BaubleType;
-import baubles.api.IBauble;
-import baubles.common.container.InventoryBaubles;
-import baubles.common.lib.PlayerHandler;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
 
 @Optional.Interface(modid = "Thaumcraft", iface = "thaumcraft.api.IRunicArmor")
 public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAttachable, IPhantomInkable, IRunicArmor {
 
-	private static final String TAG_HASHCODE = "playerHashcode";
-	private static final String TAG_HASHCODE_CLIENT = "playerHashcodeClient";
 	private static final String TAG_BAUBLE_UUID_MOST = "baubleUUIDMost";
 	private static final String TAG_BAUBLE_UUID_LEAST = "baubleUUIDLeast";
 	private static final String TAG_COSMETIC_ITEM = "cosmeticItem";
 	private static final String TAG_PHANTOM_INK = "phantomInk";
 
+	private static final HashMap<UUID, UUID> itemToPlayerRemote = new HashMap<>();
+	private static final HashMap<UUID, UUID> itemToPlayer = new HashMap<>();
+	private static final HashSet<UUID> toRemoveItems = new HashSet<>();
+
 	public ItemBauble(String name) {
 		super();
 		setMaxStackSize(1);
 		setUnlocalizedName(name);
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@SubscribeEvent
+	public void disconnectFromServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+		if (Minecraft.getMinecraft().thePlayer != null) {
+			removePlayer(Minecraft.getMinecraft().thePlayer.getUniqueID());
+		}
+	}
+
+	@SubscribeEvent
+	public void playerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
+		removePlayer(event.player.getUniqueID());
 	}
 
 	@Override
@@ -123,9 +145,17 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
-		if(getLastPlayerHashcode(stack, player.worldObj.isRemote) != player.hashCode()) {
+		UUID itemUUID = getBaubleUUID(stack);
+		if (toRemoveItems.contains(itemUUID)) {
+			// this is done like this because on server worn tick gets called after unequip
+			// so it would get reapplied
+			unapplyItem(itemUUID, player.worldObj.isRemote);
+			toRemoveItems.remove(itemUUID);
+			return;
+		}
+		if(!wasPlayerApplied(itemUUID, player.getUniqueID(), player.worldObj.isRemote)) {
 			onEquippedOrLoadedIntoWorld(stack, player);
-			setLastPlayerHashcode(stack, player.hashCode(), player.worldObj.isRemote);
+			applyToPlayer(itemUUID, player.getUniqueID(), player.worldObj.isRemote);
 		}
 	}
 
@@ -139,7 +169,7 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 				((EntityPlayer) player).addStat(ModAchievements.baubleWear, 1);
 
 			onEquippedOrLoadedIntoWorld(stack, player);
-			setLastPlayerHashcode(stack, player.hashCode(), player.worldObj.isRemote);
+			applyToPlayer(getBaubleUUID(stack), player.getUniqueID(), player.worldObj.isRemote);
 		}
 	}
 
@@ -149,7 +179,7 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	@Override
 	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
-		// NO-OP
+		toRemoveItems.add(getBaubleUUID(stack));
 	}
 
 	@Override
@@ -196,12 +226,37 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 		return new UUID(most, least);
 	}
 
-	public static int getLastPlayerHashcode(ItemStack stack, boolean remote) {
-		return ItemNBTHelper.getInt(stack, remote ? TAG_HASHCODE_CLIENT : TAG_HASHCODE, 0);
+	public static boolean wasPlayerApplied(UUID itemUUID, UUID playerUUID, boolean remote) {
+		return playerUUID.equals(remote ? itemToPlayerRemote.get(itemUUID) : itemToPlayer.get(itemUUID));
 	}
 
-	public static void setLastPlayerHashcode(ItemStack stack, int hash, boolean remote) {
-		ItemNBTHelper.setInt(stack, remote ? TAG_HASHCODE_CLIENT : TAG_HASHCODE, hash);
+	public static void applyToPlayer(UUID itemUUID, UUID playerUUID, boolean remote) {
+		if (remote) {
+			itemToPlayerRemote.put(itemUUID, playerUUID);
+		} else {
+			itemToPlayer.put(itemUUID, playerUUID);
+		}
+	}
+
+	public static void unapplyItem(UUID itemUUID, boolean remote) {
+		if (remote) {
+			itemToPlayerRemote.remove(itemUUID);
+		} else {
+			itemToPlayer.remove(itemUUID);
+		}
+	}
+
+	public static void removePlayer(UUID playerUUID) {
+		for (UUID item : itemToPlayerRemote.keySet().toArray(new UUID[0])) {
+			if(playerUUID.equals(itemToPlayerRemote.get(item))) {
+				itemToPlayerRemote.remove(item);
+			}
+		}
+		for (UUID item : itemToPlayer.keySet().toArray(new UUID[0])) {
+			if(playerUUID.equals(itemToPlayer.get(item))) {
+				itemToPlayer.remove(item);
+			}
+		}
 	}
 
 	@Override

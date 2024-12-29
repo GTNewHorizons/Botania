@@ -30,6 +30,7 @@ public class ItemReachRing extends ItemBauble {
 	@Override
 	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
 		Botania.proxy.setExtraReach(player, -3.5F);
+		super.onUnequipped(stack, player);
 	}
 
 	@Override
