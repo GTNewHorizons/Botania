@@ -117,12 +117,12 @@ public class InternalMethodHandler extends DummyMethodHandler {
 
 	@Override
 	public LexiconPage petalRecipesPage(String key, List<RecipePetals> recipes) {
-		return new PagePetalRecipe(key, recipes);
+		return new PagePetalRecipe<>(key, recipes);
 	}
 
 	@Override
 	public LexiconPage petalRecipePage(String key, RecipePetals recipe) {
-		return new PagePetalRecipe(key, recipe);
+		return new PagePetalRecipe<>(key, recipe);
 	}
 
 	@Override
@@ -271,7 +271,7 @@ public class InternalMethodHandler extends DummyMethodHandler {
 
 	@Override
 	public List<IWrappedInventory> wrapInventory(List<IInventory> inventories) {
-		ArrayList<IWrappedInventory> arrayList = new ArrayList<IWrappedInventory>();
+		ArrayList<IWrappedInventory> arrayList = new ArrayList<>();
 		for(IInventory inv : inventories) {
 			ICorporeaSpark spark = CorporeaHelper.getSparkForInventory(inv);
 			IWrappedInventory wrapped = null;

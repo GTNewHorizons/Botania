@@ -516,7 +516,7 @@ public final class ModBlocks {
 	public static void registerMultiparts() {
 		if(Loader.isModLoaded("ForgeMultipart")) {
 			try {
-				Class clazz = Class.forName("vazkii.botania.common.integration.multipart.MultipartHandler");
+				Class<?> clazz = Class.forName("vazkii.botania.common.integration.multipart.MultipartHandler");
 				clazz.newInstance();
 			} catch(Throwable e) {}
 		}

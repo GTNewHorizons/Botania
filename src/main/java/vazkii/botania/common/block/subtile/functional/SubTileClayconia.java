@@ -53,7 +53,7 @@ public class SubTileClayconia extends SubTileFunctional {
 	}
 
 	public ChunkCoordinates getCoordsToPut() {
-		List<ChunkCoordinates> possibleCoords = new ArrayList();
+		List<ChunkCoordinates> possibleCoords = new ArrayList<>();
 
 		int range = getRange();
 		int rangeY = getRangeY();

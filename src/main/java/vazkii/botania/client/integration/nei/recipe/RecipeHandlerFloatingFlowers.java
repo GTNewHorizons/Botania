@@ -19,7 +19,7 @@ public class RecipeHandlerFloatingFlowers extends TemplateRecipeHandler {
 
 	public class CachedFloatingFlowerRecipe extends CachedRecipe {
 
-		public List<PositionedStack> inputs = new ArrayList<PositionedStack>();
+		public List<PositionedStack> inputs = new ArrayList<>();
 		public PositionedStack output;
 
 		public CachedFloatingFlowerRecipe(ItemStack floatingFlower, ItemStack specialFlower, ItemStack output) {

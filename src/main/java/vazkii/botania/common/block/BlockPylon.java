@@ -20,7 +20,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import thaumcraft.api.crafting.IInfusionStabiliser;
@@ -36,7 +35,7 @@ import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 @Optional.Interface(modid = "Thaumcraft", iface = "thaumcraft.api.crafting.IInfusionStabiliser", striprefs = true)
-public class BlockPylon extends BlockModContainer implements ILexiconable, IInfusionStabiliser {
+public class BlockPylon extends BlockModContainer<TilePylon> implements ILexiconable, IInfusionStabiliser {
 
 	public BlockPylon() {
 		super(Material.iron);
@@ -101,7 +100,7 @@ public class BlockPylon extends BlockModContainer implements ILexiconable, IInfu
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TilePylon createNewTileEntity(World world, int meta) {
 		return new TilePylon();
 	}
 

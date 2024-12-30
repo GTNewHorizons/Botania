@@ -32,9 +32,9 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 
 	public class CachedManaPoolRecipe extends CachedRecipe {
 
-		public List<PositionedStack> inputs = new ArrayList<PositionedStack>();
+		public List<PositionedStack> inputs = new ArrayList<>();
 		public PositionedStack output;
-		public List<PositionedStack> otherStacks = new ArrayList<PositionedStack>();
+		public List<PositionedStack> otherStacks = new ArrayList<>();
 		public int mana;
 
 		public CachedManaPoolRecipe(RecipeManaInfusion recipe) {

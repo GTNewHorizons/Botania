@@ -33,7 +33,7 @@ public abstract class WrappedInventoryBase implements IWrappedInventory {
 	}
 
 	protected Collection<? extends ItemStack> breakDownBigStack(ItemStack stack) {
-		List<ItemStack> stacks = new ArrayList<ItemStack>();
+		List<ItemStack> stacks = new ArrayList<>();
 		int additionalStacks = stack.stackSize / stack.getMaxStackSize();
 		int lastStackSize = stack.stackSize % stack.getMaxStackSize();
 		if(additionalStacks > 0) {

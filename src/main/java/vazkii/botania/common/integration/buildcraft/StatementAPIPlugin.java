@@ -38,14 +38,14 @@ public class StatementAPIPlugin implements ITriggerProvider {
 
 	@Override
 	public Collection<ITriggerInternal> getInternalTriggers(IStatementContainer container) {
-		ArrayList<ITriggerInternal> list = new ArrayList<ITriggerInternal>();
+		ArrayList<ITriggerInternal> list = new ArrayList<>();
 		list.add(triggerManaDetector);
 		return list;
 	}
 
 	@Override
 	public Collection<ITriggerExternal> getExternalTriggers(ForgeDirection side, TileEntity tile) {
-		ArrayList<ITriggerExternal> list = new ArrayList<ITriggerExternal>();
+		ArrayList<ITriggerExternal> list = new ArrayList<>();
 
 		if (tile instanceof IManaBlock) {
 			list.add(triggerManaEmpty);

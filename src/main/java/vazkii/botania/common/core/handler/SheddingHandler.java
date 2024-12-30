@@ -36,8 +36,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public final class SheddingHandler {
 
-	public static ArrayList<ShedPattern> patterns = new ArrayList<ShedPattern>();
-	public static ArrayList<ShedPattern> defaultPatterns = new ArrayList<ShedPattern>();
+	public static ArrayList<ShedPattern> patterns = new ArrayList<>();
+	public static ArrayList<ShedPattern> defaultPatterns = new ArrayList<>();
 
 	@SubscribeEvent
 	public void onLivingUpdate(LivingUpdateEvent event) {
@@ -85,7 +85,7 @@ public final class SheddingHandler {
 		defaultPatterns.add(new ShedPattern(EntitySkeleton.class, new ItemStack(Items.bone), 36000, 40));
 		defaultPatterns.add(new ShedPattern(EntitySlime.class, new ItemStack(Items.slime_ball), 21000, 40));
 
-		ArrayList<String> defaultNames = new ArrayList<String>();
+		ArrayList<String> defaultNames = new ArrayList<>();
 
 		for(ShedPattern pattern : defaultPatterns) {
 			loadFromConfig(config, pattern.getEntityString(), pattern);
@@ -93,7 +93,7 @@ public final class SheddingHandler {
 		}
 
 		for(Object o : EntityList.stringToClassMapping.entrySet()) {
-			Entry<String, Class> entry = (Entry<String, Class>) o;
+			Entry<String, Class<?>> entry = (Entry<String, Class<?>>) o;
 
 			if(EntityLiving.class.isAssignableFrom(entry.getValue())) {
 				String name = entry.getKey();

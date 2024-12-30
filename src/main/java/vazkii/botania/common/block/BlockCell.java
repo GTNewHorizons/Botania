@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
@@ -23,7 +22,7 @@ import vazkii.botania.common.block.tile.TileCell;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockCell extends BlockModContainer implements ILexiconable {
+public class BlockCell extends BlockModContainer<TileCell> implements ILexiconable {
 
 	public BlockCell() {
 		super(Material.gourd);
@@ -33,11 +32,11 @@ public class BlockCell extends BlockModContainer implements ILexiconable {
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		return new ArrayList();
+		return new ArrayList<>();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileCell createNewTileEntity(World world, int meta) {
 		return new TileCell();
 	}
 

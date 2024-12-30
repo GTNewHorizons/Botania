@@ -417,8 +417,8 @@ public final class ConfigHandler {
 
 		private boolean enabled;
 
-		private Map<String, List<AdaptableValue>> adaptableValues = new HashMap();
-		private List<String> changes = new ArrayList();
+		private Map<String, List<AdaptableValue>> adaptableValues = new HashMap<>();
+		private List<String> changes = new ArrayList<>();
 
 		public ConfigAdaptor(boolean enabled) {
 			this.enabled = enabled;
@@ -454,9 +454,9 @@ public final class ConfigHandler {
 			if(!enabled)
 				return;
 
-			AdaptableValue<T> adapt = new AdaptableValue<T>(version, val);
+			AdaptableValue<T> adapt = new AdaptableValue<>(version, val);
 			if(!adaptableValues.containsKey(key)) {
-				ArrayList list = new ArrayList();
+				ArrayList<AdaptableValue> list = new ArrayList<>();
 				adaptableValues.put(key, list);
 			}
 

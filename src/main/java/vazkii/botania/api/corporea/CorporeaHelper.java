@@ -29,9 +29,9 @@ import vazkii.botania.api.BotaniaAPI;
 
 public final class CorporeaHelper {
 
-	private static final List<IInventory> empty = Collections.unmodifiableList(new ArrayList());
-	private static final WeakHashMap<List<ICorporeaSpark>, List<IInventory>> cachedNetworks = new WeakHashMap();
-	private static final List<ICorporeaAutoCompleteController> autoCompleteControllers = new ArrayList<ICorporeaAutoCompleteController>();
+	private static final List<IInventory> empty = Collections.unmodifiableList(new ArrayList<>());
+	private static final WeakHashMap<List<ICorporeaSpark>, List<IInventory>> cachedNetworks = new WeakHashMap<>();
+	private static final List<ICorporeaAutoCompleteController> autoCompleteControllers = new ArrayList<>();
 
 	private static final Pattern patternControlCode = Pattern.compile("(?i)\\u00A7[0-9A-FK-OR]");
 
@@ -64,7 +64,7 @@ public final class CorporeaHelper {
 				return cache;
 		}
 
-		List<IInventory> inventories = new ArrayList();
+		List<IInventory> inventories = new ArrayList<>();
 		if(network != null)
 			for(ICorporeaSpark otherSpark : network)
 				if(otherSpark != null) {
@@ -125,7 +125,7 @@ public final class CorporeaHelper {
 	 * called instead if the context for this exists to avoid having to get the value again.
 	 */
 	public static Map<IInventory, Integer> getInventoriesWithItemInNetwork(ItemStack stack,List<IInventory> inventories, boolean checkNBT) {
-		Map<IInventory, Integer> countMap = new HashMap<IInventory, Integer>();
+		Map<IInventory, Integer> countMap = new HashMap<>();
 		List<IWrappedInventory> wrappedInventories = BotaniaAPI.internalHandler.wrapInventory(inventories);
 		for (IWrappedInventory inv : wrappedInventories) {
 			CorporeaRequest request = new CorporeaRequest(stack, checkNBT, -1);
@@ -166,14 +166,14 @@ public final class CorporeaHelper {
 	 * purposes of counting huge amounts.
 	 */
 	public static List<ItemStack> requestItem(Object matcher, int itemCount, ICorporeaSpark spark, boolean checkNBT, boolean doit) {
-		List<ItemStack> stacks = new ArrayList<ItemStack>();
+		List<ItemStack> stacks = new ArrayList<>();
 		CorporeaRequestEvent event = new CorporeaRequestEvent(matcher, itemCount, spark, checkNBT, doit);
 		if(MinecraftForge.EVENT_BUS.post(event))
 			return stacks;
 
 		List<IInventory> inventories = getInventoriesOnNetwork(spark);
 		List<IWrappedInventory> inventoriesW = BotaniaAPI.internalHandler.wrapInventory(inventories);
-		Map<ICorporeaInterceptor, ICorporeaSpark> interceptors = new HashMap<ICorporeaInterceptor, ICorporeaSpark>();
+		Map<ICorporeaInterceptor, ICorporeaSpark> interceptors = new HashMap<>();
 
 		CorporeaRequest request = new CorporeaRequest(matcher, checkNBT, itemCount);
 		for(IWrappedInventory inv : inventoriesW) {

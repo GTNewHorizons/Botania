@@ -25,7 +25,7 @@ public interface IFloatingFlower {
 	public void setIslandType(IslandType type);
 
 	public class IslandType {
-		private static HashMap<String, IslandType> registry = new HashMap<String, IslandType>();
+		private static HashMap<String, IslandType> registry = new HashMap<>();
 
 		public static final IslandType GRASS = new IslandType("GRASS", LibResources.MODEL_MINI_ISLAND);
 		public static final IslandType PODZOL = new IslandType("PODZOL", LibResources.MODEL_MINI_ISLAND_PODZOL);

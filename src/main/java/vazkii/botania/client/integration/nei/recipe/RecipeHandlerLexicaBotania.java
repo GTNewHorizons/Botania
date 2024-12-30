@@ -55,7 +55,7 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
 
 		public LexiconEntry entry;
 		public PositionedStack item;
-		public List<PositionedStack> otherStacks = new ArrayList<PositionedStack>();
+		public List<PositionedStack> otherStacks = new ArrayList<>();
 
 		public CachedLexicaBotaniaRecipe(ItemStack stack, LexiconEntry entry) {
 			otherStacks.add(new PositionedStack(new ItemStack(ModItems.lexicon), 51, 5));

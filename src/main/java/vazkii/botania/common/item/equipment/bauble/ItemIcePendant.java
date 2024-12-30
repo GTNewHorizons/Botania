@@ -41,7 +41,7 @@ import baubles.api.BaubleType;
 public class ItemIcePendant extends ItemBauble implements IBaubleRender {
 
 	IIcon gemIcon;
-	public static Map<String, List<IceRemover>> playerIceBlocks = new HashMap();
+	public static Map<String, List<IceRemover>> playerIceBlocks = new HashMap<>();
 
 	public ItemIcePendant() {
 		super(LibItemNames.ICE_PENDANT);
@@ -88,7 +88,7 @@ public class ItemIcePendant extends ItemBauble implements IBaubleRender {
 	private void addIceBlock(EntityPlayer player, ChunkCoordinates coords) {
 		String user = player.getCommandSenderName();
 		if(!playerIceBlocks.containsKey(user))
-			playerIceBlocks.put(user, new ArrayList());
+			playerIceBlocks.put(user, new ArrayList<>());
 
 		List<IceRemover> ice = playerIceBlocks.get(user);
 		if(player.worldObj.getBlock(coords.posX, coords.posY, coords.posZ) == Blocks.water && player.worldObj.getBlockMetadata(coords.posX, coords.posY, coords.posZ) == 0) {
@@ -105,7 +105,7 @@ public class ItemIcePendant extends ItemBauble implements IBaubleRender {
 			return;
 
 		List<IceRemover> removers = playerIceBlocks.get(user);
-		for(IceRemover ice : new ArrayList<IceRemover>(removers))
+		for(IceRemover ice : new ArrayList<>(removers))
 			ice.tick(player.worldObj, removers);
 	}
 

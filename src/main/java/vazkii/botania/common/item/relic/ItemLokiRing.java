@@ -547,7 +547,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 	private static List<LokiCursor> getCursorList(ItemStack stack) {
 		NBTTagCompound cmp = ItemNBTHelper.getCompound(stack, TAG_CURSOR_LIST, false);
-		List<LokiCursor> cursors = new ArrayList();
+		List<LokiCursor> cursors = new ArrayList<>();
 
 		int count = cmp.getInteger(TAG_CURSOR_COUNT);
 		for(int i = 0; i < count; i++) {

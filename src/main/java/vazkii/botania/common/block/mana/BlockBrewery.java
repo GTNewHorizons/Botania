@@ -22,7 +22,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import vazkii.botania.api.lexicon.ILexiconable;
@@ -35,7 +34,7 @@ import vazkii.botania.common.block.tile.TileSimpleInventory;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockBrewery extends BlockModContainer implements ILexiconable, IWandHUD {
+public class BlockBrewery extends BlockModContainer<TileBrewery> implements ILexiconable, IWandHUD {
 
 	Random random;
 
@@ -151,7 +150,7 @@ public class BlockBrewery extends BlockModContainer implements ILexiconable, IWa
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileBrewery createNewTileEntity(World world, int meta) {
 		return new TileBrewery();
 	}
 

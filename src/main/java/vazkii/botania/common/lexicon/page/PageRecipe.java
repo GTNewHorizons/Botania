@@ -63,7 +63,7 @@ public class PageRecipe extends LexiconPage {
 
 		if(tooltipStack != null) {
 			List<String> tooltipData = tooltipStack.getTooltip(Minecraft.getMinecraft().thePlayer, false);
-			List<String> parsedTooltip = new ArrayList();
+			List<String> parsedTooltip = new ArrayList<>();
 			boolean first = true;
 
 			for(String s : tooltipData) {
@@ -172,8 +172,8 @@ public class PageRecipe extends LexiconPage {
 	}
 
 	public static <T> List<T> filterRecipes(List<T> list) {
-		if (list == null) return new ArrayList<T>();
-		ArrayList<T> filtered = new ArrayList<T>();
+		if (list == null) return new ArrayList<>();
+		ArrayList<T> filtered = new ArrayList<>();
 		for (T entry: list) {
 			if (entry != null) filtered.add(entry);
 		}

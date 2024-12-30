@@ -51,8 +51,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class BlockSpecialFlower extends BlockFlower implements ITileEntityProvider, ISpecialFlower, IWandable, ILexiconable, IWandHUD {
 
-	public static Map<String, IIcon> icons = new HashMap();
-	public static Map<String, IIcon> iconsAlt = new HashMap();
+	public static Map<String, IIcon> icons = new HashMap<>();
+	public static Map<String, IIcon> iconsAlt = new HashMap<>();
 
 	static {
 		BotaniaAPI.subtilesForCreativeMenu.addAll(Arrays.asList(new String[] {
@@ -207,7 +207,7 @@ public class BlockSpecialFlower extends BlockFlower implements ITileEntityProvid
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		ArrayList<ItemStack> list = new ArrayList();
+		ArrayList<ItemStack> list = new ArrayList<>();
 		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if(tile != null) {

@@ -25,7 +25,7 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
 
 	public class CachedBreweryRecipe extends CachedRecipe {
 
-		public List<PositionedStack> inputs = new ArrayList<PositionedStack>();
+		public List<PositionedStack> inputs = new ArrayList<>();
 		public PositionedStack output;
 		public int mana;
 

@@ -44,7 +44,7 @@ public class GuiButtonUpdateWarning extends GuiButtonLexicon {
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		drawTexturedModalRect(xPosition, yPosition, red ? 153 : 142, 180, 11, 11);
 
-		List<String> tooltip = new ArrayList();
+		List<String> tooltip = new ArrayList<>();
 		String version = PersistentVariableHelper.lastBotaniaVersion;
 		for(int i = 0; i < 6; i++) {
 			tooltip.add(EnumChatFormatting.GRAY + String.format(StatCollector.translateToLocal("botaniamisc.changes" + i), version).replaceAll("&", "\u00a7"));

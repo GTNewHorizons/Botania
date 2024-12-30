@@ -140,7 +140,7 @@ public class PagePetalRecipe<T extends RecipePetals> extends PageRecipe {
 
 	@Override
 	public List<ItemStack> getDisplayedRecipes() {
-		ArrayList<ItemStack> list = new ArrayList();
+		ArrayList<ItemStack> list = new ArrayList<>();
 		for(T r : recipes)
 			list.add(r.getOutput());
 

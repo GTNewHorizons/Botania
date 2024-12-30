@@ -61,8 +61,8 @@ public class SubTileHeiseiDream extends SubTileFunctional {
 			while(newTarget == entity);
 
 			if(newTarget instanceof EntityLiving) {
-				List<EntityAITaskEntry> entries = new ArrayList(entity.tasks.taskEntries);
-				entries.addAll(new ArrayList(entity.targetTasks.taskEntries));
+				List<EntityAITaskEntry> entries = new ArrayList<>(entity.tasks.taskEntries);
+				entries.addAll(new ArrayList<>(entity.targetTasks.taskEntries));
 
 				for(EntityAITaskEntry entry : entries)
 					if(entry.action instanceof EntityAINearestAttackableTarget) {

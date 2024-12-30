@@ -39,12 +39,12 @@ public class DummyManaNetwork implements IManaNetwork {
 
 	@Override
 	public List<TileSignature> getAllCollectorsInWorld(World world) {
-		return new ArrayList();
+		return new ArrayList<>();
 	}
 
 	@Override
 	public List<TileSignature> getAllPoolsInWorld(World world) {
-		return new ArrayList();
+		return new ArrayList<>();
 	}
 
 }

@@ -17,7 +17,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -32,7 +31,7 @@ import vazkii.botania.common.block.tile.TileIncensePlate;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockIncensePlate extends BlockModContainer implements ILexiconable {
+public class BlockIncensePlate extends BlockModContainer<TileIncensePlate> implements ILexiconable {
 
 	private static final int[] META_ROTATIONS = new int[] { 2, 5, 3, 4 };
 
@@ -142,7 +141,7 @@ public class BlockIncensePlate extends BlockModContainer implements ILexiconable
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileIncensePlate createNewTileEntity(World world, int meta) {
 		return new TileIncensePlate();
 	}
 

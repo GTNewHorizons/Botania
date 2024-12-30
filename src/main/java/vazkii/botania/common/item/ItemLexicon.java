@@ -99,7 +99,7 @@ public class ItemLexicon extends ItemMod implements ILexicon, IElvenItem {
 			if(!edition.isEmpty())
 				par3List.add(edition);
 
-			List<KnowledgeType> typesKnown = new ArrayList();
+			List<KnowledgeType> typesKnown = new ArrayList<>();
 			for(String s : BotaniaAPI.knowledgeTypes.keySet()) {
 				KnowledgeType type = BotaniaAPI.knowledgeTypes.get(s);
 				if(isKnowledgeUnlocked(par1ItemStack, type))

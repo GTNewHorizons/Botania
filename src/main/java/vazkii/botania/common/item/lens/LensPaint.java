@@ -44,14 +44,14 @@ public class LensPaint extends Lens {
 				Block block = entity.worldObj.getBlock(pos.blockX, pos.blockY, pos.blockZ);
 				if(BotaniaAPI.paintableBlocks.contains(block)) {
 					int meta = entity.worldObj.getBlockMetadata(pos.blockX, pos.blockY, pos.blockZ);
-					List<ChunkCoordinates> coordsToPaint = new ArrayList();
-					List<ChunkCoordinates> coordsFound = new ArrayList();
+					List<ChunkCoordinates> coordsToPaint = new ArrayList<>();
+					List<ChunkCoordinates> coordsFound = new ArrayList<>();
 
 					ChunkCoordinates theseCoords = new ChunkCoordinates(pos.blockX, pos.blockY, pos.blockZ);
 					coordsFound.add(theseCoords);
 
 					do {
-						List<ChunkCoordinates> iterCoords = new ArrayList(coordsFound);
+						List<ChunkCoordinates> iterCoords = new ArrayList<>(coordsFound);
 						for(ChunkCoordinates coords : iterCoords) {
 							coordsFound.remove(coords);
 							coordsToPaint.add(coords);

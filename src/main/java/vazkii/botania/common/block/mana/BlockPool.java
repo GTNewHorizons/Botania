@@ -51,7 +51,7 @@ import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class BlockPool extends BlockModContainer implements IWandHUD, IWandable, ILexiconable, ICraftAchievement {
+public class BlockPool extends BlockModContainer<TilePool> implements IWandHUD, IWandable, ILexiconable, ICraftAchievement {
 
 	boolean lastFragile = false;
 
@@ -100,7 +100,7 @@ public class BlockPool extends BlockModContainer implements IWandHUD, IWandable,
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		ArrayList<ItemStack> drops = new ArrayList();
+		ArrayList<ItemStack> drops = new ArrayList<>();
 
 		if(!lastFragile)
 			drops.add(new ItemStack(this, 1, metadata));
@@ -117,7 +117,7 @@ public class BlockPool extends BlockModContainer implements IWandHUD, IWandable,
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TilePool createNewTileEntity(World world, int meta) {
 		return new TilePool();
 	}
 

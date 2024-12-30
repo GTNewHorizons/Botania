@@ -78,7 +78,7 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 	private static final String TAG_DASH_COOLDOWN = "dashCooldown";
 	private static final String TAG_IS_SPRINTING = "isSprinting";
 
-	public static List<String> playersWithFlight = new ArrayList();
+	public static List<String> playersWithFlight = new ArrayList<>();
 	private static final int COST = 35;
 	private static final int COST_OVERKILL = COST * 3;
 	private static final int MAX_FLY_TIME = 1200;

@@ -31,7 +31,7 @@ public class TileSparkChanger extends TileSimpleInventory {
 			return;
 
 		ItemStack changeStack = getStackInSlot(0);
-		List<ISparkAttachable> attachables = new ArrayList();
+		List<ISparkAttachable> attachables = new ArrayList<>();
 		for(ForgeDirection dir : LibMisc.CARDINAL_DIRECTIONS) {
 			TileEntity tile = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord, zCoord + dir.offsetZ);
 			if(tile != null && tile instanceof ISparkAttachable) {
@@ -53,7 +53,7 @@ public class TileSparkChanger extends TileSimpleInventory {
 			ItemStack sparkStack = upg == 0 ? null : new ItemStack(ModItems.sparkUpgrade, 1, upg - 1);
 			int newUpg = changeStack == null ? 0 : changeStack.getItemDamage() + 1;
 			spark.setUpgrade(newUpg);
-			Collection transfers = spark.getTransfers();
+			Collection<ISparkEntity> transfers = spark.getTransfers();
 			if(transfers != null)
 				transfers.clear();
 			setInventorySlotContents(0, sparkStack);

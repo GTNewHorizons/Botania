@@ -68,7 +68,7 @@ public class SubTileRannuncarpus extends SubTileFunctional {
 			BlockData filter = getUnderlyingBlock();
 
 			boolean scanned = false;
-			List<ChunkCoordinates> validPositions = new ArrayList();
+			List<ChunkCoordinates> validPositions = new ArrayList<>();
 
 			int rangePlace = getRange();
 			int rangePlaceY = getRangeY();

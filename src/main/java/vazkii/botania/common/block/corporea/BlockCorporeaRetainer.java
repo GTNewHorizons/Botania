@@ -16,7 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
@@ -27,7 +26,7 @@ import vazkii.botania.common.block.tile.corporea.TileCorporeaRetainer;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockCorporeaRetainer extends BlockModContainer implements ILexiconable, ICraftAchievement {
+public class BlockCorporeaRetainer extends BlockModContainer<TileCorporeaRetainer> implements ILexiconable, ICraftAchievement {
 
 	public BlockCorporeaRetainer() {
 		super(Material.iron);
@@ -60,7 +59,7 @@ public class BlockCorporeaRetainer extends BlockModContainer implements ILexicon
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileCorporeaRetainer createNewTileEntity(World world, int meta) {
 		return new TileCorporeaRetainer();
 	}
 

@@ -27,9 +27,9 @@ public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
 
 	public class CachedPureDaisyRecipe extends CachedRecipe {
 
-		public List<PositionedStack> inputs = new ArrayList<PositionedStack>();
+		public List<PositionedStack> inputs = new ArrayList<>();
 		public PositionedStack output;
-		public List<PositionedStack> otherStacks = new ArrayList<PositionedStack>();
+		public List<PositionedStack> otherStacks = new ArrayList<>();
 
 		public CachedPureDaisyRecipe(RecipePureDaisy recipe) {
 			if(recipe == null)

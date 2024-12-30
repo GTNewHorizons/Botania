@@ -165,7 +165,7 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 		}
 
 		// Our result list
-		List<ChunkCoordinates> coordsList = new ArrayList<ChunkCoordinates>();
+		List<ChunkCoordinates> coordsList = new ArrayList<>();
 
 		// We subtract 1 from the effective range as the center tile is included
 		// So, with a range of 3, we are visiting tiles at -2, -1, 0, 1, 2
@@ -246,7 +246,7 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 	}
 
 	public static ItemStack removeFromInventory(EntityPlayer player, IInventory inv, ItemStack stack, Block block, int meta, boolean doit) {
-		List<ItemStack> providers = new ArrayList();
+		List<ItemStack> providers = new ArrayList<>();
 		for(int i = inv.getSizeInventory() - 1; i >= 0; i--) {
 			ItemStack invStack = inv.getStackInSlot(i);
 			if(invStack == null)

@@ -28,7 +28,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class SubTileVinculotus extends SubTileFunctional {
 
-	public static Set<SubTileVinculotus> existingFlowers = Collections.newSetFromMap(new WeakHashMap());
+	public static Set<SubTileVinculotus> existingFlowers = Collections.newSetFromMap(new WeakHashMap<>());
 	private static boolean registered = false;
 	private static final int RANGE = 64;
 
@@ -80,7 +80,7 @@ public class SubTileVinculotus extends SubTileFunctional {
 			int cost = 50;
 
 			if(event.entity instanceof EntityEnderman) {
-				List<SubTileVinculotus> possibleFlowers = new ArrayList();
+				List<SubTileVinculotus> possibleFlowers = new ArrayList<>();
 				for(SubTileVinculotus flower : existingFlowers) {
 					if(flower.redstoneSignal > 0 || flower.mana <= cost || flower.supertile.getWorldObj() != event.entity.worldObj || flower.supertile.getWorldObj().getTileEntity(flower.supertile.xCoord, flower.supertile.yCoord, flower.supertile.zCoord) != flower.supertile)
 						continue;

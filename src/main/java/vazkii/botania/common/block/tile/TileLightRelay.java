@@ -104,7 +104,7 @@ public class TileLightRelay extends TileMod implements IWandBindable {
 	}
 
 	public ChunkCoordinates getEndpoint() {
-		List<TileLightRelay> pointsPassed = new ArrayList();
+		List<TileLightRelay> pointsPassed = new ArrayList<>();
 		TileLightRelay relay = this;
 		ChunkCoordinates lastCoords = null;
 

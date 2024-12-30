@@ -117,7 +117,7 @@ public class PageElvenRecipe extends PageRecipe {
 
 	@Override
 	public List<ItemStack> getDisplayedRecipes() {
-		ArrayList<ItemStack> list = new ArrayList();
+		ArrayList<ItemStack> list = new ArrayList<>();
 		for(RecipeElvenTrade r : recipes)
 			list.add(r.getOutput());
 

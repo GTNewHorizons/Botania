@@ -47,7 +47,7 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 	 * Represents a map of dimension IDs to a set of all block swappers
 	 * active in that dimension.
 	 */
-	private static Map<Integer, Set<BlockSwapper>> blockSwappers = new HashMap<Integer, Set<BlockSwapper>>();
+	private static Map<Integer, Set<BlockSwapper>> blockSwappers = new HashMap<>();
 
 	private static final IslandType[] ISLAND_TYPES = {
 		IslandType.GRASS, IslandType.PODZOL, IslandType.MYCEL,
@@ -217,7 +217,7 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 		// If a set for the dimension doesn't exist, create it.
 		int dim = world.provider.dimensionId;
 		if(!blockSwappers.containsKey(dim))
-			blockSwappers.put(dim, new HashSet<BlockSwapper>());
+			blockSwappers.put(dim, new HashSet<>());
 
 		// Add the block swapper
 		blockSwappers.get(dim).add(swapper);
@@ -320,7 +320,7 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 		 * @param z The z-coordinate to use.
 		 */
 		public void tickBlock(int x, int y, int z) {
-			List<ChunkCoordinates> validCoords = new ArrayList<ChunkCoordinates>();
+			List<ChunkCoordinates> validCoords = new ArrayList<>();
 
 			// Go around this block and aggregate valid blocks.
 			for(int xOffset = -TICK_RANGE; xOffset <= TICK_RANGE; xOffset++) {

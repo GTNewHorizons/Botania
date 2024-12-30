@@ -114,7 +114,7 @@ public class BlockModDoubleFlower extends BlockDoublePlant implements ILexiconab
 		p_149636_2_.addExhaustion(0.025F);
 
 		if(this.canSilkHarvest(p_149636_1_, p_149636_2_, p_149636_3_, p_149636_4_, p_149636_5_, p_149636_6_) && EnchantmentHelper.getSilkTouchModifier(p_149636_2_)) {
-			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+			ArrayList<ItemStack> items = new ArrayList<>();
 			ItemStack itemstack = createStackedBlock(p_149636_6_);
 
 			if(itemstack != null)
@@ -164,14 +164,14 @@ public class BlockModDoubleFlower extends BlockDoublePlant implements ILexiconab
 
 	@Override
 	public ArrayList<ItemStack> onSheared(ItemStack item, IBlockAccess world, int x, int y, int z, int fortune) {
-		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> ret = new ArrayList<>();
 		ret.add(new ItemStack(this, 1, world.getBlockMetadata(x, y, z) & 7));
 		return ret;
 	}
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
-		return new ArrayList();
+		return new ArrayList<>();
 	}
 
 	@Override

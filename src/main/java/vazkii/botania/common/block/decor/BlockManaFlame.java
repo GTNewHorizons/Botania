@@ -18,7 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -33,7 +32,7 @@ import vazkii.botania.common.lib.LibBlockNames;
 import vazkii.botania.common.world.WorldTypeSkyblock;
 import cpw.mods.fml.common.Optional;
 
-public class BlockManaFlame extends BlockModContainer implements ILexiconable {
+public class BlockManaFlame extends BlockModContainer<TileManaFlame> implements ILexiconable {
 
 	public BlockManaFlame() {
 		super(Material.cloth);
@@ -108,11 +107,11 @@ public class BlockManaFlame extends BlockModContainer implements ILexiconable {
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		return new ArrayList();
+		return new ArrayList<>();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileManaFlame createNewTileEntity(World world, int meta) {
 		return new TileManaFlame();
 	}
 

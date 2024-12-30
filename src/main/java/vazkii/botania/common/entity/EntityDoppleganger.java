@@ -116,7 +116,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 	boolean spawnPixies = false;
 	boolean anyWithArmor = false;
 
-	List<String> playersWhoAttacked = new ArrayList();
+	List<String> playersWhoAttacked = new ArrayList<>();
 
 	private static boolean isPlayingMusic = false;
 
@@ -584,7 +584,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 				if(player.inventory.armorInventory[0] != null || player.inventory.armorInventory[1] != null || player.inventory.armorInventory[2] != null || player.inventory.armorInventory[3] != null)
 					anyWithArmor = true;
 
-				List<PotionEffect> remove = new ArrayList();
+				List<PotionEffect> remove = new ArrayList<>();
 				Collection<PotionEffect> active = player.getActivePotionEffects();
 				for(PotionEffect effect : active)
 					if(effect.getDuration() < 200 && effect.getIsAmbient() && !ReflectionHelper.<Boolean, Potion>getPrivateValue(Potion.class, Potion.potionTypes[effect.getPotionID()], LibObfuscation.IS_BAD_EFFECT))

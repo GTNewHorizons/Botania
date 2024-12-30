@@ -57,7 +57,7 @@ public class BlockGaiaHead extends BlockSkull {
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World p_149749_1_, int p_149749_2_, int p_149749_3_, int p_149749_4_, int p_149749_6_, int fortune) {
-		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> ret = new ArrayList<>();
 
 		if((p_149749_6_ & 8) == 0) {
 			ItemStack itemstack = new ItemStack(ModItems.gaiaHead, 1);
