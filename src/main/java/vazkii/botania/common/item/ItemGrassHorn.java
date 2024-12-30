@@ -36,6 +36,7 @@ import vazkii.botania.client.core.helper.IconHelper;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.lib.LibItemNames;
 
+@SuppressWarnings("deprecation")
 public class ItemGrassHorn extends ItemMod {
 
 	private static final int SUBTYPES = 3;
