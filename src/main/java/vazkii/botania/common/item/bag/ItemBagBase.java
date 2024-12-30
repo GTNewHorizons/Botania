@@ -15,12 +15,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import vazkii.botania.common.Botania;
-import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.core.helper.InventoryHelper;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.item.ItemMod;
-import vazkii.botania.common.lib.LibGuiIDs;
-import vazkii.botania.common.lib.LibItemNames;
 
 public abstract class ItemBagBase extends ItemMod {
 

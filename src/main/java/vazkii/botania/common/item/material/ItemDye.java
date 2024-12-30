@@ -12,17 +12,13 @@ package vazkii.botania.common.item.material;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import vazkii.botania.api.internal.VanillaPacketDispatcher;
 import vazkii.botania.api.item.IDyablePool;
-import vazkii.botania.api.item.IManaDissolvable;
-import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.common.item.Item16Colors;
 import vazkii.botania.common.lib.LibItemNames;
 
@@ -45,7 +41,6 @@ public class ItemDye extends Item16Colors {
 		TileEntity tile = par3World.getTileEntity(par4, par5, par6);
 		if(tile instanceof IDyablePool) {
 			IDyablePool dyable = (IDyablePool) tile;
-			int itemMeta = par1ItemStack.getItemDamage();
 			if(meta != dyable.getColor()) {
 				dyable.setColor(meta);
 				par1ItemStack.stackSize--;

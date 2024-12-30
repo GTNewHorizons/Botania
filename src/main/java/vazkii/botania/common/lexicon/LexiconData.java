@@ -13,7 +13,6 @@ package vazkii.botania.common.lexicon;
 import java.util.ArrayList;
 import java.util.List;
 
-import baubles.common.Config;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;

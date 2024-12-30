@@ -124,7 +124,6 @@ import vazkii.botania.client.render.tile.RenderTileTerraPlate;
 import vazkii.botania.client.render.tile.RenderTileTeruTeruBozu;
 import vazkii.botania.client.render.tile.RenderTileTinyPotato;
 import vazkii.botania.client.render.world.SkyblockRenderEvents;
-import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.TileAlfPortal;
 import vazkii.botania.common.block.tile.TileAltar;

@@ -5,7 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import vazkii.botania.common.block.ModBlocks;
 
 public abstract class SlotMagicPlant extends Slot {
 

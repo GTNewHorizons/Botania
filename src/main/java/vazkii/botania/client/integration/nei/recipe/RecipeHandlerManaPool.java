@@ -2,7 +2,6 @@ package vazkii.botania.client.integration.nei.recipe;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,6 @@ import vazkii.botania.client.render.tile.RenderTilePool;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.mana.TilePool;
 import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import vazkii.botania.common.core.helper.ItemNBTHelper;

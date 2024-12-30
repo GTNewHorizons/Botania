@@ -52,7 +52,6 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 			return;
 
 		int glSkyList = ReflectionHelper.getPrivateValue(RenderGlobal.class, mc.renderGlobal, LibObfuscation.GL_SKY_LIST);
-		int glSkyList2 = ReflectionHelper.getPrivateValue(RenderGlobal.class, mc.renderGlobal, LibObfuscation.GL_SKY_LIST2); // Horizon line. We don't have it here
 		int starGLCallList = ReflectionHelper.getPrivateValue(RenderGlobal.class, mc.renderGlobal, LibObfuscation.STAR_GL_CALL_LIST);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -181,8 +180,6 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 		GL11.glRotatef(220F, 1F, 0F, 0F);
 		GL11.glColor4f(1F, 1F, 1F, a);
 		int angles = 90;
-		float s = 3F;
-		float m = 1F;
 		float y = 2F;
 		float y0 = 0F;
 		float uPer = 1F / 360F;

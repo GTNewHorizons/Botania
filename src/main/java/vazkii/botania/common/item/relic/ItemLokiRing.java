@@ -55,7 +55,6 @@ import vazkii.botania.common.lib.LibItemNames;
 import baubles.api.BaubleType;
 import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
-import baubles.common.network.PacketHandler;
 import baubles.common.network.PacketSyncBauble;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -107,16 +106,6 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		ItemStack lokiRing = getLokiRing(player);
 		if (lokiRing == null || player.worldObj.isRemote)
 			return;
-
-		int slot = -1;
-		InventoryBaubles inv = PlayerHandler.getPlayerBaubles(player);
-		for(int i = 0; i < inv.getSizeInventory(); i++) {
-			ItemStack stack = inv.getStackInSlot(i);
-			if(stack == lokiRing) {
-				slot = i;
-				break;
-			}
-		}
 
 		ItemStack heldItemStack = player.getCurrentEquippedItem();
 		ChunkCoordinates originCoords = getOriginPos(lokiRing);
@@ -394,7 +383,6 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		World world = player.worldObj;
 		boolean silk = EnchantmentHelper.getEnchantmentLevel(Enchantment.silkTouch.effectId, stack) > 0;
 		int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, stack);
-		boolean dispose = breaker == null? true : breaker.disposeOfTrashBlocks(stack);
 
 		ChunkCoordinates originCoords = getOriginPos(lokiRing);
 

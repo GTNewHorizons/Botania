@@ -37,11 +37,9 @@ import vazkii.botania.api.recipe.IElvenItem;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.achievement.ModAchievements;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
-import vazkii.botania.common.core.helper.MathHelper;
 import vazkii.botania.common.item.relic.ItemDice;
 import vazkii.botania.common.lib.LibGuiIDs;
 import vazkii.botania.common.lib.LibItemNames;
-import vazkii.botania.common.lib.LibMisc;
 
 public class ItemLexicon extends ItemMod implements ILexicon, IElvenItem {
 

@@ -1,6 +1,5 @@
 package vazkii.botania.common.network;
 
-import baubles.common.network.PacketSyncBauble;
 import io.netty.buffer.ByteBuf;
 
 import net.minecraft.entity.player.EntityPlayerMP;
