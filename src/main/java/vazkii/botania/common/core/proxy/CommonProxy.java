@@ -50,6 +50,7 @@ import vazkii.botania.common.core.handler.ChestGenHandler;
 import vazkii.botania.common.core.handler.CommonTickHandler;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.core.handler.InternalMethodHandler;
+import vazkii.botania.common.core.handler.ItemBaubleHandler;
 import vazkii.botania.common.core.handler.ManaNetworkHandler;
 import vazkii.botania.common.core.handler.PixieHandler;
 import vazkii.botania.common.core.handler.SheddingHandler;
@@ -145,6 +146,7 @@ public class CommonProxy {
 			MinecraftForge.EVENT_BUS.register(new SkyblockWorldEvents());
 
 		FMLCommonHandler.instance().bus().register(new CommonTickHandler());
+		FMLCommonHandler.instance().bus().register(new ItemBaubleHandler());
 
 		FMLInterModComms.sendMessage("ProjectE", "interdictionblacklist", EntityManaBurst.class.getCanonicalName());
 

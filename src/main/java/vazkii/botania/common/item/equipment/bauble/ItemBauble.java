@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import thaumcraft.api.IRunicArmor;
 import vazkii.botania.api.item.ICosmeticAttachable;
 import vazkii.botania.api.item.IPhantomInkable;
@@ -36,9 +34,6 @@ import baubles.api.IBauble;
 import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -58,19 +53,6 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 		super();
 		setMaxStackSize(1);
 		setUnlocalizedName(name);
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@SubscribeEvent
-	public void disconnectFromServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-		if(Minecraft.getMinecraft().thePlayer != null) {
-			removePlayer(Minecraft.getMinecraft().thePlayer.getUniqueID());
-		}
-	}
-
-	@SubscribeEvent
-	public void playerDisconnect(PlayerEvent.PlayerLoggedOutEvent event) {
-		removePlayer(event.player.getUniqueID());
 	}
 
 	@Override
