@@ -39,10 +39,10 @@ public class CorporeaAutoCompleteHandler {
 
 	boolean isAutoCompleted = false;
 	String originalString = "";
-	List<CompletionData> completions = new ArrayList<CompletionData>();
+	List<CompletionData> completions = new ArrayList<>();
 	int position;
 
-	static TreeSet<String> itemNames = new TreeSet<String>(
+	static TreeSet<String> itemNames = new TreeSet<>(
 			new Comparator<String>() {
 				@Override
 				public int compare(String arg0, String arg1) {
@@ -55,7 +55,7 @@ public class CorporeaAutoCompleteHandler {
 	public static void updateItemList() {
 		itemNames.clear();
 		Iterator<Item> iterator = Item.itemRegistry.iterator();
-		ArrayList<ItemStack> curList = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> curList = new ArrayList<>();
 
 		while(iterator.hasNext()) {
 			Item item = iterator.next();
@@ -144,9 +144,9 @@ public class CorporeaAutoCompleteHandler {
 	private ArrayList<CompletionData> getNames(String prefix) {
 		String s = prefix.trim();
 		if(s.isEmpty())
-			return new ArrayList();
+			return new ArrayList<>();
 				
-		TreeSet<CompletionData> result = new TreeSet<CompletionData>();
+		TreeSet<CompletionData> result = new TreeSet<>();
 		String[] words = s.split(" ");
 		int i = words.length - 1;
 		String curPrefix = words[i];
@@ -156,11 +156,11 @@ public class CorporeaAutoCompleteHandler {
 			if(i >= 0)
 				curPrefix = words[i] + " " + curPrefix;
 		}
-		return new ArrayList<CompletionData>(result);
+		return new ArrayList<>(result);
 	}
 
 	private List<CompletionData> getNamesStartingWith(String prefix) {
-		ArrayList<CompletionData> result = new ArrayList<CompletionData>();
+		ArrayList<CompletionData> result = new ArrayList<>();
 		int length = prefix.length();
 		SortedSet<String> after = itemNames.tailSet(prefix);
 		for(String str : after) {

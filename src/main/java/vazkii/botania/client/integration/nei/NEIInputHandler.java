@@ -16,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import codechicken.nei.LayoutManager;
 import codechicken.nei.NEIClientConfig;
 import codechicken.nei.guihook.GuiContainerManager;
@@ -39,11 +38,11 @@ public class NEIInputHandler implements IContainerInputHandler {
 		    	if(stack != null && stack.getItem() != null) {
 		    		int count = 1;
 		    		int max = stack.getMaxStackSize();
-		    		if(gui.isShiftKeyDown()) {
+		    		if(GuiScreen.isShiftKeyDown()) {
 		    			count = max;
-		    			if(gui.isCtrlKeyDown())
+		    			if(GuiScreen.isCtrlKeyDown())
 		    				count /= 4;
-		    		} else if(gui.isCtrlKeyDown())
+		    		} else if(GuiScreen.isCtrlKeyDown())
 		    			count = max / 2;
 		    		
 		    		if(count > 0) {

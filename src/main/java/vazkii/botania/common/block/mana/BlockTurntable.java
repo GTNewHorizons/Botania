@@ -16,7 +16,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import vazkii.botania.api.lexicon.ILexiconable;
@@ -29,7 +28,7 @@ import vazkii.botania.common.block.tile.mana.TileTurntable;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockTurntable extends BlockModContainer implements IWandable, IWandHUD, ILexiconable {
+public class BlockTurntable extends BlockModContainer<TileTurntable> implements IWandable, IWandHUD, ILexiconable {
 
 	IIcon[] icons;
 
@@ -53,7 +52,7 @@ public class BlockTurntable extends BlockModContainer implements IWandable, IWan
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileTurntable createNewTileEntity(World world, int meta) {
 		return new TileTurntable();
 	}
 

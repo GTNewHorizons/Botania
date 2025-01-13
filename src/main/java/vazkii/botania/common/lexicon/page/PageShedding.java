@@ -79,7 +79,7 @@ public class PageShedding extends PageEntity {
 
 		if(tooltipStack != null) {
 			List<String> tooltipData = tooltipStack.getTooltip(Minecraft.getMinecraft().thePlayer, false);
-			List<String> parsedTooltip = new ArrayList();
+			List<String> parsedTooltip = new ArrayList<>();
 			boolean first = true;
 
 			for(String s : tooltipData) {
@@ -100,7 +100,7 @@ public class PageShedding extends PageEntity {
 			}
 		}
 		else if(tooltipEntity) {
-			List<String> parsedTooltip = new ArrayList();
+			List<String> parsedTooltip = new ArrayList<>();
 			parsedTooltip.add(EntityList.getEntityString(dummyEntity));
 			vazkii.botania.client.core.helper.RenderHelper.renderTooltip(mx, my, parsedTooltip);
 		}
@@ -147,7 +147,7 @@ public class PageShedding extends PageEntity {
 
 	@Override
 	public List<ItemStack> getDisplayedRecipes() {
-		ArrayList<ItemStack> list = new ArrayList();
+		ArrayList<ItemStack> list = new ArrayList<>();
 		list.add(shedStack);
 		return list;
 	}

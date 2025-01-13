@@ -201,7 +201,7 @@ public abstract class EntityThrowableCopy extends Entity implements IProjectile 
 		if (!worldObj.isRemote)
 		{
 			Entity entity = null;
-			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+			List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
 			double d0 = 0.0D;
 			EntityLivingBase entitylivingbase = getThrower();
 

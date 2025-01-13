@@ -22,7 +22,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -35,6 +34,7 @@ import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.BlockModContainer;
 import vazkii.botania.common.block.decor.IFloatingFlower.IslandType;
 import vazkii.botania.common.block.tile.TileFloatingFlower;
+import vazkii.botania.common.block.tile.TileMod;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.integration.coloredlights.ColoredLightHelper;
 import vazkii.botania.common.item.IFloatingFlowerVariant;
@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Random;
 
 @Optional.Interface(modid = "Thaumcraft", iface = "thaumcraft.api.crafting.IInfusionStabiliser", striprefs = true)
-public class BlockFloatingFlower extends BlockModContainer implements ILexiconable, IInfusionStabiliser {
+public class BlockFloatingFlower extends BlockModContainer<TileMod> implements ILexiconable, IInfusionStabiliser {
 
 	public BlockFloatingFlower() {
 		this(LibBlockNames.MINI_ISLAND);
@@ -158,7 +158,7 @@ public class BlockFloatingFlower extends BlockModContainer implements ILexiconab
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileMod createNewTileEntity(World world, int meta) {
 		return new TileFloatingFlower();
 	}
 

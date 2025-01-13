@@ -20,7 +20,7 @@ public final class VanillaPacketDispatcher {
 
 	public static void dispatchTEToNearbyPlayers(TileEntity tile) {
 		World world = tile.getWorldObj();
-		List players = world.playerEntities;
+		List<?> players = world.playerEntities;
 		for(Object player : players)
 			if(player instanceof EntityPlayerMP) {
 				EntityPlayerMP mp = (EntityPlayerMP) player;

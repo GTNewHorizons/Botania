@@ -39,7 +39,7 @@ public class MultiblockComponent {
 	}
 
 	public MultiblockComponent(ChunkCoordinates relPos, Block block, int meta, TileEntity tileEntity) {
-		this(relPos, block, meta, block.hasTileEntity() == (tileEntity != null), tileEntity);
+		this(relPos, block, meta, block.hasTileEntity(0) == (tileEntity != null), tileEntity);
 	}
 
 	public MultiblockComponent(ChunkCoordinates relPos, Block block, int meta, boolean doFancyRender, TileEntity tileEntity) {

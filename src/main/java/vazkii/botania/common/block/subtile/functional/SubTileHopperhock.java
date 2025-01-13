@@ -34,7 +34,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import scala.reflect.internal.util.WeakHashSet;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.mana.IManaItem;
 import vazkii.botania.api.subtile.RadiusDescriptor;
@@ -52,7 +51,7 @@ public class SubTileHopperhock extends SubTileFunctional {
 	private static final int RANGE_MANA_MINI = 2;
 	private static final int RANGE_MINI = 1;
 
-	private static Set<EntityItem> particled = Collections.newSetFromMap(new WeakHashMap());
+	private static Set<EntityItem> particled = Collections.newSetFromMap(new WeakHashMap<>());
 
 	int filterType = 0;
 
@@ -171,7 +170,7 @@ public class SubTileHopperhock extends SubTileFunctional {
 	}
 
 	public static List<ItemStack> getFilterForInventory(World world, IInventory inv, int x, int y, int z, boolean recursiveForDoubleChests) {
-		List<ItemStack> filter = new ArrayList();
+		List<ItemStack> filter = new ArrayList<>();
 
 		if(recursiveForDoubleChests) {
 			TileEntity tileEntity = world.getTileEntity(x, y, z);

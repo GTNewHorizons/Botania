@@ -68,7 +68,7 @@ public class SubTileRannuncarpus extends SubTileFunctional {
 			BlockData filter = getUnderlyingBlock();
 
 			boolean scanned = false;
-			List<ChunkCoordinates> validPositions = new ArrayList();
+			List<ChunkCoordinates> validPositions = new ArrayList<>();
 
 			int rangePlace = getRange();
 			int rangePlaceY = getRangeY();
@@ -78,7 +78,6 @@ public class SubTileRannuncarpus extends SubTileFunctional {
 			int z = supertile.zCoord;
 
 			List<EntityItem> items = supertile.getWorldObj().getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x - RANGE, y - RANGE_Y, z - RANGE, x + RANGE + 1, y + RANGE_Y, z + RANGE + 1));
-			List<ItemStack> itemFilter = SubTileHopperhock.getFilterForInventory(supertile.getWorldObj(), null,x,y-(supertile instanceof IFloatingFlower?1:2),z, false);
 			int slowdown = getSlowdownFactor();
 			for(EntityItem item : items) {
 				if(item.age < (60 + slowdown) || item.isDead)

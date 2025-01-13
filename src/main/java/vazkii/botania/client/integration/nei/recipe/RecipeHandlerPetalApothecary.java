@@ -25,7 +25,7 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
 
 	public class CachedPetalApothecaryRecipe extends CachedRecipe {
 
-		public List<PositionedStack> inputs = new ArrayList<PositionedStack>();
+		public List<PositionedStack> inputs = new ArrayList<>();
 		public PositionedStack output;
 
 		public CachedPetalApothecaryRecipe(RecipePetals recipe, boolean addCenterItem) {

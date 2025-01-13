@@ -35,6 +35,7 @@ import vazkii.botania.api.wand.IWandHUD;
 import vazkii.botania.api.wand.IWandable;
 import vazkii.botania.common.block.decor.BlockFloatingFlower;
 import vazkii.botania.common.block.tile.TileFloatingSpecialFlower;
+import vazkii.botania.common.block.tile.TileMod;
 import vazkii.botania.common.block.tile.TileSpecialFlower;
 import vazkii.botania.common.crafting.recipe.SpecialFloatingFlowerRecipe;
 import vazkii.botania.common.integration.coloredlights.LightHelper;
@@ -115,7 +116,7 @@ public class BlockFloatingSpecialFlower extends BlockFloatingFlower implements I
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		ArrayList<ItemStack> list = new ArrayList();
+		ArrayList<ItemStack> list = new ArrayList<>();
 		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if(tile != null) {
@@ -165,7 +166,7 @@ public class BlockFloatingSpecialFlower extends BlockFloatingFlower implements I
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileMod createNewTileEntity(World world, int meta) {
 		return new TileFloatingSpecialFlower();
 	}
 

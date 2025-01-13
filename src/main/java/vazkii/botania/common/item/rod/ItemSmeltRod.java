@@ -35,7 +35,7 @@ public class ItemSmeltRod extends ItemMod implements IManaUsingItem {
 	private static final int COST = 300;
 	private static final int COST_PER_TICK = COST / TIME;
 
-	public static Map<EntityPlayer, SmeltData> playerData = new WeakHashMap();
+	public static Map<EntityPlayer, SmeltData> playerData = new WeakHashMap<>();
 
 	public ItemSmeltRod() {
 		setUnlocalizedName(LibItemNames.SMELT_ROD);

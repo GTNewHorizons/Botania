@@ -106,7 +106,7 @@ public class TileSpawnerClaw extends TileMod implements IManaReceiver {
 	private void resetTimer(MobSpawnerBaseLogic logic) {
 		int maxSpawnDelay = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.MAX_SPAWN_DELAY);
 		int minSpawnDelay = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.MIN_SPAWN_DELAY);
-		List potentialEntitySpawns = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.POTENTIAL_ENTITY_SPAWNS);
+		List<?> potentialEntitySpawns = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.POTENTIAL_ENTITY_SPAWNS);
 
 		if(maxSpawnDelay <= minSpawnDelay)
 			logic.spawnDelay = minSpawnDelay;

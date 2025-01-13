@@ -49,9 +49,9 @@ public class TileCorporeaIndex extends TileCorporeaBase implements ICorporeaRequ
 	public static final double RADIUS = 2.5;
 
 	private static InputHandler input;
-	public static final Set<TileCorporeaIndex> indexes = Collections.newSetFromMap(new WeakHashMap());
+	public static final Set<TileCorporeaIndex> indexes = Collections.newSetFromMap(new WeakHashMap<>());
 
-	private static final Map<Pattern, IRegexStacker> patterns = new LinkedHashMap();
+	private static final Map<Pattern, IRegexStacker> patterns = new LinkedHashMap<>();
 
 	/**
 	 * (name) = Item name, or "this" for the name of the item in your hand
@@ -286,7 +286,7 @@ public class TileCorporeaIndex extends TileCorporeaBase implements ICorporeaRequ
 		}
 
 		public static List<TileCorporeaIndex> getNearbyIndexes(EntityPlayer player) {
-			List<TileCorporeaIndex> indexList = new ArrayList();
+			List<TileCorporeaIndex> indexList = new ArrayList<>();
 			for(TileCorporeaIndex index : indexes)
 				if(isInRangeOfIndex(player, index) && index.worldObj.isRemote == player.worldObj.isRemote)
 					indexList.add(index);

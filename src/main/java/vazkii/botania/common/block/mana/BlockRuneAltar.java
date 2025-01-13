@@ -19,7 +19,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import vazkii.botania.api.BotaniaAPI;
@@ -33,7 +32,7 @@ import vazkii.botania.common.block.tile.TileSimpleInventory;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockRuneAltar extends BlockModContainer implements IWandable, ILexiconable {
+public class BlockRuneAltar extends BlockModContainer<TileRuneAltar> implements IWandable, ILexiconable {
 
 	Random random;
 	IIcon[] icons;
@@ -137,7 +136,7 @@ public class BlockRuneAltar extends BlockModContainer implements IWandable, ILex
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileRuneAltar createNewTileEntity(World world, int meta) {
 		return new TileRuneAltar();
 	}
 

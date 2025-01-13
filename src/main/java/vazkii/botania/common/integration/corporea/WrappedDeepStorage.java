@@ -54,7 +54,7 @@ public class WrappedDeepStorage extends WrappedInventoryBase {
 	}
 
 	private List<ItemStack> iterateOverStacks(CorporeaRequest request, boolean doit) {
-		List<ItemStack> stacks = new ArrayList<ItemStack>();
+		List<ItemStack> stacks = new ArrayList<>();
 		boolean removedAny = false;
 
 		ItemStack prototype = inv.getStoredItemType();

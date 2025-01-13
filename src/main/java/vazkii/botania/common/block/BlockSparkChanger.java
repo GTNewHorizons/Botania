@@ -19,7 +19,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -32,7 +31,7 @@ import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockSparkChanger extends BlockModContainer implements ILexiconable {
+public class BlockSparkChanger extends BlockModContainer<TileSparkChanger> implements ILexiconable {
 
 	IIcon[] icons;
 	Random random;
@@ -168,7 +167,7 @@ public class BlockSparkChanger extends BlockModContainer implements ILexiconable
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileSparkChanger createNewTileEntity(World world, int meta) {
 		return new TileSparkChanger();
 	}
 

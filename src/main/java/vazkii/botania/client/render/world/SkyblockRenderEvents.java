@@ -16,7 +16,6 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.world.WorldTypeSkyblock;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import java.util.stream.IntStream;
 
 public final class SkyblockRenderEvents {
 

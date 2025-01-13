@@ -32,7 +32,7 @@ public class ItemFertilizer extends ItemMod {
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
 		final int range = 3;
 		if(!par3World.isRemote) {
-			List<ChunkCoordinates> validCoords = new ArrayList();
+			List<ChunkCoordinates> validCoords = new ArrayList<>();
 
 			for(int i = -range - 1; i < range; i++)
 				for(int j = -range - 1; j < range; j++) {

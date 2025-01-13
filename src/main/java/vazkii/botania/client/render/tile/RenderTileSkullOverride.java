@@ -46,7 +46,7 @@ public class RenderTileSkullOverride extends TileEntitySkullRenderer {
 			if(gaia)
 				resourcelocation = minecraft.thePlayer.getLocationSkin();
 			else if(gameProfile != null) {
-				Map map = minecraft.func_152342_ad().func_152788_a(gameProfile);
+				Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map = minecraft.func_152342_ad().func_152788_a(gameProfile);
 
 				if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
 					resourcelocation = minecraft.func_152342_ad().func_152792_a((MinecraftProfileTexture)map.get(MinecraftProfileTexture.Type.SKIN), MinecraftProfileTexture.Type.SKIN);

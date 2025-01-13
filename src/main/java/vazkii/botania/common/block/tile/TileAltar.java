@@ -162,7 +162,7 @@ public class TileAltar extends TileSimpleInventory implements ISidedInventory, I
 	}
 
 	public void saveLastRecipe() {
-		lastRecipe = new ArrayList();
+		lastRecipe = new ArrayList<>();
 		for(int i = 0; i < getSizeInventory(); i++) {
 			ItemStack stack = getStackInSlot(i);
 			if(stack == null)

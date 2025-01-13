@@ -162,7 +162,7 @@ public class EntityMagicMissile extends EntityThrowable {
 			setTarget(null);
 
 		double range = 12;
-		List entities = worldObj.getEntitiesWithinAABB(isEvil() ? EntityPlayer.class : IMob.class, AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range));
+		List<Entity> entities = worldObj.getEntitiesWithinAABB(isEvil() ? EntityPlayer.class : IMob.class, AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range));
 		while(entities.size() > 0) {
 			Entity e = (Entity) entities.get(worldObj.rand.nextInt(entities.size()));
 			if(!(e instanceof EntityLivingBase) || e.isDead) { // Just in case...

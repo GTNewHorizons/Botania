@@ -36,6 +36,7 @@ import vazkii.botania.client.core.helper.IconHelper;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.lib.LibItemNames;
 
+@SuppressWarnings("deprecation")
 public class ItemGrassHorn extends ItemMod {
 
 	private static final int SUBTYPES = 3;
@@ -117,7 +118,7 @@ public class ItemGrassHorn extends ItemMod {
 		Random rand = new Random(srcx ^ srcy ^ srcz);
 		int range = 12 - stackDmg * 3;
 		int rangeY = 3 + stackDmg * 4;
-		List<ChunkCoordinates> coords = new ArrayList();
+		List<ChunkCoordinates> coords = new ArrayList<>();
 
 		for(int i = -range; i < range + 1; i++)
 			for(int j = -range; j < range + 1; j++)
@@ -136,7 +137,7 @@ public class ItemGrassHorn extends ItemMod {
 		int count = Math.min(coords.size(), 32 + stackDmg * 16);
 		for(int i = 0; i < count; i++) {
 			ChunkCoordinates currCoords = coords.get(i);
-			List<ItemStack> items = new ArrayList();
+			List<ItemStack> items = new ArrayList<>();
 			Block block = world.getBlock(currCoords.posX, currCoords.posY, currCoords.posZ);
 			int meta = world.getBlockMetadata(currCoords.posX, currCoords.posY, currCoords.posZ);
 			items.addAll(block.getDrops(world, currCoords.posX, currCoords.posY, currCoords.posZ, meta, 0));

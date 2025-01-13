@@ -156,7 +156,7 @@ public class PageManaInfusionRecipe extends PageRecipe {
 
 	@Override
 	public List<ItemStack> getDisplayedRecipes() {
-		ArrayList<ItemStack> list = new ArrayList();
+		ArrayList<ItemStack> list = new ArrayList<>();
 		for(RecipeManaInfusion r : recipes)
 			list.add(r.getOutput());
 

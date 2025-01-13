@@ -2,7 +2,6 @@ package vazkii.botania.client.integration.nei.recipe;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -23,7 +22,6 @@ import vazkii.botania.client.render.tile.RenderTilePool;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.mana.TilePool;
 import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
@@ -32,9 +30,9 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 
 	public class CachedManaPoolRecipe extends CachedRecipe {
 
-		public List<PositionedStack> inputs = new ArrayList<PositionedStack>();
+		public List<PositionedStack> inputs = new ArrayList<>();
 		public PositionedStack output;
-		public List<PositionedStack> otherStacks = new ArrayList<PositionedStack>();
+		public List<PositionedStack> otherStacks = new ArrayList<>();
 		public int mana;
 
 		public CachedManaPoolRecipe(RecipeManaInfusion recipe) {

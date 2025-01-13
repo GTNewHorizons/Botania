@@ -35,9 +35,9 @@ public class EntityCorporeaSpark extends Entity implements ICorporeaSpark {
 	private static final String TAG_INVIS = "invis";
 
 	ICorporeaSpark master;
-	List<ICorporeaSpark> connections = new ArrayList();
-	List<ICorporeaSpark> connectionsClient = new ArrayList();
-	List<ICorporeaSpark> relatives = new ArrayList();
+	List<ICorporeaSpark> connections = new ArrayList<>();
+	List<ICorporeaSpark> connectionsClient = new ArrayList<>();
+	List<ICorporeaSpark> relatives = new ArrayList<>();
 	boolean firstUpdateClient = true;
 	boolean firstUpdateServer = true;
 
@@ -135,15 +135,15 @@ public class EntityCorporeaSpark extends Entity implements ICorporeaSpark {
 
 	void restartNetwork() {
 		if(worldObj.isRemote)
-			connectionsClient = new ArrayList();
-		else connections = new ArrayList();
-		relatives = new ArrayList();
+			connectionsClient = new ArrayList<>();
+		else connections = new ArrayList<>();
+		relatives = new ArrayList<>();
 
 		if(master != null) {
 			ICorporeaSpark oldMaster = master;
 			master = null;
 
-			oldMaster.registerConnections(oldMaster, this, new ArrayList());
+			oldMaster.registerConnections(oldMaster, this, new ArrayList<>());
 		}
 	}
 
@@ -263,7 +263,7 @@ public class EntityCorporeaSpark extends Entity implements ICorporeaSpark {
 						player.swingItem();
 					return true;
 				} else {
-					displayRelatives(new ArrayList(), master);
+					displayRelatives(new ArrayList<>(), master);
 					return true;
 				}
 			} else if(stack.getItem() == ModItems.dye) {

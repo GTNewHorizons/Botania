@@ -174,11 +174,11 @@ public class LightningHandler {
 
 	public static class LightningBolt {
 
-		public ArrayList<Segment> segments = new ArrayList<Segment>();
+		public ArrayList<Segment> segments = new ArrayList<>();
 		public Vector3 start;
 		public Vector3 end;
 		ChunkCoordinates target;
-		HashMap<Integer, Integer> splitparents = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> splitparents = new HashMap<>();
 
 		public double length;
 		public int numsegments0;
@@ -195,7 +195,7 @@ public class LightningHandler {
 		private World world;
 		private Entity source;
 
-		public static ConcurrentLinkedQueue<LightningBolt> boltlist = new ConcurrentLinkedQueue<LightningBolt>();
+		public static ConcurrentLinkedQueue<LightningBolt> boltlist = new ConcurrentLinkedQueue<>();
 
 		public float speed = 1.5F;
 		public static final int fadetime = 20;
@@ -347,7 +347,7 @@ public class LightningHandler {
 				return;
 
 			ArrayList<Segment> oldsegments = segments;
-			segments = new ArrayList<Segment>();
+			segments = new ArrayList<>();
 
 			Segment prev = null;
 
@@ -428,7 +428,7 @@ public class LightningHandler {
 		}
 
 		private void calculateCollisionAndDiffs() {
-			HashMap<Integer, Integer> lastactivesegment = new HashMap<Integer, Integer>();
+			HashMap<Integer, Integer> lastactivesegment = new HashMap<>();
 
 			Collections.sort(segments, new SegmentSorter());
 

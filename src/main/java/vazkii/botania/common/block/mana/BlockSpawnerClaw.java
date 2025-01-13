@@ -19,7 +19,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
@@ -29,7 +28,7 @@ import vazkii.botania.common.block.tile.TileSpawnerClaw;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockSpawnerClaw extends BlockModContainer implements ILexiconable {
+public class BlockSpawnerClaw extends BlockModContainer<TileSpawnerClaw> implements ILexiconable {
 
 	public BlockSpawnerClaw() {
 		super(Material.iron);
@@ -68,7 +67,7 @@ public class BlockSpawnerClaw extends BlockModContainer implements ILexiconable 
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileSpawnerClaw createNewTileEntity(World world, int meta) {
 		return new TileSpawnerClaw();
 	}
 

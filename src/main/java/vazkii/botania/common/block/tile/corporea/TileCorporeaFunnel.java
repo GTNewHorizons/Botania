@@ -42,7 +42,7 @@ public class TileCorporeaFunnel extends TileCorporeaBase implements ICorporeaReq
 	}
 
 	public List<ItemStack> getFilter() {
-		List<ItemStack> filter = new ArrayList();
+		List<ItemStack> filter = new ArrayList<>();
 
 		final int[] orientationToDir = new int[] {
 				3, 4, 2, 5

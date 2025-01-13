@@ -23,7 +23,7 @@ import vazkii.botania.common.lib.LibMisc;
 
 public class TileDistributor extends TileMod implements IManaReceiver {
 
-	List<IManaReceiver> validPools = new ArrayList();
+	List<IManaReceiver> validPools = new ArrayList<>();
 
 	@Override
 	public void updateEntity() {

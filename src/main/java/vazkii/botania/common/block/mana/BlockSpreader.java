@@ -47,7 +47,7 @@ import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class BlockSpreader extends BlockModContainer implements IWandable, IWandHUD, ILexiconable, IWireframeAABBProvider {
+public class BlockSpreader extends BlockModContainer<TileSpreader> implements IWandable, IWandHUD, ILexiconable, IWireframeAABBProvider {
 
 	Random random;
 
@@ -229,7 +229,7 @@ public class BlockSpreader extends BlockModContainer implements IWandable, IWand
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileSpreader createNewTileEntity(World world, int meta) {
 		return new TileSpreader();
 	}
 

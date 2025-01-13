@@ -47,8 +47,8 @@ public class EntityEnderAirBottle extends EntityThrowable {
 	}
 
 	public List<ChunkCoordinates> getCoordsToPut(int xCoord, int yCoord, int zCoord) {
-		List<ChunkCoordinates> possibleCoords = new ArrayList();
-		List<ChunkCoordinates> selectedCoords = new ArrayList();
+		List<ChunkCoordinates> possibleCoords = new ArrayList<>();
+		List<ChunkCoordinates> selectedCoords = new ArrayList<>();
 		int range = 4;
 		int rangeY = 4;
 

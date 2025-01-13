@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 public class TileRedStringInterceptor extends TileRedString {
 
-	public static List<TileRedStringInterceptor> interceptors = new ArrayList();
+	public static List<TileRedStringInterceptor> interceptors = new ArrayList<>();
 
 	@Override
 	public void updateEntity() {
@@ -40,11 +40,11 @@ public class TileRedStringInterceptor extends TileRedString {
 	}
 
 	public static void onInteract(EntityPlayer player, World world, int x, int y, int z) {
-		List<TileRedStringInterceptor> remove = new ArrayList();
+		List<TileRedStringInterceptor> remove = new ArrayList<>();
 		boolean did = false;
 
 		// CMEs are amazing
-		List<TileRedStringInterceptor> interceptorsCopy = new ArrayList(interceptors);
+		List<TileRedStringInterceptor> interceptorsCopy = new ArrayList<>(interceptors);
 		
 		for(TileRedStringInterceptor inter : interceptorsCopy) {
 			if(!inter.removeFromList()) {

@@ -25,7 +25,7 @@ import vazkii.botania.client.core.helper.IconHelper;
 import vazkii.botania.common.block.tile.TileCacophonium;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockCacophonium extends BlockModContainer {
+public class BlockCacophonium extends BlockModContainer<TileCacophonium> {
 
 	IIcon top;
 
@@ -79,7 +79,7 @@ public class BlockCacophonium extends BlockModContainer {
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		ArrayList<ItemStack> stacks = new ArrayList();
+		ArrayList<ItemStack> stacks = new ArrayList<>();
 
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile != null && tile instanceof TileCacophonium) {
@@ -93,7 +93,7 @@ public class BlockCacophonium extends BlockModContainer {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileCacophonium createNewTileEntity(World world, int meta) {
 		return new TileCacophonium();
 	}
 

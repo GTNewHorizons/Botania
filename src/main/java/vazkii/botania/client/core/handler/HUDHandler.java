@@ -128,7 +128,7 @@ public final class HUDHandler {
 					renderCrystalCubeHUD(event.resolution, (TileCorporeaCrystalCube) tile);
 			}
 
-			if(!TileCorporeaIndex.getInputHandler().getNearbyIndexes(mc.thePlayer).isEmpty() && mc.currentScreen != null && mc.currentScreen instanceof GuiChat) {
+			if(!TileCorporeaIndex.InputHandler.getNearbyIndexes(mc.thePlayer).isEmpty() && mc.currentScreen != null && mc.currentScreen instanceof GuiChat) {
 				profiler.startSection("nearIndex");
 				renderNearIndexDisplay(event.resolution);
 				profiler.endSection();

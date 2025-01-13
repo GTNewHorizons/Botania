@@ -34,7 +34,7 @@ import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class BlockTinyPotato extends BlockModContainer implements ILexiconable {
+public class BlockTinyPotato extends BlockModContainer<TileTinyPotato> implements ILexiconable {
 
 	public BlockTinyPotato() {
 		super(Material.cloth);
@@ -93,7 +93,7 @@ public class BlockTinyPotato extends BlockModContainer implements ILexiconable {
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
-		ArrayList<ItemStack> list = new ArrayList();
+		ArrayList<ItemStack> list = new ArrayList<>();
 		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if(tile != null) {
@@ -123,7 +123,7 @@ public class BlockTinyPotato extends BlockModContainer implements ILexiconable {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileTinyPotato createNewTileEntity(World world, int meta) {
 		return new TileTinyPotato();
 	}
 

@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -35,7 +34,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockBifrost extends BlockModContainer implements ILexiconable {
+public class BlockBifrost extends BlockModContainer<TileBifrost> implements ILexiconable {
 
 	public BlockBifrost() {
 		super(Material.glass);
@@ -100,7 +99,7 @@ public class BlockBifrost extends BlockModContainer implements ILexiconable {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileBifrost createNewTileEntity(World world, int meta) {
 		return new TileBifrost();
 	}
 

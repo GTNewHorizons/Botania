@@ -24,7 +24,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -39,7 +38,7 @@ import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockEnchanter extends BlockModContainer implements IWandable, ILexiconable, IWandHUD {
+public class BlockEnchanter extends BlockModContainer<TileEnchanter> implements IWandable, ILexiconable, IWandHUD {
 
 	Random random;
 	public static IIcon overlay;
@@ -67,7 +66,7 @@ public class BlockEnchanter extends BlockModContainer implements IWandable, ILex
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileEnchanter createNewTileEntity(World world, int meta) {
 		return new TileEnchanter();
 	}
 

@@ -2,7 +2,6 @@ package vazkii.botania.client.integration.nei.recipe;
 
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -19,7 +18,6 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.item.block.ItemBlockSpecialFlower;
 import vazkii.botania.common.lib.LibBlockNames;
 import codechicken.lib.gui.GuiDraw;
-import codechicken.nei.NEIServerUtils;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 
@@ -27,9 +25,9 @@ public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
 
 	public class CachedPureDaisyRecipe extends CachedRecipe {
 
-		public List<PositionedStack> inputs = new ArrayList<PositionedStack>();
+		public List<PositionedStack> inputs = new ArrayList<>();
 		public PositionedStack output;
-		public List<PositionedStack> otherStacks = new ArrayList<PositionedStack>();
+		public List<PositionedStack> otherStacks = new ArrayList<>();
 
 		public CachedPureDaisyRecipe(RecipePureDaisy recipe) {
 			if(recipe == null)

@@ -74,7 +74,7 @@ public class SubTileMarimorphosis extends SubTileFunctional {
 	public ItemStack getStoneToPut(ChunkCoordinates coords) {
 		List<Type> types = Arrays.asList(BiomeDictionary.getTypesForBiome(supertile.getWorldObj().getBiomeGenForCoords(coords.posX, coords.posZ)));
 
-		List<Integer> values = new ArrayList();
+		List<Integer> values = new ArrayList<>();
 		for(int i = 0; i < 8; i++) {
 			int times = 1;
 			if(types.contains(TYPES[i]))
@@ -88,7 +88,7 @@ public class SubTileMarimorphosis extends SubTileFunctional {
 	}
 
 	public ChunkCoordinates getCoordsToPut() {
-		List<ChunkCoordinates> possibleCoords = new ArrayList();
+		List<ChunkCoordinates> possibleCoords = new ArrayList<>();
 
 		int range = getRange();
 		int rangeY = getRangeY();

@@ -20,7 +20,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -36,7 +35,7 @@ import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class BlockLightRelay extends BlockModContainer implements IWandable, ILexiconable {
+public class BlockLightRelay extends BlockModContainer<TileLightRelay> implements IWandable, ILexiconable {
 
 	public static IIcon invIcon, worldIcon, invIconRed, worldIconRed;
 
@@ -139,7 +138,7 @@ public class BlockLightRelay extends BlockModContainer implements IWandable, ILe
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileLightRelay createNewTileEntity(World world, int meta) {
 		return new TileLightRelay();
 	}
 

@@ -29,7 +29,7 @@ import vazkii.botania.common.item.ModItems;
 
 public final class RedStringRenderer {
 
-	public static final Queue<TileRedString> redStringTiles = new ArrayDeque();
+	public static final Queue<TileRedString> redStringTiles = new ArrayDeque<>();
 	static float sizeAlpha = 0F;
 
 	public static void renderAll() {

@@ -47,7 +47,7 @@ import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class BlockOpenCrate extends BlockModContainer implements ILexiconable, IWandable, IWandHUD {
+public class BlockOpenCrate extends BlockModContainer<TileOpenCrate> implements ILexiconable, IWandable, IWandHUD {
 
 	IIcon iconSide;
 	IIcon iconBottom;
@@ -168,7 +168,7 @@ public class BlockOpenCrate extends BlockModContainer implements ILexiconable, I
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileOpenCrate createNewTileEntity(World world, int meta) {
 		return meta == 0 ? new TileOpenCrate() : new TileCraftCrate();
 	}
 

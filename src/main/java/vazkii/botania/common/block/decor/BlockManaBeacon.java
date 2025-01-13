@@ -21,7 +21,6 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -35,7 +34,7 @@ import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class BlockManaBeacon extends BlockModContainer implements ILexiconable {
+public class BlockManaBeacon extends BlockModContainer<TileManaBeacon> implements ILexiconable {
 
 	IIcon[] icons;
 
@@ -110,7 +109,7 @@ public class BlockManaBeacon extends BlockModContainer implements ILexiconable {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileManaBeacon createNewTileEntity(World world, int meta) {
 		return new TileManaBeacon();
 	}
 }

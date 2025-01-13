@@ -54,7 +54,7 @@ public class LensMine extends Lens {
 
 		ChunkCoordinates coords = burst.getBurstSourceChunkCoordinates();
 		if((coords.posX != x || coords.posY != y || coords.posZ != z) && !(tile instanceof IManaBlock) && neededHarvestLevel <= harvestLevel && hardness != -1 && hardness < 50F && (burst.isFake() || mana >= 24)) {
-			List<ItemStack> items = new ArrayList();
+			List<ItemStack> items = new ArrayList<>();
 
 			items.addAll(block.getDrops(world, x, y, z, meta, 0));
 

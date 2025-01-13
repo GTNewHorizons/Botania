@@ -28,7 +28,7 @@ public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
 
 	public class CachedElvenTradeRecipe extends CachedRecipe {
 
-		public List<PositionedStack> inputs = new ArrayList<PositionedStack>();
+		public List<PositionedStack> inputs = new ArrayList<>();
 		public PositionedStack output;
 
 		public CachedElvenTradeRecipe(RecipeElvenTrade recipe) {

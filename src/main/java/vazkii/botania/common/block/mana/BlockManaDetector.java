@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -32,7 +31,7 @@ import vazkii.botania.common.block.tile.mana.TileManaDetector;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockManaDetector extends BlockModContainer implements ILexiconable {
+public class BlockManaDetector extends BlockModContainer<TileManaDetector> implements ILexiconable {
 
 	IIcon[] icons;
 
@@ -73,7 +72,7 @@ public class BlockManaDetector extends BlockModContainer implements ILexiconable
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileManaDetector createNewTileEntity(World world, int meta) {
 		return new TileManaDetector();
 	}
 

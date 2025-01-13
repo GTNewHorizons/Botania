@@ -118,7 +118,7 @@ public class BlockForestDrum extends BlockMod implements IManaTrigger, ILexicona
 		else if(!world.isRemote) {
 			int range = 10;
 			List<EntityLiving> entities = world.getEntitiesWithinAABB(EntityLiving.class, AxisAlignedBB.getBoundingBox(x - range, y - range, z - range, x + range + 1, y + range + 1, z + range + 1));
-			List<EntityLiving> shearables = new ArrayList();
+			List<EntityLiving> shearables = new ArrayList<>();
 			ItemStack stack = new ItemStack(this, 1, 1);
 
 			for(EntityLiving entity : entities) {

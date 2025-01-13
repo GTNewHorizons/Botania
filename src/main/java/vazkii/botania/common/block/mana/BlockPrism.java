@@ -35,7 +35,7 @@ import vazkii.botania.common.block.tile.mana.TilePrism;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class BlockPrism extends BlockModContainer implements IManaTrigger, ILexiconable {
+public class BlockPrism extends BlockModContainer<TilePrism> implements IManaTrigger, ILexiconable {
 
 	Random random;
 	IIcon[] icons;
@@ -172,7 +172,7 @@ public class BlockPrism extends BlockModContainer implements IManaTrigger, ILexi
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TilePrism createNewTileEntity(World world, int meta) {
 		return new TilePrism();
 	}
 

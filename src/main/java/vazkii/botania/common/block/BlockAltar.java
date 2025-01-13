@@ -48,7 +48,7 @@ import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class BlockAltar extends BlockModContainer implements ILexiconable {
+public class BlockAltar extends BlockModContainer<TileAltar> implements ILexiconable {
 
 	Random random;
 
@@ -230,7 +230,7 @@ public class BlockAltar extends BlockModContainer implements ILexiconable {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
+	public TileAltar createNewTileEntity(World world, int meta) {
 		return new TileAltar();
 	}
 

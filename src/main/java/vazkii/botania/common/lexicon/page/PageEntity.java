@@ -35,11 +35,11 @@ public class PageEntity extends LexiconPage{
 	int relativeMouseX, relativeMouseY;
 	boolean tooltipEntity;
 	int size;
-	Constructor entityConstructor;
+	Constructor<? extends Entity> entityConstructor;
 
 	public PageEntity(String unlocalizedName, String entity, int size) {
 		super(unlocalizedName);
-		Class EntityClass = (Class) EntityList.stringToClassMapping.get(entity);
+		Class<? extends Entity> EntityClass = (Class<? extends Entity>) EntityList.stringToClassMapping.get(entity);
 		this.size = size;
 		try {
 			entityConstructor = EntityClass.getConstructor(new Class[] {World.class});

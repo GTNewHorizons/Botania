@@ -77,14 +77,14 @@ public class EntityManaBurst extends EntityThrowable implements IManaBurst {
 	final int dataWatcherEntries = 10;
 	final int dataWatcherStart = 32 - dataWatcherEntries;
 
-	List<String> alreadyCollidedAt = new ArrayList();
+	List<String> alreadyCollidedAt = new ArrayList<>();
 
 	boolean fullManaLastTick = true;
 
 	UUID shooterIdentity = null;
 	int _ticksExisted = 0;
 	boolean scanBeam = false;
-	public List<PositionProperties> propsList = new ArrayList();
+	public List<PositionProperties> propsList = new ArrayList<>();
 
 	public EntityManaBurst(World world) {
 		super(world);
@@ -162,7 +162,7 @@ public class EntityManaBurst extends EntityThrowable implements IManaBurst {
 
 		if(!worldObj.isRemote) {
 			Entity entity = null;
-			List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+			List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
 			double d0 = 0.0D;
 			EntityLivingBase entitylivingbase = getThrower();
 
