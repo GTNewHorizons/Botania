@@ -12,9 +12,14 @@ package vazkii.botania.common.item.relic;
 
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import com.gtnewhorizon.gtnhlib.GTNHLib;
+import com.gtnewhorizons.modularui.api.UIInfos;
+import com.gtnewhorizons.modularui.api.screen.IItemWithModularUI;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -29,6 +34,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
@@ -47,6 +53,7 @@ import vazkii.botania.api.item.ISequentialBreaker;
 import vazkii.botania.api.mana.IManaUsingItem;
 import vazkii.botania.api.mana.ManaItemHandler;
 import vazkii.botania.client.core.handler.BoundTileRenderer;
+import vazkii.botania.client.gui.loki.GuiLokiSchematics;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.core.helper.LokiCursor;
 import vazkii.botania.common.item.ModItems;
@@ -62,21 +69,40 @@ import cpw.mods.fml.relauncher.SideOnly;
 import vazkii.botania.common.network.PacketLokiHudNotificationAck;
 
 
-public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeCoordinateListProvider, IManaUsingItem, IInWorldRenderable {
+public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeCoordinateListProvider, IManaUsingItem, IInWorldRenderable, IItemWithModularUI {
 
-	private static final String TAG_CURSOR_LIST = "cursorList";
-	private static final String TAG_CURSOR_PREFIX = "cursor";
-	private static final String TAG_CURSOR_COUNT = "cursorCount";
-	private static final String TAG_X_ORIGIN = "xOrigin";
-	private static final String TAG_Y_ORIGIN = "yOrigin";
-	private static final String TAG_Z_ORIGIN = "zOrigin";
-	private static final String TAG_MODE = "mode";
-	private static final String TAG_BREAKING_MODE = "breaking";
-	private static final String TAG_MIRROR_MODE = "mirror";
+	public static final String TAG_CURSOR_LIST = "cursorList";
+	public static final String TAG_CURSOR_PREFIX = "cursor";
+	public static final String TAG_CURSOR_COUNT = "cursorCount";
+	public static final String TAG_X_ORIGIN = "xOrigin";
+	public static final String TAG_Y_ORIGIN = "yOrigin";
+	public static final String TAG_Z_ORIGIN = "zOrigin";
+	public static final String TAG_MODE = "mode";
+	public static final String TAG_BREAKING_MODE = "breaking";
+	public static final String TAG_MIRROR_MODE = "mirror";
+	public static final String TAG_SAVED_SCHEMATICS = "savedSchematics";
+	public static final String TAG_CURRENT_SCHEMATIC = "currentSchematic";
 	private boolean recursion = false;
 
+	private ModularWindow window;
+	public List<Object> schematicNames;
+
+	@Override
+	public ModularWindow createWindow(UIBuildContext buildContext, ItemStack heldStack) {
+		this.window = GuiLokiSchematics.getWindow(buildContext, heldStack);
+		this.schematicNames = new ArrayList<>(heldStack.getTagCompound().getCompoundTag(TAG_SAVED_SCHEMATICS).tagMap.keySet());
+		return window;
+	}
+
+	public static void openUI(EntityPlayer player, ItemStack stack) {
+		if(isLokiRing(stack) && stack.getItem() instanceof ItemLokiRing) {
+			ItemLokiRing lokiRing = (ItemLokiRing) stack.getItem();
+			UIInfos.openClientUI(player, uiBuildContext -> lokiRing.createWindow(uiBuildContext, stack));
+		}
+	}
+
 	public static enum HUD_MESSAGE  {
-		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA
+		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA, SCHEMATIC_SAVED
 	}
 
 	public ItemLokiRing() {
@@ -127,23 +153,23 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 						syncLokiRing(player);
 				} else {
 					addCursor : {
-					int relX = lookPos.blockX - originCoords.posX;
-					int relY = lookPos.blockY - originCoords.posY;
-					int relZ = lookPos.blockZ - originCoords.posZ;
+						int relX = lookPos.blockX - originCoords.posX;
+						int relY = lookPos.blockY - originCoords.posY;
+						int relZ = lookPos.blockZ - originCoords.posZ;
 
-					for(LokiCursor cursor : cursors)
-						if(cursor.getX() == relX && cursor.getY() == relY && cursor.getZ() == relZ) {
-							cursors.remove(cursor);
-							setCursorList(lokiRing, cursors);
-							if(player instanceof EntityPlayerMP)
-								syncLokiRing(player);
-							break addCursor;
-						}
+						for(LokiCursor cursor : cursors)
+							if(cursor.getX() == relX && cursor.getY() == relY && cursor.getZ() == relZ) {
+								cursors.remove(cursor);
+								setCursorList(lokiRing, cursors);
+								if(player instanceof EntityPlayerMP)
+									syncLokiRing(player);
+								break addCursor;
+							}
 
-					addCursor(lokiRing, relX, relY, relZ, getRingMirrorMode(lokiRing) );
-					if(player instanceof EntityPlayerMP)
-						syncLokiRing(player);
-				}
+						addCursor(lokiRing, relX, relY, relZ, getRingMirrorMode(lokiRing) );
+						if(player instanceof EntityPlayerMP)
+							syncLokiRing(player);
+					}
 				}
 			}
 		} else if (heldItemStack != null && event.action == Action.RIGHT_CLICK_BLOCK && lookPos != null && isRingEnabled(lokiRing)) {
@@ -278,6 +304,69 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		stack.stackTagCompound.setByte(TAG_MIRROR_MODE, state);
 	}
 
+	public static void saveCurrentSelectionAsSchematic(ItemStack stack) {
+		if(!stack.getTagCompound().tagMap.containsKey(TAG_SAVED_SCHEMATICS)) {
+			stack.getTagCompound().setTag(TAG_SAVED_SCHEMATICS, new NBTTagCompound());
+		}
+		NBTTagCompound map = (NBTTagCompound) stack.getTagCompound().getTag(TAG_SAVED_SCHEMATICS);
+		NBTTagCompound currentState = new NBTTagCompound();
+		for(String s : new String[]{
+				TAG_CURSOR_LIST,
+				TAG_CURSOR_PREFIX,
+				TAG_CURSOR_COUNT,
+				TAG_X_ORIGIN,
+				TAG_Y_ORIGIN,
+				TAG_Z_ORIGIN,
+				TAG_BREAKING_MODE,
+				TAG_MIRROR_MODE
+		}) {
+			if(stack.getTagCompound().getTag(s) != null)
+				currentState.setTag(s, stack.getTagCompound().getTag(s));
+		}
+		String newSchematicName = UUID.randomUUID().toString();
+		map.setTag(newSchematicName, currentState);
+		stack.getTagCompound().setTag(TAG_CURRENT_SCHEMATIC, new NBTTagString(newSchematicName));
+	}
+
+	public static void changeSchematic(ItemStack stack, String schematicName) {
+		if(!stack.getTagCompound().tagMap.containsKey(TAG_SAVED_SCHEMATICS)) {
+			return;
+		}
+		NBTTagCompound map = (NBTTagCompound) stack.getTagCompound().getTag(TAG_SAVED_SCHEMATICS);
+		if(!map.tagMap.containsKey(schematicName)) {
+			return;
+		}
+		NBTTagCompound schematic = (NBTTagCompound) map.getTag(schematicName);
+		for(String s : new String[]{
+				TAG_CURSOR_LIST,
+				TAG_CURSOR_PREFIX,
+				TAG_CURSOR_COUNT,
+				TAG_X_ORIGIN,
+				TAG_Y_ORIGIN,
+				TAG_Z_ORIGIN,
+				TAG_BREAKING_MODE,
+				TAG_MIRROR_MODE
+		}) {
+			if(schematic.getTag(s) != null) {
+				stack.getTagCompound().setTag(s, schematic.getTag(s));
+			}
+		}
+		stack.getTagCompound().setTag(TAG_CURRENT_SCHEMATIC, new NBTTagString(schematicName));
+	}
+
+	public static void deleteSchematic(ItemStack lokiStack, String schematicName) {
+		NBTTagCompound map = lokiStack.getTagCompound().getCompoundTag(TAG_SAVED_SCHEMATICS);
+		if(map != null) {
+			if(map.hasKey(schematicName)) {
+				map.removeTag(schematicName);
+			}
+		}
+		ItemLokiRing lokiRing = ((ItemLokiRing) lokiStack.getItem());
+		if(lokiRing != null) {
+			lokiRing.schematicNames.remove(schematicName);
+			lokiRing.window.markNeedsRebuild();
+		}
+	}
 
 	@SideOnly(Side.CLIENT)
 	public static void renderHUDNotification(HUD_MESSAGE type){
@@ -291,13 +380,16 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				text = getLokiBreakingModeText(getLokiRing(mc.thePlayer));
 				break;
 			case CLEAR:
-				text = getLokiCearText(getLokiRing(mc.thePlayer));
+				text = getLokiClearText();
 				break;
 			case MIRROR:
 				text = getLokiMirrorText(getLokiRing(mc.thePlayer));
 				break;
 			case INSUFFICIENT_MANA:
 				text = EnumChatFormatting.RED + StatCollector.translateToLocal("botaniamisc.insufficient_mana");
+				break;
+			case SCHEMATIC_SAVED:
+				text = EnumChatFormatting.GREEN + StatCollector.translateToLocal("botaniamisc.schematic_saved");
 				break;
 			default:
 				return;
@@ -329,7 +421,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				getAxisString(getRingMirrorMode(stack));
 	}
 
-	public static String getLokiCearText(ItemStack stack){
+	public static String getLokiClearText(){
 		return EnumChatFormatting.GOLD + StatCollector.translateToLocal("botaniamisc.lokiClear");		
 	}
 
@@ -445,7 +537,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiMirror") + getAxisString(getRingMirrorMode(stack)), list);
 		addStringToTooltip("", list);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiToggleDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET + "/"+ getOnOffString(false), list);
-		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiBreakingDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET+"/" + getOnOffString(false), list);	
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiBreakingDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET+"/" + getOnOffString(false), list);
 		super.addInformation(stack, player, list, adv);
 	}
 
