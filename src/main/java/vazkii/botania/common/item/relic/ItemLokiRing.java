@@ -16,9 +16,6 @@ import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import baubles.common.network.PacketSyncBauble;
 import com.gtnewhorizon.gtnhlib.GTNHLib;
-import com.gtnewhorizons.modularui.api.UIInfos;
-import com.gtnewhorizons.modularui.api.screen.ModularWindow;
-import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -52,7 +49,6 @@ import vazkii.botania.api.item.ISequentialBreaker;
 import vazkii.botania.api.mana.IManaUsingItem;
 import vazkii.botania.api.mana.ManaItemHandler;
 import vazkii.botania.client.core.handler.BoundTileRenderer;
-import vazkii.botania.client.gui.loki.GuiLokiSchematics;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.core.helper.LokiCursor;
 import vazkii.botania.common.item.ModItems;
@@ -63,11 +59,10 @@ import vazkii.botania.common.network.PacketLokiHudNotificationAck;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeCoordinateListProvider, IManaUsingItem, IInWorldRenderable {
 
-	public static final boolean isModularUIEnabled = Loader.isModLoaded("modularui");
+	public static final boolean isModularUIEnabled = Loader.isModLoaded("modularui2");
 
 	public static final String TAG_CURSOR_LIST = "cursorList";
 	public static final String TAG_CURSOR_PREFIX = "cursor";
@@ -86,7 +81,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 	public List<Object> schematicNames;
 
-	public static enum HUD_MESSAGE  {
+	public enum HUD_MESSAGE  {
 		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA, SCHEMATIC_SAVED
 	}
 
@@ -308,7 +303,14 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			if(stack.getTagCompound().getTag(s) != null)
 				currentState.setTag(s, stack.getTagCompound().getTag(s));
 		}
-		String newSchematicName = UUID.randomUUID().toString();
+		String newSchematicName = "New Schematic";
+		int idx = 1;
+		if(map.hasKey(newSchematicName)) {
+			do {
+				newSchematicName = "New Schematic (" + idx + ")";
+				idx++;
+			} while (map.hasKey(newSchematicName));
+		}
 		map.setTag(newSchematicName, currentState);
 		stack.getTagCompound().setTag(TAG_CURRENT_SCHEMATIC, new NBTTagString(newSchematicName));
 	}
@@ -339,7 +341,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		stack.getTagCompound().setTag(TAG_CURRENT_SCHEMATIC, new NBTTagString(schematicName));
 	}
 
-	@Optional.Method(modid = "modularui")
+	@Optional.Method(modid = "modularui2")
 	public static void deleteSchematic(ItemStack lokiStack, String schematicName) {
 		NBTTagCompound map = lokiStack.getTagCompound().getCompoundTag(TAG_SAVED_SCHEMATICS);
 		if(map != null) {
@@ -348,11 +350,11 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			}
 		}
 		ItemLokiRing lokiRing = ((ItemLokiRing) lokiStack.getItem());
-		if(lokiRing != null) {
-			lokiRing.schematicNames.remove(schematicName);
-			if(isModularUIEnabled)
-				((ModularWindow) lokiRing.window).markNeedsRebuild();
-		}
+//		if(lokiRing != null) {
+//			lokiRing.schematicNames.remove(schematicName);
+//			if(isModularUIEnabled)
+//				((ModularWindow) lokiRing.window).markNeedsRebuild();
+//		}
 	}
 
 	@SideOnly(Side.CLIENT)

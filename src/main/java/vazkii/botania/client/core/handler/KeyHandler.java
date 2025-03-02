@@ -1,5 +1,8 @@
 package vazkii.botania.client.core.handler;
 
+import com.cleanroommc.modularui.factory.ClientGUI;
+import com.cleanroommc.modularui.factory.GuiData;
+import com.cleanroommc.modularui.factory.GuiFactories;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -70,7 +73,7 @@ public class KeyHandler {
     private static void ringOfLokiOpenUI() {
         if(ItemLokiRing.isModularUIEnabled) {
             ItemStack ring = ItemLokiRing.getLokiRing(Minecraft.getMinecraft().thePlayer);
-            GuiLokiSchematics.openUI(Minecraft.getMinecraft().thePlayer, ring);
+            GuiLokiSchematics.open(ring);
         }
     }
 }

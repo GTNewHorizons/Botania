@@ -21,7 +21,6 @@ import vazkii.botania.client.gui.box.GuiBaubleBox;
 import vazkii.botania.client.gui.crafting.ContainerCraftingHalo;
 import vazkii.botania.client.gui.crafting.GuiCraftingHalo;
 import vazkii.botania.client.gui.lexicon.GuiLexicon;
-import vazkii.botania.client.gui.loki.GuiLokiSchematics;
 import vazkii.botania.common.lib.LibGuiIDs;
 import cpw.mods.fml.common.network.IGuiHandler;
 
