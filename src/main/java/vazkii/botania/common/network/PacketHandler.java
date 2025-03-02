@@ -1,9 +1,9 @@
 package vazkii.botania.common.network;
 
-import vazkii.botania.common.lib.LibMisc;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import vazkii.botania.common.lib.LibMisc;
 
 public class PacketHandler {
 

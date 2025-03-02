@@ -11,15 +11,19 @@
 package vazkii.botania.common.item.relic;
 
 
-import java.awt.Color;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import baubles.api.BaubleType;
+import baubles.common.container.InventoryBaubles;
+import baubles.common.lib.PlayerHandler;
+import baubles.common.network.PacketSyncBauble;
 import com.gtnewhorizon.gtnhlib.GTNHLib;
 import com.gtnewhorizons.modularui.api.UIInfos;
-import com.gtnewhorizons.modularui.api.screen.IItemWithModularUI;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -33,13 +37,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -59,17 +58,16 @@ import vazkii.botania.common.core.helper.LokiCursor;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
 import vazkii.botania.common.lib.LibItemNames;
-import baubles.api.BaubleType;
-import baubles.common.container.InventoryBaubles;
-import baubles.common.lib.PlayerHandler;
-import baubles.common.network.PacketSyncBauble;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import vazkii.botania.common.network.PacketLokiHudNotificationAck;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
-public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeCoordinateListProvider, IManaUsingItem, IInWorldRenderable, IItemWithModularUI {
+public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeCoordinateListProvider, IManaUsingItem, IInWorldRenderable {
+
+	public static final boolean isModularUIEnabled = Loader.isModLoaded("modularui");
 
 	public static final String TAG_CURSOR_LIST = "cursorList";
 	public static final String TAG_CURSOR_PREFIX = "cursor";
@@ -84,22 +82,9 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	public static final String TAG_CURRENT_SCHEMATIC = "currentSchematic";
 	private boolean recursion = false;
 
-	private ModularWindow window;
+	public Object window;
+
 	public List<Object> schematicNames;
-
-	@Override
-	public ModularWindow createWindow(UIBuildContext buildContext, ItemStack heldStack) {
-		this.window = GuiLokiSchematics.getWindow(buildContext, heldStack);
-		this.schematicNames = new ArrayList<>(heldStack.getTagCompound().getCompoundTag(TAG_SAVED_SCHEMATICS).tagMap.keySet());
-		return window;
-	}
-
-	public static void openUI(EntityPlayer player, ItemStack stack) {
-		if(isLokiRing(stack) && stack.getItem() instanceof ItemLokiRing) {
-			ItemLokiRing lokiRing = (ItemLokiRing) stack.getItem();
-			UIInfos.openClientUI(player, uiBuildContext -> lokiRing.createWindow(uiBuildContext, stack));
-		}
-	}
 
 	public static enum HUD_MESSAGE  {
 		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA, SCHEMATIC_SAVED
@@ -354,6 +339,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		stack.getTagCompound().setTag(TAG_CURRENT_SCHEMATIC, new NBTTagString(schematicName));
 	}
 
+	@Optional.Method(modid = "modularui")
 	public static void deleteSchematic(ItemStack lokiStack, String schematicName) {
 		NBTTagCompound map = lokiStack.getTagCompound().getCompoundTag(TAG_SAVED_SCHEMATICS);
 		if(map != null) {
@@ -364,7 +350,8 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		ItemLokiRing lokiRing = ((ItemLokiRing) lokiStack.getItem());
 		if(lokiRing != null) {
 			lokiRing.schematicNames.remove(schematicName);
-			lokiRing.window.markNeedsRebuild();
+			if(isModularUIEnabled)
+				((ModularWindow) lokiRing.window).markNeedsRebuild();
 		}
 	}
 
@@ -608,7 +595,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		baubles.common.network.PacketHandler.INSTANCE.sendTo(new PacketSyncBauble(player, getLokiRingSlot(player)), (EntityPlayerMP) player);
 	}
 
-	private static boolean isLokiRing(ItemStack stack) {
+	public static boolean isLokiRing(ItemStack stack) {
 		return stack != null && (stack.getItem() == ModItems.lokiRing || stack.getItem() == ModItems.aesirRing);
 	}
 

@@ -16,6 +16,8 @@ import com.gtnewhorizons.modularui.common.widget.MultiChildWidget;
 import com.gtnewhorizons.modularui.common.widget.Scrollable;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
 import com.gtnewhorizons.modularui.common.widget.textfield.TextFieldWidget;
+import cpw.mods.fml.common.Optional;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,22 +28,40 @@ import vazkii.botania.common.network.PacketHandler;
 import vazkii.botania.common.network.PacketLokiChangeSchematic;
 import vazkii.botania.common.network.PacketLokiDeleteSchematic;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GuiLokiSchematics {
 
-    private static final AdaptableUITexture BACKGROUND = AdaptableUITexture
-            .of("botania:textures/gui/croppedPaper", 330, 252, 12);
     private static Object selectedSchematic;
-    private static final AdaptableUITexture DELETE = AdaptableUITexture
-            .of("botania:textures/gui/lokiDelete", 500, 500, 0);
-    private static final AdaptableUITexture RENAME = AdaptableUITexture
-            .of("botania:textures/gui/lokiRename", 500, 500, 0);
+
     private static String newSchematicName = "";
 
     private static final int WINDOW_WIDTH = 350, WINDOW_HEIGHT = 225, SCROLL_AREA_WIDTH = 350, SCROLL_AREA_HEIGHT = 200, SAVED_SCHEMATICS_HEADER_HEIGHT = 25, X_PADDING = 5, Y_PADDING = 5;
 
+    @Optional.Method(modid = "modularui")
+    public static ModularWindow createWindow(Object buildContext, ItemStack heldStack) {
+        ItemLokiRing loki = (ItemLokiRing) heldStack.getItem();
+        loki.window = GuiLokiSchematics.getWindow((UIBuildContext) buildContext, heldStack);
+        loki.schematicNames = new ArrayList<>(heldStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).tagMap.keySet());
+        return (ModularWindow) loki.window;
+    }
+
+    @Optional.Method(modid = "modularui")
+    public static void openUI(EntityPlayer player, ItemStack stack) {
+        if(ItemLokiRing.isLokiRing(stack) && stack.getItem() instanceof ItemLokiRing) {
+            UIInfos.openClientUI(player, uiBuildContext -> GuiLokiSchematics.createWindow(uiBuildContext, stack));
+        }
+    }
+
+    @Optional.Method(modid = "modularui")
     public static ModularWindow getWindow(UIBuildContext buildContext, ItemStack lokiRing) {
+        final AdaptableUITexture BACKGROUND = AdaptableUITexture
+                .of("botania:textures/gui/croppedPaper", 330, 252, 12);
+        final AdaptableUITexture DELETE = AdaptableUITexture
+                .of("botania:textures/gui/lokiDelete", 500, 500, 0);
+        final AdaptableUITexture RENAME = AdaptableUITexture
+                .of("botania:textures/gui/lokiRename", 500, 500, 0);
         if(lokiRing.getTagCompound().tagMap.containsKey(ItemLokiRing.TAG_CURRENT_SCHEMATIC)) {
             // Substring to remove the leading and ending double quotes
             selectedSchematic = lokiRing.stackTagCompound.getString(ItemLokiRing.TAG_CURRENT_SCHEMATIC).substring(1);
@@ -116,7 +136,10 @@ public class GuiLokiSchematics {
                 .build();
     }
 
+    @Optional.Method(modid = "modularui")
     public static ModularWindow getRenameWindow(UIBuildContext buildContext, ItemStack lokiRing, Object schematicName) {
+        final AdaptableUITexture BACKGROUND = AdaptableUITexture
+                .of("botania:textures/gui/croppedPaper", 330, 252, 12);
         ModularWindow.Builder builder = ModularWindow.builder(200, 100);
 
         buildContext.addCloseListener(() -> {

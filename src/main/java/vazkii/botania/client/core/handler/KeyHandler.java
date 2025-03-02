@@ -1,19 +1,17 @@
 package vazkii.botania.client.core.handler;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import vazkii.botania.common.item.relic.ItemLokiRing;
-import vazkii.botania.common.network.*;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.ItemStack;
+import vazkii.botania.client.gui.loki.GuiLokiSchematics;
+import vazkii.botania.common.item.relic.ItemLokiRing;
+import vazkii.botania.common.network.*;
 
 
 public class KeyHandler {
@@ -70,7 +68,9 @@ public class KeyHandler {
         PacketHandler.INSTANCE.sendToServer(new PacketLokiSaveSchematic());
     }
     private static void ringOfLokiOpenUI() {
-        ItemStack ring = ItemLokiRing.getLokiRing(Minecraft.getMinecraft().thePlayer);
-        ItemLokiRing.openUI(Minecraft.getMinecraft().thePlayer, ring);
+        if(ItemLokiRing.isModularUIEnabled) {
+            ItemStack ring = ItemLokiRing.getLokiRing(Minecraft.getMinecraft().thePlayer);
+            GuiLokiSchematics.openUI(Minecraft.getMinecraft().thePlayer, ring);
+        }
     }
 }
