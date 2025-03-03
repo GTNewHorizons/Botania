@@ -64,20 +64,20 @@ public class GuiLokiSchematics extends CustomModularScreen {
                 .imageSize(330, 252)
                 .adaptable(12)
                 .build();
-        final UITexture checkIcon = AdaptableUITexture
+        final UITexture checkIcon = UITexture
                 .builder()
                 .location("botania:textures/gui/check")
-                .imageSize(16, 16)
+                .imageSize(20, 20)
                 .build();
-        final UITexture deleteIcon = AdaptableUITexture
+        final UITexture deleteIcon = UITexture
                 .builder()
                 .location("botania:textures/gui/delete")
-                .imageSize(16, 16)
+                .imageSize(20, 20)
                 .build();
-        final UITexture renameIcon = AdaptableUITexture
+        final UITexture renameIcon = UITexture
                 .builder()
                 .location("botania:textures/gui/rename")
-                .imageSize(16, 16)
+                .imageSize(20, 20)
                 .build();
 
         selectedSchematic = itemStack.getTagCompound().getString(ItemLokiRing.TAG_CURRENT_SCHEMATIC);
@@ -88,20 +88,19 @@ public class GuiLokiSchematics extends CustomModularScreen {
         Set<Object> deleted = new HashSet<>();
 
         final ScrollWidget<?> scrollWidget = new ScrollWidget<>(new VerticalScrollData());
-        scrollWidget.getScrollArea().getScrollY().setScrollSize(ring.schematicNames.size() * (SCROLL_AREA_HEIGHT / 10 + 1));
+        scrollWidget.getScrollArea().getScrollY().setScrollSize(ring.schematicNames.size() * (SCROLL_AREA_HEIGHT / 5 + 1));
         int idx = 0;
         for(Object key : itemStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).tagMap.keySet()) {
             scrollWidget.child(
                     new Row()
-                            .sizeRel(1f, 0.1f)
-                            .pos(0, ring.schematicNames.indexOf(key) * (SCROLL_AREA_HEIGHT / 10 + 1))
+                            .sizeRel(1f, 0.2f)
+                            .pos(0, ring.schematicNames.indexOf(key) * (SCROLL_AREA_HEIGHT / 5 + 1))
                             .padding(5, 0, 5, 5)
                             .setEnabledIf((w) -> !deleted.contains(key))
                             .background(new Rectangle()
                                     .setColor(idx % 2 == 0 ? Color.ORANGE.brighter(3) : Color.ORANGE.brighter(2)))
                             .child(
                                     new TextWidget(key.toString())
-                                            .scale(0.5f)
                                             .widthRel(0.72f))
                             .child(
                                     new ParentWidget<>()
@@ -118,7 +117,7 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                                             })
                                                             .background(checkIcon)
                                                             .hoverBackground(checkIcon)
-                                                            .size(8, 8)
+                                                            .size(20,20)
                                                             .center()))
                             .child(
                                     new ParentWidget<>()
@@ -134,7 +133,7 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                                     })
                                                     .background(renameIcon)
                                                     .hoverBackground(renameIcon)
-                                                    .size(8, 8)
+                                                    .size(20, 20)
                                                     .center()))
                             .child(
                                     new ParentWidget<>()
@@ -150,7 +149,7 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                                     })
                                                     .background(deleteIcon)
                                                     .hoverBackground(deleteIcon)
-                                                    .size(8, 8)
+                                                    .size(20, 20)
                                                     .center())));
             idx++;
         }
@@ -161,7 +160,7 @@ public class GuiLokiSchematics extends CustomModularScreen {
                             .style(EnumChatFormatting.BLACK)
                             .align(Alignment.TopCenter)
                             .marginTop(8)
-                            .scale(0.5F))
+                            .scale(0.75f))
                 .child(
                         scrollWidget
                                 .pos(10, 20)
