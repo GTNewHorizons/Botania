@@ -160,7 +160,7 @@ public class GuiLokiSchematics extends CustomModularScreen {
                             .style(EnumChatFormatting.BLACK)
                             .align(Alignment.TopCenter)
                             .marginTop(8)
-                            .scale(0.75f))
+                            .scale(0.5f))
                 .child(
                         scrollWidget
                                 .pos(10, 20)
