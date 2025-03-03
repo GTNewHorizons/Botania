@@ -34,7 +34,6 @@ import vazkii.botania.common.network.PacketLokiDeleteSchematic;
 
 import java.util.*;
 
-@Optional.Interface(modid = "modularui2", iface="com.cleanroommc.modularui.screen.CustomModularScreen", striprefs = true)
 public class GuiLokiSchematics extends CustomModularScreen {
 
     public static void open(ItemStack ring) {
