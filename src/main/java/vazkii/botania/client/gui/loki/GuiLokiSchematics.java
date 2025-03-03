@@ -145,6 +145,8 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                                     .onMousePressed(ignored -> {
                                                         PacketHandler.INSTANCE.sendToServer(new PacketLokiDeleteSchematic(key.toString()));
                                                         deleted.add(key);
+                                                        if(key.equals(selectedSchematic))
+                                                            selectedSchematic = null;
                                                         return true;
                                                     })
                                                     .background(deleteIcon)
@@ -157,10 +159,10 @@ public class GuiLokiSchematics extends CustomModularScreen {
         return ModularPanel.defaultPanel("lokiSchematics")
                 .child(
                     new TextWidget(IKey.dynamic(() -> selectedSchematic == null ? StatCollector.translateToLocal("botaniamisc.select_schematic") : StatCollector.translateToLocal("botaniamisc.selected_schematic") + " " + selectedSchematic))
-                            .style(EnumChatFormatting.BLACK)
-                            .align(Alignment.TopCenter)
-                            .marginTop(8)
-                            .scale(0.5f))
+                    .style(EnumChatFormatting.BLACK)
+                    .align(Alignment.TopCenter)
+                    .marginTop(8)
+                    .scale(0.5f))
                 .child(
                         scrollWidget
                                 .pos(10, 20)

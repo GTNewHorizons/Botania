@@ -349,12 +349,9 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				map.removeTag(schematicName);
 			}
 		}
-		ItemLokiRing lokiRing = ((ItemLokiRing) lokiStack.getItem());
-//		if(lokiRing != null) {
-//			lokiRing.schematicNames.remove(schematicName);
-//			if(isModularUIEnabled)
-//				((ModularWindow) lokiRing.window).markNeedsRebuild();
-//		}
+		if(schematicName.equals(lokiStack.getTagCompound().getString(TAG_CURRENT_SCHEMATIC))) {
+			lokiStack.getTagCompound().removeTag(TAG_CURRENT_SCHEMATIC);
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
