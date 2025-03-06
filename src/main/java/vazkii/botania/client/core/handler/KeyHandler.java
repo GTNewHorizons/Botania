@@ -14,7 +14,11 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.client.gui.loki.GuiLokiSchematics;
 import vazkii.botania.common.item.relic.ItemLokiRing;
-import vazkii.botania.common.network.*;
+import vazkii.botania.common.network.PacketHandler;
+import vazkii.botania.common.network.PacketLokiClear;
+import vazkii.botania.common.network.PacketLokiMirror;
+import vazkii.botania.common.network.PacketLokiSaveSchematic;
+import vazkii.botania.common.network.PacketLokiToggle;
 
 
 public class KeyHandler {
