@@ -19,6 +19,7 @@ public class PacketHandler {
         INSTANCE.registerMessage(PacketLokiSaveSchematic.class, PacketLokiSaveSchematic.class, 4, Side.SERVER);
         INSTANCE.registerMessage(PacketLokiChangeSchematic.class, PacketLokiChangeSchematic.class, 5, Side.SERVER);
         INSTANCE.registerMessage(PacketLokiDeleteSchematic.class, PacketLokiDeleteSchematic.class, 6, Side.SERVER);
-        INSTANCE.registerMessage(PacketLokiHudNotificationAck.class, PacketLokiHudNotificationAck.class, 7, Side.CLIENT);
+        INSTANCE.registerMessage(PacketLokiRenameSchematic.class, PacketLokiRenameSchematic.class, 7, Side.SERVER);
+        INSTANCE.registerMessage(PacketLokiHudNotificationAck.class, PacketLokiHudNotificationAck.class, 8, Side.CLIENT);
     }
 }

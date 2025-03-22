@@ -33,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.AxisAlignedBB;
@@ -85,7 +86,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 	public List<Object> schematicNames;
 
-	public enum HUD_MESSAGE  {
+    public enum HUD_MESSAGE  {
 		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA, SCHEMATIC_SAVED
 	}
 
@@ -343,6 +344,15 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			}
 		}
 		stack.getTagCompound().setTag(TAG_CURRENT_SCHEMATIC, new NBTTagString(schematicName));
+	}
+
+	public static void renameSchematic(ItemStack lokiStack, String schematicToBeRenamed, String newName) {
+		if (lokiStack.getTagCompound().getString(ItemLokiRing.TAG_CURRENT_SCHEMATIC).equals(schematicToBeRenamed)) {
+			lokiStack.getTagCompound().setString(ItemLokiRing.TAG_CURRENT_SCHEMATIC, newName);
+		}
+		NBTBase nbt = lokiStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).getTag(schematicToBeRenamed.toString());
+		lokiStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).removeTag(schematicToBeRenamed.toString());
+		lokiStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).setTag(newName, nbt);
 	}
 
 	@Optional.Method(modid = "modularui2")

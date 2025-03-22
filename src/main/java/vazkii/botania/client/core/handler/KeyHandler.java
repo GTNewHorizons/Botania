@@ -77,7 +77,8 @@ public class KeyHandler {
     private static void ringOfLokiOpenUI() {
         if(ItemLokiRing.isModularUIEnabled) {
             ItemStack ring = ItemLokiRing.getLokiRing(Minecraft.getMinecraft().thePlayer);
-            GuiLokiSchematics.open(ring);
+            if(ring != null)
+                GuiLokiSchematics.open(ring);
         }
     }
 }

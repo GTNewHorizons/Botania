@@ -29,6 +29,7 @@ import vazkii.botania.common.item.relic.ItemLokiRing;
 import vazkii.botania.common.network.PacketHandler;
 import vazkii.botania.common.network.PacketLokiChangeSchematic;
 import vazkii.botania.common.network.PacketLokiDeleteSchematic;
+import vazkii.botania.common.network.PacketLokiRenameSchematic;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -159,7 +160,6 @@ public class GuiLokiSchematics extends CustomModularScreen {
         return ModularPanel.defaultPanel("lokiSchematics")
                 .child(
                     new TextWidget(IKey.dynamic(() -> selectedSchematic == null ? StatCollector.translateToLocal("botaniamisc.select_schematic") : StatCollector.translateToLocal("botaniamisc.selected_schematic") + " " + selectedSchematic))
-                    .style(EnumChatFormatting.BLACK)
                     .align(Alignment.TopCenter)
                     .marginTop(8)
                     .scale(0.5f))
@@ -190,12 +190,7 @@ public class GuiLokiSchematics extends CustomModularScreen {
         }
 
         public void persist() {
-            if (itemStack.getTagCompound().getString(ItemLokiRing.TAG_CURRENT_SCHEMATIC).equals(schematicToBeRenamed)) {
-                itemStack.getTagCompound().setString(ItemLokiRing.TAG_CURRENT_SCHEMATIC, newValue);
-            }
-            NBTBase nbt = itemStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).getTag(schematicToBeRenamed.toString());
-            itemStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).removeTag(schematicToBeRenamed.toString());
-            itemStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).setTag(newValue, nbt);
+            PacketHandler.INSTANCE.sendToServer(new PacketLokiRenameSchematic(schematicToBeRenamed.toString(), newValue));
         }
 
         @Override
@@ -214,7 +209,6 @@ public class GuiLokiSchematics extends CustomModularScreen {
 
             return ModularPanel.defaultPanel("rename")
                     .child(new TextWidget("Schematic Name:")
-                            .style(EnumChatFormatting.BLACK)
                             .pos(10, 10)
                             .size(180, 20))
                     .child(new TextFieldWidget()
