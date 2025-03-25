@@ -35,7 +35,7 @@ public final class DebugHandler {
 	@SubscribeEvent
 	public void onDrawDebugText(RenderGameOverlayEvent.Text event) {
 		World world = Minecraft.getMinecraft().theWorld;
-		if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {
+		if(Minecraft.getMinecraft().gameSettings.showDebugInfo && ConfigHandler.showF3Debug) {
 			event.left.add(null);
 			String version = LibMisc.VERSION;
 			if(version.contains("GRADLE"))
