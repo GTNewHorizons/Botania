@@ -63,28 +63,27 @@ import vazkii.botania.common.network.PacketLokiHudNotificationAck;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeCoordinateListProvider, IManaUsingItem, IInWorldRenderable {
 
 	public static final boolean isModularUIEnabled = Loader.isModLoaded("modularui2");
 
-	public static final String TAG_CURSOR_LIST = "cursorList";
-	public static final String TAG_CURSOR_PREFIX = "cursor";
-	public static final String TAG_CURSOR_COUNT = "cursorCount";
-	public static final String TAG_X_ORIGIN = "xOrigin";
-	public static final String TAG_Y_ORIGIN = "yOrigin";
-	public static final String TAG_Z_ORIGIN = "zOrigin";
-	public static final String TAG_MODE = "mode";
-	public static final String TAG_BREAKING_MODE = "breaking";
-	public static final String TAG_MIRROR_MODE = "mirror";
-	public static final String TAG_SAVED_SCHEMATICS = "savedSchematics";
-	public static final String TAG_CURRENT_SCHEMATIC = "currentSchematic";
+	private static final String TAG_CURSOR_LIST = "cursorList";
+	private static final String TAG_CURSOR_PREFIX = "cursor";
+	private static final String TAG_CURSOR_COUNT = "cursorCount";
+	private static final String TAG_X_ORIGIN = "xOrigin";
+	private static final String TAG_Y_ORIGIN = "yOrigin";
+	private static final String TAG_Z_ORIGIN = "zOrigin";
+	private static final String TAG_MODE = "mode";
+	private static final String TAG_BREAKING_MODE = "breaking";
+	private static final String TAG_MIRROR_MODE = "mirror";
+	private static final String TAG_SAVED_SCHEMATICS = "savedSchematics";
+	private static final String TAG_CURRENT_SCHEMATIC = "currentSchematic";
 	private boolean recursion = false;
-
-	public Object window;
-
-	public List<Object> schematicNames;
 
     public enum HUD_MESSAGE  {
 		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA, SCHEMATIC_SAVED
@@ -287,6 +286,16 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 	public static void setMirrorMode (ItemStack stack, byte state) {
 		stack.stackTagCompound.setByte(TAG_MIRROR_MODE, state);
+	}
+
+	public static String getSelectedSchematic(ItemStack itemStack) {
+		return itemStack.getTagCompound().getString(TAG_CURRENT_SCHEMATIC);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<String> getSchematicNames(ItemStack stack) {
+		Set<String> schematicNames = stack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).func_150296_c();
+		return schematicNames.stream().sorted(Comparator.comparing(Object::toString)).collect(Collectors.toList());
 	}
 
 	public static void saveCurrentSelectionAsSchematic(ItemStack stack) {

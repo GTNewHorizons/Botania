@@ -1,107 +1,68 @@
 package vazkii.botania.client.gui.loki;
 
 import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.api.value.IStringValue;
-import com.cleanroommc.modularui.drawable.AdaptableUITexture;
 import com.cleanroommc.modularui.drawable.Rectangle;
-import com.cleanroommc.modularui.drawable.UITexture;
 import com.cleanroommc.modularui.factory.ClientGUI;
-import com.cleanroommc.modularui.screen.CustomModularScreen;
 import com.cleanroommc.modularui.screen.ModularPanel;
+import com.cleanroommc.modularui.screen.ModularScreen;
 import com.cleanroommc.modularui.screen.RichTooltip;
-import com.cleanroommc.modularui.screen.viewport.ModularGuiContext;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.utils.Color;
-import com.cleanroommc.modularui.value.sync.InteractionSyncHandler;
 import com.cleanroommc.modularui.widget.ParentWidget;
 import com.cleanroommc.modularui.widget.ScrollWidget;
 import com.cleanroommc.modularui.widget.scroll.VerticalScrollData;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.TextWidget;
 import com.cleanroommc.modularui.widgets.layout.Row;
-import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
-import cpw.mods.fml.common.Optional;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import vazkii.botania.client.gui.mui2.Textures;
 import vazkii.botania.common.item.relic.ItemLokiRing;
 import vazkii.botania.common.network.PacketHandler;
 import vazkii.botania.common.network.PacketLokiChangeSchematic;
 import vazkii.botania.common.network.PacketLokiDeleteSchematic;
-import vazkii.botania.common.network.PacketLokiRenameSchematic;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class GuiLokiSchematics extends CustomModularScreen {
-
-    public static void open(ItemStack ring) {
-        GuiLokiSchematics.itemStack = ring;
-        ClientGUI.open(new GuiLokiSchematics(ring));
-    }
-
-    public static ItemStack itemStack;
-
-    public GuiLokiSchematics(ItemStack itemStack) {
-        this.itemStack = itemStack;
-    }
-
-    private static Object selectedSchematic;
-
-    private static Object schematicToBeRenamed;
+public class GuiLokiSchematics {
 
     private static final int WINDOW_WIDTH = 350, WINDOW_HEIGHT = 225, SCROLL_AREA_WIDTH = 350, SCROLL_AREA_HEIGHT = 200, SAVED_SCHEMATICS_HEADER_HEIGHT = 25, X_PADDING = 5, Y_PADDING = 5;
 
-    @Override
-    @Optional.Method(modid = "modularui2")
-    public ModularPanel buildUI(ModularGuiContext context) {
+    public static void open(ItemStack ring) {
+        ClientGUI.open(new ModularScreen(new GuiLokiSchematics().buildUI(ring)));
+    }
 
-        final UITexture backgroundTexture = AdaptableUITexture
-                .builder()
-                .location("botania:textures/gui/croppedPaper")
-                .imageSize(330, 252)
-                .adaptable(12)
-                .build();
-        final UITexture checkIcon = UITexture
-                .builder()
-                .location("botania:textures/gui/check")
-                .imageSize(20, 20)
-                .build();
-        final UITexture deleteIcon = UITexture
-                .builder()
-                .location("botania:textures/gui/delete")
-                .imageSize(20, 20)
-                .build();
-        final UITexture renameIcon = UITexture
-                .builder()
-                .location("botania:textures/gui/rename")
-                .imageSize(20, 20)
-                .build();
+    private final Set<String> deleted = new HashSet<>();
 
-        selectedSchematic = itemStack.getTagCompound().getString(ItemLokiRing.TAG_CURRENT_SCHEMATIC);
+    private String selectedSchematic;
 
-        ItemLokiRing ring = (ItemLokiRing) itemStack.getItem();
-        ring.schematicNames = Arrays.asList(itemStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).tagMap.keySet().stream().sorted(Comparator.comparing(Object::toString)).toArray());
+    private GuiLokiSchematics() {
+    }
 
-        Set<Object> deleted = new HashSet<>();
+    public ModularPanel buildUI(ItemStack itemStack) {
+        if (! ItemLokiRing.isLokiRing(itemStack)) {
+            return null;
+        }
+
+        selectedSchematic = ItemLokiRing.getSelectedSchematic(itemStack);
+        List<String> schematicNames = ItemLokiRing.getSchematicNames(itemStack);
 
         final ScrollWidget<?> scrollWidget = new ScrollWidget<>(new VerticalScrollData());
-        scrollWidget.getScrollArea().getScrollY().setScrollSize(ring.schematicNames.size() * (SCROLL_AREA_HEIGHT / 5 + 1));
-        int idx = 0;
-        for(Object key : itemStack.getTagCompound().getCompoundTag(ItemLokiRing.TAG_SAVED_SCHEMATICS).tagMap.keySet()) {
+        scrollWidget.getScrollArea().getScrollY().setScrollSize(schematicNames.size() * (SCROLL_AREA_HEIGHT / 5 + 1));
+        for (int idx = 0; idx < schematicNames.size(); idx++) {
+            String key = schematicNames.get(idx);
             scrollWidget.child(
                     new Row()
                             .sizeRel(1f, 0.2f)
-                            .pos(0, ring.schematicNames.indexOf(key) * (SCROLL_AREA_HEIGHT / 5 + 1))
+                            .pos(0, schematicNames.indexOf(key) * (SCROLL_AREA_HEIGHT / 5 + 1))
                             .padding(5, 0, 5, 5)
                             .setEnabledIf((w) -> !deleted.contains(key))
                             .background(new Rectangle()
                                     .setColor(idx % 2 == 0 ? Color.ORANGE.brighter(3) : Color.ORANGE.brighter(2)))
                             .child(
-                                    new TextWidget(key.toString())
+                                    new TextWidget(key)
                                             .widthRel(0.72f))
                             .child(
                                     new ParentWidget<>()
@@ -112,12 +73,12 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                             .child(
                                                     new ButtonWidget<>()
                                                             .onMousePressed(ignored -> {
-                                                                PacketHandler.INSTANCE.sendToServer(new PacketLokiChangeSchematic(key.toString()));
+                                                                PacketHandler.INSTANCE.sendToServer(new PacketLokiChangeSchematic(key));
                                                                 selectedSchematic = key;
                                                                 return true;
                                                             })
-                                                            .background(checkIcon)
-                                                            .hoverBackground(checkIcon)
+                                                            .background(Textures.CHECK_ICON)
+                                                            .hoverBackground(Textures.CHECK_ICON)
                                                             .size(20,20)
                                                             .center()))
                             .child(
@@ -128,12 +89,11 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                                 new ButtonWidget<>()
                                                     .tooltip(new RichTooltip(new TextWidget("Rename Schematic")))
                                                     .onMousePressed(ignored -> {
-                                                        this.schematicToBeRenamed = key;
-                                                        ClientGUI.open(new RenameGui());
+                                                        ClientGUI.open(new RenameGui(key));
                                                         return true;
                                                     })
-                                                    .background(renameIcon)
-                                                    .hoverBackground(renameIcon)
+                                                    .background(Textures.RENAME_ICON)
+                                                    .hoverBackground(Textures.RENAME_ICON)
                                                     .size(20, 20)
                                                     .center()))
                             .child(
@@ -144,17 +104,16 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                                 new ButtonWidget<>()
                                                     .tooltip(new RichTooltip(new TextWidget("Delete Schematic")))
                                                     .onMousePressed(ignored -> {
-                                                        PacketHandler.INSTANCE.sendToServer(new PacketLokiDeleteSchematic(key.toString()));
+                                                        PacketHandler.INSTANCE.sendToServer(new PacketLokiDeleteSchematic(key));
                                                         deleted.add(key);
                                                         if(key.equals(selectedSchematic))
                                                             selectedSchematic = null;
                                                         return true;
                                                     })
-                                                    .background(deleteIcon)
-                                                    .hoverBackground(deleteIcon)
+                                                    .background(Textures.DELETE_ICON)
+                                                    .hoverBackground(Textures.DELETE_ICON)
                                                     .size(20, 20)
                                                     .center())));
-            idx++;
         }
 
         return ModularPanel.defaultPanel("lokiSchematics")
@@ -169,75 +128,8 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                 .widthRel(SCROLL_AREA_WIDTH - 20)
                                 .margin(10, 0)
                                 .height(SCROLL_AREA_HEIGHT - 10))
-                .background(backgroundTexture)
+                .background(Textures.BACKGROUND_TEXTURE)
                 .size(WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
-    public static class RenameGui extends CustomModularScreen {
-
-        private String newValue = "";
-
-        @Override
-        public void close() {
-            super.close();
-            this.persist();
-        }
-
-        @Override
-        public void close(boolean force) {
-            super.close(force);
-            this.persist();
-        }
-
-        public void persist() {
-            PacketHandler.INSTANCE.sendToServer(new PacketLokiRenameSchematic(schematicToBeRenamed.toString(), newValue));
-        }
-
-        @Override
-        public ModularPanel buildUI(ModularGuiContext context) {
-            final UITexture BACKGROUND = AdaptableUITexture.builder()
-                    .location("botania:textures/gui/croppedPaper")
-                    .imageSize(330, 252)
-                    .adaptable(12)
-                    .build();
-
-            InteractionSyncHandler handler = new InteractionSyncHandler();
-
-            handler.setOnKeyPressed((key) -> {
-                System.out.println(key.character);
-            });
-
-            return ModularPanel.defaultPanel("rename")
-                    .child(new TextWidget("Schematic Name:")
-                            .pos(10, 10)
-                            .size(180, 20))
-                    .child(new TextFieldWidget()
-                            .value(new IStringValue<String>() {
-                                @Override
-                                public String getStringValue() {
-                                    return newValue;
-                                }
-
-                                @Override
-                                public void setStringValue(String val) {
-                                    newValue = val;
-                                }
-
-                                @Override
-                                public String getValue() {
-                                    return newValue;
-                                }
-
-                                @Override
-                                public void setValue(String value) {
-                                    newValue = value;
-                                }
-                            })
-                            .disableHoverBackground()
-                            .size(150, 20)
-                            .pos(25, 40))
-                    .background(BACKGROUND)
-                    .size(200, 100);
-        }
-    }
 }
