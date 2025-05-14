@@ -1,7 +1,7 @@
 // Add your dependencies here
 
 dependencies {
-    api('com.github.GTNewHorizons:Baubles:1.0.4:dev')
+    api('com.github.GTNewHorizons:Baubles-Expanded:2.1.7-GTNH:dev')
     api('com.github.GTNewHorizons:GTNHLib:0.6.11:dev')
 
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.42:api') {transitive=false}
