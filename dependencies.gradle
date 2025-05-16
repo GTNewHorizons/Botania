@@ -2,15 +2,15 @@
 
 dependencies {
     api('com.github.GTNewHorizons:Baubles-Expanded:2.1.7-GTNH:dev')
-    api('com.github.GTNewHorizons:GTNHLib:0.6.11:dev')
+    api('com.github.GTNewHorizons:GTNHLib:0.6.22:dev')
 
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.42:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:ModularUI2:2.2.4-1.7.10:dev')
 //    runtimeOnlyNonPublishable('com.github.GTNewHorizons:ModularUI2:2.2.4-1.7.10:dev')
 
     compileOnly('com.github.GTNewHorizons:ForgeMultipart:1.6.2:dev') {transitive=false}
-    devOnlyNonPublishable('com.github.GTNewHorizons:NotEnoughItems:2.7.29-GTNH:dev')
-    compileOnly('com.github.GTNewHorizons:Railcraft:9.16.3:api') {transitive=false}
+    devOnlyNonPublishable('com.github.GTNewHorizons:NotEnoughItems:2.7.44-GTNH:dev')
+    compileOnly('com.github.GTNewHorizons:Railcraft:9.16.26:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:StorageDrawers:2.1.0-GTNH:api') {transitive=false}
     compileOnly('curse.maven:cofh-lib-220333:2388748')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
