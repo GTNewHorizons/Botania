@@ -48,6 +48,8 @@ public final class ConfigHandler {
 
 	public static boolean enableDefaultRecipes = true;
 
+	public static boolean showF3Debug = true;
+
 	public static boolean useShaders = true;
 	public static boolean lexiconRotatingItems = true;
 	public static boolean lexiconJustifiedText = false;
@@ -209,6 +211,9 @@ public final class ConfigHandler {
 
 		desc = "The ID of the dimension to use";
 		fancySkyboxDimensions = loadPropIntSet("fancySkybox.customDimID", desc, fancySkyboxDimensions);
+
+		desc = "Turn on or off the debug info in the F3 screen ingame";
+		showF3Debug = loadPropBool("showF3Debug", desc, showF3Debug);
 
 		desc = "The height of the mana display bar in above the XP bar. You can change this if you have a mod that changes where the XP bar is.";
 		manaBarHeight = loadPropInt("manaBar.height", desc, manaBarHeight);
