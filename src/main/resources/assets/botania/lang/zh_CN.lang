@@ -183,7 +183,7 @@ botania.nei.quickInfo:item.bone~0=你要倒霉了
 botania.nei.quickInfo:item.lexicon~0=你期待着什么?
 botania.nei.quickInfo:item.terrasteel~4=将正确的材料放在泰拉凝聚板上以制作泰拉钢
 botania.nei.quickInfo:item.enderAirBottle~15=要获取它,只需在在末地用玻璃瓶右击
-primus
+
 # BUILDCRAFT INTEGRATION
 botania.triggers.manaDetector=魔力脉冲
 botania.triggers.manaEmpty=魔力为0
