@@ -752,7 +752,7 @@ tile.botania:blockManaQuartz.name=Блок манакварца
 tile.botania:chiseledManaQuartz.name=Резной блок манакварца
 tile.botania:pillarManaQuartz.name=Колонна из манакварца
 tile.botania:quartzSlabManaHalf.name=Плита из манакварца
-tile.botania:quartzSlabManaFull.nameПлита из манакварца
+tile.botania:quartzSlabManaFull.name=Плита из манакварца
 tile.botania:quartzStairsMana.name=Ступеньки из манакварца
 tile.botania:blockBlazeQuartz.name=Блок пламенного кварца
 tile.botania:chiseledBlazeQuartz.name=Резной блок пламенного кварца
