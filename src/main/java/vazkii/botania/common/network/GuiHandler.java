@@ -45,17 +45,17 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		switch(ID) {
-		case LibGuiIDs.LEXICON :
-			GuiLexicon lex = GuiLexicon.currentOpenLexicon;
-			return lex;
-		case LibGuiIDs.CRAFTING_HALO :
-			return new GuiCraftingHalo(player.inventory, world);
-		case LibGuiIDs.FLOWER_BAG :
-			return new GuiFlowerBag(player);
-		case LibGuiIDs.SHROOM_BAG:
-			return new GuiShroomBag(player);
-		case LibGuiIDs.BAUBLE_BOX :
-			return new GuiBaubleBox(player);
+			case LibGuiIDs.LEXICON :
+				GuiLexicon lex = GuiLexicon.currentOpenLexicon;
+				return lex;
+			case LibGuiIDs.CRAFTING_HALO :
+				return new GuiCraftingHalo(player.inventory, world);
+			case LibGuiIDs.FLOWER_BAG :
+				return new GuiFlowerBag(player);
+			case LibGuiIDs.SHROOM_BAG:
+				return new GuiShroomBag(player);
+			case LibGuiIDs.BAUBLE_BOX :
+				return new GuiBaubleBox(player);
 		}
 
 		return null;
