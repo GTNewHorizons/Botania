@@ -105,7 +105,7 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                             .widthRel(0.72f))
                             .child(
                                     new ParentWidget<>()
-                                            .tooltip(new RichTooltip(new TextWidget("Activate Schematic")))
+                                            .tooltip(new RichTooltip().parent(new TextWidget("Activate Schematic")))
                                             .widthRel(0.083f)
                                             .heightRel(1f)
                                             .setEnabledIf((w) -> !key.equals(selectedSchematic))
@@ -126,7 +126,7 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                             .heightRel(1f)
                                             .child(
                                                 new ButtonWidget<>()
-                                                    .tooltip(new RichTooltip(new TextWidget("Rename Schematic")))
+                                                    .tooltip(new RichTooltip().parent(new TextWidget("Rename Schematic")))
                                                     .onMousePressed(ignored -> {
                                                         this.schematicToBeRenamed = key;
                                                         ClientGUI.open(new RenameGui());
@@ -142,7 +142,7 @@ public class GuiLokiSchematics extends CustomModularScreen {
                                             .heightRel(1f)
                                             .child(
                                                 new ButtonWidget<>()
-                                                    .tooltip(new RichTooltip(new TextWidget("Delete Schematic")))
+                                                    .tooltip(new RichTooltip().parent(new TextWidget("Delete Schematic")))
                                                     .onMousePressed(ignored -> {
                                                         PacketHandler.INSTANCE.sendToServer(new PacketLokiDeleteSchematic(key.toString()));
                                                         deleted.add(key);
