@@ -65,7 +65,8 @@ public class GuiLokiSchematics {
                                     .widthRel(0.72f))
                     .child(
                             new ParentWidget<>()
-                                    .tooltip(new RichTooltip(new TextWidget("Activate Schematic")))
+                                    .tooltip(new RichTooltip()
+                                            .add("Activate Schematic"))
                                     .widthRel(0.083f)
                                     .heightRel(1f)
                                     .setEnabledIf((w) -> rowId < schematicNames.size() && !schematicNames.get(rowId).equals(selectedSchematic))
@@ -87,7 +88,8 @@ public class GuiLokiSchematics {
                                     .heightRel(1f)
                                     .child(
                                             new ButtonWidget<>()
-                                                    .tooltip(new RichTooltip(new TextWidget("Rename Schematic")))
+                                                    .tooltip(new RichTooltip()
+                                                            .add("Rename Schematic"))
                                                     .onMousePressed(ignored -> {
                                                         ClientGUI.open(new RenameGui(schematicNames.get(rowId)));
                                                         return true;
@@ -102,7 +104,8 @@ public class GuiLokiSchematics {
                                     .heightRel(1f)
                                     .child(
                                             new ButtonWidget<>()
-                                                    .tooltip(new RichTooltip(new TextWidget("Delete Schematic")))
+                                                    .tooltip(new RichTooltip()
+                                                            .add("Delete Schematic"))
                                                     .onMousePressed(ignored -> {
                                                         String key = schematicNames.get(rowId);
                                                         PacketHandler.INSTANCE.sendToServer(new PacketLokiDeleteSchematic(key));

@@ -6,7 +6,7 @@ dependencies {
 
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.43:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:ModularUI2:2.2.15-1.7.10:dev')
-//    runtimeOnlyNonPublishable('com.github.GTNewHorizons:ModularUI2:2.2.15-1.7.10:dev')
+//    devOnlyNonPublishable('com.github.GTNewHorizons:ModularUI2:2.2.15-1.7.10:dev')
 
     compileOnly('com.github.GTNewHorizons:ForgeMultipart:1.6.6:dev') {transitive=false}
     devOnlyNonPublishable('com.github.GTNewHorizons:NotEnoughItems:2.7.52-GTNH:dev')
