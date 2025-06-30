@@ -55,7 +55,7 @@ import vazkii.botania.common.lib.LibItemNames;
 import baubles.api.BaubleType;
 import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
-import baubles.common.network.PacketSyncBauble;
+import baubles.common.network.client.PacketSyncBauble;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
