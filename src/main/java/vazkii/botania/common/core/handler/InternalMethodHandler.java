@@ -70,7 +70,7 @@ import vazkii.botania.common.lexicon.page.PageRuneRecipe;
 import vazkii.botania.common.lexicon.page.PageText;
 import baubles.common.lib.PlayerHandler;
 import baubles.common.network.PacketHandler;
-import baubles.common.network.PacketSyncBauble;
+import baubles.common.network.client.PacketSyncBauble;
 import buildcraft.api.transport.IPipeTile;
 import cpw.mods.fml.common.Optional;
 
