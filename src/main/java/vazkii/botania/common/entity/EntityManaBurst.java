@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.yggdrasil.YggdrasilGameProfileRepository;
+import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
+import cpw.mods.fml.common.launcher.Yggdrasil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockLeaves;
@@ -72,6 +76,7 @@ public class EntityManaBurst extends EntityThrowable implements IManaBurst {
 	private static final String TAG_SHOOTER_UUID_MOST = "shooterUUIDMost";
 	private static final String TAG_SHOOTER_UUID_LEAST = "shooterUUIDLeast";
 
+
 	boolean fake = false;
 
 	final int dataWatcherEntries = 10;
@@ -81,6 +86,7 @@ public class EntityManaBurst extends EntityThrowable implements IManaBurst {
 
 	boolean fullManaLastTick = true;
 
+	EntityPlayer player;
 	UUID shooterIdentity = null;
 	int _ticksExisted = 0;
 	boolean scanBeam = false;
@@ -122,7 +128,7 @@ public class EntityManaBurst extends EntityThrowable implements IManaBurst {
 
 	public EntityManaBurst(EntityPlayer player) {
 		this(player.worldObj);
-
+		this.player = player;
 		setBurstSourceCoords(0, -1, 0);
 		setLocationAndAngles(player.posX, player.posY + player.getEyeHeight(), player.posZ, player.rotationYaw + 180, -player.rotationPitch);
 
@@ -612,7 +618,7 @@ public class EntityManaBurst extends EntityThrowable implements IManaBurst {
 
 		ILensEffect lens = getLensInstance();
 		if(lens != null)
-			dead = lens.collideBurst(this, movingobjectposition, collidedTile != null && collidedTile instanceof IManaReceiver && ((IManaReceiver) collidedTile).canRecieveManaFromBursts(), dead, getSourceLens());
+			dead = lens.collideBurst(this, movingobjectposition, collidedTile != null && collidedTile instanceof IManaReceiver && ((IManaReceiver) collidedTile).canRecieveManaFromBursts(), dead, getSourceLens(), getPlayer());
 
 		if(collided && !hasAlreadyCollidedAt(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ))
 			alreadyCollidedAt.add(getCollisionLocString(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ));
@@ -665,7 +671,9 @@ public class EntityManaBurst extends EntityThrowable implements IManaBurst {
 		TileEntity tile = worldObj.getTileEntity(coords.posX, coords.posY, coords.posZ);
 		return tile;
 	}
-
+	public EntityPlayer getPlayer(){
+		return player;
+	}
 	@Override
 	protected float getGravityVelocity() {
 		return getGravity();
@@ -817,6 +825,7 @@ public class EntityManaBurst extends EntityThrowable implements IManaBurst {
 	@Override
 	public void setShooterUUID(UUID uuid) {
 		shooterIdentity = uuid;
+
 	}
 
 	@Override

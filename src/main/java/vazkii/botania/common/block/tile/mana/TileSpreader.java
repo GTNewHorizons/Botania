@@ -61,7 +61,7 @@ import vazkii.botania.common.entity.EntityManaBurst;
 import vazkii.botania.common.entity.EntityManaBurst.PositionProperties;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class TileSpreader extends TileSimpleInventory implements IManaCollector, IWandBindable, IKeyLocked, IThrottledPacket, IManaSpreader, IRedirectable {
+public class  TileSpreader extends TileSimpleInventory implements IManaCollector, IWandBindable, IKeyLocked, IThrottledPacket, IManaSpreader, IRedirectable {
 
 	private static final int MAX_MANA = 1000;
 	private static final int ULTRA_MAX_MANA = 6400;

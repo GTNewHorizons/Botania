@@ -51,6 +51,7 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.core.helper.LokiCursor;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
+import vazkii.botania.common.item.equipment.tool.terrasteel.ItemTerraPick;
 import vazkii.botania.common.lib.LibItemNames;
 import baubles.api.BaubleType;
 import baubles.common.container.InventoryBaubles;
@@ -94,7 +95,9 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
         ItemStack stack = player.getCurrentEquippedItem();
 		if(stack == null) return;
         Item item = player.getCurrentEquippedItem().getItem();
-        breakOnAllCursors(player, item, stack, x, y, z, side);   
+		if(item instanceof ItemTerraPick)
+			return;
+        breakOnAllCursors(player, item, stack, x, y, z, side);
     }
 	
 
