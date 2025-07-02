@@ -10,9 +10,12 @@
  */
 package vazkii.botania.common.block.tile.mana;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
@@ -31,6 +34,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -119,6 +125,10 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 
 	UUID identity;
 
+	FakePlayer fakeplayer;
+	GameProfile profile = new GameProfile(UUID.fromString("0d0f407d-1760-4f68-84af-3067c3ed0837"), "[Botania]");
+	private static final WeakHashMap<World, WeakReference<EntityPlayer>> FakePlayers = new WeakHashMap<>();
+
 	int mana;
 	int knownMana = -1;
 	public float rotationX, rotationY;
@@ -173,7 +183,6 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 			ManaNetworkEvent.addCollector(this);
 			inNetwork = true;
 		}
-
 		boolean redstone = false;
 
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
@@ -211,6 +220,7 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 				List<IManaBurst> bursts = worldObj.getEntitiesWithinAABB(IManaBurst.class, aabb);
 				IManaBurst found = null;
 				UUID identity = getIdentifier();
+
 				for(IManaBurst burst : bursts)
 					if(burst != null && identity.equals(burst.getShooterUIID())) {
 						found = burst;
@@ -465,7 +475,8 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 
 	public EntityManaBurst getBurst(boolean fake) {
 		EntityManaBurst burst = new EntityManaBurst(this, fake);
-
+		setFakeplayer();
+		burst.setPlayer(fakeplayer);
 		boolean dreamwood = isDreamwood();
 		boolean ultra = isULTRA_SPREADER();
 		int maxMana = ultra ? 640 : dreamwood ? 240 : 160;
@@ -756,6 +767,16 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 		if(identity == null)
 			identity = UUID.randomUUID();
 		return identity;
+	}
+	public void setFakeplayer(){
+		if(!worldObj.isRemote) {
+			final WeakReference<EntityPlayer> playerref = FakePlayers.get(worldObj);
+			if(playerref == null) {
+				final FakePlayer player = FakePlayerFactory.get((WorldServer) worldObj, profile);
+				FakePlayers.put(worldObj, new WeakReference<>(player));
+				this.fakeplayer = player;
+			}
+		}
 	}
 
 	public UUID getIdentifierUnsafe() {

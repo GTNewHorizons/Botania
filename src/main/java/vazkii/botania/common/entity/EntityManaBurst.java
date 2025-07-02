@@ -674,6 +674,9 @@ public class EntityManaBurst extends EntityThrowable implements IManaBurst {
 	public EntityPlayer getPlayer(){
 		return player;
 	}
+	public void setPlayer(EntityPlayer player){
+		this.player = player;
+	}
 	@Override
 	protected float getGravityVelocity() {
 		return getGravity();

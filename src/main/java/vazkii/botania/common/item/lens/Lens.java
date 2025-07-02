@@ -10,10 +10,17 @@
  */
 package vazkii.botania.common.item.lens;
 
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.api.mana.BurstProperties;
 import vazkii.botania.api.mana.IManaSpreader;
@@ -23,7 +30,29 @@ public class Lens  {
 	public void apply(ItemStack stack, BurstProperties props) {
 		// NO-OP
 	}
+	protected boolean canPlaceBlock(World world, int x, int y, int z, int xAt, int yAt, int zAt, EntityPlayer player){
+		Block block = world.getBlock(x,y,z);
+		Block blockAt= world.getBlock(xAt,zAt,yAt);
+		int meta = world.getBlockMetadata(x,y,z);
+		BlockSnapshot snapshot = new BlockSnapshot(world,x,y,z,block,meta);
+		BlockEvent.PlaceEvent event = new BlockEvent.PlaceEvent(snapshot,blockAt,player);
+		MinecraftForge.EVENT_BUS.post(event);
 
+		return !event.isCanceled();
+	}
+	protected boolean canBreakBlock(World world,int x, int y, int z,EntityPlayer player){
+		Block block = world.getBlock(x,y,z);
+		int meta = world.getBlockMetadata(x,y,z);
+		BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(x, y, z, world, block, meta, player);
+		MinecraftForge.EVENT_BUS.post(event);
+		boolean canMineBlock = world.canMineBlock(player,x,y,z);
+
+		return !event.isCanceled() && canMineBlock;
+	}
+	protected boolean canInteract(EntityPlayer player, Entity entity){
+		EntityInteractEvent event = new EntityInteractEvent(player,entity);
+		return !event.isCanceled();
+	}
 	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack) {
 		return dead;
 	}

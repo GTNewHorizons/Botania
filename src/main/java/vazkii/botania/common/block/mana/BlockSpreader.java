@@ -31,6 +31,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.mana.ILens;
@@ -50,6 +51,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class BlockSpreader extends BlockModContainer<TileSpreader> implements IWandable, IWandHUD, ILexiconable, IWireframeAABBProvider {
 
 	Random random;
+
 
 	public BlockSpreader() {
 		super(Material.wood);
