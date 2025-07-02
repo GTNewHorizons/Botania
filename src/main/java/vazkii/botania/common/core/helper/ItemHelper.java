@@ -8,7 +8,7 @@ import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.world.BlockEvent;
 
 
-public class ItemHelper {
+public class  ItemHelper {
     public static boolean canPlaceBlock(World world, int x, int y, int z, int xAt, int yAt, int zAt, EntityPlayer player){
         Block block = world.getBlock(x,y,z);
         Block blockAt= world.getBlock(xAt,zAt,yAt);

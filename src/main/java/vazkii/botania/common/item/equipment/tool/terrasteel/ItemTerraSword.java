@@ -102,7 +102,7 @@ public class ItemTerraSword extends ItemManasteelSword implements ILensEffect, I
 
 	@Override
 	public boolean collideBurst(IManaBurst burst, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack, EntityPlayer player) {
-		return false;
+		return dead;
 	}
 
 	@Override

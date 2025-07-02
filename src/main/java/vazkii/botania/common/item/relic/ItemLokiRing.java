@@ -95,7 +95,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
         ItemStack stack = player.getCurrentEquippedItem();
 		if(stack == null) return;
         Item item = player.getCurrentEquippedItem().getItem();
-		if(item instanceof ItemTerraPick)
+		if(item instanceof  ISequentialBreaker)
 			return;
         breakOnAllCursors(player, item, stack, x, y, z, side);
     }
