@@ -31,6 +31,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.mana.ManaItemHandler;
 import vazkii.botania.common.core.handler.ConfigHandler;
+import vazkii.botania.common.core.helper.ItemHelper;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.elementium.ItemElementiumPick;
 import vazkii.botania.common.item.equipment.tool.terrasteel.ItemTerraPick;
@@ -80,13 +81,8 @@ public final class ToolCommons {
 
 		if(block != null && blk != block)
 			return;
-		if(!world.isRemote){
-			BlockEvent.BreakEvent event = ForgeHooks.onBlockBreakEvent(world,((EntityPlayerMP)player).theItemInWorldManager.getGameType(),(EntityPlayerMP)player, x,  y,  z);
-			if(event.isCanceled())
-				return;
-		}
 		Material mat = world.getBlock(x, y, z).getMaterial();
-		if(!world.isRemote && blk != null && !blk.isAir(world, x, y, z) && blk.getPlayerRelativeBlockHardness(player, world, x, y, z) > 0) {
+		if(!world.isRemote && ItemHelper.canBreakBlock(world,x,y,z,player) && blk != null && !blk.isAir(world, x, y, z) && blk.getPlayerRelativeBlockHardness(player, world, x, y, z) > 0) {
 			if(!blk.canHarvestBlock(player, meta) || !isRightMaterial(mat, materialsListing))
 				return;
 

@@ -21,6 +21,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 import vazkii.botania.api.internal.IManaBurst;
 
+import static vazkii.botania.common.core.helper.ItemHelper.canBreakBlock;
+
 public class LensPiston extends Lens {
 
 	@Override

@@ -26,6 +26,8 @@ import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.common.Botania;
 
+import static vazkii.botania.common.core.helper.ItemHelper.canBreakBlock;
+
 public class LensPaint extends Lens {
 
 	@Override

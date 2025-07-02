@@ -25,6 +25,9 @@ import net.minecraftforge.event.world.BlockEvent;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.TileIncensePlate;
+import vazkii.botania.common.core.helper.ItemHelper;
+
+import static vazkii.botania.common.core.helper.ItemHelper.canPlaceBlock;
 
 public class LensFire extends Lens {
 

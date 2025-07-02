@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.common.core.handler.ConfigHandler;
 
+import static vazkii.botania.common.core.helper.ItemHelper.canBreakBlock;
+
 public class LensWeight extends Lens {
 
 	@Override

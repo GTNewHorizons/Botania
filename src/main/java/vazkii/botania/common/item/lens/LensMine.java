@@ -33,6 +33,8 @@ import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.item.ModItems;
 
+import static vazkii.botania.common.core.helper.ItemHelper.canBreakBlock;
+
 public class LensMine extends Lens {
 
 	@Override

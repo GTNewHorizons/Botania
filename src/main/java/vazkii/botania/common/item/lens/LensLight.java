@@ -23,6 +23,8 @@ import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.TileManaFlame;
 
+import static vazkii.botania.common.core.helper.ItemHelper.canPlaceBlock;
+
 public class LensLight extends Lens {
 
 	@Override
