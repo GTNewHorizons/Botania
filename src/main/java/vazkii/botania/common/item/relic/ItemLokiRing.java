@@ -75,6 +75,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	private static final String TAG_BREAKING_MODE = "breaking";
 	private static final String TAG_MIRROR_MODE = "mirror";
 	private boolean recursion = false;
+	private static boolean isBreaking = false;
 
 	public static enum HUD_MESSAGE  {
 		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA
@@ -95,11 +96,10 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
         ItemStack stack = player.getCurrentEquippedItem();
 		if(stack == null) return;
         Item item = player.getCurrentEquippedItem().getItem();
-		if(item instanceof  ISequentialBreaker)
+		if(item instanceof  ISequentialBreaker || isBreaking)
 			return;
         breakOnAllCursors(player, item, stack, x, y, z, side);
     }
-	
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -392,7 +392,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		int masterOffsetX = originCoords.posY == -1 ? 0 :x - originCoords.posX;
 		int masterOffsetY = originCoords.posY == -1 ? 0 :y - originCoords.posY;
 		int masterOffsetZ = originCoords.posY == -1 ? 0 :z - originCoords.posZ;
-
+		isBreaking = true;
 		for(int i = 0; i < cursors.size(); i++) {
 			LokiCursor cursor = cursors.get(i);
 			int xp = x + cursor.getX();
@@ -425,6 +425,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				breaker.breakOtherBlock(player, stack, xp, yp, zp, x, y, z, side);
 			ToolCommons.removeBlockWithDrops(player, stack, player.worldObj, xp, yp, zp, x, y, z, block, new Material[] { block.getMaterial() }, silk, fortune, block.getBlockHardness(world, xp, yp, zp), true);
 		}
+		isBreaking = false;
 	}
 
 	@Override
