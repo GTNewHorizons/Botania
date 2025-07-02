@@ -123,10 +123,9 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 	public static boolean staticDreamwood = false;
 	public static boolean staticUltra = false;
 
-	UUID identity;
-
+	UUID identity = UUID.fromString("0d0f407d-1760-4f68-84af-3067c3ed0837");
 	FakePlayer fakeplayer;
-	GameProfile profile = new GameProfile(UUID.fromString("0d0f407d-1760-4f68-84af-3067c3ed0837"), "[Botania]");
+	GameProfile profile = new GameProfile(identity, "[Botania]");
 	private static final WeakHashMap<World, WeakReference<EntityPlayer>> FakePlayers = new WeakHashMap<>();
 
 	int mana;
@@ -268,10 +267,7 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 	public void writeCustomNBT(NBTTagCompound cmp) {
 		super.writeCustomNBT(cmp);
 
-		UUID identity = getIdentifier();
-		cmp.setBoolean(TAG_HAS_IDENTITY, true);
-		cmp.setLong(TAG_UUID_MOST, identity.getMostSignificantBits());
-		cmp.setLong(TAG_UUID_LEAST, identity.getLeastSignificantBits());
+
 
 		cmp.setInteger(TAG_MANA, mana);
 		cmp.setFloat(TAG_ROTATION_X, rotationX);
@@ -307,13 +303,6 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 	public void readCustomNBT(NBTTagCompound cmp) {
 		super.readCustomNBT(cmp);
 
-		if(cmp.getBoolean(TAG_HAS_IDENTITY)) {
-			long most = cmp.getLong(TAG_UUID_MOST);
-			long least = cmp.getLong(TAG_UUID_LEAST);
-			UUID identity = getIdentifierUnsafe();
-			if(identity == null || most != identity.getMostSignificantBits() || least != identity.getLeastSignificantBits())
-				identity = new UUID(most, least);
-		} else getIdentifier();
 
 		mana = cmp.getInteger(TAG_MANA);
 		rotationX = cmp.getFloat(TAG_ROTATION_X);
@@ -764,8 +753,6 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 
 	@Override
 	public UUID getIdentifier() {
-		if(identity == null)
-			identity = UUID.randomUUID();
 		return identity;
 	}
 	public void setFakeplayer(){
@@ -777,10 +764,6 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 				this.fakeplayer = player;
 			}
 		}
-	}
-
-	public UUID getIdentifierUnsafe() {
-		return identity;
 	}
 
 }
