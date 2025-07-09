@@ -3,7 +3,7 @@
 dependencies {
     api('com.github.GTNewHorizons:Baubles-Expanded:2.1.9-GTNH:dev')
     api('com.github.GTNewHorizons:GTNHLib:0.6.36:dev')
-
+    devOnlyNonPublishable('com.github.GTNewHorizons:NotEnoughItems:2.7.62-GTNH:dev')
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.44:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:ForgeMultipart:1.6.7:dev') {transitive=false}
     compileOnly('com.github.GTNewHorizons:Railcraft:9.16.30:api') {transitive=false}
