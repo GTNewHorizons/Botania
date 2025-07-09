@@ -39,12 +39,15 @@ import vazkii.botania.api.mana.IManaUsingItem;
 import vazkii.botania.api.mana.ManaItemHandler;
 import vazkii.botania.client.core.handler.ItemsRemainingRenderHandler;
 import vazkii.botania.common.block.BlockCamo;
+import vazkii.botania.common.core.helper.ItemHelper;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.item.ItemMod;
 import vazkii.botania.common.lib.LibItemNames;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
+import static vazkii.botania.common.core.helper.ItemHelper.canPlaceBlock;
 
 public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWireframeCoordinateListProvider {
 
@@ -90,7 +93,7 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 		} else if(canExchange(par1ItemStack) && !ItemNBTHelper.getBoolean(par1ItemStack, TAG_SWAPPING, false)) {
 			Block block = getBlock(par1ItemStack);
 			int meta = getBlockMeta(par1ItemStack);
-			List<ChunkCoordinates> swap = getBlocksToSwap(par3World, par1ItemStack, block, meta, par4, par5, par6, null, 0);
+			List<ChunkCoordinates> swap = getBlocksToSwap(par3World, par1ItemStack, par2EntityPlayer, block, meta, par4, par5, par6, null, 0);
 			if(swap.size() > 0) {
 				ItemNBTHelper.setBoolean(par1ItemStack, TAG_SWAPPING, true);
 				ItemNBTHelper.setInt(par1ItemStack, TAG_SELECT_X, par4);
@@ -135,27 +138,35 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 				ItemNBTHelper.setBoolean(stack, TAG_SWAPPING, false);
 				return;
 			}
-
+			//block right-clicked
 			int x = ItemNBTHelper.getInt(stack, TAG_SELECT_X, 0);
 			int y = ItemNBTHelper.getInt(stack, TAG_SELECT_Y, 0);
 			int z = ItemNBTHelper.getInt(stack, TAG_SELECT_Z, 0);
+			//block that will replace.
 			Block targetBlock = getTargetBlock(stack);
 			int targetMeta = getTargetBlockMeta(stack);
-			List<ChunkCoordinates> swap = getBlocksToSwap(world, stack, block, meta, x, y, z, targetBlock, targetMeta);
-			if(swap.size() == 0) {
+			//list of blocks to replace
+			List<ChunkCoordinates> swap = getBlocksToSwap(world, stack,player ,block, meta, x, y, z, targetBlock, targetMeta);
+			if(swap.isEmpty()) {
 				ItemNBTHelper.setBoolean(stack, TAG_SWAPPING, false);
 				return;
 			}
-
-			ChunkCoordinates coords = swap.get(world.rand.nextInt(swap.size()));
-			boolean exchange = exchange(world, player, coords.posX, coords.posY, coords.posZ, stack, block, meta);
-			if(exchange)
-				ManaItemHandler.requestManaExactForTool(stack, player, COST, true);
-			else ItemNBTHelper.setBoolean(stack, TAG_SWAPPING, false);
+			for(ChunkCoordinates coords: swap){
+				boolean exchange = exchange(world, player, coords.posX, coords.posY, coords.posZ, stack, block, meta);
+				if(exchange)
+					ManaItemHandler.requestManaExactForTool(stack, player, COST, true);
+			}
+			ItemNBTHelper.setBoolean(stack, TAG_SWAPPING, false);
+//			ChunkCoordinates coords = swap.get(world.rand.nextInt(swap.size()));
+//
+//			boolean exchange = exchange(world, player, coords.posX, coords.posY, coords.posZ, stack, block, meta);
+//			if(exchange)
+//
+//			else
 		}
 	}
 
-	public List<ChunkCoordinates> getBlocksToSwap(World world, ItemStack stack, Block blockToSwap, int metaToSwap, int xc, int yc, int zc, Block targetBlock, int targetMeta) {
+	public List<ChunkCoordinates> getBlocksToSwap(World world, ItemStack stack,EntityPlayer player, Block blockToSwap, int metaToSwap, int xc, int yc, int zc, Block targetBlock, int targetMeta) {
 		// If we have no target block passed in, infer it to be
 		// the block which the swapping is centered on (presumably the block
 		// which the player is looking at)
@@ -222,15 +233,17 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 			int meta = world.getBlockMetadata(x, y, z);
 			if(!blockAt.isAir(world, x, y, z) && blockAt.getPlayerRelativeBlockHardness(player, world, x, y, z) > 0 && (blockAt != blockToSet || meta != metaToSet)) {
 				if(!world.isRemote) {
-					if(!player.capabilities.isCreativeMode) {
-						List<ItemStack> drops = blockAt.getDrops(world, x, y, z, meta, 0);
-						for(ItemStack drop : drops)
-							world.spawnEntityInWorld(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, drop));
-						removeFromInventory(player, stack, blockToSet, metaToSet, true);
+					if (canPlaceBlock(world, x, y, z, x, y, z, player)) {
+						if (!player.capabilities.isCreativeMode) {
+							List<ItemStack> drops = blockAt.getDrops(world, x, y, z, meta, 0);
+							for (ItemStack drop : drops)
+								world.spawnEntityInWorld(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, drop));
+							removeFromInventory(player, stack, blockToSet, metaToSet, true);
+						}
+						world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(blockAt) + (meta << 12));
+						world.setBlock(x, y, z, blockToSet, metaToSet, 1 | 2);
+						blockToSet.onBlockPlacedBy(world, x, y, z, player, placeStack);
 					}
-					world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(blockAt) + (meta << 12));
-					world.setBlock(x, y, z, blockToSet, metaToSet, 1 | 2);
-					blockToSet.onBlockPlacedBy(world, x, y, z, player, placeStack);
 				}
 				displayRemainderCounter(player, stack);
 				return true;
@@ -329,8 +342,8 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 		Block block = getBlock(stack);
 		int meta = getBlockMeta(stack);
 		int count = getInventoryItemCount(player, stack, block, meta);
-		if(!player.worldObj.isRemote)
-			ItemsRemainingRenderHandler.set(new ItemStack(block, 1, meta), count);
+		//if(!player.worldObj.isRemote)
+			//ItemsRemainingRenderHandler.set(new ItemStack(block, 1, meta), count);
 	}
 
 	@Override
@@ -414,7 +427,7 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 			}
 
 			if(!player.worldObj.isAirBlock(x, y, z)) {
-				List<ChunkCoordinates> coordsList = getBlocksToSwap(player.worldObj, stack, block, meta, x, y, z, targetBlock, targetMeta);
+				List<ChunkCoordinates> coordsList = getBlocksToSwap(player.worldObj, stack,player, block, meta, x, y, z, targetBlock, targetMeta);
 				for(ChunkCoordinates coords : coordsList)
 					if(coords.posX == x && coords.posY == y && coords.posZ == z) {
 						coordsList.remove(coords);

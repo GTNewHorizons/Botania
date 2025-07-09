@@ -15,6 +15,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -25,19 +26,25 @@ import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.common.Botania;
 
+import static vazkii.botania.common.core.helper.ItemHelper.canBreakBlock;
+
 public class LensPaint extends Lens {
 
 	@Override
-	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack) {
+	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack, EntityPlayer player) {
 		int storedColor = ItemLens.getStoredColor(stack);
 		if(!burst.isFake() && storedColor > -1 && storedColor < 17) {
 			if(pos.entityHit != null && pos.entityHit instanceof EntitySheep) {
 				int r = 20;
 				int sheepColor = ((EntitySheep) pos.entityHit).getFleeceColor();
 				List<EntitySheep> sheepList = entity.worldObj.getEntitiesWithinAABB(EntitySheep.class, AxisAlignedBB.getBoundingBox(pos.entityHit.posX - r, pos.entityHit.posY - r, pos.entityHit.posZ - r, pos.entityHit.posX + r, pos.entityHit.posY + r, pos.entityHit.posZ + r));
-				for(EntitySheep sheep : sheepList) {
-					if(sheep.getFleeceColor() == sheepColor)
-						sheep.setFleeceColor(storedColor == 16 ? sheep.worldObj.rand.nextInt(16) : storedColor);
+				if(!entity.worldObj.isRemote) {
+					for (EntitySheep sheep : sheepList) {
+						if (canInteract(player, pos.entityHit)) {
+							if (sheep.getFleeceColor() == sheepColor)
+								sheep.setFleeceColor(storedColor == 16 ? sheep.worldObj.rand.nextInt(16) : storedColor);
+						}
+					}
 				}
 				dead = true;
 			} else {
@@ -71,15 +78,15 @@ public class LensPaint extends Lens {
 						int metaThere = entity.worldObj.getBlockMetadata(coords.posX, coords.posY, coords.posZ);
 
 						if(metaThere != placeColor) {
-							if(!entity.worldObj.isRemote)
+							if(!entity.worldObj.isRemote && canBreakBlock(entity.worldObj, coords.posX, coords.posY, coords.posZ,player)) {
 								entity.worldObj.setBlockMetadataWithNotify(coords.posX, coords.posY, coords.posZ, placeColor, 2);
-							float[] color = EntitySheep.fleeceColorTable[placeColor];
-							float r = color[0];
-							float g = color[1];
-							float b = color[2];
-							for(int i = 0; i < 4; i++)
-								Botania.proxy.sparkleFX(entity.worldObj, coords.posX + (float) Math.random(), coords.posY + (float) Math.random(), coords.posZ + (float) Math.random(), r, g, b, 0.6F + (float) Math.random() * 0.3F, 5);
-
+								float[] color = EntitySheep.fleeceColorTable[placeColor];
+								float r = color[0];
+								float g = color[1];
+								float b = color[2];
+								for (int i = 0; i < 4; i++)
+									Botania.proxy.sparkleFX(entity.worldObj, coords.posX + (float) Math.random(), coords.posY + (float) Math.random(), coords.posZ + (float) Math.random(), r, g, b, 0.6F + (float) Math.random() * 0.3F, 5);
+							}
 						}
 					}
 				}

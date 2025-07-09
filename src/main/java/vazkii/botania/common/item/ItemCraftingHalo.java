@@ -302,7 +302,7 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 
 	@SubscribeEvent
 	public void onItemCrafted(ItemCraftedEvent event) {
-		if(!(event.craftMatrix instanceof InventoryCraftingHalo))
+		if(event.player.worldObj.isRemote &&  !(event.craftMatrix instanceof InventoryCraftingHalo))
 			return;
 
 		for(int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
