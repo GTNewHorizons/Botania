@@ -124,7 +124,7 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 	public static boolean staticUltra = false;
 
 	UUID identity = UUID.fromString("0d0f407d-1760-4f68-84af-3067c3ed0837");
-	FakePlayer fakeplayer;
+	EntityPlayer fakeplayer;
 	GameProfile profile = new GameProfile(identity, "[Botania]");
 	private static final WeakHashMap<World, WeakReference<EntityPlayer>> FakePlayers = new WeakHashMap<>();
 
@@ -182,6 +182,7 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 			ManaNetworkEvent.addCollector(this);
 			inNetwork = true;
 		}
+
 		boolean redstone = false;
 
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
@@ -219,7 +220,6 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 				List<IManaBurst> bursts = worldObj.getEntitiesWithinAABB(IManaBurst.class, aabb);
 				IManaBurst found = null;
 				UUID identity = getIdentifier();
-
 				for(IManaBurst burst : bursts)
 					if(burst != null && identity.equals(burst.getShooterUIID())) {
 						found = burst;
@@ -267,8 +267,6 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 	public void writeCustomNBT(NBTTagCompound cmp) {
 		super.writeCustomNBT(cmp);
 
-
-
 		cmp.setInteger(TAG_MANA, mana);
 		cmp.setFloat(TAG_ROTATION_X, rotationX);
 		cmp.setFloat(TAG_ROTATION_Y, rotationY);
@@ -302,7 +300,6 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 	@Override
 	public void readCustomNBT(NBTTagCompound cmp) {
 		super.readCustomNBT(cmp);
-
 
 		mana = cmp.getInteger(TAG_MANA);
 		rotationX = cmp.getFloat(TAG_ROTATION_X);
@@ -755,6 +752,7 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 	public UUID getIdentifier() {
 		return identity;
 	}
+
 	public void setFakeplayer(){
 		if(!worldObj.isRemote) {
 			final WeakReference<EntityPlayer> playerref = FakePlayers.get(worldObj);
@@ -762,8 +760,7 @@ public class  TileSpreader extends TileSimpleInventory implements IManaCollector
 				final FakePlayer player = FakePlayerFactory.get((WorldServer) worldObj, profile);
 				FakePlayers.put(worldObj, new WeakReference<>(player));
 				this.fakeplayer = player;
-			}
+			} else fakeplayer = playerref.get();
 		}
 	}
-
 }
