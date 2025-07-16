@@ -81,8 +81,9 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 
 	public ItemCraftingHalo() {
 		this(LibItemNames.CRAFTING_HALO);
-		MinecraftForge.EVENT_BUS.register(this);
-		FMLCommonHandler.instance().bus().register(this);
+		EventHandler handler = new EventHandler();
+		MinecraftForge.EVENT_BUS.register(handler);
+		FMLCommonHandler.instance().bus().register(handler);
 	}
 
 	public ItemCraftingHalo(String name) {
@@ -300,18 +301,6 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 			ItemNBTHelper.setCompound(stack, TAG_STORED_RECIPE_PREFIX + pos, getLastCraftingCompound(stack, false));
 	}
 
-	@SubscribeEvent
-	public void onItemCrafted(ItemCraftedEvent event) {
-		if(!(event.craftMatrix instanceof InventoryCraftingHalo))
-			return;
-
-		for(int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
-			ItemStack stack = event.player.inventory.getStackInSlot(i);
-			if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
-				saveRecipeToStack(event, stack);
-		}
-	}
-
 	private void saveRecipeToStack(ItemCraftedEvent event, ItemStack stack) {
 		NBTTagCompound cmp = new NBTTagCompound();
 		NBTTagCompound cmp1 = new NBTTagCompound();
@@ -389,15 +378,6 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 
 	public static void setRotationBase(ItemStack stack, float rotation) {
 		ItemNBTHelper.setFloat(stack, TAG_ROTATION_BASE, rotation);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void onRenderWorldLast(RenderWorldLastEvent event) {
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		ItemStack stack = player.getCurrentEquippedItem();
-		if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
-			render(stack, player, event.partialTicks);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -603,6 +583,29 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 	@Override
 	public Achievement getAchievementOnCraft(ItemStack stack, EntityPlayer player, IInventory matrix) {
 		return ModAchievements.craftingHaloCraft;
+	}
+
+	public class EventHandler{
+		@SubscribeEvent
+		public void onItemCrafted(ItemCraftedEvent event) {
+			if(!(event.craftMatrix instanceof InventoryCraftingHalo))
+				return;
+
+			for(int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
+				ItemStack stack = event.player.inventory.getStackInSlot(i);
+				if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
+					saveRecipeToStack(event, stack);
+			}
+		}
+
+		@SideOnly(Side.CLIENT)
+		@SubscribeEvent
+		public void onRenderWorldLast(RenderWorldLastEvent event) {
+			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			ItemStack stack = player.getCurrentEquippedItem();
+			if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
+				render(stack, player, event.partialTicks);
+		}
 	}
 
 }
