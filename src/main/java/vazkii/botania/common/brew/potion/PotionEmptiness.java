@@ -28,21 +28,23 @@ public class PotionEmptiness extends PotionMod {
 
 	public PotionEmptiness() {
 		super(ConfigHandler.potionIDEmptiness, LibPotionNames.EMPTINESS, false, 0xFACFFF, 2);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
-	@SubscribeEvent
-	public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
-		if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
-			double rangeSq = RANGE * RANGE;
-			List<EntityPlayer> players = (List<EntityPlayer>) event.world.playerEntities.stream()
-					.filter(player -> ((EntityPlayer) player).getDistanceSq(event.x, event.y, event.z) <= rangeSq)
-					.map(player -> (EntityPlayer) player)
-					.collect(Collectors.toList());
-			for (EntityPlayer player : players) {
-				if (hasEffect(player)) {
-					event.setResult(Result.DENY);
-					return;
+	class EventHandler{
+		@SubscribeEvent
+		public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
+			if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
+				double rangeSq = RANGE * RANGE;
+				List<EntityPlayer> players = (List<EntityPlayer>) event.world.playerEntities.stream()
+						.filter(player -> ((EntityPlayer) player).getDistanceSq(event.x, event.y, event.z) <= rangeSq)
+						.map(player -> (EntityPlayer) player)
+						.collect(Collectors.toList());
+				for (EntityPlayer player : players) {
+					if (hasEffect(player)) {
+						event.setResult(Result.DENY);
+						return;
+					}
 				}
 			}
 		}
