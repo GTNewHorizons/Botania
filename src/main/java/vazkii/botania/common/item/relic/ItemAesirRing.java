@@ -96,7 +96,7 @@ public class ItemAesirRing extends ItemRelicBauble implements IExtendedWireframe
 		return ModAchievements.relicAesirRing;
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		public void onDropped(ItemTossEvent event) {
 			if(event.entityItem != null && event.entityItem.getEntityItem() != null && !event.entityItem.worldObj.isRemote) {

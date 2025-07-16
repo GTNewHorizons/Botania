@@ -160,7 +160,7 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 		return stack.getItemDamage() == 4 ? ModAchievements.terrasteelPickup : null;
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		public void onPlayerInteract(PlayerInteractEvent event) {
 			boolean rightEvent = event.action == Action.RIGHT_CLICK_AIR;

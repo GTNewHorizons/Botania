@@ -98,7 +98,7 @@ public class BlockBifrost extends BlockModContainer<TileBifrost> implements ILex
 		return LexiconData.rainbowRod;
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
 		public void loadTextures(TextureStitchEvent.Pre event) {

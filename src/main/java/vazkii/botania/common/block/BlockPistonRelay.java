@@ -196,7 +196,7 @@ public class BlockPistonRelay extends BlockMod implements IWandable, ILexiconabl
 		return LexiconData.pistonRelay;
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		public void onWorldLoad(WorldEvent.Load event) {
 			WorldData.get(event.world);

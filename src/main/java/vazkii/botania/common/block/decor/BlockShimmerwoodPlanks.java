@@ -49,7 +49,7 @@ public class BlockShimmerwoodPlanks  extends BlockMod implements ILexiconable {
 		return LexiconData.rainbowRod;
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
 		public void loadTextures(TextureStitchEvent.Pre event) {

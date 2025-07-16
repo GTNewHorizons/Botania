@@ -106,7 +106,7 @@ public abstract class ItemBagBase extends ItemMod {
 
     protected abstract int getGuiID();
 
-    class EventHandler{
+    public class EventHandler{
         @SubscribeEvent
         public void onPickupItem(EntityItemPickupEvent event) {
             ItemStack stack = event.item.getEntityItem();

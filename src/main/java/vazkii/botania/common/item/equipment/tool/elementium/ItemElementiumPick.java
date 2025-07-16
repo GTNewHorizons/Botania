@@ -38,7 +38,7 @@ public class ItemElementiumPick extends ItemManasteelPick {
 		return false;
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent
 		public void onHarvestDrops(HarvestDropsEvent event) {
 			if(event.harvester == null) {

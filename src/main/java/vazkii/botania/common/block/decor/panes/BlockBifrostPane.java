@@ -33,7 +33,7 @@ public class BlockBifrostPane extends BlockModPane {
 		// NO-OP
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
 		public void loadTextures(TextureStitchEvent.Pre event) {

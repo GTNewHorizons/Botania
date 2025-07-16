@@ -31,7 +31,7 @@ public class PotionEmptiness extends PotionMod {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent
 		public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
 			if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {

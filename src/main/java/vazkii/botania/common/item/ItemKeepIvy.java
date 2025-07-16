@@ -46,7 +46,7 @@ public class ItemKeepIvy extends ItemMod {
 		FMLCommonHandler.instance().bus().register(handler);
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		public void onPlayerDrops(PlayerDropsEvent event) {
 			List<EntityItem> keeps = new ArrayList<>();

@@ -98,7 +98,7 @@ public class BlockPrismarine extends BlockMod implements ILexiconable {
 		return LexiconData.prismarine;
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
 		public void loadTextures(TextureStitchEvent.Pre event) {

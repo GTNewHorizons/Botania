@@ -130,7 +130,7 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 		}
 	}
 
-	class EventHandler {
+	public class EventHandler {
 
 		@SubscribeEvent
 		public void onEntityAttacked(LivingHurtEvent event) {

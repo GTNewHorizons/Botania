@@ -69,7 +69,7 @@ public class ItemGoldenLaurel extends ItemBauble implements IBaubleRender {
 		}
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent(priority = EventPriority.HIGHEST)
 		public void onPlayerDeath(LivingDeathEvent event) {
 			if(event.entity instanceof EntityPlayer) {

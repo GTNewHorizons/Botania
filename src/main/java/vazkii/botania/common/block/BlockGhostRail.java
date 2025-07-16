@@ -59,7 +59,7 @@ public class BlockGhostRail extends BlockRailBase implements ILexiconable {
 		return LexiconData.ghostRail;
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		public void onMinecartUpdate(MinecartUpdateEvent event) {
 			int x = MathHelper.floor_double(event.entity.posX);

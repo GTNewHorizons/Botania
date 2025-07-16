@@ -118,7 +118,7 @@ public class ItemTravelBelt extends ItemBauble implements IBaubleRender, IManaUs
 		return true;
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent
 		public void updatePlayerStepStatus(LivingUpdateEvent event) {
 			if(event.entityLiving instanceof EntityPlayer) {

@@ -38,7 +38,7 @@ public class ItemElementiumAxe extends ItemManasteelAxe {
 		event.drops.add(entityitem);
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent
 		public void onEntityDrops(LivingDropsEvent event) {
 			if(event.recentlyHit && event.source.getEntity() != null && event.source.getEntity() instanceof EntityPlayer) {

@@ -24,7 +24,7 @@ public class PotionFeatherfeet extends PotionMod {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		public void onEntityUpdate(LivingUpdateEvent event) {
 			EntityLivingBase e = event.entityLiving;

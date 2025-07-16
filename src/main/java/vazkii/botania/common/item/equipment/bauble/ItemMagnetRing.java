@@ -154,7 +154,7 @@ public class ItemMagnetRing extends ItemBauble {
 		return BaubleType.RING;
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent
 		public void onTossItem(ItemTossEvent event) {
 			InventoryBaubles inv = PlayerHandler.getPlayerBaubles(event.player);

@@ -453,7 +453,7 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 		return stack.getItemDamage() == 1 ? ModAchievements.tiaraWings : null;
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent
 		public void updatePlayerFlyStatus(LivingUpdateEvent event) {
 			if(event.entityLiving instanceof EntityPlayer) {

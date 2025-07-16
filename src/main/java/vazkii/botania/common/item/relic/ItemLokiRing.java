@@ -506,7 +506,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		}
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent
 		public void onBlockBreak(BlockEvent.BreakEvent event) {
 			EntityPlayer player = event.getPlayer();

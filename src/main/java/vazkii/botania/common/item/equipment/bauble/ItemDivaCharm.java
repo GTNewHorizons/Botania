@@ -78,7 +78,7 @@ public class ItemDivaCharm extends ItemBauble implements IManaUsingItem, IBauble
 		}
 	}
 
-	class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
 		public void onEntityDamaged(LivingHurtEvent event) {
 			if(event.source.getEntity() instanceof EntityPlayer && event.entityLiving instanceof EntityLiving && !event.entityLiving.worldObj.isRemote && Math.random() < 0.6F) {

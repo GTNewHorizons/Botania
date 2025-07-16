@@ -416,7 +416,7 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 		return null;
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent
 		public void onLeftClick(PlayerInteractEvent event) {
 			if(event.action == Action.LEFT_CLICK_BLOCK) {

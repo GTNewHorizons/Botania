@@ -85,7 +85,7 @@ public class BlockEnchantedSoil extends BlockMod implements ILexiconable {
 		return LexiconData.overgrowthSeed;
 	}
 
-	class EventHandler{
+	public class EventHandler{
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
 		public void loadTextures(TextureStitchEvent.Pre event) {

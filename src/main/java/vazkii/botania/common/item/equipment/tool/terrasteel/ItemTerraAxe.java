@@ -386,7 +386,7 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 		}
 	}
 
-	class EventHandler{
+	public class EventHandler{
 
 		@SubscribeEvent
 		public void onTickEnd(TickEvent.WorldTickEvent event) {
