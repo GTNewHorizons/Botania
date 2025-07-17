@@ -45,7 +45,7 @@ public class BlockEnchantedSoil extends BlockMod implements ILexiconable {
 		setHardness(0.6F);
 		setStepSound(soundTypeGrass);
 		setBlockName(LibBlockNames.ENCHANTED_SOIL);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -57,20 +57,6 @@ public class BlockEnchantedSoil extends BlockMod implements ILexiconable {
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
 		// NO-OP
-	}
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void loadTextures(TextureStitchEvent.Pre event) {
-		if(event.map.getTextureType() == 0) {
-			TextureAtlasSprite icon = new InterpolatedIcon("botania:enchantedSoil0");
-			if(event.map.setTextureEntry("botania:enchantedSoil0", icon))
-				blockIcon = icon;
-
-			icon = new InterpolatedIcon("botania:enchantedSoil1");
-			if(event.map.setTextureEntry("botania:enchantedSoil1", icon))
-				iconSide = icon;
-		}
 	}
 
 	@Override
@@ -99,4 +85,19 @@ public class BlockEnchantedSoil extends BlockMod implements ILexiconable {
 		return LexiconData.overgrowthSeed;
 	}
 
+	public class EventHandler{
+		@SubscribeEvent
+		@SideOnly(Side.CLIENT)
+		public void loadTextures(TextureStitchEvent.Pre event) {
+			if(event.map.getTextureType() == 0) {
+				TextureAtlasSprite icon = new InterpolatedIcon("botania:enchantedSoil0");
+				if(event.map.setTextureEntry("botania:enchantedSoil0", icon))
+					blockIcon = icon;
+
+				icon = new InterpolatedIcon("botania:enchantedSoil1");
+				if(event.map.setTextureEntry("botania:enchantedSoil1", icon))
+					iconSide = icon;
+			}
+		}
+	}
 }

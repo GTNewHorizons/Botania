@@ -62,7 +62,7 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 		super();
 		setUnlocalizedName(LibItemNames.GRASS_SEEDS);
 		setHasSubtypes(true);
-		FMLCommonHandler.instance().bus().register(this);
+		FMLCommonHandler.instance().bus().register(new EventHandler());
 	}
 
 	@Override
@@ -168,28 +168,6 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 		}
 
 		return true;
-	}
-
-	@SubscribeEvent
-	public void onTickEnd(TickEvent.WorldTickEvent event) {
-		// Block swapper updates should only occur on the server
-		if(event.world.isRemote)
-			return;
-
-		if(event.phase == Phase.END) {
-			int dim = event.world.provider.dimensionId;
-			if(blockSwappers.containsKey(dim)) {
-				Set<BlockSwapper> swappers = blockSwappers.get(dim);
-
-				Iterator<BlockSwapper> iter = swappers.iterator();
-
-				while(iter.hasNext()) {
-					BlockSwapper next = iter.next();
-					if(next == null || !next.tick())
-						iter.remove();
-				}
-			}
-		}
 	}
 
 	/**
@@ -372,6 +350,25 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 
 	public IslandType getIslandType(ItemStack stack) {
 		return ISLAND_TYPES[Math.min(stack.getItemDamage(), ISLAND_TYPES.length - 1)];
+	}
+
+	public static class EventHandler {
+		@SubscribeEvent
+		public void onTickEnd(TickEvent.WorldTickEvent event) {
+			// Block swapper updates should only occur on the server
+			if(event.world.isRemote)
+				return;
+
+			if(event.phase == Phase.END) {
+				int dim = event.world.provider.dimensionId;
+				if(blockSwappers.containsKey(dim)) {
+					Set<BlockSwapper> swappers = blockSwappers.get(dim);
+
+                    swappers.removeIf(next -> next == null || !next.tick());
+				}
+			}
+		}
+
 	}
 
 }

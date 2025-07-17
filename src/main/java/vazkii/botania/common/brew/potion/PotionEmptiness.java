@@ -10,9 +10,6 @@
  */
 package vazkii.botania.common.brew.potion;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,21 +25,21 @@ public class PotionEmptiness extends PotionMod {
 
 	public PotionEmptiness() {
 		super(ConfigHandler.potionIDEmptiness, LibPotionNames.EMPTINESS, false, 0xFACFFF, 2);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
-	@SubscribeEvent
-	public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
-		if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
-			double rangeSq = RANGE * RANGE;
-			List<EntityPlayer> players = (List<EntityPlayer>) event.world.playerEntities.stream()
-					.filter(player -> ((EntityPlayer) player).getDistanceSq(event.x, event.y, event.z) <= rangeSq)
-					.map(player -> (EntityPlayer) player)
-					.collect(Collectors.toList());
-			for (EntityPlayer player : players) {
-				if (hasEffect(player)) {
-					event.setResult(Result.DENY);
-					return;
+	public class EventHandler {
+		@SubscribeEvent
+		public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
+			if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
+				double rangeSq = RANGE * RANGE;
+				for (Object o : event.world.playerEntities) {
+					EntityPlayer player = (EntityPlayer) o;
+					if (player.getDistanceSq(event.x, event.y, event.z) <= rangeSq
+						&& hasEffect(player)) {
+						event.setResult(Result.DENY);
+						return;
+					}
 				}
 			}
 		}

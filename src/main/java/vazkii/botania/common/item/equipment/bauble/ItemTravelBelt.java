@@ -55,7 +55,7 @@ public class ItemTravelBelt extends ItemBauble implements IBaubleRender, IManaUs
 
 	public ItemTravelBelt() {
 		this(LibItemNames.TRAVEL_BELT, 0.035F, 0.2F, 2F);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	public ItemTravelBelt(String name, float speed, float jump, float fallBuffer) {
@@ -70,41 +70,6 @@ public class ItemTravelBelt extends ItemBauble implements IBaubleRender, IManaUs
 		return BaubleType.BELT;
 	}
 
-	@SubscribeEvent
-	public void updatePlayerStepStatus(LivingUpdateEvent event) {
-		if(event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			String s = playerStr(player);
-
-			ItemStack belt = PlayerHandler.getPlayerBaubles(player).getStackInSlot(3);
-			if(playersWithStepup.contains(s)) {
-				if(shouldPlayerHaveStepup(player)) {
-					ItemTravelBelt beltItem = (ItemTravelBelt) belt.getItem();
-
-					if((player.onGround || player.capabilities.isFlying) && player.moveForward > 0F && !player.isInsideOfMaterial(Material.water)) {
-						float speed = beltItem.getSpeed(belt);
-						player.moveFlying(0F, 1F, player.capabilities.isFlying ? speed : speed);
-						beltItem.onMovedTick(belt, player);
-
-						if(player.ticksExisted % COST_INTERVAL == 0)
-							ManaItemHandler.requestManaExact(belt, player, COST, true);
-					} else beltItem.onNotMovingTick(belt, player);
-
-					if(player.isSneaking())
-						player.stepHeight = 0.50001F; // Not 0.5F because that is the default
-					else player.stepHeight = 1F;
-
-				} else {
-					player.stepHeight = 0.5F;
-					playersWithStepup.remove(s);
-				}
-			} else if(shouldPlayerHaveStepup(player)) {
-				playersWithStepup.add(s);
-				player.stepHeight = 1F;
-			}
-		}
-	}
-
 	public float getSpeed(ItemStack stack) {
 		return speed;
 	}
@@ -117,29 +82,9 @@ public class ItemTravelBelt extends ItemBauble implements IBaubleRender, IManaUs
 		// NO-OP
 	}
 
-	@SubscribeEvent
-	public void onPlayerJump(LivingJumpEvent event) {
-		if(event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			ItemStack belt = PlayerHandler.getPlayerBaubles(player).getStackInSlot(3);
-
-			if(belt != null && belt.getItem() instanceof ItemTravelBelt && ManaItemHandler.requestManaExact(belt, player, COST, false)) {
-				player.motionY += ((ItemTravelBelt) belt.getItem()).jump;
-				player.fallDistance = -((ItemTravelBelt) belt.getItem()).fallBuffer;
-			}
-		}
-	}
-
 	private boolean shouldPlayerHaveStepup(EntityPlayer player) {
 		ItemStack armor = PlayerHandler.getPlayerBaubles(player).getStackInSlot(3);
 		return armor != null && armor.getItem() instanceof ItemTravelBelt && ManaItemHandler.requestManaExact(armor, player, COST, false);
-	}
-
-	@SubscribeEvent
-	public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-		String username = event.player.getGameProfile().getName();
-		playersWithStepup.remove(username + ":false");
-		playersWithStepup.remove(username + ":true");
 	}
 
 	public static String playerStr(EntityPlayer player) {
@@ -173,4 +118,60 @@ public class ItemTravelBelt extends ItemBauble implements IBaubleRender, IManaUs
 		return true;
 	}
 
+	public class EventHandler{
+		@SubscribeEvent
+		public void updatePlayerStepStatus(LivingUpdateEvent event) {
+			if(event.entityLiving instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) event.entityLiving;
+				String s = playerStr(player);
+
+				ItemStack belt = PlayerHandler.getPlayerBaubles(player).getStackInSlot(3);
+				if(playersWithStepup.contains(s)) {
+					if(shouldPlayerHaveStepup(player)) {
+						ItemTravelBelt beltItem = (ItemTravelBelt) belt.getItem();
+
+						if((player.onGround || player.capabilities.isFlying) && player.moveForward > 0F && !player.isInsideOfMaterial(Material.water)) {
+							float speed = beltItem.getSpeed(belt);
+							player.moveFlying(0F, 1F, player.capabilities.isFlying ? speed : speed);
+							beltItem.onMovedTick(belt, player);
+
+							if(player.ticksExisted % COST_INTERVAL == 0)
+								ManaItemHandler.requestManaExact(belt, player, COST, true);
+						} else beltItem.onNotMovingTick(belt, player);
+
+						if(player.isSneaking())
+							player.stepHeight = 0.50001F; // Not 0.5F because that is the default
+						else player.stepHeight = 1F;
+
+					} else {
+						player.stepHeight = 0.5F;
+						playersWithStepup.remove(s);
+					}
+				} else if(shouldPlayerHaveStepup(player)) {
+					playersWithStepup.add(s);
+					player.stepHeight = 1F;
+				}
+			}
+		}
+
+		@SubscribeEvent
+		public void onPlayerJump(LivingJumpEvent event) {
+			if(event.entityLiving instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) event.entityLiving;
+				ItemStack belt = PlayerHandler.getPlayerBaubles(player).getStackInSlot(3);
+
+				if(belt != null && belt.getItem() instanceof ItemTravelBelt && ManaItemHandler.requestManaExact(belt, player, COST, false)) {
+					player.motionY += ((ItemTravelBelt) belt.getItem()).jump;
+					player.fallDistance = -((ItemTravelBelt) belt.getItem()).fallBuffer;
+				}
+			}
+		}
+
+		@SubscribeEvent
+		public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+			String username = event.player.getGameProfile().getName();
+			playersWithStepup.remove(username + ":false");
+			playersWithStepup.remove(username + ":true");
+		}
+	}
 }

@@ -21,14 +21,16 @@ public class PotionFeatherfeet extends PotionMod {
 
 	public PotionFeatherfeet() {
 		super(ConfigHandler.potionIDFeatherfeet, LibPotionNames.FEATHER_FEET, false, 0x26ADFF, 1);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
-	@SubscribeEvent
-	public void onEntityUpdate(LivingUpdateEvent event) {
-		EntityLivingBase e = event.entityLiving;
-		if(hasEffect(e))
-			e.fallDistance = 2.5F;
+	public class EventHandler {
+		@SubscribeEvent
+		public void onEntityUpdate(LivingUpdateEvent event) {
+			EntityLivingBase e = event.entityLiving;
+			if(hasEffect(e))
+				e.fallDistance = 2.5F;
+		}
 	}
 
 }

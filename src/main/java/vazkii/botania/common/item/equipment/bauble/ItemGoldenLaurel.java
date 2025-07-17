@@ -38,24 +38,7 @@ public class ItemGoldenLaurel extends ItemBauble implements IBaubleRender {
 
 	public ItemGoldenLaurel() {
 		super(LibItemNames.GOLDEN_LAUREL);
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void onPlayerDeath(LivingDeathEvent event) {
-		if(event.entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entity;
-			ItemStack amulet = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
-
-			if(amulet != null && amulet.getItem() == this) {
-				event.setCanceled(true);
-				player.setHealth(player.getMaxHealth());
-				player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300, 6));
-				player.addChatMessage(new ChatComponentTranslation("botaniamisc.savedByLaurel"));
-				player.worldObj.playSoundAtEntity(player, "botania:goldenLaurel", 1F, 0.3F);
-				PlayerHandler.getPlayerBaubles(player).setInventorySlotContents(0, null);
-			}
-		}
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -83,6 +66,25 @@ public class ItemGoldenLaurel extends ItemBauble implements IBaubleRender {
 				GL11.glTranslatef(-0.05F, -0.1F, 0F);
 			}
 			ItemRenderer.renderItemIn2D(Tessellator.instance, f1, f2, f, f3, itemIcon.getIconWidth(), itemIcon.getIconHeight(), 1F / 32F);
+		}
+	}
+
+	public class EventHandler{
+		@SubscribeEvent(priority = EventPriority.HIGHEST)
+		public void onPlayerDeath(LivingDeathEvent event) {
+			if(event.entity instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) event.entity;
+				ItemStack amulet = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
+
+				if(amulet != null && amulet.getItem() == ItemGoldenLaurel.this) {
+					event.setCanceled(true);
+					player.setHealth(player.getMaxHealth());
+					player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300, 6));
+					player.addChatMessage(new ChatComponentTranslation("botaniamisc.savedByLaurel"));
+					player.worldObj.playSoundAtEntity(player, "botania:goldenLaurel", 1F, 0.3F);
+					PlayerHandler.getPlayerBaubles(player).setInventorySlotContents(0, null);
+				}
+			}
 		}
 	}
 }

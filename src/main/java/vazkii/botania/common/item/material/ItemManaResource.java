@@ -59,35 +59,7 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 		super();
 		setUnlocalizedName(LibItemNames.MANA_RESOURCE);
 		setHasSubtypes(true);
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@SubscribeEvent
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		boolean rightEvent = event.action == Action.RIGHT_CLICK_AIR;
-		ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
-		boolean correctStack = stack != null && stack.getItem() == Items.glass_bottle;
-		boolean ender = event.world.provider.dimensionId == 1;
-
-		if(rightEvent && correctStack && ender) {
-			MovingObjectPosition pos = ToolCommons.raytraceFromEntity(event.world, event.entityPlayer, false, 5F);
-
-			if(pos == null) {
-				ItemStack stack1 = new ItemStack(this, 1, 15);
-				event.entityPlayer.addStat(ModAchievements.enderAirMake, 1);
-
-				if(!event.entityPlayer.inventory.addItemStackToInventory(stack1))
-					event.entityPlayer.dropPlayerItemWithRandomChoice(stack1, true);
-
-				stack.stackSize--;
-				if(stack.stackSize == 0)
-					event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
-
-				if(event.world.isRemote)
-					event.entityPlayer.swingItem();
-				else event.world.playSoundAtEntity(event.entityPlayer, "random.pop", 0.5F, 1F);
-			}
-		}
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -186,6 +158,36 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 	@Override
 	public Achievement getAchievementOnPickup(ItemStack stack, EntityPlayer player, EntityItem item) {
 		return stack.getItemDamage() == 4 ? ModAchievements.terrasteelPickup : null;
+	}
+
+	public class EventHandler {
+		@SubscribeEvent
+		public void onPlayerInteract(PlayerInteractEvent event) {
+			boolean rightEvent = event.action == Action.RIGHT_CLICK_AIR;
+			ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
+			boolean correctStack = stack != null && stack.getItem() == Items.glass_bottle;
+			boolean ender = event.world.provider.dimensionId == 1;
+
+			if(rightEvent && correctStack && ender) {
+				MovingObjectPosition pos = ToolCommons.raytraceFromEntity(event.world, event.entityPlayer, false, 5F);
+
+				if(pos == null) {
+					ItemStack stack1 = new ItemStack(ItemManaResource.this, 1, 15);
+					event.entityPlayer.addStat(ModAchievements.enderAirMake, 1);
+
+					if(!event.entityPlayer.inventory.addItemStackToInventory(stack1))
+						event.entityPlayer.dropPlayerItemWithRandomChoice(stack1, true);
+
+					stack.stackSize--;
+					if(stack.stackSize == 0)
+						event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
+
+					if(event.world.isRemote)
+						event.entityPlayer.swingItem();
+					else event.world.playSoundAtEntity(event.entityPlayer, "random.pop", 0.5F, 1F);
+				}
+			}
+		}
 	}
 
 }

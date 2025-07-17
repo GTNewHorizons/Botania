@@ -24,23 +24,25 @@ public class BlockBifrostPane extends BlockModPane {
 
 	public BlockBifrostPane() {
 		super(ModBlocks.bifrostPerm);
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void loadTextures(TextureStitchEvent.Pre event) {
-		if(event.map.getTextureType() == 0) {
-			TextureAtlasSprite icon = new InterpolatedIcon("botania:bifrostPermPane");
-			if(event.map.setTextureEntry("botania:bifrostPermPane", icon))
-				iconTop = icon;
-		}
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister reg) {
 		// NO-OP
+	}
+
+	public class EventHandler {
+		@SubscribeEvent
+		@SideOnly(Side.CLIENT)
+		public void loadTextures(TextureStitchEvent.Pre event) {
+			if(event.map.getTextureType() == 0) {
+				TextureAtlasSprite icon = new InterpolatedIcon("botania:bifrostPermPane");
+				if(event.map.setTextureEntry("botania:bifrostPermPane", icon))
+					iconTop = icon;
+			}
+		}
 	}
 
 }

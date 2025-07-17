@@ -44,7 +44,7 @@ public class BlockFelPumpkin extends BlockMod implements ILexiconable {
 		setBlockName(LibBlockNames.FEL_PUMPKIN);
 		setHardness(1F);
 		setStepSound(soundTypeWood);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -85,21 +85,22 @@ public class BlockFelPumpkin extends BlockMod implements ILexiconable {
 		blockIcon = Blocks.pumpkin.getIcon(2, 0);
 	}
 
-	@SubscribeEvent
-	public void onDrops(LivingDropsEvent event) {
-		if(event.entity instanceof EntityBlaze && event.entity.getEntityData().getBoolean(TAG_FEL_SPAWNED))
-			if(event.drops.isEmpty())
-				event.drops.add(new EntityItem(event.entity.worldObj, event.entity.posX, event.entity.posY, event.entity.posZ, new ItemStack(Items.blaze_powder, 6)));
-			else for(EntityItem item : event.drops) {
-				ItemStack stack = item.getEntityItem();
-				if(stack.getItem() == Items.blaze_rod)
-					item.setEntityItemStack(new ItemStack(Items.blaze_powder, stack.stackSize * 10));
-			}
-	}
-
 	@Override
 	public LexiconEntry getEntry(World world, int x, int y, int z, EntityPlayer player, ItemStack lexicon) {
 		return LexiconData.gardenOfGlass;
 	}
 
+	public static class EventHandler {
+		@SubscribeEvent
+		public void onDrops(LivingDropsEvent event) {
+			if(event.entity instanceof EntityBlaze && event.entity.getEntityData().getBoolean(TAG_FEL_SPAWNED))
+				if(event.drops.isEmpty())
+					event.drops.add(new EntityItem(event.entity.worldObj, event.entity.posX, event.entity.posY, event.entity.posZ, new ItemStack(Items.blaze_powder, 6)));
+				else for(EntityItem item : event.drops) {
+					ItemStack stack = item.getEntityItem();
+					if(stack.getItem() == Items.blaze_rod)
+						item.setEntityItemStack(new ItemStack(Items.blaze_powder, stack.stackSize * 10));
+				}
+		}
+	}
 }

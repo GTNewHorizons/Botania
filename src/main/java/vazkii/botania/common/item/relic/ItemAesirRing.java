@@ -49,30 +49,7 @@ public class ItemAesirRing extends ItemRelicBauble implements IExtendedWireframe
 		super(LibItemNames.AESIR_RING);
 		GameRegistry.addRecipe(new AesirRingRecipe());
 		RecipeSorter.register("botania:aesirRing", AesirRingRecipe.class, Category.SHAPELESS, "");
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@SubscribeEvent
-	public void onDropped(ItemTossEvent event) {
-		if(event.entityItem != null && event.entityItem.getEntityItem() != null && !event.entityItem.worldObj.isRemote) {
-			ItemStack stack = event.entityItem.getEntityItem();
-			if(stack.getItem() != null && stack.getItem() == this) {
-				event.entityItem.setDead();
-
-				String user = getSoulbindUsername(stack);
-				for(Item item : new Item[] { ModItems.thorRing, ModItems.lokiRing, ModItems.odinRing }) {
-					ItemStack stack1 = new ItemStack(item);
-					bindToUsername(user, stack1);
-					EntityItem entity = new EntityItem(event.entityItem.worldObj, event.entityItem.posX, event.entityItem.posY, event.entityItem.posZ, stack1);
-					entity.motionX = event.entityItem.motionX;
-					entity.motionY = event.entityItem.motionY;
-					entity.motionZ = event.entityItem.motionZ;
-					entity.age = event.entityItem.age;
-					entity.delayBeforeCanPickup = event.entityItem.delayBeforeCanPickup;
-					entity.worldObj.spawnEntityInWorld(entity);
-				}
-			}
-		}
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -119,4 +96,28 @@ public class ItemAesirRing extends ItemRelicBauble implements IExtendedWireframe
 		return ModAchievements.relicAesirRing;
 	}
 
+	public class EventHandler {
+		@SubscribeEvent
+		public void onDropped(ItemTossEvent event) {
+			if(event.entityItem != null && event.entityItem.getEntityItem() != null && !event.entityItem.worldObj.isRemote) {
+				ItemStack stack = event.entityItem.getEntityItem();
+				if(stack.getItem() != null && stack.getItem() == ItemAesirRing.this) {
+					event.entityItem.setDead();
+
+					String user = getSoulbindUsername(stack);
+					for(Item item : new Item[] { ModItems.thorRing, ModItems.lokiRing, ModItems.odinRing }) {
+						ItemStack stack1 = new ItemStack(item);
+						bindToUsername(user, stack1);
+						EntityItem entity = new EntityItem(event.entityItem.worldObj, event.entityItem.posX, event.entityItem.posY, event.entityItem.posZ, stack1);
+						entity.motionX = event.entityItem.motionX;
+						entity.motionY = event.entityItem.motionY;
+						entity.motionZ = event.entityItem.motionZ;
+						entity.age = event.entityItem.age;
+						entity.delayBeforeCanPickup = event.entityItem.delayBeforeCanPickup;
+						entity.worldObj.spawnEntityInWorld(entity);
+					}
+				}
+			}
+		}
+	}
 }

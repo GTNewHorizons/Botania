@@ -43,7 +43,7 @@ public class BlockBifrost extends BlockModContainer<TileBifrost> implements ILex
 		setLightLevel(1F);
 		setBlockUnbreakable();
 		setStepSound(soundTypeGlass);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -82,16 +82,6 @@ public class BlockBifrost extends BlockModContainer<TileBifrost> implements ILex
 		return 0;
 	}
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void loadTextures(TextureStitchEvent.Pre event) {
-		if(event.map.getTextureType() == 0) {
-			TextureAtlasSprite icon = new InterpolatedIcon("botania:bifrost");
-			if(event.map.setTextureEntry("botania:bifrost", icon))
-				blockIcon = icon;
-		}
-	}
-
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
@@ -108,4 +98,15 @@ public class BlockBifrost extends BlockModContainer<TileBifrost> implements ILex
 		return LexiconData.rainbowRod;
 	}
 
+	public class EventHandler {
+		@SubscribeEvent
+		@SideOnly(Side.CLIENT)
+		public void loadTextures(TextureStitchEvent.Pre event) {
+			if(event.map.getTextureType() == 0) {
+				TextureAtlasSprite icon = new InterpolatedIcon("botania:bifrost");
+				if(event.map.setTextureEntry("botania:bifrost", icon))
+					blockIcon = icon;
+			}
+		}
+	}
 }

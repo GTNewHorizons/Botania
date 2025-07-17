@@ -49,7 +49,7 @@ public class BlockPrismarine extends BlockMod implements ILexiconable {
 		setResistance(10.0F);
 		setStepSound(soundTypeStone);
 		setBlockName(LibBlockNames.PRISMARINE);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -82,16 +82,6 @@ public class BlockPrismarine extends BlockMod implements ILexiconable {
 			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
 	}
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void loadTextures(TextureStitchEvent.Pre event) {
-		if(event.map.getTextureType() == 0) {
-			TextureAtlasSprite icon = new InterpolatedIcon("botania:prismarine0");
-			if(event.map.setTextureEntry("botania:prismarine0", icon))
-				icons[0] = icon;
-		}
-	}
-
 	@Override
 	public IIcon getIcon(int par1, int par2) {
 		return icons[Math.min(TYPES - 1, par2)];
@@ -106,5 +96,17 @@ public class BlockPrismarine extends BlockMod implements ILexiconable {
 	@Override
 	public LexiconEntry getEntry(World world, int x, int y, int z, EntityPlayer player, ItemStack lexicon) {
 		return LexiconData.prismarine;
+	}
+
+	public class EventHandler {
+		@SubscribeEvent
+		@SideOnly(Side.CLIENT)
+		public void loadTextures(TextureStitchEvent.Pre event) {
+			if(event.map.getTextureType() == 0) {
+				TextureAtlasSprite icon = new InterpolatedIcon("botania:prismarine0");
+				if(event.map.setTextureEntry("botania:prismarine0", icon))
+					icons[0] = icon;
+			}
+		}
 	}
 }

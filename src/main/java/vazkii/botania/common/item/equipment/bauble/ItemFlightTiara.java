@@ -89,8 +89,9 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 
 	public ItemFlightTiara() {
 		super(LibItemNames.FLIGHT_TIARA);
-		MinecraftForge.EVENT_BUS.register(this);
-		FMLCommonHandler.instance().bus().register(this);
+		EventHandler handler = new EventHandler();
+		MinecraftForge.EVENT_BUS.register(handler);
+		FMLCommonHandler.instance().bus().register(handler);
 		setHasSubtypes(true);
 	}
 
@@ -216,103 +217,6 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 			if(newTime != time)
 				ItemNBTHelper.setInt(stack, TAG_TIME_LEFT, newTime);
 		}
-	}
-
-	@SubscribeEvent
-	public void updatePlayerFlyStatus(LivingUpdateEvent event) {
-		if(event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			ItemStack tiara = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
-			int left = ItemNBTHelper.getInt(tiara, TAG_TIME_LEFT, MAX_FLY_TIME);
-
-			if(playersWithFlight.contains(playerStr(player))) {
-				if(shouldPlayerHaveFlight(player)) {
-					player.capabilities.allowFlying = true;
-					if(player.capabilities.isFlying) {
-						if(!player.worldObj.isRemote)
-							ManaItemHandler.requestManaExact(tiara, player, getCost(tiara, left), true);
-						else if(Math.abs(player.motionX) > 0.1 || Math.abs(player.motionZ) > 0.1) {
-							double x = event.entityLiving.posX - 0.5;
-							double y = event.entityLiving.posY - 1.7;
-							double z = event.entityLiving.posZ - 0.5;
-
-							player.getGameProfile().getName();
-							float r = 1F;
-							float g = 1F;
-							float b = 1F;
-
-							switch(tiara.getItemDamage()) {
-							case 2 : {
-								r = 0.1F;
-								g = 0.1F;
-								b = 0.1F;
-								break;
-							}
-							case 3 : {
-								r = 0F;
-								g = 0.6F;
-								break;
-							}
-							case 4 : {
-								g = 0.3F;
-								b = 0.3F;
-								break;
-							}
-							case 5 : {
-								r = 0.6F;
-								g = 0F;
-								b = 0.6F;
-								break;
-							}
-							case 6 : {
-								r = 0.4F;
-								g = 0F;
-								b = 0F;
-								break;
-							}
-							case 7 : {
-								r = 0.2F;
-								g = 0.6F;
-								b = 0.2F;
-								break;
-							}
-							case 8 : {
-								r = 0.85F;
-								g = 0.85F;
-								b = 0F;
-								break;
-							}
-							case 9 : {
-								r = 0F;
-								b = 0F;
-								break;
-							}
-							}
-
-							for(int i = 0; i < 2; i++)
-								Botania.proxy.sparkleFX(event.entityLiving.worldObj, x + Math.random() * event.entityLiving.width, y + Math.random() * 0.4, z + Math.random() * event.entityLiving.width, r, g, b, 2F * (float) Math.random(), 20);
-						}
-					}
-				} else {
-					if(!player.capabilities.isCreativeMode) {
-						player.capabilities.allowFlying = false;
-						player.capabilities.isFlying = false;
-						player.capabilities.disableDamage = false;
-					}
-					playersWithFlight.remove(playerStr(player));
-				}
-			} else if(shouldPlayerHaveFlight(player)) {
-				playersWithFlight.add(playerStr(player));
-				player.capabilities.allowFlying = true;
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-		String username = event.player.getGameProfile().getName();
-		playersWithFlight.remove(username + ":false");
-		playersWithFlight.remove(username + ":true");
 	}
 
 	public static String playerStr(EntityPlayer player) {
@@ -547,6 +451,106 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 	@Override
 	public Achievement getAchievementOnCraft(ItemStack stack, EntityPlayer player, IInventory matrix) {
 		return stack.getItemDamage() == 1 ? ModAchievements.tiaraWings : null;
+	}
+
+	public class EventHandler{
+		@SubscribeEvent
+		public void updatePlayerFlyStatus(LivingUpdateEvent event) {
+			if(event.entityLiving instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) event.entityLiving;
+				ItemStack tiara = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
+				int left = ItemNBTHelper.getInt(tiara, TAG_TIME_LEFT, MAX_FLY_TIME);
+
+				if(playersWithFlight.contains(playerStr(player))) {
+					if(shouldPlayerHaveFlight(player)) {
+						player.capabilities.allowFlying = true;
+						if(player.capabilities.isFlying) {
+							if(!player.worldObj.isRemote)
+								ManaItemHandler.requestManaExact(tiara, player, getCost(tiara, left), true);
+							else if(Math.abs(player.motionX) > 0.1 || Math.abs(player.motionZ) > 0.1) {
+								double x = event.entityLiving.posX - 0.5;
+								double y = event.entityLiving.posY - 1.7;
+								double z = event.entityLiving.posZ - 0.5;
+
+								player.getGameProfile().getName();
+								float r = 1F;
+								float g = 1F;
+								float b = 1F;
+
+								switch(tiara.getItemDamage()) {
+									case 2 : {
+										r = 0.1F;
+										g = 0.1F;
+										b = 0.1F;
+										break;
+									}
+									case 3 : {
+										r = 0F;
+										g = 0.6F;
+										break;
+									}
+									case 4 : {
+										g = 0.3F;
+										b = 0.3F;
+										break;
+									}
+									case 5 : {
+										r = 0.6F;
+										g = 0F;
+										b = 0.6F;
+										break;
+									}
+									case 6 : {
+										r = 0.4F;
+										g = 0F;
+										b = 0F;
+										break;
+									}
+									case 7 : {
+										r = 0.2F;
+										g = 0.6F;
+										b = 0.2F;
+										break;
+									}
+									case 8 : {
+										r = 0.85F;
+										g = 0.85F;
+										b = 0F;
+										break;
+									}
+									case 9 : {
+										r = 0F;
+										b = 0F;
+										break;
+									}
+								}
+
+								for(int i = 0; i < 2; i++)
+									Botania.proxy.sparkleFX(event.entityLiving.worldObj, x + Math.random() * event.entityLiving.width, y + Math.random() * 0.4, z + Math.random() * event.entityLiving.width, r, g, b, 2F * (float) Math.random(), 20);
+							}
+						}
+					} else {
+						if(!player.capabilities.isCreativeMode) {
+							player.capabilities.allowFlying = false;
+							player.capabilities.isFlying = false;
+							player.capabilities.disableDamage = false;
+						}
+						playersWithFlight.remove(playerStr(player));
+					}
+				} else if(shouldPlayerHaveFlight(player)) {
+					playersWithFlight.add(playerStr(player));
+					player.capabilities.allowFlying = true;
+				}
+			}
+		}
+
+		@SubscribeEvent
+		public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+			String username = event.player.getGameProfile().getName();
+			playersWithFlight.remove(username + ":false");
+			playersWithFlight.remove(username + ":true");
+		}
+
 	}
 
 }

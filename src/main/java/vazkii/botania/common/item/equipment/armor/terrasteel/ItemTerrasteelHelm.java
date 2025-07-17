@@ -50,7 +50,7 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 
 	public ItemTerrasteelHelm() {
 		this(LibItemNames.TERRASTEEL_HELM);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	public ItemTerrasteelHelm(String name) {
@@ -130,34 +130,37 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 		}
 	}
 
-	@SubscribeEvent
-	public void onEntityAttacked(LivingHurtEvent event) {
-		Entity attacker = event.source.getEntity();
-		if(attacker instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) attacker;
-			if(hasArmorSet(player)) {
-				boolean crit = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(Potion.blindness) && player.ridingEntity == null;
-				ItemStack stack = player.inventory.armorItemInSlot(3);
-				if(crit && stack != null && stack.getItem() instanceof ItemTerrasteelHelm) {
-					boolean ahrim = hasAncientWill(stack, 0);
-					boolean dharok = hasAncientWill(stack, 1);
-					boolean guthan = hasAncientWill(stack, 2);
-					boolean torag = hasAncientWill(stack, 3);
-					boolean verac = hasAncientWill(stack, 4);
-					boolean karil = hasAncientWill(stack, 5);
+	public class EventHandler {
 
-					if(ahrim)
-						event.entityLiving.addPotionEffect(new PotionEffect(Potion.weakness.id, 20, 1));
-					if(dharok)
-						event.ammount *= 1F + (1F - player.getHealth() / player.getMaxHealth()) * 0.5F;
-					if(guthan)
-						player.heal(event.ammount * 0.25F);
-					if(torag)
-						event.entityLiving.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 1));
-					if(verac)
-						event.source.setDamageBypassesArmor();
-					if(karil)
-						event.entityLiving.addPotionEffect(new PotionEffect(Potion.wither.id, 60, 1));
+		@SubscribeEvent
+		public void onEntityAttacked(LivingHurtEvent event) {
+			Entity attacker = event.source.getEntity();
+			if (attacker instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) attacker;
+				if (hasArmorSet(player)) {
+					boolean crit = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(Potion.blindness) && player.ridingEntity == null;
+					ItemStack stack = player.inventory.armorItemInSlot(3);
+					if (crit && stack != null && stack.getItem() instanceof ItemTerrasteelHelm) {
+						boolean ahrim = hasAncientWill(stack, 0);
+						boolean dharok = hasAncientWill(stack, 1);
+						boolean guthan = hasAncientWill(stack, 2);
+						boolean torag = hasAncientWill(stack, 3);
+						boolean verac = hasAncientWill(stack, 4);
+						boolean karil = hasAncientWill(stack, 5);
+
+						if (ahrim)
+							event.entityLiving.addPotionEffect(new PotionEffect(Potion.weakness.id, 20, 1));
+						if (dharok)
+							event.ammount *= 1F + (1F - player.getHealth() / player.getMaxHealth()) * 0.5F;
+						if (guthan)
+							player.heal(event.ammount * 0.25F);
+						if (torag)
+							event.entityLiving.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 1));
+						if (verac)
+							event.source.setDamageBypassesArmor();
+						if (karil)
+							event.entityLiving.addPotionEffect(new PotionEffect(Potion.wither.id, 60, 1));
+					}
 				}
 			}
 		}
