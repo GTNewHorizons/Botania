@@ -309,7 +309,8 @@ public class SubTileGenerating extends SubTileEntity {
 
 	@Override
 	public boolean isOvergrowthAffected() {
-		return !isPassiveFlower();
+		return true;
+		//return !isPassiveFlower();
 	}
 
 }
