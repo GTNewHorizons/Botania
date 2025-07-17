@@ -386,7 +386,7 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 		}
 	}
 
-	public class EventHandler{
+	public static class EventHandler{
 
 		@SubscribeEvent
 		public void onTickEnd(TickEvent.WorldTickEvent event) {
@@ -401,14 +401,8 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 
 					// Iterate through all of our swappers, removing any
 					// which no longer need to tick.
-					Iterator<BlockSwapper> swapper = swappers.iterator();
-					while(swapper.hasNext()) {
-						BlockSwapper next = swapper.next();
-
-						// If a null sneaks in or the swapper is done, remove it
-						if(next == null || !next.tick())
-							swapper.remove();
-					}
+                    // If a null sneaks in or the swapper is done, remove it
+                    swappers.removeIf(next -> next == null || !next.tick());
 				}
 			}
 		}

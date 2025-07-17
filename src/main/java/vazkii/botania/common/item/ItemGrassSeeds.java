@@ -352,7 +352,7 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 		return ISLAND_TYPES[Math.min(stack.getItemDamage(), ISLAND_TYPES.length - 1)];
 	}
 
-	public class EventHandler {
+	public static class EventHandler {
 		@SubscribeEvent
 		public void onTickEnd(TickEvent.WorldTickEvent event) {
 			// Block swapper updates should only occur on the server
@@ -364,13 +364,7 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 				if(blockSwappers.containsKey(dim)) {
 					Set<BlockSwapper> swappers = blockSwappers.get(dim);
 
-					Iterator<BlockSwapper> iter = swappers.iterator();
-
-					while(iter.hasNext()) {
-						BlockSwapper next = iter.next();
-						if(next == null || !next.tick())
-							iter.remove();
-					}
+                    swappers.removeIf(next -> next == null || !next.tick());
 				}
 			}
 		}

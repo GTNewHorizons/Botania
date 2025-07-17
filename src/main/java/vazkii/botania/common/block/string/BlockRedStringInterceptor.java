@@ -54,7 +54,7 @@ public class BlockRedStringInterceptor extends BlockRedString {
 		return new TileRedStringInterceptor();
 	}
 
-	public class EventHandler{
+	public static class EventHandler {
 
 		@SubscribeEvent
 		public void onInteract(PlayerInteractEvent event) {

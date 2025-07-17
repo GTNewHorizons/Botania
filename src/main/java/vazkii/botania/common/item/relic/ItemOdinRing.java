@@ -96,7 +96,7 @@ public class ItemOdinRing extends ItemRelicBauble {
 		attributes.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), new AttributeModifier(getBaubleUUID(stack), "Bauble modifier", 20, 0));
 	}
 
-	public class EventHandler{
+	public static class EventHandler{
 		@SubscribeEvent
 		public void onPlayerAttacked(LivingAttackEvent event) {
 			if(event.entityLiving instanceof EntityPlayer) {

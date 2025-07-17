@@ -100,11 +100,11 @@ public class ItemVirus extends ItemMod {
 			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
 	}
 
-	public class EventHandler{
+	public static class EventHandler{
 		@SubscribeEvent
 		public void onLivingHurt(LivingHurtEvent event) {
 			EntityLivingBase entity = event.entityLiving;
-			if(entity.ridingEntity != null && entity.ridingEntity instanceof EntityLivingBase)
+			if(entity.ridingEntity instanceof EntityLivingBase)
 				entity = (EntityLivingBase) entity.ridingEntity;
 
 			if(entity instanceof EntityHorse && event.source == DamageSource.fall) {

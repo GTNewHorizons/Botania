@@ -90,7 +90,7 @@ public class BlockFelPumpkin extends BlockMod implements ILexiconable {
 		return LexiconData.gardenOfGlass;
 	}
 
-	public class EventHandler {
+	public static class EventHandler {
 		@SubscribeEvent
 		public void onDrops(LivingDropsEvent event) {
 			if(event.entity instanceof EntityBlaze && event.entity.getEntityData().getBoolean(TAG_FEL_SPAWNED))

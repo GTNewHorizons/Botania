@@ -124,7 +124,7 @@ public class ItemHolyCloak extends ItemBauble implements IBaubleRender {
 		}
 	}
 
-	public class EventHandler{
+	public static class EventHandler{
 		@SubscribeEvent
 		public void onPlayerDamage(LivingHurtEvent event) {
 			if(event.entityLiving instanceof EntityPlayer) {

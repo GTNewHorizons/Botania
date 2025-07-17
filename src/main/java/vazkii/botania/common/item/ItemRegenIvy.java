@@ -36,7 +36,7 @@ public class ItemRegenIvy extends ItemMod {
 		FMLCommonHandler.instance().bus().register(new EventHandler());
 	}
 
-	public class EventHandler{
+	public static class EventHandler {
 		@SubscribeEvent(priority = EventPriority.LOWEST)
 		public void onTick(PlayerTickEvent event) {
 			if(event.phase == Phase.END && !event.player.worldObj.isRemote)

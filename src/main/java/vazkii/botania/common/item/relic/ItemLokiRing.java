@@ -520,7 +520,6 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 			breakOnAllCursors(player, item, stack, x, y, z, side);
 		}
 
-
 		@SubscribeEvent
 		public void onPlayerInteract(PlayerInteractEvent event) {
 			if(recursion) return;
