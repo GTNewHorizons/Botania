@@ -10,6 +10,7 @@
  */
 package vazkii.botania.api.mana;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import vazkii.botania.api.internal.IManaBurst;
@@ -32,6 +33,11 @@ public interface ILensEffect {
 	 * @return True to kill the burst. False to keep it alive.
 	 */
 	public boolean collideBurst(IManaBurst burst, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack);
+
+	/**
+	 * Player sensitive version of #collideBurst.
+	 */
+	boolean collideBurst(IManaBurst burst, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack, EntityPlayer player);
 
 	/**
 	 * Called when a mana burst fired from a mana spreader with this focus is updated.
