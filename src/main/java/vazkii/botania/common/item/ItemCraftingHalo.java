@@ -301,6 +301,17 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 			ItemNBTHelper.setCompound(stack, TAG_STORED_RECIPE_PREFIX + pos, getLastCraftingCompound(stack, false));
 	}
 
+	public void onItemCrafted(ItemCraftedEvent event) {
+		if(event.player.worldObj.isRemote &&  !(event.craftMatrix instanceof InventoryCraftingHalo))
+			return;
+
+		for(int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
+			ItemStack stack = event.player.inventory.getStackInSlot(i);
+			if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
+				saveRecipeToStack(event, stack);
+		}
+	}
+
 	private void saveRecipeToStack(ItemCraftedEvent event, ItemStack stack) {
 		NBTTagCompound cmp = new NBTTagCompound();
 		NBTTagCompound cmp1 = new NBTTagCompound();

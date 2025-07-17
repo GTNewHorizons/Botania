@@ -25,6 +25,7 @@ import vazkii.botania.api.item.IManaProficiencyArmor;
 import vazkii.botania.api.mana.IManaUsingItem;
 import vazkii.botania.api.mana.ManaItemHandler;
 import vazkii.botania.common.Botania;
+import vazkii.botania.common.core.helper.ItemHelper;
 import vazkii.botania.common.item.ItemMod;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
 import vazkii.botania.common.lib.LibItemNames;
@@ -82,7 +83,7 @@ public class ItemSmeltRod extends ItemMod implements IManaUsingItem {
 						data.progress--;
 						decremented = true;
 						if(data.progress <= 0) {
-							if(!p.worldObj.isRemote) {
+							if(!p.worldObj.isRemote && ItemHelper.canBreakBlock(p.worldObj,pos.blockX, pos.blockY, pos.blockZ,p)) {
 								p.worldObj.setBlock(pos.blockX, pos.blockY, pos.blockZ, Block.getBlockFromItem(result.getItem()), result.getItemDamage(), 1 | 2);
 								p.worldObj.playSoundAtEntity(p, "fire.ignite", 0.6F, 1F);
 								p.worldObj.playSoundAtEntity(p, "fire.fire", 1F, 1F);

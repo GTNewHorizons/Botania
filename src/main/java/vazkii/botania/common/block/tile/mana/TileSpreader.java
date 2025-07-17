@@ -10,9 +10,12 @@
  */
 package vazkii.botania.common.block.tile.mana;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
@@ -31,6 +34,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
@@ -61,7 +67,7 @@ import vazkii.botania.common.entity.EntityManaBurst;
 import vazkii.botania.common.entity.EntityManaBurst.PositionProperties;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class TileSpreader extends TileSimpleInventory implements IManaCollector, IWandBindable, IKeyLocked, IThrottledPacket, IManaSpreader, IRedirectable {
+public class  TileSpreader extends TileSimpleInventory implements IManaCollector, IWandBindable, IKeyLocked, IThrottledPacket, IManaSpreader, IRedirectable {
 
 	private static final int MAX_MANA = 1000;
 	private static final int ULTRA_MAX_MANA = 6400;
@@ -117,7 +123,10 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 	public static boolean staticDreamwood = false;
 	public static boolean staticUltra = false;
 
-	UUID identity;
+	UUID identity = UUID.fromString("0d0f407d-1760-4f68-84af-3067c3ed0837");
+	EntityPlayer fakeplayer;
+	GameProfile profile = new GameProfile(identity, "[Botania]");
+	private static final WeakHashMap<World, WeakReference<EntityPlayer>> FakePlayers = new WeakHashMap<>();
 
 	int mana;
 	int knownMana = -1;
@@ -258,11 +267,6 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 	public void writeCustomNBT(NBTTagCompound cmp) {
 		super.writeCustomNBT(cmp);
 
-		UUID identity = getIdentifier();
-		cmp.setBoolean(TAG_HAS_IDENTITY, true);
-		cmp.setLong(TAG_UUID_MOST, identity.getMostSignificantBits());
-		cmp.setLong(TAG_UUID_LEAST, identity.getLeastSignificantBits());
-
 		cmp.setInteger(TAG_MANA, mana);
 		cmp.setFloat(TAG_ROTATION_X, rotationX);
 		cmp.setFloat(TAG_ROTATION_Y, rotationY);
@@ -296,14 +300,6 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 	@Override
 	public void readCustomNBT(NBTTagCompound cmp) {
 		super.readCustomNBT(cmp);
-
-		if(cmp.getBoolean(TAG_HAS_IDENTITY)) {
-			long most = cmp.getLong(TAG_UUID_MOST);
-			long least = cmp.getLong(TAG_UUID_LEAST);
-			UUID identity = getIdentifierUnsafe();
-			if(identity == null || most != identity.getMostSignificantBits() || least != identity.getLeastSignificantBits())
-				identity = new UUID(most, least);
-		} else getIdentifier();
 
 		mana = cmp.getInteger(TAG_MANA);
 		rotationX = cmp.getFloat(TAG_ROTATION_X);
@@ -465,7 +461,8 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 
 	public EntityManaBurst getBurst(boolean fake) {
 		EntityManaBurst burst = new EntityManaBurst(this, fake);
-
+		setFakeplayer();
+		burst.setPlayer(fakeplayer);
 		boolean dreamwood = isDreamwood();
 		boolean ultra = isULTRA_SPREADER();
 		int maxMana = ultra ? 640 : dreamwood ? 240 : 160;
@@ -753,13 +750,17 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 
 	@Override
 	public UUID getIdentifier() {
-		if(identity == null)
-			identity = UUID.randomUUID();
 		return identity;
 	}
 
-	public UUID getIdentifierUnsafe() {
-		return identity;
+	public void setFakeplayer(){
+		if(!worldObj.isRemote) {
+			final WeakReference<EntityPlayer> playerref = FakePlayers.get(worldObj);
+			if(playerref == null) {
+				final FakePlayer player = FakePlayerFactory.get((WorldServer) worldObj, profile);
+				FakePlayers.put(worldObj, new WeakReference<>(player));
+				this.fakeplayer = player;
+			} else fakeplayer = playerref.get();
+		}
 	}
-
 }

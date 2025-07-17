@@ -82,8 +82,8 @@ public class EntityFlameRing extends Entity {
 			for(EntityLivingBase entity : entities) {
 				if(entity == null || MathHelper.pointDistancePlane(posX, posY, entity.posX, entity.posY) > radius)
 					continue;
-
-				entity.setFire(4);
+				if(entity.attackEntityFrom(DamageSource.onFire,1))
+					entity.setFire(4);
 			}
 		}
 	}

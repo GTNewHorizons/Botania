@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.item.lens;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
@@ -21,7 +22,7 @@ import vazkii.botania.common.core.helper.Vector3;
 public class LensBounce extends Lens {
 
 	@Override
-	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack) {
+	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack, EntityPlayer player) {
 		if(!isManaBlock && pos.entityHit == null) {
 			ChunkCoordinates coords = burst.getBurstSourceChunkCoordinates();
 			if(coords.posX != pos.blockX || coords.posY != pos.blockY || coords.posZ != pos.blockZ) {

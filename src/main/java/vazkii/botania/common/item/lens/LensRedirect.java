@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.item.lens;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -24,7 +25,7 @@ import vazkii.botania.common.core.helper.Vector3;
 public class LensRedirect extends Lens {
 
 	@Override
-	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack) {
+	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack, EntityPlayer player) {
 		ChunkCoordinates coords = burst.getBurstSourceChunkCoordinates();
 		if(!entity.worldObj.isRemote && pos.entityHit == null && coords.posY != -1 && (pos.blockX != coords.posX || pos.blockY != coords.posY || pos.blockZ != coords.posZ)) {
 			TileEntity tile = entity.worldObj.getTileEntity(pos.blockX, pos.blockY, pos.blockZ);

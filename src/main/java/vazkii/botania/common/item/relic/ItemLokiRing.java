@@ -58,6 +58,7 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.core.helper.LokiCursor;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
+import vazkii.botania.common.item.equipment.tool.terrasteel.ItemTerraPick;
 import vazkii.botania.common.lib.LibItemNames;
 import vazkii.botania.common.network.PacketLokiHudNotificationAck;
 
@@ -84,6 +85,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	private static final String TAG_SAVED_SCHEMATICS = "savedSchematics";
 	private static final String TAG_CURRENT_SCHEMATIC = "currentSchematic";
 	private boolean recursion = false;
+	private static boolean isBreaking = false;
 
     public enum HUD_MESSAGE  {
 		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA, SCHEMATIC_SAVED
@@ -490,7 +492,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		int masterOffsetX = originCoords.posY == -1 ? 0 :x - originCoords.posX;
 		int masterOffsetY = originCoords.posY == -1 ? 0 :y - originCoords.posY;
 		int masterOffsetZ = originCoords.posY == -1 ? 0 :z - originCoords.posZ;
-
+		isBreaking = true;
 		for(int i = 0; i < cursors.size(); i++) {
 			LokiCursor cursor = cursors.get(i);
 			int xp = x + cursor.getX();
@@ -523,6 +525,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				breaker.breakOtherBlock(player, stack, xp, yp, zp, x, y, z, side);
 			ToolCommons.removeBlockWithDrops(player, stack, player.worldObj, xp, yp, zp, x, y, z, block, new Material[] { block.getMaterial() }, silk, fortune, block.getBlockHardness(world, xp, yp, zp), true);
 		}
+		isBreaking = false;
 	}
 
 	@Override
