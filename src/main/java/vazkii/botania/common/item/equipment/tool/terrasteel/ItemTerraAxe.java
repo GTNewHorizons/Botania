@@ -80,7 +80,7 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 
 	public ItemTerraAxe() {
 		super(BotaniaAPI.terrasteelToolMaterial, LibItemNames.TERRA_AXE);
-		FMLCommonHandler.instance().bus().register(this);
+		FMLCommonHandler.instance().bus().register(new EventHandler());
 	}
 
 	@Override
@@ -131,31 +131,6 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 	@Override
 	public boolean disposeOfTrashBlocks(ItemStack stack) {
 		return false;
-	}
-
-	@SubscribeEvent
-	public void onTickEnd(TickEvent.WorldTickEvent event) {
-		// Block Swapping ticking should only occur on the server
-		if(event.world.isRemote)
-			return;
-
-		if(event.phase == Phase.END) {
-			int dim = event.world.provider.dimensionId;
-			if(blockSwappers.containsKey(dim)) {
-				Set<BlockSwapper> swappers = blockSwappers.get(dim);
-				
-				// Iterate through all of our swappers, removing any
-				// which no longer need to tick.
-				Iterator<BlockSwapper> swapper = swappers.iterator();
-				while(swapper.hasNext()) {
-					BlockSwapper next = swapper.next();
-
-					// If a null sneaks in or the swapper is done, remove it
-					if(next == null || !next.tick())
-						swapper.remove();
-				}
-			}
-		}
 	}
 
 	/**
@@ -411,4 +386,25 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 		}
 	}
 
+	public static class EventHandler{
+
+		@SubscribeEvent
+		public void onTickEnd(TickEvent.WorldTickEvent event) {
+			// Block Swapping ticking should only occur on the server
+			if(event.world.isRemote)
+				return;
+
+			if(event.phase == Phase.END) {
+				int dim = event.world.provider.dimensionId;
+				if(blockSwappers.containsKey(dim)) {
+					Set<BlockSwapper> swappers = blockSwappers.get(dim);
+
+					// Iterate through all of our swappers, removing any
+					// which no longer need to tick.
+                    // If a null sneaks in or the swapper is done, remove it
+                    swappers.removeIf(next -> next == null || !next.tick());
+				}
+			}
+		}
+	}
 }

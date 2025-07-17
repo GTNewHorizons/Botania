@@ -64,7 +64,7 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 	public ItemExchangeRod() {
 		setMaxStackSize(1);
 		setUnlocalizedName(LibItemNames.EXCHANGE_ROD);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -103,17 +103,6 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 		}
 
 		return false;
-	}
-
-	@SubscribeEvent
-	public void onLeftClick(PlayerInteractEvent event) {
-		if(event.action == Action.LEFT_CLICK_BLOCK) {
-			ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
-			if(stack != null && stack.getItem() == this && canExchange(stack) && ManaItemHandler.requestManaExactForTool(stack, event.entityPlayer, COST, false)) {
-				if(exchange(event.world, event.entityPlayer, event.x, event.y, event.z, stack, getBlock(stack), getBlockMeta(stack)))
-					ManaItemHandler.requestManaExactForTool(stack, event.entityPlayer, COST, true);
-			}
-		}
 	}
 
 	@Override
@@ -427,4 +416,16 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 		return null;
 	}
 
+	public class EventHandler{
+		@SubscribeEvent
+		public void onLeftClick(PlayerInteractEvent event) {
+			if(event.action == Action.LEFT_CLICK_BLOCK) {
+				ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
+				if(stack != null && stack.getItem() == ItemExchangeRod.this && canExchange(stack) && ManaItemHandler.requestManaExactForTool(stack, event.entityPlayer, COST, false)) {
+					if(exchange(event.world, event.entityPlayer, event.x, event.y, event.z, stack, getBlock(stack), getBlockMeta(stack)))
+						ManaItemHandler.requestManaExactForTool(stack, event.entityPlayer, COST, true);
+				}
+			}
+		}
+	}
 }

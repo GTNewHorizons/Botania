@@ -41,63 +41,66 @@ public class ItemKeepIvy extends ItemMod {
 		setUnlocalizedName(LibItemNames.KEEP_IVY);
 		GameRegistry.addRecipe(new KeepIvyRecipe());
 		RecipeSorter.register("botania:keepIvy", KeepIvyRecipe.class, Category.SHAPELESS, "");
-		MinecraftForge.EVENT_BUS.register(this);
-		FMLCommonHandler.instance().bus().register(this);
+		EventHandler handler = new EventHandler();
+		MinecraftForge.EVENT_BUS.register(handler);
+		FMLCommonHandler.instance().bus().register(handler);
 	}
 
-	@SubscribeEvent
-	public void onPlayerDrops(PlayerDropsEvent event) {
-		List<EntityItem> keeps = new ArrayList<>();
-		for(EntityItem item : event.drops) {
-			ItemStack stack = item.getEntityItem();
-			if(stack != null && ItemNBTHelper.detectNBT(stack) && ItemNBTHelper.getBoolean(stack, TAG_KEEP, false))
-				keeps.add(item);
-		}
-
-		if(keeps.size() > 0) {
-			event.drops.removeAll(keeps);
-
-
-			NBTTagCompound cmp = new NBTTagCompound();
-			cmp.setInteger(TAG_DROP_COUNT, keeps.size());
-
-			int i = 0;
-			for(EntityItem keep : keeps) {
-				ItemStack stack = keep.getEntityItem();
-				NBTTagCompound cmp1 = new NBTTagCompound();
-				stack.writeToNBT(cmp1);
-				cmp.setTag(TAG_DROP_PREFIX + i, cmp1);
-				i++;
+	public static class EventHandler {
+		@SubscribeEvent
+		public void onPlayerDrops(PlayerDropsEvent event) {
+			List<EntityItem> keeps = new ArrayList<>();
+			for (EntityItem item : event.drops) {
+				ItemStack stack = item.getEntityItem();
+				if (stack != null && ItemNBTHelper.detectNBT(stack) && ItemNBTHelper.getBoolean(stack, TAG_KEEP, false))
+					keeps.add(item);
 			}
 
-			NBTTagCompound data = event.entityPlayer.getEntityData();
-			if(!data.hasKey(EntityPlayer.PERSISTED_NBT_TAG))
-				data.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+			if (!keeps.isEmpty()) {
+				event.drops.removeAll(keeps);
 
-			NBTTagCompound persist = data.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-			persist.setTag(TAG_PLAYER_KEPT_DROPS, cmp);
-		}
-	}
 
-	@SubscribeEvent
-	public void onPlayerRespawn(PlayerRespawnEvent event) {
-		NBTTagCompound data = event.player.getEntityData();
-		if(data.hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
-			NBTTagCompound cmp = data.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-			NBTTagCompound cmp1 = cmp.getCompoundTag(TAG_PLAYER_KEPT_DROPS);
+				NBTTagCompound cmp = new NBTTagCompound();
+				cmp.setInteger(TAG_DROP_COUNT, keeps.size());
 
-			int count = cmp1.getInteger(TAG_DROP_COUNT);
-			for(int i = 0; i < count; i++) {
-				NBTTagCompound cmp2 = cmp1.getCompoundTag(TAG_DROP_PREFIX + i);
-				ItemStack stack = ItemStack.loadItemStackFromNBT(cmp2);
-				if(stack != null) {
-					ItemStack copy = stack.copy();
-					ItemNBTHelper.setBoolean(copy, TAG_KEEP, false);
-					event.player.inventory.addItemStackToInventory(copy);
+				int i = 0;
+				for (EntityItem keep : keeps) {
+					ItemStack stack = keep.getEntityItem();
+					NBTTagCompound cmp1 = new NBTTagCompound();
+					stack.writeToNBT(cmp1);
+					cmp.setTag(TAG_DROP_PREFIX + i, cmp1);
+					i++;
 				}
-			}
 
-			cmp.setTag(TAG_PLAYER_KEPT_DROPS, new NBTTagCompound());
+				NBTTagCompound data = event.entityPlayer.getEntityData();
+				if (!data.hasKey(EntityPlayer.PERSISTED_NBT_TAG))
+					data.setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+
+				NBTTagCompound persist = data.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+				persist.setTag(TAG_PLAYER_KEPT_DROPS, cmp);
+			}
+		}
+
+		@SubscribeEvent
+		public void onPlayerRespawn(PlayerRespawnEvent event) {
+			NBTTagCompound data = event.player.getEntityData();
+			if (data.hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
+				NBTTagCompound cmp = data.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+				NBTTagCompound cmp1 = cmp.getCompoundTag(TAG_PLAYER_KEPT_DROPS);
+
+				int count = cmp1.getInteger(TAG_DROP_COUNT);
+				for (int i = 0; i < count; i++) {
+					NBTTagCompound cmp2 = cmp1.getCompoundTag(TAG_DROP_PREFIX + i);
+					ItemStack stack = ItemStack.loadItemStackFromNBT(cmp2);
+					if (stack != null) {
+						ItemStack copy = stack.copy();
+						ItemNBTHelper.setBoolean(copy, TAG_KEEP, false);
+						event.player.inventory.addItemStackToInventory(copy);
+					}
+				}
+
+				cmp.setTag(TAG_PLAYER_KEPT_DROPS, new NBTTagCompound());
+			}
 		}
 	}
 

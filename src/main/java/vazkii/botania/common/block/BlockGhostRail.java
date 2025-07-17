@@ -38,7 +38,7 @@ public class BlockGhostRail extends BlockRailBase implements ILexiconable {
 	public BlockGhostRail() {
 		super(true);
 		setCreativeTab(BotaniaCreativeTab.INSTANCE);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 		setBlockName(LibBlockNames.GHOST_RAIL);
 	}
 
@@ -54,40 +54,42 @@ public class BlockGhostRail extends BlockRailBase implements ILexiconable {
 		blockIcon = IconHelper.forBlock(par1IconRegister, this);
 	}
 
-	@SubscribeEvent
-	public void onMinecartUpdate(MinecartUpdateEvent event) {
-		int x = MathHelper.floor_double(event.entity.posX);
-		int y = MathHelper.floor_double(event.entity.posY);
-		int z = MathHelper.floor_double(event.entity.posZ);
-		Block block = event.entity.worldObj.getBlock(x, y, z);
-		boolean air = block.isAir(event.entity.worldObj, x, y, z);
-		int floatTicks = event.entity.getEntityData().getInteger(TAG_FLOAT_TICKS);
-
-		if(block == this)
-			event.entity.getEntityData().setInteger(TAG_FLOAT_TICKS, 20);
-		else if(block instanceof BlockRailBase || block == ModBlocks.dreamwood) {
-			event.entity.getEntityData().setInteger(TAG_FLOAT_TICKS, 0);
-			if(floatTicks > 0)
-				event.entity.worldObj.playAuxSFX(2003, x, y, z, 0);
-		}
-		floatTicks = event.entity.getEntityData().getInteger(TAG_FLOAT_TICKS);
-
-		if(floatTicks > 0) {
-			Block blockBelow = event.entity.worldObj.getBlock(x, y - 1, z);
-			boolean airBelow = blockBelow.isAir(event.entity.worldObj, x, y - 1, z);
-			if(air && airBelow || !air && !airBelow)
-				event.entity.noClip = true;
-			event.entity.motionY = 0.2;
-			event.entity.motionX *= 1.4;
-			event.entity.motionZ *= 1.4;
-			event.entity.getEntityData().setInteger(TAG_FLOAT_TICKS, floatTicks - 1);
-			event.entity.worldObj.playAuxSFX(2000, x, y, z, 0);
-		} else event.entity.noClip = false;
-	}
-
 	@Override
 	public LexiconEntry getEntry(World world, int x, int y, int z, EntityPlayer player, ItemStack lexicon) {
 		return LexiconData.ghostRail;
+	}
+
+	public class EventHandler {
+		@SubscribeEvent
+		public void onMinecartUpdate(MinecartUpdateEvent event) {
+			int x = MathHelper.floor_double(event.entity.posX);
+			int y = MathHelper.floor_double(event.entity.posY);
+			int z = MathHelper.floor_double(event.entity.posZ);
+			Block block = event.entity.worldObj.getBlock(x, y, z);
+			boolean air = block.isAir(event.entity.worldObj, x, y, z);
+			int floatTicks = event.entity.getEntityData().getInteger(TAG_FLOAT_TICKS);
+
+			if(block == BlockGhostRail.this)
+				event.entity.getEntityData().setInteger(TAG_FLOAT_TICKS, 20);
+			else if(block instanceof BlockRailBase || block == ModBlocks.dreamwood) {
+				event.entity.getEntityData().setInteger(TAG_FLOAT_TICKS, 0);
+				if(floatTicks > 0)
+					event.entity.worldObj.playAuxSFX(2003, x, y, z, 0);
+			}
+			floatTicks = event.entity.getEntityData().getInteger(TAG_FLOAT_TICKS);
+
+			if(floatTicks > 0) {
+				Block blockBelow = event.entity.worldObj.getBlock(x, y - 1, z);
+				boolean airBelow = blockBelow.isAir(event.entity.worldObj, x, y - 1, z);
+				if(air && airBelow || !air && !airBelow)
+					event.entity.noClip = true;
+				event.entity.motionY = 0.2;
+				event.entity.motionX *= 1.4;
+				event.entity.motionZ *= 1.4;
+				event.entity.getEntityData().setInteger(TAG_FLOAT_TICKS, floatTicks - 1);
+				event.entity.worldObj.playAuxSFX(2000, x, y, z, 0);
+			} else event.entity.noClip = false;
+		}
 	}
 
 }

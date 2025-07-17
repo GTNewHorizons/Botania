@@ -54,7 +54,7 @@ public class ItemMagnetRing extends ItemBauble {
 
 	public ItemMagnetRing() {
 		this(LibItemNames.MAGNET_RING, 6);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	public ItemMagnetRing(String name, int range) {
@@ -73,18 +73,6 @@ public class ItemMagnetRing extends ItemBauble {
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconIndex(ItemStack stack) {
 		return getCooldown(stack) <= 0 ? itemIcon : iconOff;
-	}
-
-	@SubscribeEvent
-	public void onTossItem(ItemTossEvent event) {
-		InventoryBaubles inv = PlayerHandler.getPlayerBaubles(event.player);
-		for(int i = 0; i < inv.getSizeInventory(); i++) {
-			ItemStack stack = inv.getStackInSlot(i);
-			if(stack != null && stack.getItem() instanceof ItemMagnetRing) {
-				setCooldown(stack, 100);
-				BotaniaAPI.internalHandler.sendBaubleUpdatePacket(event.player, i);
-			}
-		}
 	}
 
 	@Override
@@ -166,5 +154,17 @@ public class ItemMagnetRing extends ItemBauble {
 		return BaubleType.RING;
 	}
 
-
+	public static class EventHandler{
+		@SubscribeEvent
+		public void onTossItem(ItemTossEvent event) {
+			InventoryBaubles inv = PlayerHandler.getPlayerBaubles(event.player);
+			for(int i = 0; i < inv.getSizeInventory(); i++) {
+				ItemStack stack = inv.getStackInSlot(i);
+				if(stack != null && stack.getItem() instanceof ItemMagnetRing) {
+					setCooldown(stack, 100);
+					BotaniaAPI.internalHandler.sendBaubleUpdatePacket(event.player, i);
+				}
+			}
+		}
+	}
 }

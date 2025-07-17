@@ -45,30 +45,11 @@ public class ItemHolyCloak extends ItemBauble implements IBaubleRender {
 
 	public ItemHolyCloak() {
 		this(LibItemNames.HOLY_CLOAK);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	public ItemHolyCloak(String name) {
 		super(name);
-	}
-
-	@SubscribeEvent
-	public void onPlayerDamage(LivingHurtEvent event) {
-		if(event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
-			ItemStack belt = baubles.getStackInSlot(3);
-			if(belt != null && belt.getItem() instanceof ItemHolyCloak && !isInEffect(belt)) {
-				ItemHolyCloak cloak = (ItemHolyCloak) belt.getItem();
-				int cooldown = getCooldown(belt);
-
-				// Used to prevent StackOverflows with mobs that deal damage when damaged
-				setInEffect(belt, true);
-				if(cooldown == 0 && cloak.effectOnDamage(event, player, belt))
-					setCooldown(belt, cloak.getCooldownTime(belt));
-				setInEffect(belt, false);
-			}
-		}
 	}
 
 	@Override
@@ -140,6 +121,27 @@ public class ItemHolyCloak extends ItemBauble implements IBaubleRender {
 				model = new ModelBiped();
 
 			model.bipedBody.render(1F);
+		}
+	}
+
+	public static class EventHandler{
+		@SubscribeEvent
+		public void onPlayerDamage(LivingHurtEvent event) {
+			if(event.entityLiving instanceof EntityPlayer) {
+				EntityPlayer player = (EntityPlayer) event.entityLiving;
+				InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
+				ItemStack belt = baubles.getStackInSlot(3);
+				if(belt != null && belt.getItem() instanceof ItemHolyCloak && !isInEffect(belt)) {
+					ItemHolyCloak cloak = (ItemHolyCloak) belt.getItem();
+					int cooldown = getCooldown(belt);
+
+					// Used to prevent StackOverflows with mobs that deal damage when damaged
+					setInEffect(belt, true);
+					if(cooldown == 0 && cloak.effectOnDamage(event, player, belt))
+						setCooldown(belt, cloak.getCooldownTime(belt));
+					setInEffect(belt, false);
+				}
+			}
 		}
 	}
 

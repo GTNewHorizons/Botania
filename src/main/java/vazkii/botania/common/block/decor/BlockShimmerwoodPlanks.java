@@ -35,17 +35,7 @@ public class BlockShimmerwoodPlanks  extends BlockMod implements ILexiconable {
 		setHardness(2.0F);
 		setStepSound(soundTypeWood);
 		setBlockName(LibBlockNames.SHIMMERWOOD_PLANKS);
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void loadTextures(TextureStitchEvent.Pre event) {
-		if(event.map.getTextureType() == 0) {
-			TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerwoodPlanks");
-			if(event.map.setTextureEntry("botania:shimmerwoodPlanks", icon))
-				blockIcon = icon;
-		}
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -59,4 +49,15 @@ public class BlockShimmerwoodPlanks  extends BlockMod implements ILexiconable {
 		return LexiconData.rainbowRod;
 	}
 
+	public class EventHandler {
+		@SubscribeEvent
+		@SideOnly(Side.CLIENT)
+		public void loadTextures(TextureStitchEvent.Pre event) {
+			if(event.map.getTextureType() == 0) {
+				TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerwoodPlanks");
+				if(event.map.setTextureEntry("botania:shimmerwoodPlanks", icon))
+					blockIcon = icon;
+			}
+		}
+	}
 }

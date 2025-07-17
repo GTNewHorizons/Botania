@@ -45,7 +45,7 @@ public class ItemVirus extends ItemMod {
 	public ItemVirus() {
 		setUnlocalizedName(LibItemNames.VIRUS);
 		setHasSubtypes(true);
-		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
 	@Override
@@ -68,19 +68,6 @@ public class ItemVirus extends ItemMod {
 			}
 		}
 		return false;
-	}
-
-	@SubscribeEvent
-	public void onLivingHurt(LivingHurtEvent event) {
-		EntityLivingBase entity = event.entityLiving;
-		if(entity.ridingEntity != null && entity.ridingEntity instanceof EntityLivingBase)
-			entity = (EntityLivingBase) entity.ridingEntity;
-
-		if(entity instanceof EntityHorse && event.source == DamageSource.fall) {
-			EntityHorse horse = (EntityHorse) entity;
-			if((horse.getHorseType() == 3 || horse.getHorseType() == 4) && horse.isTame())
-				event.setCanceled(true);
-		}
 	}
 
 	@Override
@@ -111,6 +98,21 @@ public class ItemVirus extends ItemMod {
 		icons = new IIcon[SUBTYPES];
 		for(int i = 0; i < SUBTYPES; i++)
 			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+	}
+
+	public static class EventHandler{
+		@SubscribeEvent
+		public void onLivingHurt(LivingHurtEvent event) {
+			EntityLivingBase entity = event.entityLiving;
+			if(entity.ridingEntity instanceof EntityLivingBase)
+				entity = (EntityLivingBase) entity.ridingEntity;
+
+			if(entity instanceof EntityHorse && event.source == DamageSource.fall) {
+				EntityHorse horse = (EntityHorse) entity;
+				if((horse.getHorseType() == 3 || horse.getHorseType() == 4) && horse.isTame())
+					event.setCanceled(true);
+			}
+		}
 	}
 
 }
