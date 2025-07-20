@@ -282,7 +282,7 @@ public class BlockAltar extends BlockModContainer<TileAltar> implements ILexicon
 	@Override
 	public int getComparatorInputOverride(World par1World, int par2, int par3, int par4, int par5) {
 		TileAltar altar = (TileAltar) par1World.getTileEntity(par2, par3, par4);
-		if (tile == null) return 0;
+		if (altar == null) return 0;
 		return altar.hasWater ? 15 : 0;
 	}
 
