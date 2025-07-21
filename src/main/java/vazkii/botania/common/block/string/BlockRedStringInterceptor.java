@@ -54,12 +54,16 @@ public class BlockRedStringInterceptor extends BlockRedString {
 		return new TileRedStringInterceptor();
 	}
 
-	public static class EventHandler {
+	public void onInteract(PlayerInteractEvent event) {
+		if(event.action == Action.RIGHT_CLICK_BLOCK)
+			TileRedStringInterceptor.onInteract(event.entityPlayer, event.world, event.x, event.y, event.z);
+	}
+
+	public class EventHandler {
 
 		@SubscribeEvent
-		public void onInteract(PlayerInteractEvent event) {
-			if(event.action == Action.RIGHT_CLICK_BLOCK)
-				TileRedStringInterceptor.onInteract(event.entityPlayer, event.world, event.x, event.y, event.z);
+		public void onInteractWrapper(PlayerInteractEvent event) {
+			BlockRedStringInterceptor.this.onInteract(event);
 		}
 	}
 }
