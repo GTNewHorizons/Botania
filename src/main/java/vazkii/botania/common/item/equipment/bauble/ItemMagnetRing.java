@@ -154,17 +154,22 @@ public class ItemMagnetRing extends ItemBauble {
 		return BaubleType.RING;
 	}
 
-	public static class EventHandler{
-		@SubscribeEvent
-		public void onTossItem(ItemTossEvent event) {
-			InventoryBaubles inv = PlayerHandler.getPlayerBaubles(event.player);
-			for(int i = 0; i < inv.getSizeInventory(); i++) {
-				ItemStack stack = inv.getStackInSlot(i);
-				if(stack != null && stack.getItem() instanceof ItemMagnetRing) {
-					setCooldown(stack, 100);
-					BotaniaAPI.internalHandler.sendBaubleUpdatePacket(event.player, i);
-				}
+
+	public void onTossItem(ItemTossEvent event) {
+		InventoryBaubles inv = PlayerHandler.getPlayerBaubles(event.player);
+		for(int i = 0; i < inv.getSizeInventory(); i++) {
+			ItemStack stack = inv.getStackInSlot(i);
+			if(stack != null && stack.getItem() instanceof ItemMagnetRing) {
+				setCooldown(stack, 100);
+				BotaniaAPI.internalHandler.sendBaubleUpdatePacket(event.player, i);
 			}
+		}
+	}
+
+	public class EventHandler{
+		@SubscribeEvent
+		public void onTossItemWrapper(ItemTossEvent event) {
+			ItemMagnetRing.this.onTossItem(event);
 		}
 	}
 }
