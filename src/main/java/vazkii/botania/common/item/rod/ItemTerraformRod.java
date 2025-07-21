@@ -34,6 +34,7 @@ import vazkii.botania.api.subtile.ISpecialFlower;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.achievement.ICraftAchievement;
 import vazkii.botania.common.achievement.ModAchievements;
+import vazkii.botania.common.core.helper.ItemHelper;
 import vazkii.botania.common.item.ItemMod;
 import vazkii.botania.common.lib.LibItemNames;
 import vazkii.botania.common.lib.LibMisc;
@@ -160,7 +161,8 @@ public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockP
 		if(par2World.isRemote || ManaItemHandler.requestManaExactForTool(par1ItemStack, par3EntityPlayer, cost, true)) {
 			if(!par2World.isRemote)
 				for(CoordsWithBlock block : blocks)
-					par2World.setBlock(block.posX, block.posY, block.posZ, block.block);
+					if(ItemHelper.canBreakBlock(par2World,block.posX, block.posY, block.posZ, par3EntityPlayer))
+						par2World.setBlock(block.posX, block.posY, block.posZ, block.block);
 
 			if(!blocks.isEmpty()) {
 				for(int i = 0; i < 10; i++)

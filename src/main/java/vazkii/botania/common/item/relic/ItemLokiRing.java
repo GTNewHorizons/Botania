@@ -51,6 +51,7 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.core.helper.LokiCursor;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
+import vazkii.botania.common.item.equipment.tool.terrasteel.ItemTerraPick;
 import vazkii.botania.common.lib.LibItemNames;
 import baubles.api.BaubleType;
 import baubles.common.container.InventoryBaubles;
@@ -74,6 +75,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	private static final String TAG_BREAKING_MODE = "breaking";
 	private static final String TAG_MIRROR_MODE = "mirror";
 	private boolean recursion = false;
+	private static boolean isBreaking = false;
 
 	public static enum HUD_MESSAGE  {
 		MODE, BREAKING, CLEAR, MIRROR, INSUFFICIENT_MANA
@@ -81,7 +83,190 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 
 	public ItemLokiRing() {
 		super(LibItemNames.LOKI_RING);
-		MinecraftForge.EVENT_BUS.register(new EventHandler());
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@SubscribeEvent
+	public void onBlockBreak(BlockEvent.BreakEvent event) {
+        EntityPlayer player = event.getPlayer();
+        int x = event.x;
+        int y = event.y;
+        int z = event.z;
+        int side = event.blockMetadata;
+        ItemStack stack = player.getCurrentEquippedItem();
+		if(stack == null) return;
+        Item item = player.getCurrentEquippedItem().getItem();
+		if(item instanceof  ISequentialBreaker || isBreaking)
+			return;
+        breakOnAllCursors(player, item, stack, x, y, z, side);
+    }
+
+	@SubscribeEvent
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if(recursion) return;
+		
+		EntityPlayer player = event.entityPlayer;
+		ItemStack lokiRing = getLokiRing(player);
+		if (lokiRing == null || player.worldObj.isRemote)
+			return;
+
+		ItemStack heldItemStack = player.getCurrentEquippedItem();
+		ChunkCoordinates originCoords = getOriginPos(lokiRing);
+		MovingObjectPosition lookPos = ToolCommons.raytraceFromEntity(player.worldObj, player, true, 10F);
+		List<LokiCursor> cursors = getCursorList(lokiRing);
+		int cursorCount = cursors.size();
+		//I don`t think mana for placing should be cruel , so I just made graph with funny line
+		int cost = (int)(50*Math.sin(0.04* cursorCount)+cursorCount+120+20*Math.cos(0.2*cursorCount));
+
+		if (heldItemStack == null && event.action == Action.RIGHT_CLICK_BLOCK && player.isSneaking() && isRingEnabled(lokiRing)) {
+			if(originCoords.posY == -1 && lookPos != null) {
+				setOriginPos(lokiRing, lookPos.blockX, lookPos.blockY, lookPos.blockZ);
+				if(player instanceof EntityPlayerMP)
+					syncLokiRing(player);
+			} else if(lookPos != null) {
+				if(originCoords.posX == lookPos.blockX && originCoords.posY == lookPos.blockY && originCoords.posZ == lookPos.blockZ) {
+					clearMasterCursor(lokiRing);
+					if(player instanceof EntityPlayerMP)
+						syncLokiRing(player);
+				} else {
+					addCursor : {
+					int relX = lookPos.blockX - originCoords.posX;
+					int relY = lookPos.blockY - originCoords.posY;
+					int relZ = lookPos.blockZ - originCoords.posZ;
+
+					for(LokiCursor cursor : cursors)
+						if(cursor.getX() == relX && cursor.getY() == relY && cursor.getZ() == relZ) {
+							cursors.remove(cursor);
+							setCursorList(lokiRing, cursors);
+							if(player instanceof EntityPlayerMP)
+								syncLokiRing(player);
+							break addCursor;
+						}
+
+					addCursor(lokiRing, relX, relY, relZ, getRingMirrorMode(lokiRing) );
+					if(player instanceof EntityPlayerMP)
+						syncLokiRing(player);
+				}
+				}
+			}
+		} else if (heldItemStack != null && event.action == Action.RIGHT_CLICK_BLOCK && lookPos != null && isRingEnabled(lokiRing)) {
+			if(!ManaItemHandler.requestManaExact(lokiRing, player, cost, true)){
+				if(player instanceof EntityPlayerMP){
+					vazkii.botania.common.network.PacketHandler.INSTANCE.sendTo(new PacketLokiHudNotificationAck(HUD_MESSAGE.INSUFFICIENT_MANA),(EntityPlayerMP) player);
+				}
+				else
+				{
+					renderHUDNotification(HUD_MESSAGE.INSUFFICIENT_MANA);
+				}
+				return;
+			}
+
+			recursion = true;
+
+			double oldPosX = player.posX;
+			double oldPosY = player.posY;
+			double oldPosZ = player.posZ;
+			float oldPitch = player.rotationPitch;
+			float oldYaw = player.rotationYaw;
+
+			int masterOffsetX = originCoords.posY == -1 ? 0 :lookPos.blockX - originCoords.posX;
+			int masterOffsetY = originCoords.posY == -1 ? 0 :lookPos.blockY - originCoords.posY;
+			int masterOffsetZ = originCoords.posY == -1 ? 0 :lookPos.blockZ - originCoords.posZ;
+
+			double playerOffsetX = player.posX - originCoords.posX;
+			double playerOffsetY = player.posY - originCoords.posY;
+			double playerOffsetZ = player.posZ - originCoords.posZ;
+
+			for(LokiCursor cursor : cursors) {
+
+				int x = lookPos.blockX + cursor.getX();
+				int y = lookPos.blockY + cursor.getY();
+				int z = lookPos.blockZ + cursor.getZ();
+
+				if(cursor.isMirrorX()){
+					x -= 2*masterOffsetX;
+				}
+				if(cursor.isMirrorY()){
+					y -= 2*masterOffsetY;
+				}
+				if(cursor.isMirrorZ()){
+					z -= 2*masterOffsetZ;
+				}
+
+				if (player.worldObj.isAirBlock(x, y, z) ) {
+					continue;
+				}
+
+				player.posX = cursor.getX()+oldPosX;
+				player.posY = cursor.getY()+oldPosY;
+				player.posZ = cursor.getZ()+oldPosZ;
+				player.rotationYaw = oldYaw;
+
+				if(cursor.isMirrorX()){
+					player.posX -= 2*playerOffsetX;
+					player.rotationYaw = player.rotationYaw * (-1);
+				}
+				if(cursor.isMirrorY()){
+					player.posY -= 2*playerOffsetY;
+					player.rotationPitch = oldPitch * (-1);
+				}
+				if(cursor.isMirrorZ()){
+					player.posZ -= 2*playerOffsetZ;
+					player.rotationYaw = 180 - (Math.abs(player.rotationYaw));
+					if(oldYaw < 0){
+						player.rotationYaw *= -1;
+					}
+				}
+
+				float hitX = (float) (lookPos.hitVec.xCoord - lookPos.blockX);
+				float hitY = (float) (lookPos.hitVec.yCoord - lookPos.blockY);
+				float hitZ = (float) (lookPos.hitVec.zCoord - lookPos.blockZ);
+				if(cursor.isMirrorX()){
+					hitX = 1-hitX;
+				}
+				if(cursor.isMirrorY()){
+					hitY = 1-hitY;
+				}
+				if(cursor.isMirrorZ()){
+					hitZ = 1-hitZ;
+				}
+
+				int hitSide = lookPos.sideHit;
+				if(cursor.isMirrorX() && (hitSide == ForgeDirection.EAST.ordinal() || hitSide == ForgeDirection.WEST.ordinal()) ){
+					hitSide = hitSide ^ 1;
+				}
+				if(cursor.isMirrorY() && (hitSide == ForgeDirection.DOWN.ordinal() || hitSide == ForgeDirection.UP.ordinal()) ){
+					hitSide = hitSide ^ 1;
+				}
+				if(cursor.isMirrorZ() && (hitSide == ForgeDirection.NORTH.ordinal() || hitSide == ForgeDirection.SOUTH.ordinal()) ){
+					hitSide = hitSide ^ 1;
+				}
+
+				Item item = heldItemStack.getItem();
+				Block markedBlock = player.worldObj.getBlock(x, y, z);
+
+				boolean wasActivated = markedBlock.onBlockActivated(player.worldObj, x, y, z, player, hitSide, hitX,hitY,hitZ);
+
+				if (heldItemStack.stackSize == 0 ) {
+					event.setCanceled(true);
+					break;
+				}
+				if (!wasActivated) {
+					item.onItemUse(player.capabilities.isCreativeMode ? heldItemStack.copy() : heldItemStack, player, player.worldObj, x, y, z, hitSide, (float) lookPos.hitVec.xCoord - x, (float) lookPos.hitVec.yCoord - y, (float) lookPos.hitVec.zCoord - z);
+					if(heldItemStack.stackSize == 0) {
+						event.setCanceled(true);
+						break;
+					}
+				}
+
+			}
+			recursion = false;
+			player.posX = oldPosX;
+			player.posY = oldPosY;
+			player.posZ = oldPosZ;
+			player.rotationPitch = oldPitch;
+			player.rotationYaw = oldYaw;
+		}
 	}
 
 	public static void setMode(ItemStack stack, boolean state) {
@@ -207,7 +392,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		int masterOffsetX = originCoords.posY == -1 ? 0 :x - originCoords.posX;
 		int masterOffsetY = originCoords.posY == -1 ? 0 :y - originCoords.posY;
 		int masterOffsetZ = originCoords.posY == -1 ? 0 :z - originCoords.posZ;
-
+		isBreaking = true;
 		for(int i = 0; i < cursors.size(); i++) {
 			LokiCursor cursor = cursors.get(i);
 			int xp = x + cursor.getX();
@@ -240,6 +425,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 				breaker.breakOtherBlock(player, stack, xp, yp, zp, x, y, z, side);
 			ToolCommons.removeBlockWithDrops(player, stack, player.worldObj, xp, yp, zp, x, y, z, block, new Material[] { block.getMaterial() }, silk, fortune, block.getBlockHardness(world, xp, yp, zp), true);
 		}
+		isBreaking = false;
 	}
 
 	@Override

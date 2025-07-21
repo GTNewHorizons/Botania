@@ -238,6 +238,19 @@ public class ItemLens extends ItemMod implements ILensControl, ICompositableLens
 	}
 
 	@Override
+	public boolean collideBurst(IManaBurst burst, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack, EntityPlayer player) {
+		EntityThrowable entity = (EntityThrowable) burst;
+
+		dead = getLens(stack.getItemDamage()).collideBurst(burst, entity, pos, isManaBlock, dead, stack, player);
+
+		ItemStack compositeLens = getCompositeLens(stack);
+		if(compositeLens != null && compositeLens.getItem() instanceof ILens)
+			dead = ((ILens) compositeLens.getItem()).collideBurst(burst, pos, isManaBlock, dead, compositeLens, player);
+
+		return dead;
+	}
+
+	@Override
 	public void updateBurst(IManaBurst burst, ItemStack stack) {
 		EntityThrowable entity = (EntityThrowable) burst;
 		int storedColor = getStoredColor(stack);

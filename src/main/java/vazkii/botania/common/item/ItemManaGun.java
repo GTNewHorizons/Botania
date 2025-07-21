@@ -12,6 +12,7 @@ package vazkii.botania.common.item;
 
 import java.awt.Color;
 import java.util.List;
+import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;

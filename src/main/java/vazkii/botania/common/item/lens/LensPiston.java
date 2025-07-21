@@ -11,6 +11,7 @@
 package vazkii.botania.common.item.lens;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -20,10 +21,12 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 import vazkii.botania.api.internal.IManaBurst;
 
+import static vazkii.botania.common.core.helper.ItemHelper.canBreakBlock;
+
 public class LensPiston extends Lens {
 
 	@Override
-	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack) {
+	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack, EntityPlayer player) {
 		ChunkCoordinates coords = burst.getBurstSourceChunkCoordinates();
 		if((coords.posX != pos.blockX || coords.posY != pos.blockY || coords.posZ != pos.blockZ) && !burst.isFake() && !isManaBlock && !entity.worldObj.isRemote) {
 			ForgeDirection dir = ForgeDirection.getOrientation(pos.sideHit).getOpposite();
@@ -36,7 +39,7 @@ public class LensPiston extends Lens {
 				int meta = entity.worldObj.getBlockMetadata(pos.blockX, pos.blockY, pos.blockZ);
 				TileEntity tile = entity.worldObj.getTileEntity(pos.blockX, pos.blockY, pos.blockZ);
 
-				if(block.getMobilityFlag() == 0 && block != Blocks.obsidian && block.getBlockHardness(entity.worldObj, pos.blockX, pos.blockY, pos.blockZ) >= 0 && tile == null) {
+				if(canBreakBlock(entity.worldObj,pos.blockX, pos.blockY, pos.blockZ,player) && block.getMobilityFlag() == 0 && block != Blocks.obsidian && block.getBlockHardness(entity.worldObj, pos.blockX, pos.blockY, pos.blockZ) >= 0 && tile == null) {
 					entity.worldObj.setBlockToAir(pos.blockX, pos.blockY, pos.blockZ);
 					entity.worldObj.setBlock(x, y, z, block, meta, 1 | 2);
 					entity.worldObj.playAuxSFX(2001, pos.blockX, pos.blockY, pos.blockZ, Block.getIdFromBlock(block) + (meta << 12));
