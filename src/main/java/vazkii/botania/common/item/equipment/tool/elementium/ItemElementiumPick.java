@@ -38,24 +38,28 @@ public class ItemElementiumPick extends ItemManasteelPick {
 		return false;
 	}
 
-	public class EventHandler{
-		@SubscribeEvent
-		public void onHarvestDrops(HarvestDropsEvent event) {
-			if(event.harvester != null) {
-				ItemStack stack = event.harvester.getCurrentEquippedItem();
-				if(stack != null && (stack.getItem() == ItemElementiumPick.this || stack.getItem() == ModItems.terraPick && ItemTerraPick.isTipped(stack))) {
-					for(int i = 0; i < event.drops.size(); i++) {
-						ItemStack drop = event.drops.get(i);
-						if(drop != null) {
-							Block block = Block.getBlockFromItem(drop.getItem());
-							if(block != null){
-								if(isDisposable(block) || (isSemiDisposable(block) && !event.harvester.isSneaking()))
-									event.drops.remove(i);
-							}
+	public void onHarvestDrops(HarvestDropsEvent event) {
+		if(event.harvester != null) {
+			ItemStack stack = event.harvester.getCurrentEquippedItem();
+			if(stack != null && (stack.getItem() == ItemElementiumPick.this || stack.getItem() == ModItems.terraPick && ItemTerraPick.isTipped(stack))) {
+				for(int i = 0; i < event.drops.size(); i++) {
+					ItemStack drop = event.drops.get(i);
+					if(drop != null) {
+						Block block = Block.getBlockFromItem(drop.getItem());
+						if(block != null){
+							if(isDisposable(block) || (isSemiDisposable(block) && !event.harvester.isSneaking()))
+								event.drops.remove(i);
 						}
 					}
 				}
 			}
+		}
+	}
+
+	public class EventHandler{
+		@SubscribeEvent
+		public void onHarvestDropsWrapper(HarvestDropsEvent event) {
+			ItemElementiumPick.this.onHarvestDrops(event);
 		}
 	}
 }
