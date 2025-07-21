@@ -98,15 +98,20 @@ public class BlockPrismarine extends BlockMod implements ILexiconable {
 		return LexiconData.prismarine;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void loadTextures(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			TextureAtlasSprite icon = new InterpolatedIcon("botania:prismarine0");
+			if(event.map.setTextureEntry("botania:prismarine0", icon))
+				icons[0] = icon;
+		}
+	}
+
 	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
-		public void loadTextures(TextureStitchEvent.Pre event) {
-			if(event.map.getTextureType() == 0) {
-				TextureAtlasSprite icon = new InterpolatedIcon("botania:prismarine0");
-				if(event.map.setTextureEntry("botania:prismarine0", icon))
-					icons[0] = icon;
-			}
+		public void loadTexturesWrapper(TextureStitchEvent.Pre event) {
+			BlockPrismarine.this.loadTextures(event);
 		}
 	}
 }
