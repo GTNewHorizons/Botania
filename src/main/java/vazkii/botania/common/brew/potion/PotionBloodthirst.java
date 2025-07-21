@@ -29,20 +29,24 @@ public class PotionBloodthirst extends PotionMod {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
-	public class EventHandler {
-		@SubscribeEvent
-		public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
-			if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
-				double rangeSq = RANGE * RANGE;
-				for (Object o : event.world.playerEntities) {
-                    EntityPlayer player = (EntityPlayer) o;
-                    if (player.getDistanceSq(event.x, event.y, event.z) <= rangeSq
-                        && hasEffect(player) && !hasEffect(player, ModPotions.emptiness)) {
-                        event.setResult(Result.ALLOW);
-                        return;
-					}
+	public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
+		if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
+			double rangeSq = RANGE * RANGE;
+			for (Object o : event.world.playerEntities) {
+				EntityPlayer player = (EntityPlayer) o;
+				if (player.getDistanceSq(event.x, event.y, event.z) <= rangeSq
+						&& hasEffect(player) && !hasEffect(player, ModPotions.emptiness)) {
+					event.setResult(Result.ALLOW);
+					return;
 				}
 			}
+		}
+	}
+
+	public class EventHandler {
+		@SubscribeEvent
+		public void onSpawnWrapper(LivingSpawnEvent.CheckSpawn event) {
+			PotionBloodthirst.this.onSpawn(event);
 		}
 	}
 }
