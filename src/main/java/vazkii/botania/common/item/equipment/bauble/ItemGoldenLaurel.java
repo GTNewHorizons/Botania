@@ -69,22 +69,26 @@ public class ItemGoldenLaurel extends ItemBauble implements IBaubleRender {
 		}
 	}
 
+	public void onPlayerDeath(LivingDeathEvent event) {
+		if(event.entity instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.entity;
+			ItemStack amulet = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
+
+			if(amulet != null && amulet.getItem() == ItemGoldenLaurel.this) {
+				event.setCanceled(true);
+				player.setHealth(player.getMaxHealth());
+				player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300, 6));
+				player.addChatMessage(new ChatComponentTranslation("botaniamisc.savedByLaurel"));
+				player.worldObj.playSoundAtEntity(player, "botania:goldenLaurel", 1F, 0.3F);
+				PlayerHandler.getPlayerBaubles(player).setInventorySlotContents(0, null);
+			}
+		}
+	}
+
 	public class EventHandler{
 		@SubscribeEvent(priority = EventPriority.HIGHEST)
-		public void onPlayerDeath(LivingDeathEvent event) {
-			if(event.entity instanceof EntityPlayer) {
-				EntityPlayer player = (EntityPlayer) event.entity;
-				ItemStack amulet = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
-
-				if(amulet != null && amulet.getItem() == ItemGoldenLaurel.this) {
-					event.setCanceled(true);
-					player.setHealth(player.getMaxHealth());
-					player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300, 6));
-					player.addChatMessage(new ChatComponentTranslation("botaniamisc.savedByLaurel"));
-					player.worldObj.playSoundAtEntity(player, "botania:goldenLaurel", 1F, 0.3F);
-					PlayerHandler.getPlayerBaubles(player).setInventorySlotContents(0, null);
-				}
-			}
+		public void onPlayerDeathWrapper(LivingDeathEvent event) {
+			ItemGoldenLaurel.this.onPlayerDeath(event);
 		}
 	}
 }
