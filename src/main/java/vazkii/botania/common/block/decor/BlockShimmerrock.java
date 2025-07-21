@@ -50,15 +50,20 @@ public class BlockShimmerrock extends BlockMod implements ILexiconable {
 		return LexiconData.rainbowRod;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void loadTextures(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerrock");
+			if(event.map.setTextureEntry("botania:shimmerrock", icon))
+				blockIcon = icon;
+		}
+	}
+
 	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
-		public void loadTextures(TextureStitchEvent.Pre event) {
-			if(event.map.getTextureType() == 0) {
-				TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerrock");
-				if(event.map.setTextureEntry("botania:shimmerrock", icon))
-					blockIcon = icon;
-			}
+		public void loadTexturesWrapper(TextureStitchEvent.Pre event) {
+			BlockShimmerrock.this.loadTextures(event);
 		}
 	}
 }
