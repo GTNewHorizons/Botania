@@ -49,15 +49,20 @@ public class BlockShimmerwoodPlanks  extends BlockMod implements ILexiconable {
 		return LexiconData.rainbowRod;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void loadTextures(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerwoodPlanks");
+			if(event.map.setTextureEntry("botania:shimmerwoodPlanks", icon))
+				blockIcon = icon;
+		}
+	}
+
 	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
-		public void loadTextures(TextureStitchEvent.Pre event) {
-			if(event.map.getTextureType() == 0) {
-				TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerwoodPlanks");
-				if(event.map.setTextureEntry("botania:shimmerwoodPlanks", icon))
-					blockIcon = icon;
-			}
+		public void loadTexturesWrapper(TextureStitchEvent.Pre event) {
+			BlockShimmerwoodPlanks.this.loadTextures(event);
 		}
 	}
 }
