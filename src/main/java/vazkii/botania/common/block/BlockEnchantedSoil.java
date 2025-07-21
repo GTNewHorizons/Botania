@@ -85,19 +85,24 @@ public class BlockEnchantedSoil extends BlockMod implements ILexiconable {
 		return LexiconData.overgrowthSeed;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void loadTextures(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			TextureAtlasSprite icon = new InterpolatedIcon("botania:enchantedSoil0");
+			if(event.map.setTextureEntry("botania:enchantedSoil0", icon))
+				blockIcon = icon;
+
+			icon = new InterpolatedIcon("botania:enchantedSoil1");
+			if(event.map.setTextureEntry("botania:enchantedSoil1", icon))
+				iconSide = icon;
+		}
+	}
+
 	public class EventHandler{
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
-		public void loadTextures(TextureStitchEvent.Pre event) {
-			if(event.map.getTextureType() == 0) {
-				TextureAtlasSprite icon = new InterpolatedIcon("botania:enchantedSoil0");
-				if(event.map.setTextureEntry("botania:enchantedSoil0", icon))
-					blockIcon = icon;
-
-				icon = new InterpolatedIcon("botania:enchantedSoil1");
-				if(event.map.setTextureEntry("botania:enchantedSoil1", icon))
-					iconSide = icon;
-			}
+		public void loadTexturesWrapper(TextureStitchEvent.Pre event) {
+			BlockEnchantedSoil.this.loadTextures(event);
 		}
 	}
 }
