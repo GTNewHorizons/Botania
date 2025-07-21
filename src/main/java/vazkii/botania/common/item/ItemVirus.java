@@ -100,18 +100,22 @@ public class ItemVirus extends ItemMod {
 			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
 	}
 
-	public static class EventHandler{
-		@SubscribeEvent
-		public void onLivingHurt(LivingHurtEvent event) {
-			EntityLivingBase entity = event.entityLiving;
-			if(entity.ridingEntity instanceof EntityLivingBase)
-				entity = (EntityLivingBase) entity.ridingEntity;
+	public void onLivingHurt(LivingHurtEvent event) {
+		EntityLivingBase entity = event.entityLiving;
+		if(entity.ridingEntity instanceof EntityLivingBase)
+			entity = (EntityLivingBase) entity.ridingEntity;
 
-			if(entity instanceof EntityHorse && event.source == DamageSource.fall) {
-				EntityHorse horse = (EntityHorse) entity;
-				if((horse.getHorseType() == 3 || horse.getHorseType() == 4) && horse.isTame())
-					event.setCanceled(true);
-			}
+		if(entity instanceof EntityHorse && event.source == DamageSource.fall) {
+			EntityHorse horse = (EntityHorse) entity;
+			if((horse.getHorseType() == 3 || horse.getHorseType() == 4) && horse.isTame())
+				event.setCanceled(true);
+		}
+	}
+
+	public class EventHandler{
+		@SubscribeEvent
+		public void onLivingHurtWrapper(LivingHurtEvent event) {
+			ItemVirus.this.onLivingHurt(event);
 		}
 	}
 
