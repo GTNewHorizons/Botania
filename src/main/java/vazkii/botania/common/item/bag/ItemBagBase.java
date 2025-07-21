@@ -106,48 +106,52 @@ public abstract class ItemBagBase extends ItemMod {
 
     protected abstract int getGuiID();
 
-    public class EventHandler{
-        @SubscribeEvent
-        public void onPickupItem(EntityItemPickupEvent event) {
-            ItemStack stack = event.item.getEntityItem();
-            if(stack.getItem() == Item.getItemFromBlock(getValidPickUp()) && stack.stackSize > 0) {
-                int color = stack.getItemDamage();
-                if(color > 15)
-                    return;
+    public void onPickupItem(EntityItemPickupEvent event) {
+        ItemStack stack = event.item.getEntityItem();
+        if(stack.getItem() == Item.getItemFromBlock(getValidPickUp()) && stack.stackSize > 0) {
+            int color = stack.getItemDamage();
+            if(color > 15)
+                return;
 
-                for(int i = 0; i < event.entityPlayer.inventory.getSizeInventory(); i++) {
-                    if(i == event.entityPlayer.inventory.currentItem)
-                        continue; // prevent item deletion
+            for(int i = 0; i < event.entityPlayer.inventory.getSizeInventory(); i++) {
+                if(i == event.entityPlayer.inventory.currentItem)
+                    continue; // prevent item deletion
 
-                    ItemStack invStack = event.entityPlayer.inventory.getStackInSlot(i);
-                    if(invStack != null && invStack.getItem() == ItemBagBase.this) {
-                        ItemStack[] bagInv = loadStacks(invStack);
-                        ItemStack stackAt = bagInv[color];
-                        boolean didChange = false;
-                        if(stackAt == null) {
-                            bagInv[color] = stack.copy();
-                            stack.stackSize = 0;
+                ItemStack invStack = event.entityPlayer.inventory.getStackInSlot(i);
+                if(invStack != null && invStack.getItem() == ItemBagBase.this) {
+                    ItemStack[] bagInv = loadStacks(invStack);
+                    ItemStack stackAt = bagInv[color];
+                    boolean didChange = false;
+                    if(stackAt == null) {
+                        bagInv[color] = stack.copy();
+                        stack.stackSize = 0;
+                        didChange = true;
+                    } else {
+                        int stackAtSize = stackAt.stackSize;
+                        int stackSize = stack.stackSize;
+                        int spare = 64 - stackAtSize;
+                        int pass = Math.min(spare, stackSize);
+                        if(pass > 0) {
+                            stackAt.stackSize += pass;
+                            stack.stackSize -= pass;
                             didChange = true;
-                        } else {
-                            int stackAtSize = stackAt.stackSize;
-                            int stackSize = stack.stackSize;
-                            int spare = 64 - stackAtSize;
-                            int pass = Math.min(spare, stackSize);
-                            if(pass > 0) {
-                                stackAt.stackSize += pass;
-                                stack.stackSize -= pass;
-                                didChange = true;
-                            }
                         }
-
-                        if(didChange)
-                            setStacks(invStack, bagInv);
                     }
 
-                    if(stack.stackSize == 0)
-                        return;
+                    if(didChange)
+                        setStacks(invStack, bagInv);
                 }
+
+                if(stack.stackSize == 0)
+                    return;
             }
+        }
+    }
+
+    public class EventHandler{
+        @SubscribeEvent
+        public void onPickupItemWrapper(EntityItemPickupEvent event) {
+            ItemBagBase.this.onPickupItem(event);
         }
     }
 }
