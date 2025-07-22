@@ -20,28 +20,10 @@ public class ItemElementiumPick extends ItemManasteelPick {
 	}
 
 
-	public static boolean isDisposable(Block block) {
-		for(int id : OreDictionary.getOreIDs(new ItemStack(block))) {
-			String name = OreDictionary.getOreName(id);
-			if(BotaniaAPI.disposableBlocks.contains(name))
-				return true;
-		}
-		return false;
-	}
-	
-	public static boolean isSemiDisposable(Block block) {
-		for(int id : OreDictionary.getOreIDs(new ItemStack(block))) {
-			String name = OreDictionary.getOreName(id);
-			if(BotaniaAPI.semiDisposableBlocks.contains(name))
-				return true;
-		}
-		return false;
-	}
-
 	public void onHarvestDrops(HarvestDropsEvent event) {
 		if(event.harvester != null) {
 			ItemStack stack = event.harvester.getCurrentEquippedItem();
-			if(stack != null && (stack.getItem() == ItemElementiumPick.this || stack.getItem() == ModItems.terraPick && ItemTerraPick.isTipped(stack))) {
+			if(stack != null && (stack.getItem() == this || stack.getItem() == ModItems.terraPick && ItemTerraPick.isTipped(stack))) {
 				for(int i = 0; i < event.drops.size(); i++) {
 					ItemStack drop = event.drops.get(i);
 					if(drop != null) {
@@ -54,6 +36,24 @@ public class ItemElementiumPick extends ItemManasteelPick {
 				}
 			}
 		}
+	}
+
+	public static boolean isDisposable(Block block) {
+		for(int id : OreDictionary.getOreIDs(new ItemStack(block))) {
+			String name = OreDictionary.getOreName(id);
+			if(BotaniaAPI.disposableBlocks.contains(name))
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isSemiDisposable(Block block) {
+		for(int id : OreDictionary.getOreIDs(new ItemStack(block))) {
+			String name = OreDictionary.getOreName(id);
+			if(BotaniaAPI.semiDisposableBlocks.contains(name))
+				return true;
+		}
+		return false;
 	}
 
 	public class EventHandler{

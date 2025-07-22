@@ -85,11 +85,6 @@ public class BlockFelPumpkin extends BlockMod implements ILexiconable {
 		blockIcon = Blocks.pumpkin.getIcon(2, 0);
 	}
 
-	@Override
-	public LexiconEntry getEntry(World world, int x, int y, int z, EntityPlayer player, ItemStack lexicon) {
-		return LexiconData.gardenOfGlass;
-	}
-
 	public void onDrops(LivingDropsEvent event) {
 		if(event.entity instanceof EntityBlaze && event.entity.getEntityData().getBoolean(TAG_FEL_SPAWNED))
 			if(event.drops.isEmpty())
@@ -99,6 +94,11 @@ public class BlockFelPumpkin extends BlockMod implements ILexiconable {
 				if(stack.getItem() == Items.blaze_rod)
 					item.setEntityItemStack(new ItemStack(Items.blaze_powder, stack.stackSize * 10));
 			}
+	}
+
+	@Override
+	public LexiconEntry getEntry(World world, int x, int y, int z, EntityPlayer player, ItemStack lexicon) {
+		return LexiconData.gardenOfGlass;
 	}
 
 	public class EventHandler {

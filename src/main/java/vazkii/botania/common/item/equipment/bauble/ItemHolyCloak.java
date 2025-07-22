@@ -52,6 +52,24 @@ public class ItemHolyCloak extends ItemBauble implements IBaubleRender {
 		super(name);
 	}
 
+	public void onPlayerDamage(LivingHurtEvent event) {
+		if(event.entityLiving instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.entityLiving;
+			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
+			ItemStack belt = baubles.getStackInSlot(3);
+			if(belt != null && belt.getItem() instanceof ItemHolyCloak && !isInEffect(belt)) {
+				ItemHolyCloak cloak = (ItemHolyCloak) belt.getItem();
+				int cooldown = getCooldown(belt);
+
+				// Used to prevent StackOverflows with mobs that deal damage when damaged
+				setInEffect(belt, true);
+				if(cooldown == 0 && cloak.effectOnDamage(event, player, belt))
+					setCooldown(belt, cloak.getCooldownTime(belt));
+				setInEffect(belt, false);
+			}
+		}
+	}
+
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
 		int cooldown = getCooldown(stack);
@@ -121,24 +139,6 @@ public class ItemHolyCloak extends ItemBauble implements IBaubleRender {
 				model = new ModelBiped();
 
 			model.bipedBody.render(1F);
-		}
-	}
-
-	public void onPlayerDamage(LivingHurtEvent event) {
-		if(event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
-			ItemStack belt = baubles.getStackInSlot(3);
-			if(belt != null && belt.getItem() instanceof ItemHolyCloak && !isInEffect(belt)) {
-				ItemHolyCloak cloak = (ItemHolyCloak) belt.getItem();
-				int cooldown = getCooldown(belt);
-
-				// Used to prevent StackOverflows with mobs that deal damage when damaged
-				setInEffect(belt, true);
-				if(cooldown == 0 && cloak.effectOnDamage(event, player, belt))
-					setCooldown(belt, cloak.getCooldownTime(belt));
-				setInEffect(belt, false);
-			}
 		}
 	}
 

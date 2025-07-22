@@ -75,6 +75,17 @@ public class ItemMagnetRing extends ItemBauble {
 		return getCooldown(stack) <= 0 ? itemIcon : iconOff;
 	}
 
+	public void onTossItem(ItemTossEvent event) {
+		InventoryBaubles inv = PlayerHandler.getPlayerBaubles(event.player);
+		for(int i = 0; i < inv.getSizeInventory(); i++) {
+			ItemStack stack = inv.getStackInSlot(i);
+			if(stack != null && stack.getItem() instanceof ItemMagnetRing) {
+				setCooldown(stack, 100);
+				BotaniaAPI.internalHandler.sendBaubleUpdatePacket(event.player, i);
+			}
+		}
+	}
+
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
 		super.onWornTick(stack, player);
@@ -152,18 +163,6 @@ public class ItemMagnetRing extends ItemBauble {
 	@Override
 	public BaubleType getBaubleType(ItemStack arg0) {
 		return BaubleType.RING;
-	}
-
-
-	public void onTossItem(ItemTossEvent event) {
-		InventoryBaubles inv = PlayerHandler.getPlayerBaubles(event.player);
-		for(int i = 0; i < inv.getSizeInventory(); i++) {
-			ItemStack stack = inv.getStackInSlot(i);
-			if(stack != null && stack.getItem() instanceof ItemMagnetRing) {
-				setCooldown(stack, 100);
-				BotaniaAPI.internalHandler.sendBaubleUpdatePacket(event.player, i);
-			}
-		}
 	}
 
 	public class EventHandler{

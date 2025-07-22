@@ -105,6 +105,16 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 		return false;
 	}
 
+	public void onLeftClick(PlayerInteractEvent event) {
+		if(event.action == Action.LEFT_CLICK_BLOCK) {
+			ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
+			if(stack != null && stack.getItem() == this && canExchange(stack) && ManaItemHandler.requestManaExactForTool(stack, event.entityPlayer, COST, false)) {
+				if(exchange(event.world, event.entityPlayer, event.x, event.y, event.z, stack, getBlock(stack), getBlockMeta(stack)))
+					ManaItemHandler.requestManaExactForTool(stack, event.entityPlayer, COST, true);
+			}
+		}
+	}
+
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int something, boolean somethingelse) {
 		if(!canExchange(stack) || !(entity instanceof EntityPlayer))
@@ -414,16 +424,6 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 
 		}
 		return null;
-	}
-
-	public void onLeftClick(PlayerInteractEvent event) {
-		if(event.action == Action.LEFT_CLICK_BLOCK) {
-			ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
-			if(stack != null && stack.getItem() == ItemExchangeRod.this && canExchange(stack) && ManaItemHandler.requestManaExactForTool(stack, event.entityPlayer, COST, false)) {
-				if(exchange(event.world, event.entityPlayer, event.x, event.y, event.z, stack, getBlock(stack), getBlockMeta(stack)))
-					ManaItemHandler.requestManaExactForTool(stack, event.entityPlayer, COST, true);
-			}
-		}
 	}
 
 	public class EventHandler{

@@ -32,16 +32,10 @@ public class ItemElementiumAxe extends ItemManasteelAxe {
 	// Thanks to SpitefulFox for the drop rates
 	// https://github.com/SpitefulFox/ForbiddenMagic/blob/master/src/com/spiteful/forbidden/FMEventHandler.java
 
-	private void addDrop(LivingDropsEvent event, ItemStack drop) {
-		EntityItem entityitem = new EntityItem(event.entityLiving.worldObj, event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, drop);
-		entityitem.delayBeforeCanPickup = 10;
-		event.drops.add(entityitem);
-	}
-
 	public void onEntityDrops(LivingDropsEvent event) {
 		if(event.recentlyHit && event.source.getEntity() != null && event.source.getEntity() instanceof EntityPlayer) {
 			ItemStack weapon = ((EntityPlayer) event.source.getEntity()).getCurrentEquippedItem();
-			if(weapon != null && weapon.getItem() == ItemElementiumAxe.this) {
+			if(weapon != null && weapon.getItem() == this) {
 				Random rand = event.entity.worldObj.rand;
 				int looting = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, weapon);
 
@@ -59,6 +53,12 @@ public class ItemElementiumAxe extends ItemManasteelAxe {
 					addDrop(event, new ItemStack(ModItems.gaiaHead));
 			}
 		}
+	}
+
+	private void addDrop(LivingDropsEvent event, ItemStack drop) {
+		EntityItem entityitem = new EntityItem(event.entityLiving.worldObj, event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, drop);
+		entityitem.delayBeforeCanPickup = 10;
+		event.drops.add(entityitem);
 	}
 
 	public class EventHandler{

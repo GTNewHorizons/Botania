@@ -27,12 +27,6 @@ public class BlockBifrostPane extends BlockModPane {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister reg) {
-		// NO-OP
-	}
-
 	@SideOnly(Side.CLIENT)
 	public void loadTextures(TextureStitchEvent.Pre event) {
 		if(event.map.getTextureType() == 0) {
@@ -40,6 +34,12 @@ public class BlockBifrostPane extends BlockModPane {
 			if(event.map.setTextureEntry("botania:bifrostPermPane", icon))
 				iconTop = icon;
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister reg) {
+		// NO-OP
 	}
 
 	public class EventHandler {

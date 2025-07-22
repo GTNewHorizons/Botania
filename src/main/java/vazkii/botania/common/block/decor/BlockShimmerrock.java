@@ -39,6 +39,15 @@ public class BlockShimmerrock extends BlockMod implements ILexiconable {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void loadTextures(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerrock");
+			if(event.map.setTextureEntry("botania:shimmerrock", icon))
+				blockIcon = icon;
+		}
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
@@ -48,15 +57,6 @@ public class BlockShimmerrock extends BlockMod implements ILexiconable {
 	@Override
 	public LexiconEntry getEntry(World world, int x, int y, int z, EntityPlayer player, ItemStack lexicon) {
 		return LexiconData.rainbowRod;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void loadTextures(TextureStitchEvent.Pre event) {
-		if(event.map.getTextureType() == 0) {
-			TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerrock");
-			if(event.map.setTextureEntry("botania:shimmerrock", icon))
-				blockIcon = icon;
-		}
 	}
 
 	public class EventHandler {

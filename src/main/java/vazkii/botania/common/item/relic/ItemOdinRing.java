@@ -61,6 +61,14 @@ public class ItemOdinRing extends ItemRelicBauble {
 			player.extinguish();
 	}
 
+	public void onPlayerAttacked(LivingAttackEvent event) {
+		if(event.entityLiving instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.entityLiving;
+			if(getOdinRing(player) != null && damageNegations.contains(event.source.damageType))
+				event.setCanceled(true);
+		}
+	}
+
 	@Override
 	public BaubleType getBaubleType(ItemStack arg0) {
 		return BaubleType.RING;
@@ -94,14 +102,6 @@ public class ItemOdinRing extends ItemRelicBauble {
 
 	void fillModifiers(Multimap<String, AttributeModifier> attributes, ItemStack stack) {
 		attributes.put(SharedMonsterAttributes.maxHealth.getAttributeUnlocalizedName(), new AttributeModifier(getBaubleUUID(stack), "Bauble modifier", 20, 0));
-	}
-
-	public void onPlayerAttacked(LivingAttackEvent event) {
-		if(event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			if(getOdinRing(player) != null && damageNegations.contains(event.source.damageType))
-				event.setCanceled(true);
-		}
 	}
 
 	public class EventHandler{

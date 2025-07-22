@@ -49,40 +49,11 @@ public class ItemDivaCharm extends ItemBauble implements IManaUsingItem, IBauble
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
-	@Override
-	public BaubleType getBaubleType(ItemStack arg0) {
-		return BaubleType.AMULET;
-	}
-
-	@Override
-	public boolean usesMana(ItemStack stack) {
-		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
-		if(type == RenderType.HEAD) {
-			float f = itemIcon.getMinU();
-			float f1 = itemIcon.getMaxU();
-			float f2 = itemIcon.getMinV();
-			float f3 = itemIcon.getMaxV();
-			boolean armor = event.entityPlayer.getCurrentArmor(3) != null;
-			Helper.translateToHeadLevel(event.entityPlayer);
-			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
-			GL11.glRotatef(90F, 0F, 1F, 0F);
-			GL11.glRotatef(180F, 1F, 0F, 0F);
-			GL11.glTranslatef(-0.4F, 0.1F, armor ? -0.35F : -0.3F);
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
-			ItemRenderer.renderItemIn2D(Tessellator.instance, f1, f2, f, f3, itemIcon.getIconWidth(), itemIcon.getIconHeight(), 1F / 16F);
-		}
-	}
-
 	public void onEntityDamaged(LivingHurtEvent event) {
 		if(event.source.getEntity() instanceof EntityPlayer && event.entityLiving instanceof EntityLiving && !event.entityLiving.worldObj.isRemote && Math.random() < 0.6F) {
 			EntityPlayer player = (EntityPlayer) event.source.getEntity();
 			ItemStack amulet = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
-			if(amulet != null && amulet.getItem() == ItemDivaCharm.this) {
+			if(amulet != null && amulet.getItem() == this) {
 				final int cost = 250;
 				if(ManaItemHandler.requestManaExact(amulet, player, cost, false)) {
 					final int range = 20;
@@ -109,6 +80,35 @@ public class ItemDivaCharm extends ItemBauble implements IManaUsingItem, IBauble
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	public BaubleType getBaubleType(ItemStack arg0) {
+		return BaubleType.AMULET;
+	}
+
+	@Override
+	public boolean usesMana(ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
+		if(type == RenderType.HEAD) {
+			float f = itemIcon.getMinU();
+			float f1 = itemIcon.getMaxU();
+			float f2 = itemIcon.getMinV();
+			float f3 = itemIcon.getMaxV();
+			boolean armor = event.entityPlayer.getCurrentArmor(3) != null;
+			Helper.translateToHeadLevel(event.entityPlayer);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
+			GL11.glRotatef(90F, 0F, 1F, 0F);
+			GL11.glRotatef(180F, 1F, 0F, 0F);
+			GL11.glTranslatef(-0.4F, 0.1F, armor ? -0.35F : -0.3F);
+			GL11.glScalef(0.5F, 0.5F, 0.5F);
+			ItemRenderer.renderItemIn2D(Tessellator.instance, f1, f2, f, f3, itemIcon.getIconWidth(), itemIcon.getIconHeight(), 1F / 16F);
 		}
 	}
 

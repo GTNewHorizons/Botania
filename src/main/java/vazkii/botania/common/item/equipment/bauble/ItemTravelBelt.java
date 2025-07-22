@@ -70,50 +70,6 @@ public class ItemTravelBelt extends ItemBauble implements IBaubleRender, IManaUs
 		return BaubleType.BELT;
 	}
 
-	public float getSpeed(ItemStack stack) {
-		return speed;
-	}
-
-	public void onMovedTick(ItemStack stack, EntityPlayer player) {
-		// NO-OP
-	}
-
-	public void onNotMovingTick(ItemStack stack, EntityPlayer player) {
-		// NO-OP
-	}
-
-	private boolean shouldPlayerHaveStepup(EntityPlayer player) {
-		ItemStack armor = PlayerHandler.getPlayerBaubles(player).getStackInSlot(3);
-		return armor != null && armor.getItem() instanceof ItemTravelBelt && ManaItemHandler.requestManaExact(armor, player, COST, false);
-	}
-
-	public static String playerStr(EntityPlayer player) {
-		return player.getGameProfile().getName() + ":" + player.worldObj.isRemote;
-	}
-
-	@SideOnly(Side.CLIENT)
-	ResourceLocation getRenderTexture() {
-		return texture;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
-		if(type == RenderType.BODY) {
-			Minecraft.getMinecraft().renderEngine.bindTexture(getRenderTexture());
-			Helper.rotateIfSneaking(event.entityPlayer);
-			GL11.glTranslatef(0F, 0.2F, 0F);
-
-			float s = 1.05F / 16F;
-			GL11.glScalef(s, s, s);
-			if(model == null)
-				model = new ModelBiped();
-
-			model.bipedBody.render(1F);
-		}
-	}
-
-
 	public void updatePlayerStepStatus(LivingUpdateEvent event) {
 		if(event.entityLiving instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) event.entityLiving;
@@ -148,6 +104,17 @@ public class ItemTravelBelt extends ItemBauble implements IBaubleRender, IManaUs
 		}
 	}
 
+	public float getSpeed(ItemStack stack) {
+		return speed;
+	}
+
+	public void onMovedTick(ItemStack stack, EntityPlayer player) {
+		// NO-OP
+	}
+
+	public void onNotMovingTick(ItemStack stack, EntityPlayer player) {
+		// NO-OP
+	}
 
 	public void onPlayerJump(LivingJumpEvent event) {
 		if(event.entityLiving instanceof EntityPlayer) {
@@ -161,11 +128,41 @@ public class ItemTravelBelt extends ItemBauble implements IBaubleRender, IManaUs
 		}
 	}
 
+	private boolean shouldPlayerHaveStepup(EntityPlayer player) {
+		ItemStack armor = PlayerHandler.getPlayerBaubles(player).getStackInSlot(3);
+		return armor != null && armor.getItem() instanceof ItemTravelBelt && ManaItemHandler.requestManaExact(armor, player, COST, false);
+	}
 
 	public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
 		String username = event.player.getGameProfile().getName();
 		playersWithStepup.remove(username + ":false");
 		playersWithStepup.remove(username + ":true");
+	}
+
+	public static String playerStr(EntityPlayer player) {
+		return player.getGameProfile().getName() + ":" + player.worldObj.isRemote;
+	}
+
+	@SideOnly(Side.CLIENT)
+	ResourceLocation getRenderTexture() {
+		return texture;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
+		if(type == RenderType.BODY) {
+			Minecraft.getMinecraft().renderEngine.bindTexture(getRenderTexture());
+			Helper.rotateIfSneaking(event.entityPlayer);
+			GL11.glTranslatef(0F, 0.2F, 0F);
+
+			float s = 1.05F / 16F;
+			GL11.glScalef(s, s, s);
+			if(model == null)
+				model = new ModelBiped();
+
+			model.bipedBody.render(1F);
+		}
 	}
 
 	@Override

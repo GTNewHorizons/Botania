@@ -31,6 +31,14 @@ public class ItemGlassPick extends ItemManasteelPick {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
+	public void onBlockDrops(HarvestDropsEvent event) {
+		if (event.harvester != null && event.block != null && event.drops.isEmpty() && event.harvester.getCurrentEquippedItem() != null
+			&& event.harvester.getCurrentEquippedItem().getItem() == this && event.block.getMaterial() == Material.glass
+			&& event.block.canSilkHarvest(event.world, event.harvester, event.x, event.y, event.z, event.blockMetadata)) {
+			event.drops.add(new ItemStack(event.block, 1, event.blockMetadata));
+		}
+	}
+
 	@Override
 	public int getManaPerDmg() {
 		return MANA_PER_DAMAGE;
@@ -44,14 +52,6 @@ public class ItemGlassPick extends ItemManasteelPick {
 	@Override
 	public int getSortingPriority(ItemStack stack) {
 		return 0;
-	}
-
-	public void onBlockDrops(HarvestDropsEvent event) {
-		if (event.harvester != null && event.block != null && event.drops.isEmpty() && event.harvester.getCurrentEquippedItem() != null
-				&& event.harvester.getCurrentEquippedItem().getItem() == ItemGlassPick.this && event.block.getMaterial() == Material.glass
-				&& event.block.canSilkHarvest(event.world, event.harvester, event.x, event.y, event.z, event.blockMetadata)) {
-			event.drops.add(new ItemStack(event.block, 1, event.blockMetadata));
-		}
 	}
 
 	public class EventHandler{

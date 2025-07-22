@@ -141,6 +141,14 @@ public class BlockPistonRelay extends BlockMod implements IWandable, ILexiconabl
 		return true;
 	}
 
+	public void onWorldLoad(WorldEvent.Load event) {
+		WorldData.get(event.world);
+	}
+
+	public void onWorldUnload(WorldEvent.Unload event) {
+		WorldData.get(event.world).markDirty();
+	}
+
 	public static class WorldData extends WorldSavedData {
 
 		private static final String ID = "PistonRelayPairs";
@@ -183,25 +191,6 @@ public class BlockPistonRelay extends BlockMod implements IWandable, ILexiconabl
 			}
 			return data;
 		}
-	}
-
-	public void save(World world) {
-		WorldData data = WorldData.get(world);
-		if(data != null)
-			data.markDirty();
-	}
-
-	@Override
-	public LexiconEntry getEntry(World world, int x, int y, int z, EntityPlayer player, ItemStack lexicon) {
-		return LexiconData.pistonRelay;
-	}
-
-	public void onWorldLoad(WorldEvent.Load event) {
-		WorldData.get(event.world);
-	}
-
-	public void onWorldUnload(WorldEvent.Unload event) {
-		WorldData.get(event.world).markDirty();
 	}
 
 	public void tickEnd(TickEvent event) {
@@ -275,6 +264,17 @@ public class BlockPistonRelay extends BlockMod implements IWandable, ILexiconabl
 				checkedCoords.remove(s);
 		}
 		removeThese.clear();
+	}
+
+	public void save(World world) {
+		WorldData data = WorldData.get(world);
+		if(data != null)
+			data.markDirty();
+	}
+
+	@Override
+	public LexiconEntry getEntry(World world, int x, int y, int z, EntityPlayer player, ItemStack lexicon) {
+		return LexiconData.pistonRelay;
 	}
 
 	public class EventHandler {

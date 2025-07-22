@@ -28,6 +28,10 @@ public class KeyHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void key(InputEvent.KeyInputEvent event){
+        checkAndPerformKeyActions();
+    }
+
+    private void checkAndPerformKeyActions(){
         if (keyToggleRingOfLoki.isPressed()){
             toggleRingLoki();
         }

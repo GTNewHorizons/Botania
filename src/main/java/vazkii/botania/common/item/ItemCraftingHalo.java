@@ -301,6 +301,17 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 			ItemNBTHelper.setCompound(stack, TAG_STORED_RECIPE_PREFIX + pos, getLastCraftingCompound(stack, false));
 	}
 
+	public void onItemCrafted(ItemCraftedEvent event) {
+		if(!(event.craftMatrix instanceof InventoryCraftingHalo))
+			return;
+
+		for(int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
+			ItemStack stack = event.player.inventory.getStackInSlot(i);
+			if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
+				saveRecipeToStack(event, stack);
+		}
+	}
+
 	private void saveRecipeToStack(ItemCraftedEvent event, ItemStack stack) {
 		NBTTagCompound cmp = new NBTTagCompound();
 		NBTTagCompound cmp1 = new NBTTagCompound();
@@ -378,6 +389,14 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 
 	public static void setRotationBase(ItemStack stack, float rotation) {
 		ItemNBTHelper.setFloat(stack, TAG_ROTATION_BASE, rotation);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void onRenderWorldLast(RenderWorldLastEvent event) {
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		ItemStack stack = player.getCurrentEquippedItem();
+		if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
+			render(stack, player, event.partialTicks);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -583,25 +602,6 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 	@Override
 	public Achievement getAchievementOnCraft(ItemStack stack, EntityPlayer player, IInventory matrix) {
 		return ModAchievements.craftingHaloCraft;
-	}
-
-	public void onItemCrafted(ItemCraftedEvent event) {
-		if(!(event.craftMatrix instanceof InventoryCraftingHalo))
-			return;
-
-		for(int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
-			ItemStack stack = event.player.inventory.getStackInSlot(i);
-			if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
-				saveRecipeToStack(event, stack);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void onRenderWorldLast(RenderWorldLastEvent event) {
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		ItemStack stack = player.getCurrentEquippedItem();
-		if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
-			render(stack, player, event.partialTicks);
 	}
 
 	public class EventHandler{
