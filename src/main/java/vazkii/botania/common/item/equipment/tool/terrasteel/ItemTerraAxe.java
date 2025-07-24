@@ -133,6 +133,24 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 		return false;
 	}
 
+	public void onTickEnd(TickEvent.WorldTickEvent event) {
+		// Block Swapping ticking should only occur on the server
+		if(event.world.isRemote)
+			return;
+
+		if(event.phase == Phase.END) {
+			int dim = event.world.provider.dimensionId;
+			if(blockSwappers.containsKey(dim)) {
+				Set<BlockSwapper> swappers = blockSwappers.get(dim);
+
+				// Iterate through all of our swappers, removing any
+				// which no longer need to tick.
+				// If a null sneaks in or the swapper is done, remove it
+				swappers.removeIf(next -> next == null || !next.tick());
+			}
+		}
+	}
+
 	/**
 	 * Adds a new block swapper to the provided world as the provided player.
 	 * Block swappers are only added on the server, and a marker instance
@@ -386,25 +404,11 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 		}
 	}
 
-	public static class EventHandler{
+	public class EventHandler{
 
 		@SubscribeEvent
-		public void onTickEnd(TickEvent.WorldTickEvent event) {
-			// Block Swapping ticking should only occur on the server
-			if(event.world.isRemote)
-				return;
-
-			if(event.phase == Phase.END) {
-				int dim = event.world.provider.dimensionId;
-				if(blockSwappers.containsKey(dim)) {
-					Set<BlockSwapper> swappers = blockSwappers.get(dim);
-
-					// Iterate through all of our swappers, removing any
-					// which no longer need to tick.
-                    // If a null sneaks in or the swapper is done, remove it
-                    swappers.removeIf(next -> next == null || !next.tick());
-				}
-			}
+		public void onTickEndWrapper(TickEvent.WorldTickEvent event) {
+			ItemTerraAxe.this.onTickEnd(event);
 		}
 	}
 }

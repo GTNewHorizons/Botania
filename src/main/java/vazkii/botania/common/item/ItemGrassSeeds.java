@@ -170,6 +170,21 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 		return true;
 	}
 
+	public void onTickEnd(TickEvent.WorldTickEvent event) {
+		// Block swapper updates should only occur on the server
+		if(event.world.isRemote)
+			return;
+
+		if(event.phase == Phase.END) {
+			int dim = event.world.provider.dimensionId;
+			if(blockSwappers.containsKey(dim)) {
+				Set<BlockSwapper> swappers = blockSwappers.get(dim);
+
+				swappers.removeIf(next -> next == null || !next.tick());
+			}
+		}
+	}
+
 	/**
 	 * Adds a grass seed block swapper to the world at the provided positiona
 	 * and with the provided meta (which designates the type of the grass
@@ -352,21 +367,10 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 		return ISLAND_TYPES[Math.min(stack.getItemDamage(), ISLAND_TYPES.length - 1)];
 	}
 
-	public static class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
-		public void onTickEnd(TickEvent.WorldTickEvent event) {
-			// Block swapper updates should only occur on the server
-			if(event.world.isRemote)
-				return;
-
-			if(event.phase == Phase.END) {
-				int dim = event.world.provider.dimensionId;
-				if(blockSwappers.containsKey(dim)) {
-					Set<BlockSwapper> swappers = blockSwappers.get(dim);
-
-                    swappers.removeIf(next -> next == null || !next.tick());
-				}
-			}
+		public void onTickEndWrapper(TickEvent.WorldTickEvent event) {
+			ItemGrassSeeds.this.onTickEnd(event);
 		}
 
 	}

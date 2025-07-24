@@ -62,6 +62,33 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		boolean rightEvent = event.action == Action.RIGHT_CLICK_AIR;
+		ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
+		boolean correctStack = stack != null && stack.getItem() == Items.glass_bottle;
+		boolean ender = event.world.provider.dimensionId == 1;
+
+		if(rightEvent && correctStack && ender) {
+			MovingObjectPosition pos = ToolCommons.raytraceFromEntity(event.world, event.entityPlayer, false, 5F);
+
+			if(pos == null) {
+				ItemStack stack1 = new ItemStack(this, 1, 15);
+				event.entityPlayer.addStat(ModAchievements.enderAirMake, 1);
+
+				if(!event.entityPlayer.inventory.addItemStackToInventory(stack1))
+					event.entityPlayer.dropPlayerItemWithRandomChoice(stack1, true);
+
+				stack.stackSize--;
+				if(stack.stackSize == 0)
+					event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
+
+				if(event.world.isRemote)
+					event.entityPlayer.swingItem();
+				else event.world.playSoundAtEntity(event.entityPlayer, "random.pop", 0.5F, 1F);
+			}
+		}
+	}
+
 	@Override
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
 		if(par1ItemStack.getItemDamage() == 4 || par1ItemStack.getItemDamage() == 14)
@@ -162,31 +189,8 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 
 	public class EventHandler {
 		@SubscribeEvent
-		public void onPlayerInteract(PlayerInteractEvent event) {
-			boolean rightEvent = event.action == Action.RIGHT_CLICK_AIR;
-			ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
-			boolean correctStack = stack != null && stack.getItem() == Items.glass_bottle;
-			boolean ender = event.world.provider.dimensionId == 1;
-
-			if(rightEvent && correctStack && ender) {
-				MovingObjectPosition pos = ToolCommons.raytraceFromEntity(event.world, event.entityPlayer, false, 5F);
-
-				if(pos == null) {
-					ItemStack stack1 = new ItemStack(ItemManaResource.this, 1, 15);
-					event.entityPlayer.addStat(ModAchievements.enderAirMake, 1);
-
-					if(!event.entityPlayer.inventory.addItemStackToInventory(stack1))
-						event.entityPlayer.dropPlayerItemWithRandomChoice(stack1, true);
-
-					stack.stackSize--;
-					if(stack.stackSize == 0)
-						event.entityPlayer.inventory.setInventorySlotContents(event.entityPlayer.inventory.currentItem, null);
-
-					if(event.world.isRemote)
-						event.entityPlayer.swingItem();
-					else event.world.playSoundAtEntity(event.entityPlayer, "random.pop", 0.5F, 1F);
-				}
-			}
+		public void onPlayerInteractWrapper(PlayerInteractEvent event) {
+			ItemManaResource.this.onPlayerInteract(event);
 		}
 	}
 

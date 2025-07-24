@@ -90,6 +90,7 @@ public class BlockAltar extends BlockModContainer<TileAltar> implements ILexicon
 	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
 		if(par5Entity instanceof EntityItem) {
 			TileAltar tile = (TileAltar) par1World.getTileEntity(par2, par3, par4);
+			if (tile == null) return;
 			if(tile.collideEntityItem((EntityItem) par5Entity))
 				VanillaPacketDispatcher.dispatchTEToNearbyPlayers(tile);
 		}
@@ -98,6 +99,7 @@ public class BlockAltar extends BlockModContainer<TileAltar> implements ILexicon
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z) {
 		TileAltar tile = (TileAltar) world.getTileEntity(x, y, z);
+		if (tile == null) return 0;
 		return tile.hasLava ? 15 : 0;
 	}
 
@@ -105,6 +107,7 @@ public class BlockAltar extends BlockModContainer<TileAltar> implements ILexicon
 	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
 		ItemStack stack = par5EntityPlayer.getCurrentEquippedItem();
 		TileAltar tile = (TileAltar) par1World.getTileEntity(par2, par3, par4);
+		if (tile == null) return false;
 
 		if(par5EntityPlayer.isSneaking()) {
 			for(int i = tile.getSizeInventory() - 1; i >= 0; i--) {
@@ -168,8 +171,7 @@ public class BlockAltar extends BlockModContainer<TileAltar> implements ILexicon
 	public void fillWithRain(World world, int x, int y, int z) {
 		if(world.rand.nextInt(20) == 1) {
 			TileEntity tile = world.getTileEntity(x, y, z);
-			if(tile instanceof TileAltar) {
-				TileAltar altar = (TileAltar) tile;
+			if(tile instanceof TileAltar altar) {
 				if(!altar.hasLava && !altar.hasWater)
 					altar.setWater(true);
 				world.func_147453_f(x, y, z, this);
@@ -280,6 +282,7 @@ public class BlockAltar extends BlockModContainer<TileAltar> implements ILexicon
 	@Override
 	public int getComparatorInputOverride(World par1World, int par2, int par3, int par4, int par5) {
 		TileAltar altar = (TileAltar) par1World.getTileEntity(par2, par3, par4);
+		if (altar == null) return 0;
 		return altar.hasWater ? 15 : 0;
 	}
 

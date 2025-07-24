@@ -25,15 +25,19 @@ public class PotionSoulCross extends PotionMod {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
+	public void onEntityKill(LivingDeathEvent event) {
+		Entity e = event.source.getEntity();
+		if(e != null && e instanceof EntityLivingBase) {
+			EntityLivingBase living = (EntityLivingBase) e;
+			if(hasEffect(living))
+				living.heal(event.entityLiving.getMaxHealth() / 20);
+		}
+	}
+
 	public class EventHandler {
 		@SubscribeEvent
-		public void onEntityKill(LivingDeathEvent event) {
-			Entity e = event.source.getEntity();
-			if(e != null && e instanceof EntityLivingBase) {
-				EntityLivingBase living = (EntityLivingBase) e;
-				if(hasEffect(living))
-					living.heal(event.entityLiving.getMaxHealth() / 20);
-			}
+		public void onEntityKillWrapper(LivingDeathEvent event) {
+			PotionSoulCross.this.onEntityKill(event);
 		}
 	}
 

@@ -38,6 +38,15 @@ public class BlockShimmerwoodPlanks  extends BlockMod implements ILexiconable {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void loadTextures(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerwoodPlanks");
+			if(event.map.setTextureEntry("botania:shimmerwoodPlanks", icon))
+				blockIcon = icon;
+		}
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
@@ -52,12 +61,8 @@ public class BlockShimmerwoodPlanks  extends BlockMod implements ILexiconable {
 	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
-		public void loadTextures(TextureStitchEvent.Pre event) {
-			if(event.map.getTextureType() == 0) {
-				TextureAtlasSprite icon = new InterpolatedIcon("botania:shimmerwoodPlanks");
-				if(event.map.setTextureEntry("botania:shimmerwoodPlanks", icon))
-					blockIcon = icon;
-			}
+		public void loadTexturesWrapper(TextureStitchEvent.Pre event) {
+			BlockShimmerwoodPlanks.this.loadTextures(event);
 		}
 	}
 }
