@@ -13,8 +13,13 @@ package vazkii.botania.common.block.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -22,25 +27,30 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.internal.VanillaPacketDispatcher;
 import vazkii.botania.api.lexicon.multiblock.Multiblock;
 import vazkii.botania.api.lexicon.multiblock.MultiblockSet;
 import vazkii.botania.api.lexicon.multiblock.component.FlowerComponent;
+import vazkii.botania.api.lexicon.multiblock.component.MultiblockComponent;
 import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
 import vazkii.botania.api.mana.spark.ISparkEntity;
 import vazkii.botania.api.mana.spark.SparkHelper;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.common.Botania;
+import vazkii.botania.common.block.BlockModFlower;
 import vazkii.botania.common.block.ModBlocks;
+import vazkii.botania.common.item.block.ItemBlockMod;
 
 public class TileEnchanter extends TileMod implements ISparkAttachable {
 
@@ -81,20 +91,68 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 		{ -1, 0, -1 }, { 1, 0, -1 }, { -1, 0, 1 }, { 1, 0, 1 }
 	};
 
+	//Note: It currently doesn't show up when looking at a Lapis Block in NEI and I have no idea how to fix it.
 	public static MultiblockSet makeMultiblockSet() {
 		Multiblock mb = new Multiblock();
 
 		for(int[] o : OBSIDIAN_LOCATIONS)
 			mb.addComponent(o[0], o[1] + 1, o[2], Blocks.obsidian, 0);
+
+		//Flowers don't seem to properly work in StructureLib (since they need a block below them)
+		//This solution also allows the flowers to cycle through each other
+		//Not sure if there's a better solution for this, but hey it works
+		Block physicsDefyingFlower = new StructureLibFlower();
+
+		List<MultiblockComponent> extraDisplayList = new ArrayList<>();
+
 		for(int[] p : PYLON_LOCATIONS[0]) {
 			mb.addComponent(p[0], p[1] + 1, p[2], ModBlocks.pylon, 0);
-			mb.addComponent(new FlowerComponent(new ChunkCoordinates(p[0], p[1], p[2]), ModBlocks.flower));
+
+			extraDisplayList.add(new MultiblockComponent(
+					new ChunkCoordinates(p[0], p[1], p[2]),
+					physicsDefyingFlower,
+					0
+			));
+			extraDisplayList.add(new MultiblockComponent(
+					new ChunkCoordinates(p[0], p[1] - 1, p[2]),
+					Blocks.dirt,
+					0
+			));
 		}
-		for(int[] f : FLOWER_LOCATIONS)
-			mb.addComponent(new FlowerComponent(new ChunkCoordinates(f[0], f[1] + 1, f[2]), ModBlocks.flower));
+		for(int[] f : FLOWER_LOCATIONS) {
+			extraDisplayList.add(new MultiblockComponent(
+					new ChunkCoordinates(f[0], f[1] + 1, f[2]),
+					physicsDefyingFlower,
+					0
+			));
+			extraDisplayList.add(new MultiblockComponent(
+					new ChunkCoordinates(f[0], f[1], f[2]),
+					Blocks.dirt,
+					0
+			));
+		}
 
-		mb.addComponent(0, 1, 0, Blocks.lapis_block, 0);
 
+		mb.addComponent(0, 1, 0, ModBlocks.enchanter, 0);
+		mb.registerStructure(
+				TileEnchanter.class,
+				ModBlocks.enchanter,
+				extraDisplayList.toArray(new MultiblockComponent[0])
+		);
+
+		//Add the actual flowers
+		for(int[] p : PYLON_LOCATIONS[0]) {
+			mb.addComponent(new FlowerComponent(
+					new ChunkCoordinates(p[0], p[1], p[2]),
+					ModBlocks.flower
+			));
+		}
+		for(int[] f : FLOWER_LOCATIONS) {
+			mb.addComponent(new FlowerComponent(
+					new ChunkCoordinates(f[0], f[1] + 1, f[2]),
+					ModBlocks.flower
+			));
+		}
 		return mb.makeSet();
 	}
 
@@ -128,7 +186,7 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 		if(getBlockMetadata() < PYLON_LOCATIONS.length)
 			for(int[] pylon : PYLON_LOCATIONS[getBlockMetadata()]) {
 				TileEntity tile = worldObj.getTileEntity(xCoord + pylon[0], yCoord + pylon[1], zCoord + pylon[2]);
-				if(tile != null && tile instanceof TilePylon)
+				if(tile instanceof TilePylon)
 					((TilePylon) tile).activated = false;
 			}
 
@@ -426,6 +484,56 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 		public EnchantmentData(int enchant, int level) {
 			this.enchant = enchant;
 			this.level = level;
+		}
+	}
+
+	private static class StructureLibFlower extends BlockModFlower  {
+
+		public StructureLibFlower() {
+			super();
+			//TODO
+			//setBlockTextureName("flower");
+		}
+
+		@Override
+		public Block setBlockName(String par1Str) {
+			GameRegistry.registerBlock(this, ItemBlockMod.class, "flower_structurelib");
+			return this;
+		}
+
+		@Override
+		public IIcon getIcon(int par1, int par2) {
+			return super.getIcon(par1, (int) (BotaniaAPI.internalHandler.getWorldElapsedTicks() / 20) % 16);
+		}
+
+		@Override
+		public String getUnlocalizedName() {
+			return "tile.flower_structurelib";
+		}
+
+		@Override
+		public void registerBlockIcons(IIconRegister par1IconRegister) {
+			//has to be empty
+		}
+
+		@Override
+		public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
+			//has to be empty
+		}
+
+		@Override
+		public boolean canPlaceBlockAt(World worldIn, int x, int y, int z) {
+			return true;
+		}
+
+		@Override
+		public boolean canBlockStay(World worldIn, int x, int y, int z) {
+			return true;
+		}
+
+		@Override
+		protected boolean canPlaceBlockOn(Block ground) {
+			return true;
 		}
 	}
 

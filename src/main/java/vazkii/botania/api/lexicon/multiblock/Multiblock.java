@@ -11,13 +11,14 @@
 package vazkii.botania.api.lexicon.multiblock;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import vazkii.botania.api.lexicon.multiblock.compat.MultiblockCompatRegistry;
 import vazkii.botania.api.lexicon.multiblock.component.MultiblockComponent;
 
 /**
@@ -32,17 +33,21 @@ public class Multiblock {
 
 	public int minX, minY, minZ, maxX, maxY, maxZ, offX, offY, offZ;
 
-	public HashMap<List<Integer>, MultiblockComponent> locationCache = new HashMap<>();
+	public HashMap<Integer, MultiblockComponent> locationCache = new HashMap<>();
 
 	/**
 	 * Adds a multiblock component to this multiblock. The component's x y z
 	 * coords should be pivoted to the center of the structure.
 	 */
 	public void addComponent(MultiblockComponent component) {
-		if(getComponentForLocation(component.relPos.posX, component.relPos.posY, component.relPos.posZ) != null)
-			throw new IllegalArgumentException("Location in multiblock already occupied");
+		ChunkCoordinates pos = component.relPos;
+		if(getComponentForLocation(pos.posX, pos.posY, pos.posZ) != null) {
+			MultiblockComponent comp = getComponentForLocation(pos.posX, pos.posY, pos.posZ);
+			throw new IllegalArgumentException(
+					"Location in multiblock {x=" + pos.posX + " y=" + pos.posY + " z=" + pos.posZ + "} already occupied by block " + comp.getBlock().getLocalizedName());
+		}
 		components.add(component);
-		changeAxisForNewComponent(component.relPos.posX, component.relPos.posY, component.relPos.posZ);
+		changeAxisForNewComponent(pos.posX, pos.posY, pos.posZ);
 		calculateCostForNewComponent(component);
 		addComponentToLocationCache(component);
 	}
@@ -138,6 +143,21 @@ public class Multiblock {
 		return blocks;
 	}
 
+	public <T extends TileEntity> MultiblockSet makeSetRegisterStructure(
+			Class<T> controllerTileClass, Block controllerBlock, MultiblockComponent... extra
+	) {
+		registerStructure(controllerTileClass, controllerBlock, extra);
+		return makeSet();
+	}
+
+	public <T extends TileEntity> void registerStructure(
+			Class<T> controllerTileClass, Block controllerBlock, MultiblockComponent... extra
+	) {
+		MultiblockCompatRegistry.registerMultiblock(
+				this, controllerTileClass, controllerBlock, extra
+		);
+	}
+
 	/**
 	 * Makes a MultiblockSet from this Multiblock and its rotations using
 	 * createRotations().
@@ -172,17 +192,17 @@ public class Multiblock {
 	 */
 	private void addComponentToLocationCache(MultiblockComponent comp) {
 		ChunkCoordinates pos = comp.getRelativePosition();
-		locationCache.put(Arrays.asList(
-				pos.posX,
-				pos.posY,
-				pos.posZ
-				),  comp);
+		locationCache.put(hashCoordinates(pos.posX, pos.posY, pos.posZ), comp);
 	}
 
 	/**
 	 * Gets the component for a given location
 	 */
 	public MultiblockComponent getComponentForLocation(int x, int y, int z) {
-		return locationCache.get(Arrays.asList(x, y, z));
+		return locationCache.get(hashCoordinates(x, y, z));
+	}
+
+	private int hashCoordinates(int x, int y, int z) {
+		return (x * 31 + y) * 31 + z;
 	}
 }
