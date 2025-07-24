@@ -59,6 +59,19 @@ public class BlockEnchantedSoil extends BlockMod implements ILexiconable {
 		// NO-OP
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void loadTextures(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			TextureAtlasSprite icon = new InterpolatedIcon("botania:enchantedSoil0");
+			if(event.map.setTextureEntry("botania:enchantedSoil0", icon))
+				blockIcon = icon;
+
+			icon = new InterpolatedIcon("botania:enchantedSoil1");
+			if(event.map.setTextureEntry("botania:enchantedSoil1", icon))
+				iconSide = icon;
+		}
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
@@ -88,16 +101,8 @@ public class BlockEnchantedSoil extends BlockMod implements ILexiconable {
 	public class EventHandler{
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
-		public void loadTextures(TextureStitchEvent.Pre event) {
-			if(event.map.getTextureType() == 0) {
-				TextureAtlasSprite icon = new InterpolatedIcon("botania:enchantedSoil0");
-				if(event.map.setTextureEntry("botania:enchantedSoil0", icon))
-					blockIcon = icon;
-
-				icon = new InterpolatedIcon("botania:enchantedSoil1");
-				if(event.map.setTextureEntry("botania:enchantedSoil1", icon))
-					iconSide = icon;
-			}
+		public void loadTexturesWrapper(TextureStitchEvent.Pre event) {
+			BlockEnchantedSoil.this.loadTextures(event);
 		}
 	}
 }

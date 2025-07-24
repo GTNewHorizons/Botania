@@ -29,6 +29,11 @@ public class BlockRedStringInterceptor extends BlockRedString {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
+	public void onInteract(PlayerInteractEvent event) {
+		if(event.action == Action.RIGHT_CLICK_BLOCK)
+			TileRedStringInterceptor.onInteract(event.entityPlayer, event.world, event.x, event.y, event.z);
+	}
+
 	@Override
 	public boolean canProvidePower() {
 		return true;
@@ -54,12 +59,11 @@ public class BlockRedStringInterceptor extends BlockRedString {
 		return new TileRedStringInterceptor();
 	}
 
-	public static class EventHandler {
+	public class EventHandler {
 
 		@SubscribeEvent
-		public void onInteract(PlayerInteractEvent event) {
-			if(event.action == Action.RIGHT_CLICK_BLOCK)
-				TileRedStringInterceptor.onInteract(event.entityPlayer, event.world, event.x, event.y, event.z);
+		public void onInteractWrapper(PlayerInteractEvent event) {
+			BlockRedStringInterceptor.this.onInteract(event);
 		}
 	}
 }

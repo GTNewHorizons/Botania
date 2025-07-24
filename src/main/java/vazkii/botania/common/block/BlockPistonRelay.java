@@ -141,6 +141,14 @@ public class BlockPistonRelay extends BlockMod implements IWandable, ILexiconabl
 		return true;
 	}
 
+	public void onWorldLoad(WorldEvent.Load event) {
+		WorldData.get(event.world);
+	}
+
+	public void onWorldUnload(WorldEvent.Unload event) {
+		WorldData.get(event.world).markDirty();
+	}
+
 	public static class WorldData extends WorldSavedData {
 
 		private static final String ID = "PistonRelayPairs";
@@ -185,6 +193,79 @@ public class BlockPistonRelay extends BlockMod implements IWandable, ILexiconabl
 		}
 	}
 
+	public void tickEnd(TickEvent event) {
+		if(event.type == Type.SERVER && event.phase == Phase.END) {
+			List<String> coordsToCheckCopy = new ArrayList<>(coordsToCheck.keySet());
+			for(String s : coordsToCheckCopy) {
+				decrCoords(s);
+				if(checkedCoords.contains(s))
+					continue;
+
+				Block block = getBlockAt(s);
+				if(block == Blocks.piston_extension) {
+					int meta = getBlockMetaAt(s);
+					boolean sticky = (meta & 8) == 8;
+					ForgeDirection dir = ForgeDirection.getOrientation(meta & ~8);
+
+					MinecraftServer server = MinecraftServer.getServer();
+
+					if(server != null && getTimeInCoords(s) == 0) {
+						String newPos;
+
+						{
+							String[] tokens = s.split(":");
+							int worldId = Integer.parseInt(tokens[0]), x = Integer.parseInt(tokens[1]), y = Integer.parseInt(tokens[2]), z = Integer.parseInt(tokens[3]);
+							World world = server.worldServerForDimension(worldId);
+							if(world.isAirBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ))
+								world.setBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, ModBlocks.pistonRelay);
+							else if(!world.isRemote) {
+								ItemStack stack = new ItemStack(ModBlocks.pistonRelay);
+								world.spawnEntityInWorld(new EntityItem(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, stack));
+							}
+							checkedCoords.add(s);
+							newPos = getCoordsAsString(world.provider.dimensionId, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+						}
+
+						if(mappedPositions.containsKey(s)) {
+							String pos = mappedPositions.get(s);
+							String[] tokens = pos.split(":");
+							int worldId = Integer.parseInt(tokens[0]), x = Integer.parseInt(tokens[1]), y = Integer.parseInt(tokens[2]), z = Integer.parseInt(tokens[3]);
+							World world = server.worldServerForDimension(worldId);
+
+							Block srcBlock = world.getBlock(x, y, z);
+							int srcMeta = world.getBlockMetadata(x, y, z);
+							TileEntity tile = world.getTileEntity(x, y, z);
+							Material mat = srcBlock.getMaterial();
+
+							if(!sticky && tile == null && mat.getMaterialMobility() == 0 && srcBlock.getBlockHardness(world, x, y, z) != -1 && !srcBlock.isAir(world, x, y, z)) {
+								Material destMat = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ).getMaterial();
+								if(world.isAirBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) || destMat.isReplaceable()) {
+									world.setBlock(x, y, z, Blocks.air);
+									world.setBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, srcBlock, srcMeta, 1 | 2);
+									mappedPositions.put(s, getCoordsAsString(world.provider.dimensionId, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ));
+								}
+							}
+
+							pos = mappedPositions.get(s);
+							mappedPositions.remove(s);
+							mappedPositions.put(newPos, pos);
+							save(world);
+						}
+					}
+				}
+			}
+		}
+
+		// ConcurrentModificationException failsafe
+		ArrayList<String> remove = new ArrayList<>(removeThese);
+		for(String s : remove) {
+			coordsToCheck.remove(s);
+			if(checkedCoords.contains(s))
+				checkedCoords.remove(s);
+		}
+		removeThese.clear();
+	}
+
 	public void save(World world) {
 		WorldData data = WorldData.get(world);
 		if(data != null)
@@ -198,87 +279,18 @@ public class BlockPistonRelay extends BlockMod implements IWandable, ILexiconabl
 
 	public class EventHandler {
 		@SubscribeEvent
-		public void onWorldLoad(WorldEvent.Load event) {
-			WorldData.get(event.world);
+		public void onWorldLoadWrapper(WorldEvent.Load event) {
+			BlockPistonRelay.this.onWorldLoad(event);
 		}
 
 		@SubscribeEvent
-		public void onWorldUnload(WorldEvent.Unload event) {
-			WorldData.get(event.world).markDirty();
+		public void onWorldUnloadWrapper(WorldEvent.Unload event) {
+			BlockPistonRelay.this.onWorldUnload(event);
 		}
 
 		@SubscribeEvent
-		public void tickEnd(TickEvent event) {
-			if(event.type == Type.SERVER && event.phase == Phase.END) {
-				List<String> coordsToCheckCopy = new ArrayList<>(coordsToCheck.keySet());
-				for(String s : coordsToCheckCopy) {
-					decrCoords(s);
-					if(checkedCoords.contains(s))
-						continue;
-
-					Block block = getBlockAt(s);
-					if(block == Blocks.piston_extension) {
-						int meta = getBlockMetaAt(s);
-						boolean sticky = (meta & 8) == 8;
-						ForgeDirection dir = ForgeDirection.getOrientation(meta & ~8);
-
-						MinecraftServer server = MinecraftServer.getServer();
-
-						if(server != null && getTimeInCoords(s) == 0) {
-							String newPos;
-
-							{
-								String[] tokens = s.split(":");
-								int worldId = Integer.parseInt(tokens[0]), x = Integer.parseInt(tokens[1]), y = Integer.parseInt(tokens[2]), z = Integer.parseInt(tokens[3]);
-								World world = server.worldServerForDimension(worldId);
-								if(world.isAirBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ))
-									world.setBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, ModBlocks.pistonRelay);
-								else if(!world.isRemote) {
-									ItemStack stack = new ItemStack(ModBlocks.pistonRelay);
-									world.spawnEntityInWorld(new EntityItem(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, stack));
-								}
-								checkedCoords.add(s);
-								newPos = getCoordsAsString(world.provider.dimensionId, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-							}
-
-							if(mappedPositions.containsKey(s)) {
-								String pos = mappedPositions.get(s);
-								String[] tokens = pos.split(":");
-								int worldId = Integer.parseInt(tokens[0]), x = Integer.parseInt(tokens[1]), y = Integer.parseInt(tokens[2]), z = Integer.parseInt(tokens[3]);
-								World world = server.worldServerForDimension(worldId);
-
-								Block srcBlock = world.getBlock(x, y, z);
-								int srcMeta = world.getBlockMetadata(x, y, z);
-								TileEntity tile = world.getTileEntity(x, y, z);
-								Material mat = srcBlock.getMaterial();
-
-								if(!sticky && tile == null && mat.getMaterialMobility() == 0 && srcBlock.getBlockHardness(world, x, y, z) != -1 && !srcBlock.isAir(world, x, y, z)) {
-									Material destMat = world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ).getMaterial();
-									if(world.isAirBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) || destMat.isReplaceable()) {
-										world.setBlock(x, y, z, Blocks.air);
-										world.setBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, srcBlock, srcMeta, 1 | 2);
-										mappedPositions.put(s, getCoordsAsString(world.provider.dimensionId, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ));
-									}
-								}
-
-								pos = mappedPositions.get(s);
-								mappedPositions.remove(s);
-								mappedPositions.put(newPos, pos);
-								save(world);
-							}
-						}
-					}
-				}
-			}
-
-			// ConcurrentModificationException failsafe
-			ArrayList<String> remove = new ArrayList<>(removeThese);
-			for(String s : remove) {
-				coordsToCheck.remove(s);
-				if(checkedCoords.contains(s))
-					checkedCoords.remove(s);
-			}
-			removeThese.clear();
+		public void tickEndWrapper(TickEvent event) {
+			BlockPistonRelay.this.tickEnd(event);
 		}
 	}
 }

@@ -28,20 +28,24 @@ public class PotionEmptiness extends PotionMod {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
-	public class EventHandler {
-		@SubscribeEvent
-		public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
-			if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
-				double rangeSq = RANGE * RANGE;
-				for (Object o : event.world.playerEntities) {
-					EntityPlayer player = (EntityPlayer) o;
-					if (player.getDistanceSq(event.x, event.y, event.z) <= rangeSq
+	public void onSpawn(LivingSpawnEvent.CheckSpawn event) {
+		if (event.getResult() != Result.ALLOW && event.entityLiving instanceof IMob) {
+			double rangeSq = RANGE * RANGE;
+			for (Object o : event.world.playerEntities) {
+				EntityPlayer player = (EntityPlayer) o;
+				if (player.getDistanceSq(event.x, event.y, event.z) <= rangeSq
 						&& hasEffect(player)) {
-						event.setResult(Result.DENY);
-						return;
-					}
+					event.setResult(Result.DENY);
+					return;
 				}
 			}
+		}
+	}
+
+	public class EventHandler {
+		@SubscribeEvent
+		public void onSpawnWrapper(LivingSpawnEvent.CheckSpawn event) {
+			PotionEmptiness.this.onSpawn(event);
 		}
 	}
 }

@@ -82,6 +82,15 @@ public class BlockBifrost extends BlockModContainer<TileBifrost> implements ILex
 		return 0;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void loadTextures(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			TextureAtlasSprite icon = new InterpolatedIcon("botania:bifrost");
+			if(event.map.setTextureEntry("botania:bifrost", icon))
+				blockIcon = icon;
+		}
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister par1IconRegister) {
@@ -101,12 +110,8 @@ public class BlockBifrost extends BlockModContainer<TileBifrost> implements ILex
 	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
-		public void loadTextures(TextureStitchEvent.Pre event) {
-			if(event.map.getTextureType() == 0) {
-				TextureAtlasSprite icon = new InterpolatedIcon("botania:bifrost");
-				if(event.map.setTextureEntry("botania:bifrost", icon))
-					blockIcon = icon;
-			}
+		public void loadTexturesWrapper(TextureStitchEvent.Pre event) {
+			BlockBifrost.this.loadTextures(event);
 		}
 	}
 }

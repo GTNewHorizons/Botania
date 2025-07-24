@@ -26,15 +26,19 @@ public class PotionAllure extends PotionMod {
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
+	public void onEntityUpdate(LivingUpdateEvent event) {
+		EntityLivingBase e = event.entityLiving;
+		if(e instanceof EntityPlayer && hasEffect(e)) {
+			EntityFishHook hook = ((EntityPlayer) e).fishEntity;
+			if(hook != null)
+				hook.onUpdate();
+		}
+	}
+
 	public class EventHandler{
 		@SubscribeEvent
-		public void onEntityUpdate(LivingUpdateEvent event) {
-			EntityLivingBase e = event.entityLiving;
-			if(e instanceof EntityPlayer && hasEffect(e)) {
-				EntityFishHook hook = ((EntityPlayer) e).fishEntity;
-				if(hook != null)
-					hook.onUpdate();
-			}
+		public void onEntityUpdateWrapper(LivingUpdateEvent event) {
+			PotionAllure.this.onEntityUpdate(event);
 		}
 	}
 

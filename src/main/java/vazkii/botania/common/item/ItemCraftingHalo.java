@@ -392,6 +392,14 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 	}
 
 	@SideOnly(Side.CLIENT)
+	public void onRenderWorldLast(RenderWorldLastEvent event) {
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		ItemStack stack = player.getCurrentEquippedItem();
+		if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
+			render(stack, player, event.partialTicks);
+	}
+
+	@SideOnly(Side.CLIENT)
 	public void render(ItemStack stack, EntityPlayer player, float partialTicks) {
 		Minecraft mc = Minecraft.getMinecraft();
 		Tessellator tess = Tessellator.instance;
@@ -598,24 +606,14 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 
 	public class EventHandler{
 		@SubscribeEvent
-		public void onItemCrafted(ItemCraftedEvent event) {
-			if(!(event.craftMatrix instanceof InventoryCraftingHalo))
-				return;
-
-			for(int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
-				ItemStack stack = event.player.inventory.getStackInSlot(i);
-				if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
-					saveRecipeToStack(event, stack);
-			}
+		public void onItemCraftedWrapper(ItemCraftedEvent event) {
+			ItemCraftingHalo.this.onItemCrafted(event);
 		}
 
 		@SideOnly(Side.CLIENT)
 		@SubscribeEvent
-		public void onRenderWorldLast(RenderWorldLastEvent event) {
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			ItemStack stack = player.getCurrentEquippedItem();
-			if(stack != null && stack.getItem() instanceof ItemCraftingHalo)
-				render(stack, player, event.partialTicks);
+		public void onRenderWorldLastWrapper(RenderWorldLastEvent event) {
+			ItemCraftingHalo.this.onRenderWorldLast(event);
 		}
 	}
 

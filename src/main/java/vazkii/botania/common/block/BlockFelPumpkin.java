@@ -85,22 +85,26 @@ public class BlockFelPumpkin extends BlockMod implements ILexiconable {
 		blockIcon = Blocks.pumpkin.getIcon(2, 0);
 	}
 
+	public void onDrops(LivingDropsEvent event) {
+		if(event.entity instanceof EntityBlaze && event.entity.getEntityData().getBoolean(TAG_FEL_SPAWNED))
+			if(event.drops.isEmpty())
+				event.drops.add(new EntityItem(event.entity.worldObj, event.entity.posX, event.entity.posY, event.entity.posZ, new ItemStack(Items.blaze_powder, 6)));
+			else for(EntityItem item : event.drops) {
+				ItemStack stack = item.getEntityItem();
+				if(stack.getItem() == Items.blaze_rod)
+					item.setEntityItemStack(new ItemStack(Items.blaze_powder, stack.stackSize * 10));
+			}
+	}
+
 	@Override
 	public LexiconEntry getEntry(World world, int x, int y, int z, EntityPlayer player, ItemStack lexicon) {
 		return LexiconData.gardenOfGlass;
 	}
 
-	public static class EventHandler {
+	public class EventHandler {
 		@SubscribeEvent
-		public void onDrops(LivingDropsEvent event) {
-			if(event.entity instanceof EntityBlaze && event.entity.getEntityData().getBoolean(TAG_FEL_SPAWNED))
-				if(event.drops.isEmpty())
-					event.drops.add(new EntityItem(event.entity.worldObj, event.entity.posX, event.entity.posY, event.entity.posZ, new ItemStack(Items.blaze_powder, 6)));
-				else for(EntityItem item : event.drops) {
-					ItemStack stack = item.getEntityItem();
-					if(stack.getItem() == Items.blaze_rod)
-						item.setEntityItemStack(new ItemStack(Items.blaze_powder, stack.stackSize * 10));
-				}
+		public void onDropsWrapper(LivingDropsEvent event) {
+			BlockFelPumpkin.this.onDrops(event);
 		}
 	}
 }

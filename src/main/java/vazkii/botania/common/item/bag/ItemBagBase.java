@@ -30,6 +30,48 @@ public abstract class ItemBagBase extends ItemMod {
         MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 
+    public void onPickupItem(EntityItemPickupEvent event) {
+        ItemStack stack = event.item.getEntityItem();
+        if(stack.getItem() == Item.getItemFromBlock(getValidPickUp()) && stack.stackSize > 0) {
+            int color = stack.getItemDamage();
+            if(color > 15)
+                return;
+
+            for(int i = 0; i < event.entityPlayer.inventory.getSizeInventory(); i++) {
+                if(i == event.entityPlayer.inventory.currentItem)
+                    continue; // prevent item deletion
+
+                ItemStack invStack = event.entityPlayer.inventory.getStackInSlot(i);
+                if(invStack != null && invStack.getItem() == ItemBagBase.this) {
+                    ItemStack[] bagInv = loadStacks(invStack);
+                    ItemStack stackAt = bagInv[color];
+                    boolean didChange = false;
+                    if(stackAt == null) {
+                        bagInv[color] = stack.copy();
+                        stack.stackSize = 0;
+                        didChange = true;
+                    } else {
+                        int stackAtSize = stackAt.stackSize;
+                        int stackSize = stack.stackSize;
+                        int spare = 64 - stackAtSize;
+                        int pass = Math.min(spare, stackSize);
+                        if(pass > 0) {
+                            stackAt.stackSize += pass;
+                            stack.stackSize -= pass;
+                            didChange = true;
+                        }
+                    }
+
+                    if(didChange)
+                        setStacks(invStack, bagInv);
+                }
+
+                if(stack.stackSize == 0)
+                    return;
+            }
+        }
+    }
+
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         player.openGui(Botania.instance, getGuiID(), world, 0, 0, 0);
@@ -108,46 +150,8 @@ public abstract class ItemBagBase extends ItemMod {
 
     public class EventHandler{
         @SubscribeEvent
-        public void onPickupItem(EntityItemPickupEvent event) {
-            ItemStack stack = event.item.getEntityItem();
-            if(stack.getItem() == Item.getItemFromBlock(getValidPickUp()) && stack.stackSize > 0) {
-                int color = stack.getItemDamage();
-                if(color > 15)
-                    return;
-
-                for(int i = 0; i < event.entityPlayer.inventory.getSizeInventory(); i++) {
-                    if(i == event.entityPlayer.inventory.currentItem)
-                        continue; // prevent item deletion
-
-                    ItemStack invStack = event.entityPlayer.inventory.getStackInSlot(i);
-                    if(invStack != null && invStack.getItem() == ItemBagBase.this) {
-                        ItemStack[] bagInv = loadStacks(invStack);
-                        ItemStack stackAt = bagInv[color];
-                        boolean didChange = false;
-                        if(stackAt == null) {
-                            bagInv[color] = stack.copy();
-                            stack.stackSize = 0;
-                            didChange = true;
-                        } else {
-                            int stackAtSize = stackAt.stackSize;
-                            int stackSize = stack.stackSize;
-                            int spare = 64 - stackAtSize;
-                            int pass = Math.min(spare, stackSize);
-                            if(pass > 0) {
-                                stackAt.stackSize += pass;
-                                stack.stackSize -= pass;
-                                didChange = true;
-                            }
-                        }
-
-                        if(didChange)
-                            setStacks(invStack, bagInv);
-                    }
-
-                    if(stack.stackSize == 0)
-                        return;
-                }
-            }
+        public void onPickupItemWrapper(EntityItemPickupEvent event) {
+            ItemBagBase.this.onPickupItem(event);
         }
     }
 }

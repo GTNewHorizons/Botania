@@ -49,6 +49,40 @@ public class ItemDivaCharm extends ItemBauble implements IManaUsingItem, IBauble
 		MinecraftForge.EVENT_BUS.register(new EventHandler());
 	}
 
+	public void onEntityDamaged(LivingHurtEvent event) {
+		if(event.source.getEntity() instanceof EntityPlayer && event.entityLiving instanceof EntityLiving && !event.entityLiving.worldObj.isRemote && Math.random() < 0.6F) {
+			EntityPlayer player = (EntityPlayer) event.source.getEntity();
+			ItemStack amulet = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
+			if(amulet != null && amulet.getItem() == this) {
+				final int cost = 250;
+				if(ManaItemHandler.requestManaExact(amulet, player, cost, false)) {
+					final int range = 20;
+
+					List<IMob> mobs = player.worldObj.getEntitiesWithinAABB(IMob.class, AxisAlignedBB.getBoundingBox(event.entity.posX - range, event.entity.posY - range, event.entity.posZ - range, event.entity.posX + range, event.entity.posY + range, event.entity.posZ + range));
+					if(mobs.size() > 1) {
+						if(SubTileHeiseiDream.brainwashEntity((EntityLiving) event.entityLiving, mobs)) {
+							if(event.entityLiving instanceof EntityCreeper)
+								ReflectionHelper.setPrivateValue(EntityCreeper.class, (EntityCreeper) event.entityLiving, 2, LibObfuscation.TIME_SINCE_IGNITED);
+							event.entityLiving.heal(event.entityLiving.getMaxHealth());
+							if(event.entityLiving.isDead)
+								event.entityLiving.isDead = false;
+
+							ManaItemHandler.requestManaExact(amulet, player, cost, true);
+							player.worldObj.playSoundAtEntity(player, "botania:divaCharm", 1F, 1F);
+
+							double x = event.entityLiving.posX;
+							double y = event.entityLiving.posY;
+							double z = event.entityLiving.posZ;
+
+							for(int i = 0; i < 50; i++)
+								Botania.proxy.sparkleFX(event.entityLiving.worldObj, x + Math.random() * event.entityLiving.width, y + Math.random() * event.entityLiving.height, z + Math.random() * event.entityLiving.width, 1F, 1F, 0.25F, 1F, 3);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public BaubleType getBaubleType(ItemStack arg0) {
 		return BaubleType.AMULET;
@@ -81,37 +115,7 @@ public class ItemDivaCharm extends ItemBauble implements IManaUsingItem, IBauble
 	public class EventHandler {
 		@SubscribeEvent
 		public void onEntityDamaged(LivingHurtEvent event) {
-			if(event.source.getEntity() instanceof EntityPlayer && event.entityLiving instanceof EntityLiving && !event.entityLiving.worldObj.isRemote && Math.random() < 0.6F) {
-				EntityPlayer player = (EntityPlayer) event.source.getEntity();
-				ItemStack amulet = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
-				if(amulet != null && amulet.getItem() == ItemDivaCharm.this) {
-					final int cost = 250;
-					if(ManaItemHandler.requestManaExact(amulet, player, cost, false)) {
-						final int range = 20;
-
-						List<IMob> mobs = player.worldObj.getEntitiesWithinAABB(IMob.class, AxisAlignedBB.getBoundingBox(event.entity.posX - range, event.entity.posY - range, event.entity.posZ - range, event.entity.posX + range, event.entity.posY + range, event.entity.posZ + range));
-						if(mobs.size() > 1) {
-							if(SubTileHeiseiDream.brainwashEntity((EntityLiving) event.entityLiving, mobs)) {
-								if(event.entityLiving instanceof EntityCreeper)
-									ReflectionHelper.setPrivateValue(EntityCreeper.class, (EntityCreeper) event.entityLiving, 2, LibObfuscation.TIME_SINCE_IGNITED);
-								event.entityLiving.heal(event.entityLiving.getMaxHealth());
-								if(event.entityLiving.isDead)
-									event.entityLiving.isDead = false;
-
-								ManaItemHandler.requestManaExact(amulet, player, cost, true);
-								player.worldObj.playSoundAtEntity(player, "botania:divaCharm", 1F, 1F);
-
-								double x = event.entityLiving.posX;
-								double y = event.entityLiving.posY;
-								double z = event.entityLiving.posZ;
-
-								for(int i = 0; i < 50; i++)
-									Botania.proxy.sparkleFX(event.entityLiving.worldObj, x + Math.random() * event.entityLiving.width, y + Math.random() * event.entityLiving.height, z + Math.random() * event.entityLiving.width, 1F, 1F, 0.25F, 1F, 3);
-							}
-						}
-					}
-				}
-			}
+			ItemDivaCharm.this.onEntityDamaged(event);
 		}
 	}
 }

@@ -82,6 +82,15 @@ public class BlockPrismarine extends BlockMod implements ILexiconable {
 			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void loadTextures(TextureStitchEvent.Pre event) {
+		if(event.map.getTextureType() == 0) {
+			TextureAtlasSprite icon = new InterpolatedIcon("botania:prismarine0");
+			if(event.map.setTextureEntry("botania:prismarine0", icon))
+				icons[0] = icon;
+		}
+	}
+
 	@Override
 	public IIcon getIcon(int par1, int par2) {
 		return icons[Math.min(TYPES - 1, par2)];
@@ -101,12 +110,8 @@ public class BlockPrismarine extends BlockMod implements ILexiconable {
 	public class EventHandler {
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
-		public void loadTextures(TextureStitchEvent.Pre event) {
-			if(event.map.getTextureType() == 0) {
-				TextureAtlasSprite icon = new InterpolatedIcon("botania:prismarine0");
-				if(event.map.setTextureEntry("botania:prismarine0", icon))
-					icons[0] = icon;
-			}
+		public void loadTexturesWrapper(TextureStitchEvent.Pre event) {
+			BlockPrismarine.this.loadTextures(event);
 		}
 	}
 }
