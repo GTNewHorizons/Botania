@@ -115,7 +115,7 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 			));
 			extraDisplayList.add(new MultiblockComponent(
 					new ChunkCoordinates(p[0], p[1] - 1, p[2]),
-					Blocks.dirt,
+					Blocks.grass,
 					0
 			));
 		}
@@ -127,7 +127,7 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 			));
 			extraDisplayList.add(new MultiblockComponent(
 					new ChunkCoordinates(f[0], f[1], f[2]),
-					Blocks.dirt,
+					Blocks.grass,
 					0
 			));
 		}
