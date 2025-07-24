@@ -13,6 +13,7 @@ dependencies {
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
     compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
 
-    compileOnly("com.github.GTNewHorizons:StructureLib:1.4.12:dev")
+    //Not sure if api or compileOnly is correct here.
+    api("com.github.GTNewHorizons:StructureLib:1.4.12:dev")
 }
 
