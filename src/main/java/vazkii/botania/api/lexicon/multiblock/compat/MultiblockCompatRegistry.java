@@ -155,7 +155,7 @@ public class MultiblockCompatRegistry {
                     stackSize,
                     "main",
                     tileEntity.getWorldObj(),
-                    aSide,
+                    noSideWay(aSide),
                     tileEntity.xCoord,
                     tileEntity.yCoord,
                     tileEntity.zCoord,
@@ -173,7 +173,7 @@ public class MultiblockCompatRegistry {
                     stackSize,
                     "main",
                     tileEntity.getWorldObj(),
-                    aSide,
+                    noSideWay(aSide),
                     tileEntity.xCoord,
                     tileEntity.yCoord,
                     tileEntity.zCoord,
@@ -189,6 +189,10 @@ public class MultiblockCompatRegistry {
         @Override
         public String[] getDescription(ItemStack stackSize) {
             return new String[0];
+        }
+
+        private static ExtendedFacing noSideWay(ExtendedFacing aSide) {
+            return aSide.getDirection().offsetY != 0 ? ExtendedFacing.DEFAULT : aSide.getOppositeDirection();
         }
     }
 
