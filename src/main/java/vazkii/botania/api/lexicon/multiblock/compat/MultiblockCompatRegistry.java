@@ -22,7 +22,7 @@ import java.util.Map;
 
 
 /**
- * Automatically register any Botania Multiblock
+ * Only gets loaded if StructureLib is present inside the Modpack
  */
 public class MultiblockCompatRegistry {
 
