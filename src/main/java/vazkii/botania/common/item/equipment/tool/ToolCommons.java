@@ -39,12 +39,26 @@ public final class ToolCommons {
 	public static Material[] materialsAxe = new Material[]{ Material.coral, Material.leaves, Material.plants, Material.wood, Material.gourd };
 
 	public static void damageItem(ItemStack stack, int dmg, EntityLivingBase entity, int manaPerDamage) {
-		int manaToRequest = dmg * manaPerDamage;
-		boolean manaRequested = entity instanceof EntityPlayer ? ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, manaToRequest, true) : false;
+    int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
+    int actualDamage = 0;
 
-		if(!manaRequested)
-			stack.damageItem(dmg, entity);
-	}
+    for (int i = 0; i < dmg; i++) {
+        if (unbreaking <= 0 || entity.getRNG().nextInt(unbreaking + 1) == 0) {
+            actualDamage++;
+        }
+    }
+
+    if (actualDamage == 0) return; 
+
+    int manaToRequest = actualDamage * manaPerDamage;
+    boolean manaRequested = entity instanceof EntityPlayer
+        ? ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, manaToRequest, true)
+        : false;
+
+    if (!manaRequested) {
+        stack.damageItem(actualDamage, entity);
+    }
+}
 
 	public static void removeBlocksInIteration(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, int xs, int ys, int zs, int xe, int ye, int ze, Block block, Material[] materialsListing, boolean silk, int fortune, boolean dispose) {
 		float blockHardness = block == null ? 1F : block.getBlockHardness(world, x, y, z);
