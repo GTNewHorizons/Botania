@@ -56,7 +56,7 @@ public final class ToolCommons {
         : false;
 
     if (!manaRequested) {
-        stack.damageItem(actualDamage, entity);
+        stack.damageItem(dmg, entity);
     }
 }
 
