@@ -42,13 +42,17 @@ public final class ToolCommons {
     int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
     int actualDamage = 0;
 
-    for (int i = 0; i < dmg; i++) {
-        if (unbreaking <= 0 || entity.getRNG().nextInt(unbreaking + 1) == 0) {
-            actualDamage++;
+    if (unbreaking <= 0) {
+        actualDamage = dmg;
+    } else {
+        for (int i = 0; i < dmg; i++) {
+            if (entity.getRNG().nextInt(unbreaking + 1) == 0) {
+                actualDamage++;
+            }
         }
     }
 
-    if (actualDamage == 0) return; 
+    if (actualDamage == 0) return;
 
     int manaToRequest = actualDamage * manaPerDamage;
     boolean manaRequested = entity instanceof EntityPlayer
@@ -56,7 +60,7 @@ public final class ToolCommons {
         : false;
 
     if (!manaRequested) {
-        stack.damageItem(dmg, entity);
+        stack.damageItem(actualDamage, entity);
     }
 }
 
