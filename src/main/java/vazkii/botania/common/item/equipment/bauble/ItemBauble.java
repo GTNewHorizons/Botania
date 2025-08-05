@@ -47,7 +47,8 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	private static final HashMap<UUID, UUID> itemToPlayerRemote = new HashMap<>();
 	private static final HashMap<UUID, UUID> itemToPlayer = new HashMap<>();
-	private static final HashSet<UUID> toRemoveItems = new HashSet<>();
+	private static final HashMap<UUID, Integer> itemDelay = new HashMap<>();
+	private static final HashMap<UUID, Integer> itemDelayRemote = new HashMap<>();
 
 	public ItemBauble(String name) {
 		super();
@@ -128,13 +129,15 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
 		UUID itemUUID = getBaubleUUID(stack);
-		if(toRemoveItems.contains(itemUUID)) {
-			// this is done like this because on server worn tick gets called after unequip
-			// so it would get reapplied
-			unapplyItem(itemUUID, player.worldObj.isRemote);
-			toRemoveItems.remove(itemUUID);
+
+		// Add a delay before applying effect
+		// Needed because of spurious onWorkTick calls after unequip
+		int delay = getItemDelay(itemUUID, player.worldObj.isRemote);
+		if (delay < 5) {
+			setItemDelay(itemUUID, player.worldObj.isRemote, delay + 1);
 			return;
 		}
+
 		if(!wasPlayerApplied(itemUUID, player.getUniqueID(), player.worldObj.isRemote)) {
 			onEquippedOrLoadedIntoWorld(stack, player);
 			applyToPlayer(itemUUID, player.getUniqueID(), player.worldObj.isRemote);
@@ -161,7 +164,9 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	@Override
 	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
-		toRemoveItems.add(getBaubleUUID(stack));
+		UUID itemUUID = getBaubleUUID(stack);
+		unapplyItem(itemUUID, player.worldObj.isRemote);
+		setItemDelay(itemUUID,  player.worldObj.isRemote, 0);
 	}
 
 	@Override
@@ -228,15 +233,33 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 		}
 	}
 
+	public static int getItemDelay(UUID itemUUID, boolean remote) {
+		if(remote) {
+			return itemDelayRemote.getOrDefault(itemUUID, 0);
+		} else {
+			return itemDelay.getOrDefault(itemUUID, 0);
+		}
+	}
+
+	public static void setItemDelay(UUID itemUUID, boolean remote, int delay) {
+		if(remote) {
+			itemDelayRemote.put(itemUUID, delay);
+		} else {
+			itemDelay.put(itemUUID, delay);
+		}
+	}
+
 	public static void removePlayer(UUID playerUUID) {
 		for(UUID item : itemToPlayerRemote.keySet().toArray(new UUID[0])) {
 			if(playerUUID.equals(itemToPlayerRemote.get(item))) {
 				itemToPlayerRemote.remove(item);
+				setItemDelay(item,  true, 0);
 			}
 		}
 		for(UUID item : itemToPlayer.keySet().toArray(new UUID[0])) {
 			if(playerUUID.equals(itemToPlayer.get(item))) {
 				itemToPlayer.remove(item);
+				setItemDelay(item,  false, 0);
 			}
 		}
 	}
