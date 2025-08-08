@@ -20,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
 import vazkii.botania.api.lexicon.multiblock.compat.MultiblockCompatRegistry;
 import vazkii.botania.api.lexicon.multiblock.component.MultiblockComponent;
+import vazkii.botania.common.Botania;
 
 /**
  * This class describes a Mutiblock object. It's used to display a
@@ -153,9 +154,11 @@ public class Multiblock {
 	public <T extends TileEntity> void registerStructure(
 			Class<T> controllerTileClass, Block controllerBlock, MultiblockComponent... extra
 	) {
-		MultiblockCompatRegistry.registerMultiblock(
-				this, controllerTileClass, controllerBlock, extra
-		);
+		if (Botania.structureLibLoaded) {
+			MultiblockCompatRegistry.registerMultiblock(
+					this, controllerTileClass, controllerBlock, extra
+			);
+		}
 	}
 
 	/**

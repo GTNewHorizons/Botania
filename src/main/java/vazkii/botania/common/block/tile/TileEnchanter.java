@@ -491,8 +491,6 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 
 		public StructureLibFlower() {
 			super();
-			//TODO
-			//setBlockTextureName("flower");
 		}
 
 		@Override
