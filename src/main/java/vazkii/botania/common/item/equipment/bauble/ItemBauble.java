@@ -10,14 +10,14 @@
  */
 package vazkii.botania.common.item.equipment.bauble;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import baubles.api.BaublesApi;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -45,10 +45,6 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 	private static final String TAG_COSMETIC_ITEM = "cosmeticItem";
 	private static final String TAG_PHANTOM_INK = "phantomInk";
 
-	private static final HashMap<UUID, UUID> itemToPlayerRemote = new HashMap<>();
-	private static final HashMap<UUID, UUID> itemToPlayer = new HashMap<>();
-	private static final HashMap<UUID, Integer> itemDelay = new HashMap<>();
-	private static final HashMap<UUID, Integer> itemDelayRemote = new HashMap<>();
 
 	public ItemBauble(String name) {
 		super();
@@ -67,7 +63,9 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 				if(baubles.isItemValidForSlot(i, par1ItemStack)) {
 					ItemStack stackInSlot = baubles.getStackInSlot(i);
 					if(stackInSlot == null || ((IBauble) stackInSlot.getItem()).canUnequip(stackInSlot, par3EntityPlayer)) {
-						if(!par2World.isRemote) {
+						if(par2World.isRemote) {
+							((IBauble) par1ItemStack.getItem()).onEquipped(stackInSlot, par3EntityPlayer);
+						} else {
 							baubles.setInventorySlotContents(i, par1ItemStack.copy());
 							if(!par3EntityPlayer.capabilities.isCreativeMode)
 								par3EntityPlayer.inventory.setInventorySlotContents(par3EntityPlayer.inventory.currentItem, null);
@@ -128,20 +126,7 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
-		UUID itemUUID = getBaubleUUID(stack);
-
-		// Add a delay before applying effect
-		// Needed because of spurious onWorkTick calls after unequip
-		int delay = getItemDelay(itemUUID, player.worldObj.isRemote);
-		if (delay < 5) {
-			setItemDelay(itemUUID, player.worldObj.isRemote, delay + 1);
-			return;
-		}
-
-		if(!wasPlayerApplied(itemUUID, player.getUniqueID(), player.worldObj.isRemote)) {
-			onEquippedOrLoadedIntoWorld(stack, player);
-			applyToPlayer(itemUUID, player.getUniqueID(), player.worldObj.isRemote);
-		}
+		// NO-OP
 	}
 
 	@Override
@@ -154,19 +139,26 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 				((EntityPlayer) player).addStat(ModAchievements.baubleWear, 1);
 
 			onEquippedOrLoadedIntoWorld(stack, player);
-			applyToPlayer(getBaubleUUID(stack), player.getUniqueID(), player.worldObj.isRemote);
 		}
+	}
+
+	@Override
+	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
+		// NO-OP
 	}
 
 	public void onEquippedOrLoadedIntoWorld(ItemStack stack, EntityLivingBase player) {
 		// NO-OP
 	}
 
-	@Override
-	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
-		UUID itemUUID = getBaubleUUID(stack);
-		unapplyItem(itemUUID, player.worldObj.isRemote);
-		setItemDelay(itemUUID,  player.worldObj.isRemote, 0);
+	public static void playerLoggedIn(EntityPlayer player) {
+		IInventory baubles = BaublesApi.getBaubles(player);
+		for (int i = 0; i < baubles.getSizeInventory(); i++) {
+			ItemStack stack = baubles.getStackInSlot(i);
+			if (stack != null && stack.getItem() instanceof ItemBauble itemBauble) {
+				itemBauble.onEquippedOrLoadedIntoWorld(stack, player);
+			}
+		}
 	}
 
 	@Override
@@ -211,57 +203,6 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 		long least = ItemNBTHelper.getLong(stack, TAG_BAUBLE_UUID_LEAST, 0);
 		return new UUID(most, least);
-	}
-
-	public static boolean wasPlayerApplied(UUID itemUUID, UUID playerUUID, boolean remote) {
-		return playerUUID.equals(remote ? itemToPlayerRemote.get(itemUUID) : itemToPlayer.get(itemUUID));
-	}
-
-	public static void applyToPlayer(UUID itemUUID, UUID playerUUID, boolean remote) {
-		if(remote) {
-			itemToPlayerRemote.put(itemUUID, playerUUID);
-		} else {
-			itemToPlayer.put(itemUUID, playerUUID);
-		}
-	}
-
-	public static void unapplyItem(UUID itemUUID, boolean remote) {
-		if(remote) {
-			itemToPlayerRemote.remove(itemUUID);
-		} else {
-			itemToPlayer.remove(itemUUID);
-		}
-	}
-
-	public static int getItemDelay(UUID itemUUID, boolean remote) {
-		if(remote) {
-			return itemDelayRemote.getOrDefault(itemUUID, 0);
-		} else {
-			return itemDelay.getOrDefault(itemUUID, 0);
-		}
-	}
-
-	public static void setItemDelay(UUID itemUUID, boolean remote, int delay) {
-		if(remote) {
-			itemDelayRemote.put(itemUUID, delay);
-		} else {
-			itemDelay.put(itemUUID, delay);
-		}
-	}
-
-	public static void removePlayer(UUID playerUUID) {
-		for(UUID item : itemToPlayerRemote.keySet().toArray(new UUID[0])) {
-			if(playerUUID.equals(itemToPlayerRemote.get(item))) {
-				itemToPlayerRemote.remove(item);
-				setItemDelay(item,  true, 0);
-			}
-		}
-		for(UUID item : itemToPlayer.keySet().toArray(new UUID[0])) {
-			if(playerUUID.equals(itemToPlayer.get(item))) {
-				itemToPlayer.remove(item);
-				setItemDelay(item,  false, 0);
-			}
-		}
 	}
 
 	@Override

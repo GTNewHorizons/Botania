@@ -147,6 +147,7 @@ public class CommonProxy {
 
 		FMLCommonHandler.instance().bus().register(new CommonTickHandler());
 		FMLCommonHandler.instance().bus().register(new ItemBaubleHandler());
+		MinecraftForge.EVENT_BUS.register(new ItemBaubleHandler());
 
 		FMLInterModComms.sendMessage("ProjectE", "interdictionblacklist", EntityManaBurst.class.getCanonicalName());
 
