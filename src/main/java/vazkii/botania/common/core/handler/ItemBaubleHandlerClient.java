@@ -4,16 +4,9 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import vazkii.botania.common.item.equipment.bauble.ItemBauble;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class ItemBaubleHandler {
-
-    @SubscribeEvent
-    public void playerConnectServer(PlayerEvent.PlayerLoggedInEvent event) {
-        ItemBauble.playerLoggedIn(event.player);
-    }
-
+public class ItemBaubleHandlerClient {
     static boolean newServer;
 
     @SubscribeEvent

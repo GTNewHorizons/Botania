@@ -154,6 +154,7 @@ import vazkii.botania.common.block.tile.mana.TilePump;
 import vazkii.botania.common.block.tile.mana.TileSpreader;
 import vazkii.botania.common.block.tile.string.TileRedString;
 import vazkii.botania.common.core.handler.ConfigHandler;
+import vazkii.botania.common.core.handler.ItemBaubleHandlerClient;
 import vazkii.botania.common.core.helper.MathHelper;
 import vazkii.botania.common.core.helper.Vector3;
 import vazkii.botania.common.core.proxy.CommonProxy;
@@ -221,6 +222,8 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new SkyblockRenderEvents());
 		MinecraftForge.EVENT_BUS.register(new KeyHandler());
 		FMLCommonHandler.instance().bus().register(new CorporeaAutoCompleteHandler());
+		FMLCommonHandler.instance().bus().register(new ItemBaubleHandlerClient());
+		MinecraftForge.EVENT_BUS.register(new ItemBaubleHandlerClient());
 
 		if(ConfigHandler.enableSeasonalFeatures) {
 			Calendar calendar = Calendar.getInstance();
