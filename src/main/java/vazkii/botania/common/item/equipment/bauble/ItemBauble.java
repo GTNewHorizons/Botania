@@ -130,6 +130,11 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 	}
 
 	@Override
+	public void onPlayerLoad(ItemStack stack, EntityLivingBase player) {
+		onEquippedOrLoadedIntoWorld(stack, player);
+	}
+
+	@Override
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {
 		if(player != null) {
 			if(!player.worldObj.isRemote)
@@ -149,16 +154,6 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	public void onEquippedOrLoadedIntoWorld(ItemStack stack, EntityLivingBase player) {
 		// NO-OP
-	}
-
-	public static void playerLoggedIn(EntityPlayer player) {
-		IInventory baubles = BaublesApi.getBaubles(player);
-		for (int i = 0; i < baubles.getSizeInventory(); i++) {
-			ItemStack stack = baubles.getStackInSlot(i);
-			if (stack != null && stack.getItem() instanceof ItemBauble itemBauble) {
-				itemBauble.onEquippedOrLoadedIntoWorld(stack, player);
-			}
-		}
 	}
 
 	@Override
