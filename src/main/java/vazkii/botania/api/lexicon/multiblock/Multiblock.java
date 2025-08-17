@@ -14,10 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import org.apache.logging.log4j.Level;
 import vazkii.botania.api.lexicon.multiblock.compat.MultiblockCompatRegistry;
 import vazkii.botania.api.lexicon.multiblock.component.MultiblockComponent;
 import vazkii.botania.common.Botania;
@@ -155,9 +157,14 @@ public class Multiblock {
 			Class<T> controllerTileClass, Block controllerBlock, MultiblockComponent... extra
 	) {
 		if (Botania.structureLibLoaded) {
-			MultiblockCompatRegistry.registerMultiblock(
-					this, controllerTileClass, controllerBlock, extra
-			);
+			try {
+				MultiblockCompatRegistry.registerMultiblock(
+						this, controllerTileClass, controllerBlock, extra
+				);
+			} catch (Exception e) {
+				e.printStackTrace();
+				FMLLog.log(Level.ERROR, "Failed to load a Botania Multiblock into StructureLib.");
+			}
 		}
 	}
 
