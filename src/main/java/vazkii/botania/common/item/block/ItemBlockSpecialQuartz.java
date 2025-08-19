@@ -28,7 +28,8 @@ public class ItemBlockSpecialQuartz extends ItemMultiTexture {
 
 	@Override
 	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return par1ItemStack.getItemDamage() >= 3 ? "" : ((BlockSpecialQuartz) field_150939_a).getNames()[par1ItemStack.getItemDamage()];
+        String[] names = ((BlockSpecialQuartz) field_150939_a).getNames();
+		return par1ItemStack.getItemDamage() >= names.length ? ((BlockSpecialQuartz) field_150939_a).getNames()[names.length - 1] : ((BlockSpecialQuartz) field_150939_a).getNames()[par1ItemStack.getItemDamage()];
 	}
 
 	@Override
