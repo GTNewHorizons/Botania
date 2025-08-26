@@ -11,6 +11,7 @@
 package vazkii.botania.api.lexicon.multiblock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class Multiblock {
 
 	public int minX, minY, minZ, maxX, maxY, maxZ, offX, offY, offZ;
 
-	public HashMap<Integer, MultiblockComponent> locationCache = new HashMap<>();
+	public HashMap<List<Integer>, MultiblockComponent> locationCache = new HashMap<>();
 
 	/**
 	 * Adds a multiblock component to this multiblock. The component's x y z
@@ -202,17 +203,17 @@ public class Multiblock {
 	 */
 	private void addComponentToLocationCache(MultiblockComponent comp) {
 		ChunkCoordinates pos = comp.getRelativePosition();
-		locationCache.put(hashCoordinates(pos.posX, pos.posY, pos.posZ), comp);
+		locationCache.put(Arrays.asList(
+				pos.posX,
+				pos.posY,
+				pos.posZ
+		),  comp);
 	}
 
 	/**
 	 * Gets the component for a given location
 	 */
 	public MultiblockComponent getComponentForLocation(int x, int y, int z) {
-		return locationCache.get(hashCoordinates(x, y, z));
-	}
-
-	private int hashCoordinates(int x, int y, int z) {
-		return (x * 31 + y) * 31 + z;
+		return locationCache.get(Arrays.asList(x, y, z));
 	}
 }
