@@ -33,6 +33,8 @@ import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.elementium.ItemElementiumPick;
 import vazkii.botania.common.item.equipment.tool.terrasteel.ItemTerraPick;
 
+import java.util.Random;
+
 public final class ToolCommons {
 
 	public static Material[] materialsPick = new Material[]{ Material.rock, Material.iron, Material.ice, Material.glass, Material.piston, Material.anvil };
@@ -40,21 +42,23 @@ public final class ToolCommons {
 	public static Material[] materialsAxe = new Material[]{ Material.coral, Material.leaves, Material.plants, Material.wood, Material.gourd };
 
     public static void damageItem(ItemStack stack, int dmg, EntityLivingBase entity, int manaPerDamage) {
+        int damageTaken = 0;
+        Random random = entity.worldObj.rand;
+        int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
 
         for (int i = 0; i < dmg; i++) {
-            int beforeUnbreakingDurability = stack.getItemDamage();
-            stack.damageItem(1, entity);
-            int durabilitySpent = stack.getItemDamage() - beforeUnbreakingDurability;
-
-            if (durabilitySpent > 0) {
+            if (!EnchantmentDurability.negateDamage(stack, unbreaking, random)) {
                 boolean manaRequested = entity instanceof EntityPlayer
-                        ? ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, durabilitySpent * manaPerDamage, true)
+                        ? ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, manaPerDamage, true)
                         : false;
-                if (manaRequested) {
-                    stack.setItemDamage(beforeUnbreakingDurability);
+                if (!manaRequested) {
+                    damageTaken++;
                 }
             }
+        }
 
+        if (damageTaken > 0) {
+            stack.damageItem(damageTaken, entity);
         }
 
     }
