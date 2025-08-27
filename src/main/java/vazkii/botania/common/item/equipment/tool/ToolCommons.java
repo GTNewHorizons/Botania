@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnchantmentDurability;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,31 +39,25 @@ public final class ToolCommons {
 	public static Material[] materialsShovel = new Material[]{ Material.grass, Material.ground, Material.sand, Material.snow, Material.craftedSnow, Material.clay };
 	public static Material[] materialsAxe = new Material[]{ Material.coral, Material.leaves, Material.plants, Material.wood, Material.gourd };
 
-	public static void damageItem(ItemStack stack, int dmg, EntityLivingBase entity, int manaPerDamage) {
-		int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
-		int actualDamage = 0;
+    public static void damageItem(ItemStack stack, int dmg, EntityLivingBase entity, int manaPerDamage) {
 
-		if (unbreaking <= 0) {
-			actualDamage = dmg;
-		} else {
-			for (int i = 0; i < dmg; i++) {
-				if (entity.getRNG().nextInt(unbreaking + 1) == 0) {
-					actualDamage++;
-				}
-			}
-		}
+        for (int i = 0; i < dmg; i++) {
+            int beforeUnbreakingDurability = stack.getItemDamage();
+            stack.damageItem(1, entity);
+            int durabilitySpent = stack.getItemDamage() - beforeUnbreakingDurability;
 
-		if (actualDamage == 0) return;
+            if (durabilitySpent > 0) {
+                boolean manaRequested = entity instanceof EntityPlayer
+                        ? ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, durabilitySpent * manaPerDamage, true)
+                        : false;
+                if (manaRequested) {
+                    stack.setItemDamage(beforeUnbreakingDurability);
+                }
+            }
 
-		int manaToRequest = actualDamage * manaPerDamage;
-		boolean manaRequested = entity instanceof EntityPlayer
-			? ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, manaToRequest, true)
-			: false;
+        }
 
-		if (!manaRequested) {
-			stack.damageItem(actualDamage, entity);
-		}
-	}
+    }
 
 	public static void removeBlocksInIteration(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, int xs, int ys, int zs, int xe, int ye, int ze, Block block, Material[] materialsListing, boolean silk, int fortune, boolean dispose) {
 		float blockHardness = block == null ? 1F : block.getBlockHardness(world, x, y, z);
