@@ -42,12 +42,13 @@ public final class ToolCommons {
 	public static Material[] materialsAxe = new Material[]{ Material.coral, Material.leaves, Material.plants, Material.wood, Material.gourd };
 
     public static void damageItem(ItemStack stack, int dmg, EntityLivingBase entity, int manaPerDamage) {
+        if(entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode) return;
         int damageTaken = 0;
         Random random = entity.worldObj.rand;
         int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
 
         for (int i = 0; i < dmg; i++) {
-            if (!EnchantmentDurability.negateDamage(stack, unbreaking, random)) {
+            if (unbreaking <= 0 || !EnchantmentDurability.negateDamage(stack, unbreaking, random)) {
                 boolean manaRequested = entity instanceof EntityPlayer
                         ? ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, manaPerDamage, true)
                         : false;
