@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnchantmentDurability;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,19 +33,36 @@ import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.elementium.ItemElementiumPick;
 import vazkii.botania.common.item.equipment.tool.terrasteel.ItemTerraPick;
 
+import java.util.Random;
+
 public final class ToolCommons {
 
 	public static Material[] materialsPick = new Material[]{ Material.rock, Material.iron, Material.ice, Material.glass, Material.piston, Material.anvil };
 	public static Material[] materialsShovel = new Material[]{ Material.grass, Material.ground, Material.sand, Material.snow, Material.craftedSnow, Material.clay };
 	public static Material[] materialsAxe = new Material[]{ Material.coral, Material.leaves, Material.plants, Material.wood, Material.gourd };
 
-	public static void damageItem(ItemStack stack, int dmg, EntityLivingBase entity, int manaPerDamage) {
-		int manaToRequest = dmg * manaPerDamage;
-		boolean manaRequested = entity instanceof EntityPlayer ? ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, manaToRequest, true) : false;
+    public static void damageItem(ItemStack stack, int dmg, EntityLivingBase entity, int manaPerDamage) {
+        if(entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode) return;
+        int damageTaken = 0;
+        Random random = entity.worldObj.rand;
+        int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
 
-		if(!manaRequested)
-			stack.damageItem(dmg, entity);
-	}
+        for (int i = 0; i < dmg; i++) {
+            if (unbreaking <= 0 || !EnchantmentDurability.negateDamage(stack, unbreaking, random)) {
+                boolean manaRequested = entity instanceof EntityPlayer
+                        ? ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, manaPerDamage, true)
+                        : false;
+                if (!manaRequested) {
+                    damageTaken++;
+                }
+            }
+        }
+
+        if (damageTaken > 0) {
+            stack.damageItem(damageTaken, entity);
+        }
+
+    }
 
 	public static void removeBlocksInIteration(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, int xs, int ys, int zs, int xe, int ye, int ze, Block block, Material[] materialsListing, boolean silk, int fortune, boolean dispose) {
 		float blockHardness = block == null ? 1F : block.getBlockHardness(world, x, y, z);
