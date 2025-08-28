@@ -42,6 +42,7 @@ public class Botania {
 	public static boolean coloredLightsLoaded = false;
 	public static boolean etFuturumLoaded = false;
 	public static boolean storageDrawersLoaded = false;
+	public static boolean structureLibLoaded = false;
 
 	public static ILightHelper lightHelper;
 
@@ -61,6 +62,7 @@ public class Botania {
 		coloredLightsLoaded = Loader.isModLoaded("easycoloredlights");
 		etFuturumLoaded = Loader.isModLoaded("etfuturum");
 		storageDrawersLoaded = Loader.isModLoaded("StorageDrawers");
+		structureLibLoaded = Loader.isModLoaded("structurelib");
 		
 		lightHelper = coloredLightsLoaded ? new LightHelperColored() : new LightHelperVanilla();
 		proxy.preInit(event);

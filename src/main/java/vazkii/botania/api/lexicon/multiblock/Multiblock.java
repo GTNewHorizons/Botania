@@ -15,10 +15,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import org.apache.logging.log4j.Level;
+import vazkii.botania.api.lexicon.multiblock.compat.MultiblockCompatRegistry;
 import vazkii.botania.api.lexicon.multiblock.component.MultiblockComponent;
+import vazkii.botania.common.Botania;
 
 /**
  * This class describes a Mutiblock object. It's used to display a
@@ -39,10 +44,14 @@ public class Multiblock {
 	 * coords should be pivoted to the center of the structure.
 	 */
 	public void addComponent(MultiblockComponent component) {
-		if(getComponentForLocation(component.relPos.posX, component.relPos.posY, component.relPos.posZ) != null)
-			throw new IllegalArgumentException("Location in multiblock already occupied");
+		ChunkCoordinates pos = component.relPos;
+		if(getComponentForLocation(pos.posX, pos.posY, pos.posZ) != null) {
+			MultiblockComponent comp = getComponentForLocation(pos.posX, pos.posY, pos.posZ);
+			throw new IllegalArgumentException(
+					"Location in multiblock {x=" + pos.posX + " y=" + pos.posY + " z=" + pos.posZ + "} already occupied by block " + comp.getBlock().getLocalizedName());
+		}
 		components.add(component);
-		changeAxisForNewComponent(component.relPos.posX, component.relPos.posY, component.relPos.posZ);
+		changeAxisForNewComponent(pos.posX, pos.posY, pos.posZ);
 		calculateCostForNewComponent(component);
 		addComponentToLocationCache(component);
 	}
@@ -138,6 +147,28 @@ public class Multiblock {
 		return blocks;
 	}
 
+	public <T extends TileEntity> MultiblockSet makeSetRegisterStructure(
+			Class<T> controllerTileClass, Block controllerBlock, MultiblockComponent... extra
+	) {
+		registerStructure(controllerTileClass, controllerBlock, extra);
+		return makeSet();
+	}
+
+	public <T extends TileEntity> void registerStructure(
+			Class<T> controllerTileClass, Block controllerBlock, MultiblockComponent... extra
+	) {
+		if (Botania.structureLibLoaded) {
+			try {
+				MultiblockCompatRegistry.registerMultiblock(
+						this, controllerTileClass, controllerBlock, extra
+				);
+			} catch (Exception e) {
+				e.printStackTrace();
+				FMLLog.log(Level.ERROR, "Failed to load a Botania Multiblock into StructureLib.");
+			}
+		}
+	}
+
 	/**
 	 * Makes a MultiblockSet from this Multiblock and its rotations using
 	 * createRotations().
@@ -176,7 +207,7 @@ public class Multiblock {
 				pos.posX,
 				pos.posY,
 				pos.posZ
-				),  comp);
+		),  comp);
 	}
 
 	/**
