@@ -383,7 +383,8 @@ public class ClientProxy extends CommonProxy {
 		super.setExtraReach(entity, reach);
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayer player = mc.thePlayer;
-		if(entity == player) {
+		// Player object might have changed, need to check the UUID.
+		if(entity.worldObj.isRemote && entity.getUniqueID().equals(player.getUniqueID())) {
 			if(!(mc.playerController instanceof IExtendedPlayerController)) {
 				GameType type = ReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, LibObfuscation.CURRENT_GAME_TYPE);
 				NetHandlerPlayClient net = ReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, LibObfuscation.NET_CLIENT_HANDLER);
