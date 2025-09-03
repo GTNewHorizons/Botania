@@ -116,7 +116,7 @@ public class TileAlfPortal extends TileMod {
 		mb.addComponent(0, 1, 0, ModBlocks.alfPortal, 0);
 		mb.setRenderOffset(0, -1, 0);
 
-		return mb.makeSet();
+		return mb.makeSetRegisterStructure(TileAlfPortal.class, ModBlocks.alfPortal);
 	}
 
 	@Override
