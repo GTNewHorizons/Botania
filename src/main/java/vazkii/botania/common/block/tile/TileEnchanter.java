@@ -279,8 +279,10 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 		case 3 : { // Enchant
 			if(stageTicks >= 100) {
 				for(EnchantmentData data : enchants)
-					if(EnchantmentHelper.getEnchantmentLevel(data.enchant, itemToEnchant) == 0)
-						itemToEnchant.addEnchantment(Enchantment.enchantmentsList[data.enchant], data.level);
+					if(EnchantmentHelper.getEnchantmentLevel(data.enchant, itemToEnchant) == 0) {
+                        Enchantment ench = Enchantment.enchantmentsList[data.enchant];
+						itemToEnchant.addEnchantment(ench, Math.min(data.level, ench.getMaxLevel()));
+                    }
 
 				enchants.clear();
 				manaRequired = -1;
