@@ -83,7 +83,10 @@ public class BlockLightLauncher extends BlockMod implements ILexiconable {
 
 		if(!relays.isEmpty()) {
 			AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
-			List<Entity> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb);
+			// getEntitiesWithinAABB returns a new array, so nobody will care if we also use that array for entities of
+			// other types.
+			@SuppressWarnings({"rawtypes", "unchecked"})
+			List<Entity> entities = (List) world.getEntitiesWithinAABB(EntityLivingBase.class, aabb);
 			entities.addAll(world.getEntitiesWithinAABB(EntityItem.class, aabb));
 
 			if(!entities.isEmpty()) {

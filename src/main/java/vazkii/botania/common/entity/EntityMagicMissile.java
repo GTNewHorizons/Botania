@@ -162,7 +162,10 @@ public class EntityMagicMissile extends EntityThrowable {
 			setTarget(null);
 
 		double range = 12;
-		List<Entity> entities = worldObj.getEntitiesWithinAABB(isEvil() ? EntityPlayer.class : IMob.class, AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range));
+		AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
+		// getEntitiesWithinAABB returns a new array of Entities - it doesn't care what specific kinds of entity we stuff into it.
+		@SuppressWarnings({"rawtypes", "unchecked"})
+		List<Entity> entities = (List) worldObj.getEntitiesWithinAABB((Class) (isEvil() ? EntityPlayer.class : IMob.class), boundingBox);
 		while(entities.size() > 0) {
 			Entity e = (Entity) entities.get(worldObj.rand.nextInt(entities.size()));
 			if(!(e instanceof EntityLivingBase) || e.isDead) { // Just in case...

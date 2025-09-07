@@ -29,11 +29,18 @@ public class LensInfluence extends Lens {
 	public void updateBurst(IManaBurst burst, EntityThrowable entity, ItemStack stack) {
 		if(!burst.isFake()) {
 			double range = 3.5;
-			List<Entity> movables = entity.worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
+
+			// Yes, this is horrible & dumb, but there's no pattern within Java to indicate
+			// "I have created this new array, which contains only this class, but you can add whatever to it"
+            @SuppressWarnings({"rawtypes", "unchecked"})
+			List<Entity> movables = (List<Entity>) (List) entity.worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
 			movables.addAll(entity.worldObj.getEntitiesWithinAABB(EntityXPOrb.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range)));
 			movables.addAll(entity.worldObj.getEntitiesWithinAABB(EntityArrow.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range)));
 			movables.addAll(entity.worldObj.getEntitiesWithinAABB(EntityFallingBlock.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range)));
-			movables.addAll(entity.worldObj.getEntitiesWithinAABB(IManaBurst.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range)));
+
+			// getEntitiesWithinAABB is guaranteed to always return only entities.
+            //noinspection unchecked,rawtypes
+            movables.addAll((List) entity.worldObj.getEntitiesWithinAABB(IManaBurst.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range)));
 
 			for(Entity movable : movables) {
 				if(movable == burst)
