@@ -106,7 +106,7 @@ public class EntityMagicMissile extends EntityThrowable {
 		}
 		Botania.proxy.setSparkleFXCorrupt(false);
 
-		EntityLivingBase target = getTargetEntity();
+		final EntityLivingBase target = getTargetEntity();
 		if(target != null) {
 			if(lockY == -1) {
 				lockX = target.posX;
@@ -124,7 +124,7 @@ public class EntityMagicMissile extends EntityThrowable {
 			motionZ = motionVec.z;
 
 			List<EntityLivingBase> targetList = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(posX - 0.5, posY - 0.5, posZ - 0.5, posX + 0.5, posY + 0.5, posZ + 0.5));
-			if(targetList.contains(target) && target != null) {
+			if(targetList.contains(target)) {
 				EntityLivingBase thrower = getThrower();
 				if(thrower != null) {
 					EntityPlayer player = thrower instanceof EntityPlayer ? (EntityPlayer) thrower : null;
@@ -167,7 +167,7 @@ public class EntityMagicMissile extends EntityThrowable {
 		@SuppressWarnings({"rawtypes", "unchecked"})
 		List<Entity> entities = (List) worldObj.getEntitiesWithinAABB((Class) (isEvil() ? EntityPlayer.class : IMob.class), boundingBox);
 		while(entities.size() > 0) {
-			Entity e = (Entity) entities.get(worldObj.rand.nextInt(entities.size()));
+			Entity e = entities.get(worldObj.rand.nextInt(entities.size()));
 			if(!(e instanceof EntityLivingBase) || e.isDead) { // Just in case...
 				entities.remove(e);
 				continue;
