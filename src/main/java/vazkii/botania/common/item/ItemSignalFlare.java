@@ -116,7 +116,7 @@ public class ItemSignalFlare extends ItemMod {
 	}
 
 	@Override
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
+	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List) {
 		for(int i = 0; i < 16; i++)
 			par3List.add(forColor(i));
 	}
@@ -127,9 +127,9 @@ public class ItemSignalFlare extends ItemMod {
 	}
 
 	@Override
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-		int storedColor = getColor(par1ItemStack);
-		par3List.add(String.format(StatCollector.translateToLocal("botaniamisc.flareColor"), StatCollector.translateToLocal("botania.color" + storedColor)));
+	public void addInformation(ItemStack stack, EntityPlayer p, List<String> infoList, boolean adv) {
+		int storedColor = getColor(stack);
+		infoList.add(String.format(StatCollector.translateToLocal("botaniamisc.flareColor"), StatCollector.translateToLocal("botania.color" + storedColor)));
 	}
 
 	public static ItemStack forColor(int color) {

@@ -81,7 +81,7 @@ public class BlockAltar extends BlockModContainer<TileAltar> implements ILexicon
 	}
 
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, List list) {
+	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
 		for(int i = 0; i < 9; i++)
 			list.add(new ItemStack(item, 1, i));
 	}

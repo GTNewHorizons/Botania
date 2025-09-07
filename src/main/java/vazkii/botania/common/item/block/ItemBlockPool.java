@@ -24,10 +24,10 @@ public class ItemBlockPool extends ItemBlockWithMetadataAndName {
 	}
 
 	@Override
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-		if(par1ItemStack.getItemDamage() == 1)
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+		if(stack.getItemDamage() == 1)
 			for(int i = 0; i < 2; i++)
-				par3List.add(StatCollector.translateToLocal("botaniamisc.creativePool" + i));
+				infoList.add(StatCollector.translateToLocal("botaniamisc.creativePool" + i));
 	}
 
 }

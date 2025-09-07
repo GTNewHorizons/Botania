@@ -160,11 +160,11 @@ public class BlockSpecialFlower extends BlockFlower implements ITileEntityProvid
 	}
 
 	@Override
-	public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
+	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
 		for(String s : BotaniaAPI.subtilesForCreativeMenu) {
-			par3List.add(ItemBlockSpecialFlower.ofType(s));
+			list.add(ItemBlockSpecialFlower.ofType(s));
 			if(BotaniaAPI.miniFlowers.containsKey(s))
-				par3List.add(ItemBlockSpecialFlower.ofType(BotaniaAPI.miniFlowers.get(s)));
+				list.add(ItemBlockSpecialFlower.ofType(BotaniaAPI.miniFlowers.get(s)));
 		}
 	}
 
