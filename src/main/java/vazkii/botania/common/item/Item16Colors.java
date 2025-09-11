@@ -36,9 +36,9 @@ public class Item16Colors extends ItemMod {
 	}
 
 	@Override
-	public void getSubItems(Item item, CreativeTabs par2CreativeTabs, List par3List) {
+	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
 		for(int i = 0; i < 16; i++)
-			par3List.add(new ItemStack(item, 1, i));
+			list.add(new ItemStack(item, 1, i));
 	}
 
 	@Override

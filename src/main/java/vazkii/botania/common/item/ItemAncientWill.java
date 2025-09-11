@@ -42,7 +42,7 @@ public class ItemAncientWill extends ItemMod {
 	}
 
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, List list) {
+	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
 		for(int i = 0; i < SUBTYPES; i++)
 			list.add(new ItemStack(item, 1, i));
 	}
@@ -60,9 +60,9 @@ public class ItemAncientWill extends ItemMod {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean adv) {
-		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.craftToAddWill"), list);
-		addStringToTooltip(StatCollector.translateToLocal("botania.armorset.will" + stack.getItemDamage() + ".shortDesc"), list);
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.craftToAddWill"), infoList);
+		addStringToTooltip(StatCollector.translateToLocal("botania.armorset.will" + stack.getItemDamage() + ".shortDesc"), infoList);
 	}
 
 	public void addStringToTooltip(String s, List<String> tooltip) {

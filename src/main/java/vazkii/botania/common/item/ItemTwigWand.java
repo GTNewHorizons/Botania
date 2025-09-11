@@ -232,9 +232,9 @@ public class ItemTwigWand extends Item16Colors implements ICoordBoundItem {
 	}
 
 	@Override
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
+	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
 		for(int i = 0; i < 16; i++)
-			par3List.add(forColors(i, i));
+			list.add(forColors(i, i));
 	}
 
 	@Override
@@ -243,7 +243,7 @@ public class ItemTwigWand extends Item16Colors implements ICoordBoundItem {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer p, List list, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer p, List<String> list, boolean adv) {
 		list.add(StatCollector.translateToLocal(getModeString(stack)));
 	}
 

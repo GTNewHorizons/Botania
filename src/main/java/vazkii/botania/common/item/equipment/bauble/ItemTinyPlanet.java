@@ -61,7 +61,11 @@ public class ItemTinyPlanet extends ItemBauble implements IBaubleRender {
 
 	public static void applyEffect(World world, double x, double y, double z) {
 		int range = 8;
-		List<Entity> entities = world.getEntitiesWithinAABB(IManaBurst.class, AxisAlignedBB.getBoundingBox(x - range, y - range, z - range, x + range, y + range, z + range));
+
+		// The list from getEntitiesWithinAABB is guaranteed to only contain Entities, even though we don't use
+		// a subclass of Entity.
+		@SuppressWarnings({"rawtypes", "unchecked"})
+		List<Entity> entities = (List) world.getEntitiesWithinAABB(IManaBurst.class, AxisAlignedBB.getBoundingBox(x - range, y - range, z - range, x + range, y + range, z + range));
 		for(Entity entity : entities) {
 			IManaBurst burst = (IManaBurst) entity;
 			ItemStack lens = burst.getSourceLens();

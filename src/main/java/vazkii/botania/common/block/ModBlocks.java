@@ -525,9 +525,9 @@ public final class ModBlocks {
 	private static void registerSubTileWithMini(String key, Class<? extends SubTileEntity> clazz) {
 		BotaniaAPI.registerSubTile(key, clazz);
 
-		for(Class innerClazz : clazz.getDeclaredClasses())
+		for(final var innerClazz : clazz.getDeclaredClasses())
 			if(innerClazz.getSimpleName().equals("Mini"))
-				BotaniaAPI.registerMiniSubTile(key + "Chibi", innerClazz, key);
+				BotaniaAPI.registerMiniSubTile(key + "Chibi", innerClazz.asSubclass(SubTileEntity.class), key);
 	}
 
 	private static void registerSubTileWithDecor(String key, Class<? extends SubTileEntity> clazz, Class<? extends SubTileEntity> decor) {

@@ -105,11 +105,11 @@ public class ItemCacophonium extends ItemMod implements ICraftAchievement {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
 		if(isDOIT(stack))
-			list.add(StatCollector.translateToLocal("botaniamisc.justDoIt"));
+			infoList.add(StatCollector.translateToLocal("botaniamisc.justDoIt"));
 		else if(ItemNBTHelper.getBoolean(stack, TAG_HAS_SOUND, false))
-			list.add(StatCollector.translateToLocal(ItemNBTHelper.getString(stack, TAG_SOUND_NAME, "")));
+			infoList.add(StatCollector.translateToLocal(ItemNBTHelper.getString(stack, TAG_SOUND_NAME, "")));
 	}
 
 	@Override
