@@ -138,11 +138,11 @@ public class ItemItemFinder extends ItemBauble implements IBaubleRender {
 					if(scanInventory(chest, pstack))
 						positionsBuilder.append(horse.getEntityId()).append(";");
 
-				} else if(e instanceof EntityPlayer player_) {
-                    InventoryPlayer inv = player_.inventory;
-					InventoryBaubles binv = PlayerHandler.getPlayerBaubles(player_);
+				} else if(e instanceof EntityPlayer otherPlayer) {
+                    InventoryPlayer inv = otherPlayer.inventory;
+					InventoryBaubles binv = PlayerHandler.getPlayerBaubles(otherPlayer);
 					if(scanInventory(inv, pstack) || scanInventory(binv, pstack))
-						positionsBuilder.append(player_.getEntityId()).append(";");
+						positionsBuilder.append(otherPlayer.getEntityId()).append(";");
 
 				} else if(e instanceof EntityVillager villager) {
                     ArrayList<MerchantRecipe> recipes = villager.getRecipes(player);
@@ -151,9 +151,8 @@ public class ItemItemFinder extends ItemBauble implements IBaubleRender {
 							if(recipe != null && !recipe.isRecipeDisabled() && (equalStacks(pstack, recipe.getItemToBuy()) || equalStacks(pstack, recipe.getItemToSell())))
 								positionsBuilder.append(villager.getEntityId()).append(";");
 
-				} else if(e instanceof EntityLivingBase) {
-					EntityLivingBase living = (EntityLivingBase) e;
-					ItemStack estack = living.getEquipmentInSlot(0);
+				} else if(e instanceof EntityLivingBase living) {
+                    ItemStack estack = living.getEquipmentInSlot(0);
 					if(pstack != null && estack != null && equalStacks(estack, pstack))
 						positionsBuilder.append(living.getEntityId()).append(";");
 				}

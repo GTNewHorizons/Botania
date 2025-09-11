@@ -163,7 +163,9 @@ public class EntityMagicMissile extends EntityThrowable {
 
 		double range = 12;
 		AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
-		// getEntitiesWithinAABB returns a new array of Entities - it doesn't care what specific kinds of entity we stuff into it.
+
+		// The list from getEntitiesWithinAABB is guaranteed to only contain Entities, even though we don't use
+		// a subclass of Entity.
 		@SuppressWarnings({"rawtypes", "unchecked"})
 		List<Entity> entities = (List) worldObj.getEntitiesWithinAABB((Class) (isEvil() ? EntityPlayer.class : IMob.class), boundingBox);
 		while(entities.size() > 0) {
