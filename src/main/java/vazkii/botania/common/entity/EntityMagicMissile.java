@@ -69,7 +69,7 @@ public class EntityMagicMissile extends EntityThrowable {
 	public EntityLivingBase getTargetEntity() {
 		int id = dataWatcher.getWatchableObjectInt(26);
 		Entity e = worldObj.getEntityByID(id);
-		if(e != null && e instanceof EntityLivingBase)
+		if(e instanceof EntityLivingBase)
 			return (EntityLivingBase) e;
 
 		return null;

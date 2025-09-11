@@ -170,9 +170,8 @@ public class ItemItemFinder extends ItemBauble implements IBaubleRender {
 							int yp = y + j;
 							int zp = z + k;
 							TileEntity tile = player.worldObj.getTileEntity(xp, yp, zp);
-							if(tile != null && tile instanceof IInventory) {
-								IInventory inv = (IInventory) tile;
-								if(scanInventory(inv, pstack))
+							if(tile instanceof IInventory inv) {
+                                if(scanInventory(inv, pstack))
 									positionsBuilder.append(xp).append(",").append(yp).append(",").append(zp).append(";");
 							}
 						}
