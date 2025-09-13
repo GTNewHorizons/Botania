@@ -29,7 +29,7 @@ public class TileCocoon extends TileMod {
 	private static final String TAG_TIME_PASSED = "timePassed";
 	private static final String TAG_EMERALDS_GIVEN = "emeraldsGiven";
 
-	public static final int TOTAL_TIME = 2400;
+	public static final int TOTAL_TIME = 60; // TODO Undo this
 	public static final int MAX_EMERALDS = 20;
 
 	public int timePassed;
@@ -94,6 +94,20 @@ public class TileCocoon extends TileMod {
 			if(entity != null) {
 				entity.setPosition(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
 				entity.setGrowingAge(-24000);
+
+				if (Math.random() < 0.01) {
+					// gonna make modded minecraft items into a gacha game
+					// and somehow find a way to add jeanne d'arc to it
+					// - Vazkii 2021
+					// Do I backport the easter egg?
+					// - nicksitnikov 2025
+					// Yes
+					// - koolkrafter5 2025
+
+					entity.setCustomNameTag("§6§lJeanne d'" + entity.getCommandSenderName() + "§6§l [SSR]");
+					entity.setAlwaysRenderNameTag(true);
+				}
+
 				worldObj.spawnEntityInWorld(entity);
 				entity.spawnExplosionParticle();
 			}
