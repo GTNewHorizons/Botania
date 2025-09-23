@@ -75,6 +75,10 @@ public class PageText extends LexiconPage {
 		font.setUnicodeFlag(unicode);
 	}
 
+	/**
+	 * Checks if the given character belongs to the CJK (Chinese, Japanese, Korean) Unicode block.
+	 * Used to handle proper line breaking for languages without spaces.
+	 */
 	public static boolean isCJK(char c) {
 		Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
 		return block == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
