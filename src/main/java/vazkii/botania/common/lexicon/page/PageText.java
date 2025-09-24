@@ -49,29 +49,29 @@ public class PageText extends LexiconPage {
 
 	@SideOnly(Side.CLIENT)
 	public static void renderText(int x, int y, int width, int height, int paragraphSize, String unlocalizedText) {
-		y += 10;
-		width -= 4;
+        y += 10;
+        width -= 4;
 
-		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-		boolean unicode = font.getUnicodeFlag();
-		font.setUnicodeFlag(true);
-		String text = StatCollector.translateToLocal(unlocalizedText).replaceAll("&", "\u00a7");
-		String[] textEntries = text.split("<br>");
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+        boolean unicode = font.getUnicodeFlag();
+        font.setUnicodeFlag(true);
+        String text = StatCollector.translateToLocal(unlocalizedText).replaceAll("&", "\u00a7");
+        String[] textEntries = text.split("<br>");
 
-		List<List<String>> lines = new ArrayList<>(textEntries.length * 2);
+        List<List<String>> lines = new ArrayList<>(textEntries.length * 2);
 
-		String controlCodes;
+        String controlCodes;
         var lang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage();
-        var locale =  Locale.forLanguageTag(lang.toString().replace(" (", "-").replace(")", ""));
-        if(locale == null) {
+        var locale = Locale.forLanguageTag(lang.toString().replace(" (", "-").replace(")", ""));
+        if (locale == null) {
             locale = Locale.forLanguageTag(lang.getLanguageCode());
         }
-        if(locale == null) {
+        if (locale == null) {
             locale = Locale.ENGLISH;
         }
-		for(String s : textEntries) {
-			List<String> words = new ArrayList<>();
-			String lineStr = "";
+        for (String s : textEntries) {
+            List<String> words = new ArrayList<>();
+            String lineStr = "";
             var breaker = BreakIterator.getLineInstance(locale);
             breaker.setText(s);
             int start = breaker.first();
@@ -81,7 +81,7 @@ public class PageText extends LexiconPage {
                 lineStr += token;
 
                 controlCodes = toControlCodes(getControlCodes(prev));
-                if(font.getStringWidth(lineStr) > width) {
+                if (font.getStringWidth(lineStr) > width) {
                     lines.add(words);
                     lineStr = controlCodes + token;
                     words = new ArrayList<>();
@@ -90,22 +90,29 @@ public class PageText extends LexiconPage {
                 words.add(controlCodes + token);
             }
 
-			if(!lineStr.isEmpty())
-				lines.add(words);
-			lines.add(new ArrayList<>());
-		}
+            if (!lineStr.isEmpty())
+                lines.add(words);
+            lines.add(new ArrayList<>());
+        }
 
         int i = 0;
         for (List<String> words : lines) {
             int xi = x;
 
-            int gaps = Math.max(0, words.size() - 1);
+            List<Integer> gapIds= new ArrayList<>(words.size());
+            for (int k = 0; k < words.size() - 1; k++) {
+                if (font.getStringWidth(words.get(k)) > 0 &&
+                        font.getStringWidth(words.get(k + 1)) > 0) {
+                    gapIds.add(k);
+                }
+            }
+
             boolean nextLineExists = (i + 1) < lines.size();
             boolean justify = ConfigHandler.lexiconJustifiedText
                     && !words.isEmpty()
                     && nextLineExists
                     && !lines.get(i + 1).isEmpty()
-                    && gaps > 0;
+                    && !gapIds.isEmpty();
 
             int spacing = 0;
             int compensation = 0;
@@ -114,19 +121,24 @@ public class PageText extends LexiconPage {
                 String joined = Joiner.on("").join(words);
                 int swidth = font.getStringWidth(joined);
                 int extraSpace = width - swidth;
+
+                int gaps = gapIds.size();
                 spacing = extraSpace / gaps;
                 compensation = extraSpace % gaps;
             }
 
+            int gi = 0;
             for (int idx = 0; idx < words.size(); idx++) {
                 String tok = words.get(idx);
-                font.drawString(tok, xi, y, 0);
-                xi += font.getStringWidth(tok);
+                int tw = font.getStringWidth(tok);
 
-                if (justify && idx < words.size() - 1) {
-                    int extra = 0;
-                    if (compensation > 0) { extra = 1; compensation--; }
-                    xi += spacing + extra;
+                font.drawString(tok, xi, y, 0);
+                xi += tw;
+
+                if (justify && gi < gapIds.size() && idx == gapIds.get(gi)) {
+                    xi += spacing + (compensation > 0 ? 1 : 0);
+                    if (compensation > 0) compensation--;
+                    gi++;
                 }
             }
 
