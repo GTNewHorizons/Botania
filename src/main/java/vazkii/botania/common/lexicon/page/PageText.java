@@ -2,21 +2,27 @@
  * This class was created by <Vazkii>. It's distributed as
  * part of the Botania Mod. Get the Source Code in github:
  * https://github.com/Vazkii/Botania
- * 
+ *
  * Botania is Open Source and distributed under the
  * Botania License: http://botaniamod.net/license.php
- * 
+ *
  * File Created @ [Jan 14, 2014, 6:45:33 PM (GMT)]
  */
 package vazkii.botania.common.lexicon.page;
 
+import java.text.BreakIterator;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.StatCollector;
 import vazkii.botania.api.internal.IGuiLexiconEntry;
 import vazkii.botania.api.lexicon.LexiconPage;
+import vazkii.botania.common.core.handler.ConfigHandler;
+
+import com.google.common.base.Joiner;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -37,58 +43,103 @@ public class PageText extends LexiconPage {
 		renderText(x, y, width, gui.getHeight(), getUnlocalizedName());
 	}
 
+	public static void renderText(int x, int y, int width, int height, String unlocalizedText) {
+		renderText(x, y, width, height, 10, unlocalizedText);
+	}
+
 	@SideOnly(Side.CLIENT)
-	public static void renderText(int x, int y, int width, int paragraphSize, String unlocalizedText) {
+	public static void renderText(int x, int y, int width, int height, int paragraphSize, String unlocalizedText) {
+		x += 2;
+		y += 10;
+		width -= 4;
+
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 		boolean unicode = font.getUnicodeFlag();
 		font.setUnicodeFlag(true);
-
 		String text = StatCollector.translateToLocal(unlocalizedText).replaceAll("&", "\u00a7");
-		String[] paragraphs = text.split("<br>");
+		String[] textEntries = text.split("<br>");
 
-		for (String paragraph : paragraphs) {
-			StringBuilder processed = new StringBuilder();
-			for (int i = 0; i < paragraph.length(); i++) {
-				char c = paragraph.charAt(i);
-				if (c == ' ' && i > 0 && i < paragraph.length() - 1) {
-					char prev = paragraph.charAt(i - 1);
-					char next = paragraph.charAt(i + 1);
-					if (isCJK(prev) && isCJK(next)) {
-						processed.append('\n');
-						continue;
-					}
-				}
-				processed.append(c);
-			}
+		List<List<String>> lines = new ArrayList<>(textEntries.length * 2);
 
-			String[] preSplit = processed.toString().split("\n");
-			for (String block : preSplit) {
-				List<String> lines = font.listFormattedStringToWidth(block, width - 4);
-				for (String line : lines) {
-					font.drawString(line, x + 2, y + 10, 0x000000);
-					y += 10;
-				}
-			}
-			y += 10;
+		String controlCodes;
+        var lang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage();
+        var locale =  Locale.forLanguageTag(lang.toString().replace(" (", "-").replace(")", ""));
+		for(String s : textEntries) {
+			List<String> words = new ArrayList<>();
+			String lineStr = "";
+            var breaker = BreakIterator.getLineInstance(locale);
+            breaker.setText(s);
+            int start = breaker.first();
+            for (int end = breaker.next(); end != BreakIterator.DONE; start = end, end = breaker.next()) {
+                String token = s.substring(start, end);
+                String prev = lineStr;
+                lineStr += token;
+
+                controlCodes = toControlCodes(getControlCodes(prev));
+                if(font.getStringWidth(lineStr) > width) {
+                    lines.add(words);
+                    lineStr = controlCodes + token;
+                    words = new ArrayList<>();
+                }
+
+                words.add(controlCodes + token);
+            }
+
+			if(!lineStr.isEmpty())
+				lines.add(words);
+			lines.add(new ArrayList<>());
 		}
+
+        int i = 0;
+        for (List<String> words : lines) {
+            int xi = x;
+
+            int gaps = Math.max(0, words.size() - 1);
+            boolean nextLineExists = (i + 1) < lines.size();
+            boolean justify = ConfigHandler.lexiconJustifiedText
+                    && !words.isEmpty()
+                    && nextLineExists
+                    && !lines.get(i + 1).isEmpty()
+                    && gaps > 0;
+
+            int spacing = 0;
+            int compensation = 0;
+
+            if (justify) {
+                String joined = Joiner.on("").join(words);
+                int swidth = font.getStringWidth(joined);
+                int extraSpace = width - swidth;
+                spacing = extraSpace / gaps;
+                compensation = extraSpace % gaps;
+            }
+
+            for (int idx = 0; idx < words.size(); idx++) {
+                String tok = words.get(idx);
+                font.drawString(tok, xi, y, 0);
+                xi += font.getStringWidth(tok);
+
+                if (justify && idx < words.size() - 1) {
+                    int extra = 0;
+                    if (compensation > 0) { extra = 1; compensation--; }
+                    xi += spacing + extra;
+                }
+            }
+
+            y += words.isEmpty() ? paragraphSize : 10;
+            i++;
+        }
 
 		font.setUnicodeFlag(unicode);
 	}
 
-	/**
-	 * Checks if the given character belongs to the CJK (Chinese, Japanese, Korean) Unicode block.
-	 * Used to handle proper line breaking for languages without spaces.
-	 */
-	public static boolean isCJK(char c) {
-		Character.UnicodeBlock block = Character.UnicodeBlock.of(c);
-		return block == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
-				|| block == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
-				|| block == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
-				|| block == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
-				|| block == Character.UnicodeBlock.HIRAGANA
-				|| block == Character.UnicodeBlock.KATAKANA
-				|| block == Character.UnicodeBlock.HANGUL_SYLLABLES
-				|| block == Character.UnicodeBlock.HANGUL_JAMO
-				|| block == Character.UnicodeBlock.HANGUL_COMPATIBILITY_JAMO;
+	public static String getControlCodes(String s) {
+		String controls = s.replaceAll("(?<!\u00a7)(.)", "");
+		String wiped = controls.replaceAll(".*r", "r");
+		return wiped;
 	}
+
+	public static String toControlCodes(String s) {
+		return s.replaceAll(".", "\u00a7$0");
+	}
+
 }
