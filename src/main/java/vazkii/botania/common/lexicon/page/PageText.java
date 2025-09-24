@@ -64,6 +64,12 @@ public class PageText extends LexiconPage {
 		String controlCodes;
         var lang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage();
         var locale =  Locale.forLanguageTag(lang.toString().replace(" (", "-").replace(")", ""));
+        if(locale == null) {
+            locale = Locale.forLanguageTag(lang.getLanguageCode());
+        }
+        if(locale == null) {
+            locale = Locale.ENGLISH;
+        }
 		for(String s : textEntries) {
 			List<String> words = new ArrayList<>();
 			String lineStr = "";
