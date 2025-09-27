@@ -35,9 +35,8 @@ public class TileSpawnerClaw extends TileMod implements IManaReceiver {
 	@Override
 	public void updateEntity() {
 		TileEntity tileBelow = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
-		if(mana >= 5 && tileBelow instanceof TileEntityMobSpawner) {
-			TileEntityMobSpawner spawner = (TileEntityMobSpawner) tileBelow;
-			MobSpawnerBaseLogic logic = spawner.func_145881_a();
+		if(mana >= 5 && tileBelow instanceof TileEntityMobSpawner spawner) {
+            MobSpawnerBaseLogic logic = spawner.func_145881_a();
 
 			if(!logic.isActivated()) {
 				if(!worldObj.isRemote)
@@ -106,7 +105,7 @@ public class TileSpawnerClaw extends TileMod implements IManaReceiver {
 	private void resetTimer(MobSpawnerBaseLogic logic) {
 		int maxSpawnDelay = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.MAX_SPAWN_DELAY);
 		int minSpawnDelay = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.MIN_SPAWN_DELAY);
-		List<?> potentialEntitySpawns = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.POTENTIAL_ENTITY_SPAWNS);
+		List<MobSpawnerBaseLogic.WeightedRandomMinecart> potentialEntitySpawns = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.POTENTIAL_ENTITY_SPAWNS);
 
 		if(maxSpawnDelay <= minSpawnDelay)
 			logic.spawnDelay = minSpawnDelay;

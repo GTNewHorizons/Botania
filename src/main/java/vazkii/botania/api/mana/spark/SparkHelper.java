@@ -23,10 +23,9 @@ public final class SparkHelper {
 		return SparkHelper.getEntitiesAround(ISparkEntity.class, world, x, y, z);
 	}
 
-	public static <T> List<T> getEntitiesAround(Class<? extends T> clazz, World world, double x, double y, double z) {
+	public static <T> List<T> getEntitiesAround(Class<T> clazz, World world, double x, double y, double z) {
 		int r = SPARK_SCAN_RANGE;
-		List<T> entities = world.getEntitiesWithinAABB(clazz, AxisAlignedBB.getBoundingBox(x - r, y - r, z - r, x + r, y + r, z + r));
-		return entities;
+        return world.getEntitiesWithinAABB(clazz, AxisAlignedBB.getBoundingBox(x - r, y - r, z - r, x + r, y + r, z + r));
 	}
 
 }

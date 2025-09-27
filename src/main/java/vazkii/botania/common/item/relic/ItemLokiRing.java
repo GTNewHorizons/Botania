@@ -432,18 +432,18 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean adv) {
-		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiDescription"), list);
-		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiDescription2"), list);
-		addStringToTooltip("", list);
-		addStringToTooltip(EnumChatFormatting.WHITE +StatCollector.translateToLocal("botaniamisc.lokiCurrent"), list);
-		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiState") + ": " + getOnOffString(isRingEnabled(stack)), list);
-		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.breaking") + ": " + getOnOffString(isRingBreakingEnabled(stack)), list);
-		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiMirror") + getAxisString(getRingMirrorMode(stack)), list);
-		addStringToTooltip("", list);
-		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiToggleDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET + "/"+ getOnOffString(false), list);
-		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiBreakingDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET+"/" + getOnOffString(false), list);	
-		super.addInformation(stack, player, list, adv);
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiDescription"), infoList);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiDescription2"), infoList);
+		addStringToTooltip("", infoList);
+		addStringToTooltip(EnumChatFormatting.WHITE +StatCollector.translateToLocal("botaniamisc.lokiCurrent"), infoList);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiState") + ": " + getOnOffString(isRingEnabled(stack)), infoList);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.breaking") + ": " + getOnOffString(isRingBreakingEnabled(stack)), infoList);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiMirror") + getAxisString(getRingMirrorMode(stack)), infoList);
+		addStringToTooltip("", infoList);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiToggleDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET + "/"+ getOnOffString(false), infoList);
+		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiBreakingDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET+"/" + getOnOffString(false), infoList);
+		super.addInformation(stack, player, infoList, adv);
 	}
 
 	@Override

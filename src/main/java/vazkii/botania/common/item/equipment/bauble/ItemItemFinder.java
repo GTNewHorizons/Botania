@@ -124,41 +124,35 @@ public class ItemItemFinder extends ItemBauble implements IBaubleRender {
 				if(e == player)
 					continue;
 
-				if(e instanceof EntityItem) {
-					EntityItem item = (EntityItem) e;
-					ItemStack istack = item.getEntityItem();
+				if(e instanceof EntityItem item) {
+                    ItemStack istack = item.getEntityItem();
 					if(player.isSneaking() || istack.isItemEqual(pstack) && ItemStack.areItemStackTagsEqual(istack, pstack))
 						positionsBuilder.append(item.getEntityId()).append(";");
 
-				} else if(e instanceof IInventory) {
-					IInventory inv = (IInventory) e;
-					if(scanInventory(inv, pstack))
+				} else if(e instanceof IInventory inv) {
+                    if(scanInventory(inv, pstack))
 						positionsBuilder.append(e.getEntityId()).append(";");
 
-				} else if(e instanceof EntityHorse) {
-					EntityHorse horse = (EntityHorse) e;
-					AnimalChest chest = ReflectionHelper.getPrivateValue(EntityHorse.class, horse, LibObfuscation.HORSE_CHEST);
+				} else if(e instanceof EntityHorse horse) {
+                    AnimalChest chest = ReflectionHelper.getPrivateValue(EntityHorse.class, horse, LibObfuscation.HORSE_CHEST);
 					if(scanInventory(chest, pstack))
 						positionsBuilder.append(horse.getEntityId()).append(";");
 
-				} else if(e instanceof EntityPlayer) {
-					EntityPlayer player_ = (EntityPlayer) e;
-					InventoryPlayer inv = player_.inventory;
-					InventoryBaubles binv = PlayerHandler.getPlayerBaubles(player_);
+				} else if(e instanceof EntityPlayer otherPlayer) {
+                    InventoryPlayer inv = otherPlayer.inventory;
+					InventoryBaubles binv = PlayerHandler.getPlayerBaubles(otherPlayer);
 					if(scanInventory(inv, pstack) || scanInventory(binv, pstack))
-						positionsBuilder.append(player_.getEntityId()).append(";");
+						positionsBuilder.append(otherPlayer.getEntityId()).append(";");
 
-				} else if(e instanceof EntityVillager) {
-					EntityVillager villager = (EntityVillager) e;
-					ArrayList<MerchantRecipe> recipes = villager.getRecipes(player);
+				} else if(e instanceof EntityVillager villager) {
+                    ArrayList<MerchantRecipe> recipes = villager.getRecipes(player);
 					if(pstack != null && recipes != null)
 						for(MerchantRecipe recipe : recipes)
 							if(recipe != null && !recipe.isRecipeDisabled() && (equalStacks(pstack, recipe.getItemToBuy()) || equalStacks(pstack, recipe.getItemToSell())))
 								positionsBuilder.append(villager.getEntityId()).append(";");
 
-				} else if(e instanceof EntityLivingBase) {
-					EntityLivingBase living = (EntityLivingBase) e;
-					ItemStack estack = living.getEquipmentInSlot(0);
+				} else if(e instanceof EntityLivingBase living) {
+                    ItemStack estack = living.getEquipmentInSlot(0);
 					if(pstack != null && estack != null && equalStacks(estack, pstack))
 						positionsBuilder.append(living.getEntityId()).append(";");
 				}
@@ -176,9 +170,8 @@ public class ItemItemFinder extends ItemBauble implements IBaubleRender {
 							int yp = y + j;
 							int zp = z + k;
 							TileEntity tile = player.worldObj.getTileEntity(xp, yp, zp);
-							if(tile != null && tile instanceof IInventory) {
-								IInventory inv = (IInventory) tile;
-								if(scanInventory(inv, pstack))
+							if(tile instanceof IInventory inv) {
+                                if(scanInventory(inv, pstack))
 									positionsBuilder.append(xp).append(",").append(yp).append(",").append(zp).append(";");
 							}
 						}

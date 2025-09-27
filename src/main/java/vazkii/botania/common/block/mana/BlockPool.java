@@ -109,11 +109,11 @@ public class BlockPool extends BlockModContainer<TilePool> implements IWandHUD, 
 	}
 
 	@Override
-	public void getSubBlocks(Item par1, CreativeTabs par2, List par3) {
-		par3.add(new ItemStack(par1, 1, 0));
-		par3.add(new ItemStack(par1, 1, 2));
-		par3.add(new ItemStack(par1, 1, 3));
-		par3.add(new ItemStack(par1, 1, 1));
+	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
+		list.add(new ItemStack(item, 1, 0));
+		list.add(new ItemStack(item, 1, 2));
+		list.add(new ItemStack(item, 1, 3));
+		list.add(new ItemStack(item, 1, 1));
 	}
 
 	@Override
@@ -131,18 +131,18 @@ public class BlockPool extends BlockModContainer<TilePool> implements IWandHUD, 
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World p_149743_1_, int p_149743_2_, int p_149743_3_, int p_149743_4_, AxisAlignedBB p_149743_5_, List p_149743_6_, Entity p_149743_7_) {
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collider) {
 		float f = 1F / 16F;
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
-		super.addCollisionBoxesToList(p_149743_1_, p_149743_2_, p_149743_3_, p_149743_4_, p_149743_5_, p_149743_6_, p_149743_7_);
+		super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
 		setBlockBounds(0.0F, 0.0F, 0.0F, f, 0.5F, 1.0F);
-		super.addCollisionBoxesToList(p_149743_1_, p_149743_2_, p_149743_3_, p_149743_4_, p_149743_5_, p_149743_6_, p_149743_7_);
+		super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, f);
-		super.addCollisionBoxesToList(p_149743_1_, p_149743_2_, p_149743_3_, p_149743_4_, p_149743_5_, p_149743_6_, p_149743_7_);
+		super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
 		setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
-		super.addCollisionBoxesToList(p_149743_1_, p_149743_2_, p_149743_3_, p_149743_4_, p_149743_5_, p_149743_6_, p_149743_7_);
+		super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
 		setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 0.5F, 1.0F);
-		super.addCollisionBoxesToList(p_149743_1_, p_149743_2_, p_149743_3_, p_149743_4_, p_149743_5_, p_149743_6_, p_149743_7_);
+		super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
 	}
 

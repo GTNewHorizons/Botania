@@ -31,8 +31,8 @@ public class ItemBlockModSlab extends ItemSlab {
 		return field_150939_a.getUnlocalizedName().replaceAll("tile.", "tile.botania:");
 	}
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advancedTooltips) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
 		if (ConfigHandler.noMobSpawnOnBlocks)
-			list.add(StatCollector.translateToLocal("nomobspawnsonthisblock.tip"));
+			infoList.add(StatCollector.translateToLocal("nomobspawnsonthisblock.tip"));
 	}
 }
