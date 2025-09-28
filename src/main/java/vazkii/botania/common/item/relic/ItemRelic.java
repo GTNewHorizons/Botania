@@ -46,11 +46,11 @@ public class ItemRelic extends ItemMod implements IRelic {
 	}
 
 	@Override
-	public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List p_77624_3_, boolean p_77624_4_) {
-		addBindInfo(p_77624_3_, p_77624_1_, p_77624_2_);
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+		addBindInfo(infoList, stack, player);
 	}
 
-	public static void addBindInfo(List list, ItemStack stack, EntityPlayer player) {
+	public static void addBindInfo(List<String> list, ItemStack stack, EntityPlayer player) {
 		if(GuiScreen.isShiftKeyDown()) {
 			String bind = getSoulbindUsernameS(stack);
 			if(bind.isEmpty())

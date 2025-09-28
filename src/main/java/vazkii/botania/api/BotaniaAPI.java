@@ -60,8 +60,8 @@ import cpw.mods.fml.common.Loader;
 
 public final class BotaniaAPI {
 
-	private static List<LexiconCategory> categories = new ArrayList<>();
-	private static List<LexiconEntry> allEntries = new ArrayList<>();
+	private static final List<LexiconCategory> categories = new ArrayList<>();
+	private static final List<LexiconEntry> allEntries = new ArrayList<>();
 
 	public static Map<String, KnowledgeType> knowledgeTypes = new HashMap<>();
 
@@ -78,11 +78,11 @@ public final class BotaniaAPI {
 	public static List<RecipeBrew> brewRecipes = new ArrayList<>();
 	public static List<RecipeManaInfusion> miniFlowerRecipes = new ArrayList<>();
 
-	private static BiMap<String, Class<? extends SubTileEntity>> subTiles = HashBiMap.<String, Class<? extends SubTileEntity>> create();
-	private static Map<Class<? extends SubTileEntity>, SubTileSignature> subTileSignatures = new HashMap<>();
+	private static final BiMap<String, Class<? extends SubTileEntity>> subTiles = HashBiMap.create();
+	private static final Map<Class<? extends SubTileEntity>, SubTileSignature> subTileSignatures = new HashMap<>();
 	public static Set<String> subtilesForCreativeMenu = new LinkedHashSet<>();
 	public static Map<String, String> subTileMods = new HashMap<>();
-	public static BiMap<String, String> miniFlowers = HashBiMap.<String, String> create();
+	public static BiMap<String, String> miniFlowers = HashBiMap.create();
 
 	public static Map<String, Integer> oreWeights = new HashMap<>();
 	public static Map<String, Integer> oreWeightsNether = new HashMap<>();
@@ -108,7 +108,7 @@ public final class BotaniaAPI {
 	public static KnowledgeType basicKnowledge;
 	public static KnowledgeType elvenKnowledge;
 
-	// This is here for completeness sake, but you shouldn't use it
+	// This is here for completeness’s sake, but you shouldn't use it
 	public static KnowledgeType relicKnowledge;
 
 	// All of these categories are initialized during botania's PreInit stage.
@@ -290,14 +290,14 @@ public final class BotaniaAPI {
 		return fallbackBrew;
 	}
 
-	/*
+	/**
 	 * Registers a Block as disposable using its Ore Dictionary Name.
 	 */
 	public static void registerDisposableBlock(String oreDictName) {
 		disposableBlocks.add(oreDictName);
 	}
 	
-	/*
+	/**
 	 * Registers a Block as semi disposable using its Ore Dictionary Name.
 	 * This means it will not be trashed when sneaking.
 	 */
@@ -313,7 +313,7 @@ public final class BotaniaAPI {
 		return paintable;
 	}
 
-	/*
+	/**
 	 * Blacklists an Entity from being affected by the Rod of the Shaded Mesa.
 	 * Pass in the class for the Entity, e.g. EntityCow.class
 	 */
@@ -321,7 +321,7 @@ public final class BotaniaAPI {
 		gravityRodBlacklist.add(entity);
 	}
 	
-	/*
+	/**
 	 * Checks if the provided Entity is contained in the Blacklist.
 	 * Pass in the class for the Entity, e.g. entity.getClass()
 	 */
@@ -476,7 +476,7 @@ public final class BotaniaAPI {
 	/**
 	 * Registers a Brew Recipe (for the Botanical Brewery).
 	 * @param brew The brew in to be set in this recipe.
-	 * @inputs The items used in the recipe, no more than 6.
+	 * @param inputs The items used in the recipe, no more than 6.
 	 */
 	public static RecipeBrew registerBrewRecipe(Brew brew, Object... inputs) {
 		RecipeBrew recipe = new RecipeBrew(brew, inputs);
@@ -592,7 +592,7 @@ public final class BotaniaAPI {
 	 * https://gist.github.com/Vazkii/9493322
 	 */
 	public static void addOreWeightNether(String ore, int weight) {
-		if(ore.contains("Nether") && OreDictionary.getOres(ore.replace("Nether", "")).size() == 0)
+		if(ore.contains("Nether") && OreDictionary.getOres(ore.replace("Nether", "")).isEmpty())
 			return;
 
 		oreWeightsNether.put(ore, weight);

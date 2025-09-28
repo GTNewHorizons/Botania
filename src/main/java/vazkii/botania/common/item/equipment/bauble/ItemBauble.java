@@ -10,14 +10,14 @@
  */
 package vazkii.botania.common.item.equipment.bauble;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
+import baubles.api.BaublesApi;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -45,9 +45,6 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 	private static final String TAG_COSMETIC_ITEM = "cosmeticItem";
 	private static final String TAG_PHANTOM_INK = "phantomInk";
 
-	private static final HashMap<UUID, UUID> itemToPlayerRemote = new HashMap<>();
-	private static final HashMap<UUID, UUID> itemToPlayer = new HashMap<>();
-	private static final HashSet<UUID> toRemoveItems = new HashSet<>();
 
 	public ItemBauble(String name) {
 		super();
@@ -87,28 +84,28 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
 		if(GuiScreen.isShiftKeyDown())
-			addHiddenTooltip(par1ItemStack, par2EntityPlayer, par3List, par4);
-		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), par3List);
+			addHiddenTooltip(stack, player, infoList, adv);
+		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), infoList);
 	}
 
-	public void addHiddenTooltip(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-		BaubleType type = getBaubleType(par1ItemStack);
-		addStringToTooltip(StatCollector.translateToLocal("botania.baubletype." + type.name().toLowerCase()), par3List);
+	public void addHiddenTooltip(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+		BaubleType type = getBaubleType(stack);
+		addStringToTooltip(StatCollector.translateToLocal("botania.baubletype." + type.name().toLowerCase()), infoList);
 
 		String key = vazkii.botania.client.core.helper.RenderHelper.getKeyDisplayString("Baubles Inventory");
 
 		if(key != null && !key.equals("NONE")) {
-			addStringToTooltip(StatCollector.translateToLocal("botania.baubletooltip").replaceAll("%key%", key), par3List);
+			addStringToTooltip(StatCollector.translateToLocal("botania.baubletooltip").replaceAll("%key%", key), infoList);
 		}
 
-		ItemStack cosmetic = getCosmeticItem(par1ItemStack);
+		ItemStack cosmetic = getCosmeticItem(stack);
 		if(cosmetic != null)
-			addStringToTooltip(String.format(StatCollector.translateToLocal("botaniamisc.hasCosmetic"), cosmetic.getDisplayName()), par3List);
+			addStringToTooltip(String.format(StatCollector.translateToLocal("botaniamisc.hasCosmetic"), cosmetic.getDisplayName()), infoList);
 
-		if(hasPhantomInk(par1ItemStack))
-			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.hasPhantomInk"), par3List);
+		if(hasPhantomInk(stack))
+			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.hasPhantomInk"), infoList);
 	}
 
 	public void addStringToTooltip(String s, List<String> tooltip) {
@@ -127,18 +124,12 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
-		UUID itemUUID = getBaubleUUID(stack);
-		if(toRemoveItems.contains(itemUUID)) {
-			// this is done like this because on server worn tick gets called after unequip
-			// so it would get reapplied
-			unapplyItem(itemUUID, player.worldObj.isRemote);
-			toRemoveItems.remove(itemUUID);
-			return;
-		}
-		if(!wasPlayerApplied(itemUUID, player.getUniqueID(), player.worldObj.isRemote)) {
-			onEquippedOrLoadedIntoWorld(stack, player);
-			applyToPlayer(itemUUID, player.getUniqueID(), player.worldObj.isRemote);
-		}
+		// NO-OP
+	}
+
+	@Override
+	public void onPlayerLoad(ItemStack stack, EntityLivingBase player) {
+		onEquippedOrLoadedIntoWorld(stack, player);
 	}
 
 	@Override
@@ -151,17 +142,16 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 				((EntityPlayer) player).addStat(ModAchievements.baubleWear, 1);
 
 			onEquippedOrLoadedIntoWorld(stack, player);
-			applyToPlayer(getBaubleUUID(stack), player.getUniqueID(), player.worldObj.isRemote);
 		}
-	}
-
-	public void onEquippedOrLoadedIntoWorld(ItemStack stack, EntityLivingBase player) {
-		// NO-OP
 	}
 
 	@Override
 	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
-		toRemoveItems.add(getBaubleUUID(stack));
+		// NO-OP
+	}
+
+	public void onEquippedOrLoadedIntoWorld(ItemStack stack, EntityLivingBase player) {
+		// NO-OP
 	}
 
 	@Override
@@ -206,39 +196,6 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 		long least = ItemNBTHelper.getLong(stack, TAG_BAUBLE_UUID_LEAST, 0);
 		return new UUID(most, least);
-	}
-
-	public static boolean wasPlayerApplied(UUID itemUUID, UUID playerUUID, boolean remote) {
-		return playerUUID.equals(remote ? itemToPlayerRemote.get(itemUUID) : itemToPlayer.get(itemUUID));
-	}
-
-	public static void applyToPlayer(UUID itemUUID, UUID playerUUID, boolean remote) {
-		if(remote) {
-			itemToPlayerRemote.put(itemUUID, playerUUID);
-		} else {
-			itemToPlayer.put(itemUUID, playerUUID);
-		}
-	}
-
-	public static void unapplyItem(UUID itemUUID, boolean remote) {
-		if(remote) {
-			itemToPlayerRemote.remove(itemUUID);
-		} else {
-			itemToPlayer.remove(itemUUID);
-		}
-	}
-
-	public static void removePlayer(UUID playerUUID) {
-		for(UUID item : itemToPlayerRemote.keySet().toArray(new UUID[0])) {
-			if(playerUUID.equals(itemToPlayerRemote.get(item))) {
-				itemToPlayerRemote.remove(item);
-			}
-		}
-		for(UUID item : itemToPlayer.keySet().toArray(new UUID[0])) {
-			if(playerUUID.equals(itemToPlayer.get(item))) {
-				itemToPlayer.remove(item);
-			}
-		}
 	}
 
 	@Override
