@@ -84,28 +84,28 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
 		if(GuiScreen.isShiftKeyDown())
-			addHiddenTooltip(par1ItemStack, par2EntityPlayer, par3List, par4);
-		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), par3List);
+			addHiddenTooltip(stack, player, infoList, adv);
+		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), infoList);
 	}
 
-	public void addHiddenTooltip(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-		BaubleType type = getBaubleType(par1ItemStack);
-		addStringToTooltip(StatCollector.translateToLocal("botania.baubletype." + type.name().toLowerCase()), par3List);
+	public void addHiddenTooltip(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+		BaubleType type = getBaubleType(stack);
+		addStringToTooltip(StatCollector.translateToLocal("botania.baubletype." + type.name().toLowerCase()), infoList);
 
 		String key = vazkii.botania.client.core.helper.RenderHelper.getKeyDisplayString("Baubles Inventory");
 
 		if(key != null && !key.equals("NONE")) {
-			addStringToTooltip(StatCollector.translateToLocal("botania.baubletooltip").replaceAll("%key%", key), par3List);
+			addStringToTooltip(StatCollector.translateToLocal("botania.baubletooltip").replaceAll("%key%", key), infoList);
 		}
 
-		ItemStack cosmetic = getCosmeticItem(par1ItemStack);
+		ItemStack cosmetic = getCosmeticItem(stack);
 		if(cosmetic != null)
-			addStringToTooltip(String.format(StatCollector.translateToLocal("botaniamisc.hasCosmetic"), cosmetic.getDisplayName()), par3List);
+			addStringToTooltip(String.format(StatCollector.translateToLocal("botaniamisc.hasCosmetic"), cosmetic.getDisplayName()), infoList);
 
-		if(hasPhantomInk(par1ItemStack))
-			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.hasPhantomInk"), par3List);
+		if(hasPhantomInk(stack))
+			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.hasPhantomInk"), infoList);
 	}
 
 	public void addStringToTooltip(String s, List<String> tooltip) {

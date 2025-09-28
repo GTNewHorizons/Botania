@@ -66,9 +66,9 @@ public class BlockManaDetector extends BlockModContainer<TileManaDetector> imple
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, List par6List, Entity par7Entity) {
-		if(par7Entity != null && !(par7Entity instanceof IManaBurst))
-			super.addCollisionBoxesToList(par1World, par2, par3, par4, par5AxisAlignedBB, par6List, par7Entity);
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collider) {
+		if(collider != null && !(collider instanceof IManaBurst))
+			super.addCollisionBoxesToList(world, x, y, z, mask, list, collider);
 	}
 
 	@Override

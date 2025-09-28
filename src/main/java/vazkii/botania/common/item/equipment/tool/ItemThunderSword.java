@@ -49,23 +49,16 @@ public class ItemThunderSword extends ItemManasteelSword implements ICraftAchiev
 			int dmg = 5;
 			long lightningSeed = ItemNBTHelper.getLong(stack, TAG_LIGHTNING_SEED, 0);
 
-			IEntitySelector selector = new IEntitySelector() {
-
-				@Override
-				public boolean isEntityApplicable(Entity e) {
-					return e instanceof EntityLivingBase && e instanceof IMob && !(e instanceof EntityPlayer) && !alreadyTargetedEntities.contains(e);
-				}
-
-			};
+			IEntitySelector selector = e -> e instanceof EntityLivingBase && e instanceof IMob && !(e instanceof EntityPlayer) && !alreadyTargetedEntities.contains(e);
 
 			Random rand = new Random(lightningSeed);
 			EntityLivingBase lightningSource = entity;
 			for(int i = 0; i < 4; i++) {
-				List<EntityLivingBase> entities = entity.worldObj.getEntitiesWithinAABBExcludingEntity(lightningSource, AxisAlignedBB.getBoundingBox(lightningSource.posX - range, lightningSource.posY - range, lightningSource.posZ - range, lightningSource.posX + range, lightningSource.posY + range, lightningSource.posZ + range), selector);
+				List<Entity> entities = entity.worldObj.getEntitiesWithinAABBExcludingEntity(lightningSource, AxisAlignedBB.getBoundingBox(lightningSource.posX - range, lightningSource.posY - range, lightningSource.posZ - range, lightningSource.posX + range, lightningSource.posY + range, lightningSource.posZ + range), selector);
 				if(entities.isEmpty())
 					break;
 
-				EntityLivingBase target = entities.get(rand.nextInt(entities.size()));
+				EntityLivingBase target = (EntityLivingBase) entities.get(rand.nextInt(entities.size()));
 				if(attacker instanceof EntityPlayer)
 					target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), dmg);
 				else target.attackEntityFrom(DamageSource.causeMobDamage(attacker), dmg);
