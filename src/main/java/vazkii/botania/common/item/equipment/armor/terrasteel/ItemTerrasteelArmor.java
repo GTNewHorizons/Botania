@@ -56,7 +56,7 @@ public class ItemTerrasteelArmor extends ItemManasteelArmor {
 	}
 
 	@Override
-	public Multimap getItemAttributeModifiers() {
+	public Multimap<String, AttributeModifier> getItemAttributeModifiers() {
 		Multimap<String, AttributeModifier> multimap = HashMultimap.create();
 		UUID uuid = new UUID(getUnlocalizedName().hashCode(), 0);
 		multimap.put(SharedMonsterAttributes.knockbackResistance.getAttributeUnlocalizedName(), new AttributeModifier(uuid, "Terrasteel modifier " + type, (double) getArmorDisplay(null, new ItemStack(this), type) / 20, 0));

@@ -160,13 +160,13 @@ public class ItemManasteelArmor extends ItemArmor implements ISpecialArmor, IMan
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
 		if(GuiScreen.isShiftKeyDown())
-			addInformationAfterShift(stack, player, list, adv);
-		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), list);
+			addInformationAfterShift(stack, player, infoList, adv);
+		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), infoList);
 	}
 
-	public void addInformationAfterShift(ItemStack stack, EntityPlayer player, List list, boolean adv) {
+	public void addInformationAfterShift(ItemStack stack, EntityPlayer player, List<String> list, boolean adv) {
 		addStringToTooltip(getArmorSetTitle(player), list);
 		addArmorSetDescription(stack, list);
 		ItemStack[] stacks = getArmorSetStacks();

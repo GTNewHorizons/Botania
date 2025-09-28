@@ -251,16 +251,16 @@ public class ItemBlackHoleTalisman extends ItemMod implements IBlockProvider {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-		Block block = getBlock(par1ItemStack);
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+		Block block = getBlock(stack);
 		if(block != null && block != Blocks.air) {
-			int count = getBlockCount(par1ItemStack);
-			par3List.add(count + " " + StatCollector.translateToLocal(new ItemStack(block, 1, getBlockMeta(par1ItemStack)).getUnlocalizedName() + ".name"));
+			int count = getBlockCount(stack);
+			infoList.add(count + " " + StatCollector.translateToLocal(new ItemStack(block, 1, getBlockMeta(stack)).getUnlocalizedName() + ".name"));
 		}
 
-		if(par1ItemStack.getItemDamage() == 1)
-			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.active"), par3List);
-		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.inactive"), par3List);
+		if(stack.getItemDamage() == 1)
+			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.active"), infoList);
+		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.inactive"), infoList);
 	}
 
 	void addStringToTooltip(String s, List<String> tooltip) {

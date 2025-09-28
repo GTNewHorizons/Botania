@@ -216,31 +216,31 @@ public class ItemManaGun extends ItemMod implements IManaUsingItem {
 	}
 
 	@Override
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
-		boolean clip = hasClip(par1ItemStack);
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+		boolean clip = hasClip(stack);
 		if(clip && !GuiScreen.isShiftKeyDown()) {
-			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), par3List);
+			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), infoList);
 			return;
 		}
 
-		ItemStack lens = getLens(par1ItemStack);
+		ItemStack lens = getLens(stack);
 		if(lens != null) {
-			List<String> tooltip = lens.getTooltip(par2EntityPlayer, false);
+			List<String> tooltip = lens.getTooltip(player, false);
 			if(tooltip.size() > 1)
-				par3List.addAll(tooltip.subList(1, tooltip.size()));
+				infoList.addAll(tooltip.subList(1, tooltip.size()));
 		}
 
 		if(clip) {
-			int pos = getClipPos(par1ItemStack);
-			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.hasClip"), par3List);
+			int pos = getClipPos(stack);
+			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.hasClip"), infoList);
 			for(int i = 0; i < CLIP_SLOTS; i++) {
 				String name = "";
 				EnumChatFormatting formatting = i == pos ? EnumChatFormatting.GREEN : EnumChatFormatting.GRAY;
-				ItemStack lensAt = getLensAtPos(par1ItemStack, i);
+				ItemStack lensAt = getLensAtPos(stack, i);
 				if(lensAt == null)
 					name = StatCollector.translateToLocal("botaniamisc.clipEmpty");
 				else name = lensAt.getDisplayName();
-				addStringToTooltip(formatting + " - " + name, par3List);
+				addStringToTooltip(formatting + " - " + name, infoList);
 			}
 		}
 	}

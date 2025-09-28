@@ -92,9 +92,7 @@ public final class SheddingHandler {
 			defaultNames.add(pattern.getEntityString());
 		}
 
-		for(Object o : EntityList.stringToClassMapping.entrySet()) {
-			Entry<String, Class<?>> entry = (Entry<String, Class<?>>) o;
-
+		for(final var entry : EntityList.stringToClassMapping.entrySet()) {
 			if(EntityLiving.class.isAssignableFrom(entry.getValue())) {
 				String name = entry.getKey();
 				if(!defaultNames.contains(name))
