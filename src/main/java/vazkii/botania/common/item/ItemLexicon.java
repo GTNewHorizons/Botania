@@ -80,7 +80,7 @@ public class ItemLexicon extends ItemMod implements ILexicon, IElvenItem {
 	}
 
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, List list) {
+	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
 		list.add(new ItemStack(item));
 		ItemStack creative = new ItemStack(item);
 		for(String s : BotaniaAPI.knowledgeTypes.keySet()) {
@@ -91,26 +91,26 @@ public class ItemLexicon extends ItemMod implements ILexicon, IElvenItem {
 	}
 
 	@Override
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
 		if(GuiScreen.isShiftKeyDown()) {
 			String edition = EnumChatFormatting.GOLD + String.format(StatCollector.translateToLocal("botaniamisc.edition"), getEdition());
 			if(!edition.isEmpty())
-				par3List.add(edition);
+				infoList.add(edition);
 
 			List<KnowledgeType> typesKnown = new ArrayList<>();
 			for(String s : BotaniaAPI.knowledgeTypes.keySet()) {
 				KnowledgeType type = BotaniaAPI.knowledgeTypes.get(s);
-				if(isKnowledgeUnlocked(par1ItemStack, type))
+				if(isKnowledgeUnlocked(stack, type))
 					typesKnown.add(type);
 			}
 
 			String format = typesKnown.size() == 1 ? "botaniamisc.knowledgeTypesSingular" : "botaniamisc.knowledgeTypesPlural";
-			addStringToTooltip(String.format(StatCollector.translateToLocal(format), typesKnown.size()), par3List);
+			addStringToTooltip(String.format(StatCollector.translateToLocal(format), typesKnown.size()), infoList);
 
 			for(KnowledgeType type : typesKnown)
-				addStringToTooltip(" \u2022 " + StatCollector.translateToLocal(type.getUnlocalizedName()), par3List);
+				addStringToTooltip(" \u2022 " + StatCollector.translateToLocal(type.getUnlocalizedName()), infoList);
 
-		} else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), par3List);
+		} else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), infoList);
 	}
 
 	private void addStringToTooltip(String s, List<String> tooltip) {

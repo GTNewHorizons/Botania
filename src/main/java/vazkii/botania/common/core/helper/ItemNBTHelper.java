@@ -195,8 +195,7 @@ public final class ItemNBTHelper {
 	private static boolean matchTagCompound(NBTTagCompound template, NBTTagCompound target) {
 		if (template.tagMap.size() > target.tagMap.size()) return false;
 
-		//noinspection unchecked
-		for (String key : (Set<String>) template.func_150296_c()) {
+		for (String key : template.func_150296_c()) {
 			if (!matchTag(template.getTag(key), target.getTag(key))) return false;
 		}
 

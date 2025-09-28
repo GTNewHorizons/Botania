@@ -12,6 +12,7 @@ package vazkii.botania.common.item.lens;
 
 import java.util.List;
 
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityItem;
@@ -25,27 +26,25 @@ import vazkii.botania.common.item.ModItems;
 
 public class LensInfluence extends Lens {
 
+	private static final IEntitySelector MOVABLE_ENTITIES = e -> (e instanceof EntityItem || e instanceof EntityXPOrb || e instanceof EntityArrow || e instanceof EntityFallingBlock || e instanceof IManaBurst);
+
 	@Override
 	public void updateBurst(IManaBurst burst, EntityThrowable entity, ItemStack stack) {
 		if(!burst.isFake()) {
 			double range = 3.5;
-			List<Entity> movables = entity.worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
-			movables.addAll(entity.worldObj.getEntitiesWithinAABB(EntityXPOrb.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range)));
-			movables.addAll(entity.worldObj.getEntitiesWithinAABB(EntityArrow.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range)));
-			movables.addAll(entity.worldObj.getEntitiesWithinAABB(EntityFallingBlock.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range)));
-			movables.addAll(entity.worldObj.getEntitiesWithinAABB(IManaBurst.class, AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range)));
 
+			AxisAlignedBB rangeBox = AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range);
+			List<Entity> movables = entity.worldObj.selectEntitiesWithinAABB(Entity.class, rangeBox, MOVABLE_ENTITIES);
 			for(Entity movable : movables) {
 				if(movable == burst)
 					continue;
 
-				if(movable instanceof IManaBurst) {
-					IManaBurst otherBurst = (IManaBurst) movable;
-					ItemStack lens = otherBurst.getSourceLens();
+				if(movable instanceof IManaBurst otherBurst) {
+                    ItemStack lens = otherBurst.getSourceLens();
 					if(lens != null && lens.getItem() == ModItems.lens && lens.getItemDamage() == ItemLens.INFLUENCE)
 						continue;
 
-					((IManaBurst) movable).setMotion(entity.motionX, entity.motionY, entity.motionZ);
+					otherBurst.setMotion(entity.motionX, entity.motionY, entity.motionZ);
 				} else {
 					movable.motionX = entity.motionX;
 					movable.motionY = entity.motionY;
