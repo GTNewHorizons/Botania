@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.item;
 
+import baubles.common.lib.PlayerHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
@@ -37,12 +38,22 @@ public class ItemRegenIvy extends ItemMod {
 	}
 
 	public void onTick(PlayerTickEvent event) {
-		if(event.phase == Phase.END && !event.player.worldObj.isRemote)
-			for(int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
-				ItemStack stack = event.player.inventory.getStackInSlot(i);
-				if(stack != null && ItemNBTHelper.detectNBT(stack) && ItemNBTHelper.getBoolean(stack, TAG_REGEN, false) && stack.getItemDamage() > 0 && ManaItemHandler.requestManaExact(stack, event.player, MANA_PER_DAMAGE, true))
-					stack.setItemDamage(stack.getItemDamage() - 1);
-			}
+        if (event.phase != Phase.END || event.player.worldObj.isRemote) {
+            return;
+        }
+
+        for (int i = 0; i < event.player.inventory.getSizeInventory(); i++) {
+            ItemStack stack = event.player.inventory.getStackInSlot(i);
+            if (canBeRepaired(event, stack)) stack.setItemDamage(stack.getItemDamage() - 1);
+        }
+
+		for (ItemStack bauble : PlayerHandler.getPlayerBaubles(event.player).stackList) {
+			if (canBeRepaired(event, bauble)) bauble.setItemDamage(bauble.getItemDamage() - 1);
+		}
+    }
+
+	private static boolean canBeRepaired(PlayerTickEvent event, ItemStack stack) {
+		return stack != null && ItemNBTHelper.detectNBT(stack) && ItemNBTHelper.getBoolean(stack, TAG_REGEN, false) && stack.getItemDamage() > 0 && ManaItemHandler.requestManaExact(stack, event.player, MANA_PER_DAMAGE, true);
 	}
 
 	public class EventHandler {
