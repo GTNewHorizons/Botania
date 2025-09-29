@@ -47,8 +47,12 @@ public class ItemRegenIvy extends ItemMod {
             if (canBeRepaired(event, stack)) stack.setItemDamage(stack.getItemDamage() - 1);
         }
 
-		for (ItemStack bauble : PlayerHandler.getPlayerBaubles(event.player).stackList) {
-			if (canBeRepaired(event, bauble)) bauble.setItemDamage(bauble.getItemDamage() - 1);
+        ItemStack[] baubles = PlayerHandler.getPlayerBaubles(event.player).stackList;
+		if (baubles != null) {
+			for (int i = 0; i < baubles.length; i++) { // Basic for loop to avoid iterator in onTick method
+				ItemStack bauble = baubles[i];
+				if (canBeRepaired(event, bauble)) bauble.setItemDamage(bauble.getItemDamage() - 1);
+			}
 		}
     }
 
