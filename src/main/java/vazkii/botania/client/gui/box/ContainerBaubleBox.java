@@ -89,16 +89,16 @@ public class ContainerBaubleBox extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_) {
+	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
 		ItemStack itemstack = null;
-		Slot slot = (Slot)inventorySlots.get(p_82846_2_);
+		Slot slot = (Slot)inventorySlots.get(index);
 
 		if(slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			System.out.println(p_82846_2_ + " " + itemstack);
-			if(p_82846_2_ < 28) {
+			System.out.println(index + " " + itemstack);
+			if(index < 28) {
 				if(!mergeItemStack(itemstack1, 28, 64, true))
 					return null;
 			} else {
@@ -113,7 +113,7 @@ public class ContainerBaubleBox extends Container {
 			if(itemstack1.stackSize == itemstack.stackSize)
 				return null;
 
-			slot.onPickupFromSlot(p_82846_1_, itemstack1);
+			slot.onPickupFromSlot(player, itemstack1);
 		}
 
 		return itemstack;

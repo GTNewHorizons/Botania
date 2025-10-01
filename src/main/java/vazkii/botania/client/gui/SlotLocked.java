@@ -27,7 +27,7 @@ public class SlotLocked extends Slot {
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack p_75214_1_) {
+	public boolean isItemValid(ItemStack stack) {
 		return false;
 	}
 
