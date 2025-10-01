@@ -45,9 +45,9 @@ public class BlockModWall extends BlockWall implements ILexiconable {
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		register(par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		register(name);
+		return super.setBlockName(name);
 	}
 
 	public void register(String name) {
@@ -70,7 +70,7 @@ public class BlockModWall extends BlockWall implements ILexiconable {
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister p_149651_1_) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 

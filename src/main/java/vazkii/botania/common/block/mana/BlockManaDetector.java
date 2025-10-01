@@ -44,15 +44,15 @@ public class BlockManaDetector extends BlockModContainer<TileManaDetector> imple
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[2];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
+			icons[i] = IconHelper.forBlock(register, this, i);
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return icons[Math.min(icons.length - 1, par2)];
+	public IIcon getIcon(int side, int meta) {
+		return icons[Math.min(icons.length - 1, meta)];
 	}
 
 	@Override
@@ -61,8 +61,8 @@ public class BlockManaDetector extends BlockModContainer<TileManaDetector> imple
 	}
 
 	@Override
-	public int isProvidingWeakPower(IBlockAccess par1iBlockAccess, int par2, int par3, int par4, int par5) {
-		return par1iBlockAccess.getBlockMetadata(par2, par3, par4) != 0 ? 15 : 0;
+	public int isProvidingWeakPower(IBlockAccess worldIn, int x, int y, int z, int side) {
+		return worldIn.getBlockMetadata(x, y, z) != 0 ? 15 : 0;
 	}
 
 	@Override

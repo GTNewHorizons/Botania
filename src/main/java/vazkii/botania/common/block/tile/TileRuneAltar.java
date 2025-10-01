@@ -275,19 +275,19 @@ public class TileRuneAltar extends TileSimpleInventory implements ISidedInventor
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.writeCustomNBT(par1nbtTagCompound);
+	public void writeCustomNBT(NBTTagCompound compound) {
+		super.writeCustomNBT(compound);
 
-		par1nbtTagCompound.setInteger(TAG_MANA, mana);
-		par1nbtTagCompound.setInteger(TAG_MANA_TO_GET, manaToGet);
+		compound.setInteger(TAG_MANA, mana);
+		compound.setInteger(TAG_MANA_TO_GET, manaToGet);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.readCustomNBT(par1nbtTagCompound);
+	public void readCustomNBT(NBTTagCompound compound) {
+		super.readCustomNBT(compound);
 
-		mana = par1nbtTagCompound.getInteger(TAG_MANA);
-		manaToGet = par1nbtTagCompound.getInteger(TAG_MANA_TO_GET);
+		mana = compound.getInteger(TAG_MANA);
+		manaToGet = compound.getInteger(TAG_MANA_TO_GET);
 	}
 
 	@Override

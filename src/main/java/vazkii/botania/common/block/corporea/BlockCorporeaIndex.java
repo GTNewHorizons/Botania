@@ -44,7 +44,7 @@ public class BlockCorporeaIndex extends BlockCorporeaBase implements ILexiconabl
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 

@@ -19,8 +19,8 @@ public class BlockBiomeStoneA extends BlockBiomeStone {
 	}
 
 	@Override
-	public int damageDropped(int par1) {
-		return par1 % 8 + 8;
+	public int damageDropped(int meta) {
+		return meta % 8 + 8;
 	}
 
 }

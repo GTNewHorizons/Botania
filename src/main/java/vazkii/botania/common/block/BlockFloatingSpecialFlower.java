@@ -87,7 +87,7 @@ public class BlockFloatingSpecialFlower extends BlockFloatingFlower implements I
 	}
 
 	@Override
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
 		// NO-OP
 	}
 
@@ -107,10 +107,10 @@ public class BlockFloatingSpecialFlower extends BlockFloatingFlower implements I
 	}
 
 	@Override
-	public void onBlockHarvested(World par1World, int par2, int par3, int par4, int par5, EntityPlayer par6EntityPlayer) {
-		if(!par6EntityPlayer.capabilities.isCreativeMode) {
-			dropBlockAsItem(par1World, par2, par3, par4, par5, 0);
-			((TileSpecialFlower) par1World.getTileEntity(par2, par3, par4)).onBlockHarvested(par1World, par2, par3, par4, par5, par6EntityPlayer);
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player) {
+		if(!player.capabilities.isCreativeMode) {
+			dropBlockAsItem(world, x, y, z, meta, 0);
+			((TileSpecialFlower) world.getTileEntity(x, y, z)).onBlockHarvested(world, x, y, z, meta, player);
 		}
 	}
 
@@ -129,10 +129,10 @@ public class BlockFloatingSpecialFlower extends BlockFloatingFlower implements I
 	}
 
 	@Override
-	public boolean onBlockEventReceived(World par1World, int par2, int par3, int par4, int par5, int par6) {
-		super.onBlockEventReceived(par1World, par2, par3, par4, par5, par6);
-		TileEntity tileentity = par1World.getTileEntity(par2, par3, par4);
-		return tileentity != null ? tileentity.receiveClientEvent(par5, par6) : false;
+	public boolean onBlockEventReceived(World world, int x, int y, int z, int eventId, int eventData) {
+		super.onBlockEventReceived(world, x, y, z, eventId, eventData);
+		TileEntity tileentity = world.getTileEntity(x, y, z);
+		return tileentity != null ? tileentity.receiveClientEvent(eventId, eventData) : false;
 	}
 
 	@Override

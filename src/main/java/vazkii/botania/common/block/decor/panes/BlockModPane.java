@@ -42,9 +42,9 @@ public class BlockModPane extends BlockPane {
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemBlockMod.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemBlockMod.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override

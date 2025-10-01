@@ -43,15 +43,15 @@ public class BlockGhostRail extends BlockRailBase implements ILexiconable {
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemBlockMod.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemBlockMod.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		blockIcon = IconHelper.forBlock(par1IconRegister, this);
+	public void registerBlockIcons(IIconRegister register) {
+		blockIcon = IconHelper.forBlock(register, this);
 	}
 
 	public void onMinecartUpdate(MinecartUpdateEvent event) {

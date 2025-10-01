@@ -96,21 +96,21 @@ public class TileCorporeaCrystalCube extends TileCorporeaBase implements ICorpor
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.writeCustomNBT(par1nbtTagCompound);
+	public void writeCustomNBT(NBTTagCompound compound) {
+		super.writeCustomNBT(compound);
 		NBTTagCompound cmp = new NBTTagCompound();
 		if(requestTarget != null)
 			requestTarget.writeToNBT(cmp);
-		par1nbtTagCompound.setTag(TAG_REQUEST_TARGET, cmp);
-		par1nbtTagCompound.setInteger(TAG_ITEM_COUNT, itemCount);
+		compound.setTag(TAG_REQUEST_TARGET, cmp);
+		compound.setInteger(TAG_ITEM_COUNT, itemCount);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.readCustomNBT(par1nbtTagCompound);
-		NBTTagCompound cmp = par1nbtTagCompound.getCompoundTag(TAG_REQUEST_TARGET);
+	public void readCustomNBT(NBTTagCompound compound) {
+		super.readCustomNBT(compound);
+		NBTTagCompound cmp = compound.getCompoundTag(TAG_REQUEST_TARGET);
 		requestTarget = ItemStack.loadItemStackFromNBT(cmp);
-		itemCount = par1nbtTagCompound.getInteger(TAG_ITEM_COUNT);
+		itemCount = compound.getInteger(TAG_ITEM_COUNT);
 	}
 
 	@Override

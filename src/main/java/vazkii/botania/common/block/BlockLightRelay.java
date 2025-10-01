@@ -47,9 +47,9 @@ public class BlockLightRelay extends BlockModContainer<TileLightRelay> implement
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		register(par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		register(name);
+		return super.setBlockName(name);
 	}
 
 	void register(String name) {
@@ -73,7 +73,7 @@ public class BlockLightRelay extends BlockModContainer<TileLightRelay> implement
 	}
 
 	@Override
-	public boolean getBlocksMovement(IBlockAccess p_149655_1_, int p_149655_2_, int p_149655_3_, int p_149655_4_) {
+	public boolean getBlocksMovement(IBlockAccess worldIn, int x, int y, int z) {
 		return false;
 	}
 
@@ -84,12 +84,12 @@ public class BlockLightRelay extends BlockModContainer<TileLightRelay> implement
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
 		return null;
 	}
 
 	@Override
-	public int tickRate(World p_149738_1_) {
+	public int tickRate(World world) {
 		return 2;
 	}
 
@@ -110,11 +110,11 @@ public class BlockLightRelay extends BlockModContainer<TileLightRelay> implement
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		invIcon = IconHelper.forBlock(par1IconRegister, this, 0);
-		worldIcon = IconHelper.forBlock(par1IconRegister, this, 1);
-		invIconRed = IconHelper.forBlock(par1IconRegister, this, 2);
-		worldIconRed = IconHelper.forBlock(par1IconRegister, this, 3);
+	public void registerBlockIcons(IIconRegister register) {
+		invIcon = IconHelper.forBlock(register, this, 0);
+		worldIcon = IconHelper.forBlock(register, this, 1);
+		invIconRed = IconHelper.forBlock(register, this, 2);
+		worldIconRed = IconHelper.forBlock(register, this, 3);
 	}
 
 	@Override

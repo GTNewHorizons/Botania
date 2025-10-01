@@ -173,17 +173,17 @@ public class TileBrewery extends TileSimpleInventory implements ISidedInventory,
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.writeCustomNBT(par1nbtTagCompound);
+	public void writeCustomNBT(NBTTagCompound compound) {
+		super.writeCustomNBT(compound);
 
-		par1nbtTagCompound.setInteger(TAG_MANA, mana);
+		compound.setInteger(TAG_MANA, mana);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.readCustomNBT(par1nbtTagCompound);
+	public void readCustomNBT(NBTTagCompound compound) {
+		super.readCustomNBT(compound);
 
-		mana = par1nbtTagCompound.getInteger(TAG_MANA);
+		mana = compound.getInteger(TAG_MANA);
 	}
 
 	@Override

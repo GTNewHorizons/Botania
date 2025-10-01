@@ -96,7 +96,7 @@ public class BlockTeruTeruBozu extends BlockModContainer<TileTeruTeruBozu> imple
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 

@@ -46,7 +46,7 @@ public abstract class BlockModSlab extends BlockSlab implements ILexiconable {
 	}
 
 	@Override
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+	public Item getItemDropped(int meta, Random random, int fortune) {
 		return Item.getItemFromBlock(getSingleBlock());
 	}
 
@@ -56,13 +56,13 @@ public abstract class BlockModSlab extends BlockSlab implements ILexiconable {
 	}
 
 	@Override
-	public ItemStack createStackedBlock(int par1) {
+	public ItemStack createStackedBlock(int meta) {
 		return new ItemStack(getSingleBlock());
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 

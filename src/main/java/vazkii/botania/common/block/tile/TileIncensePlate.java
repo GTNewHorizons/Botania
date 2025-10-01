@@ -110,17 +110,17 @@ public class TileIncensePlate extends TileSimpleInventory implements ISidedInven
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.writeCustomNBT(par1nbtTagCompound);
-		par1nbtTagCompound.setInteger(TAG_TIME_LEFT, timeLeft);
-		par1nbtTagCompound.setBoolean(TAG_BURNING, burning);
+	public void writeCustomNBT(NBTTagCompound compound) {
+		super.writeCustomNBT(compound);
+		compound.setInteger(TAG_TIME_LEFT, timeLeft);
+		compound.setBoolean(TAG_BURNING, burning);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.readCustomNBT(par1nbtTagCompound);
-		timeLeft = par1nbtTagCompound.getInteger(TAG_TIME_LEFT);
-		burning = par1nbtTagCompound.getBoolean(TAG_BURNING);
+	public void readCustomNBT(NBTTagCompound compound) {
+		super.readCustomNBT(compound);
+		timeLeft = compound.getInteger(TAG_TIME_LEFT);
+		burning = compound.getBoolean(TAG_BURNING);
 	}
 
 	@Override
@@ -139,7 +139,7 @@ public class TileIncensePlate extends TileSimpleInventory implements ISidedInven
 	}
 
 	@Override
-	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_, int p_102008_3_) {
+	public boolean canExtractItem(int slot, ItemStack stack, int side) {
 		return false;
 	}
 

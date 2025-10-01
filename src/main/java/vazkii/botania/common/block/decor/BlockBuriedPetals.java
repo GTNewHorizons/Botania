@@ -41,12 +41,12 @@ public class BlockBuriedPetals extends BlockModFlower {
 	}
 
 	@Override
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		int meta = par1World.getBlockMetadata(par2, par3, par4);
+	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+		int meta = world.getBlockMetadata(x, y, z);
 		float[] color = EntitySheep.fleeceColorTable[meta];
 
 		Botania.proxy.setSparkleFXNoClip(true);
-		Botania.proxy.sparkleFX(par1World, par2 + 0.3 + par5Random.nextFloat() * 0.5, par3 + 0.1 + par5Random.nextFloat() * 0.1, par4 + 0.3 + par5Random.nextFloat() * 0.5, color[0], color[1], color[2], par5Random.nextFloat(), 5);
+		Botania.proxy.sparkleFX(world, x + 0.3 + random.nextFloat() * 0.5, y + 0.1 + random.nextFloat() * 0.1, z + 0.3 + random.nextFloat() * 0.5, color[0], color[1], color[2], random.nextFloat(), 5);
 		Botania.proxy.setSparkleFXNoClip(false);
 	}
 
@@ -56,17 +56,17 @@ public class BlockBuriedPetals extends BlockModFlower {
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		blockIcon = IconHelper.forBlock(par1IconRegister, this);
+	public void registerBlockIcons(IIconRegister register) {
+		blockIcon = IconHelper.forBlock(register, this);
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
+	public IIcon getIcon(int side, int meta) {
 		return blockIcon;
 	}
 
 	@Override
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+	public Item getItemDropped(int meta, Random random, int fortune) {
 		return ModItems.petal;
 	}
 

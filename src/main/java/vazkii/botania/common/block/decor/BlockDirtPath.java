@@ -60,9 +60,11 @@ public class BlockDirtPath extends BlockMod implements ILexiconable {
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
 		Block blockAbove = world.getBlock(x, y + 1, z);
-		if(!blockAbove.isAir(world, x, y + 1, z))
+		if(!blockAbove.isAir(world, x, y + 1, z)) {
 			setBlockBounds(0F, 0F, 0F, 1F, 1, 1F);
-		else setBlockBounds(0F, 0F, 0F, 1F, 15F / 16F, 1F);
+		} else {
+			setBlockBounds(0F, 0F, 0F, 1F, 15F / 16F, 1F);
+		}
 	}
 
 	@Override

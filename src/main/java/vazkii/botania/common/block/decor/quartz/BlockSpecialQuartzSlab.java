@@ -33,8 +33,8 @@ public class BlockSpecialQuartzSlab extends BlockModSlab {
 
 	Block source;
 
-	public BlockSpecialQuartzSlab(Block source, boolean par2) {
-		super(par2, Material.rock, "quartzSlab" + ((BlockSpecialQuartz) source).type + (par2 ? "Full" : "Half"));
+	public BlockSpecialQuartzSlab(Block source, boolean full) {
+		super(full, Material.rock, "quartzSlab" + ((BlockSpecialQuartz) source).type + (full ? "Full" : "Half"));
 		setHardness(0.8F);
 		setResistance(10F);
 		this.source = source;
@@ -87,23 +87,23 @@ public class BlockSpecialQuartzSlab extends BlockModSlab {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int par1, int par2) {
-		return source.getBlockTextureFromSide(par1);
+	public IIcon getIcon(int side, int meta) {
+		return source.getBlockTextureFromSide(side);
 	}
 
 	@Override
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+	public Item getItemDropped(int meta, Random random, int fortune) {
 		return Item.getItemFromBlock(getSingleBlock());
 	}
 
 	@Override
-	public ItemStack createStackedBlock(int par1) {
+	public ItemStack createStackedBlock(int meta) {
 		return new ItemStack(getSingleBlock());
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 

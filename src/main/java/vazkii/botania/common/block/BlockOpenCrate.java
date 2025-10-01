@@ -75,9 +75,9 @@ public class BlockOpenCrate extends BlockModContainer<TileOpenCrate> implements 
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemCubeWithMetadataAndName.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemCubeWithMetadataAndName.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
@@ -98,14 +98,14 @@ public class BlockOpenCrate extends BlockModContainer<TileOpenCrate> implements 
 	}
 
 	@Override
-	public int getComparatorInputOverride(World par1World, int par2, int par3, int par4, int par5) {
-		TileOpenCrate crate = (TileOpenCrate) par1World.getTileEntity(par2, par3, par4);
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
+		TileOpenCrate crate = (TileOpenCrate) world.getTileEntity(x, y, z);
 		return crate.getSignal();
 	}
 
 	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
-		TileSimpleInventory inv = (TileSimpleInventory) par1World.getTileEntity(par2, par3, par4);
+	public void breakBlock(World world, int x, int y, int z, Block blockBroken, int meta) {
+		TileSimpleInventory inv = (TileSimpleInventory) world.getTileEntity(x, y, z);
 
 		if (inv != null) {
 			for (int j1 = 0; j1 < inv.getSizeInventory(); ++j1) {
@@ -116,14 +116,14 @@ public class BlockOpenCrate extends BlockModContainer<TileOpenCrate> implements 
 					float f1 = random.nextFloat() * 0.8F + 0.1F;
 					EntityItem entityitem;
 
-					for (float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; par1World.spawnEntityInWorld(entityitem)) {
+					for (float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem)) {
 						int k1 = random.nextInt(21) + 10;
 
 						if (k1 > itemstack.stackSize)
 							k1 = itemstack.stackSize;
 
 						itemstack.stackSize -= k1;
-						entityitem = new EntityItem(par1World, par2 + f, par3 + f1, par4 + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
+						entityitem = new EntityItem(world, x + f, y + f1, z + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
 						float f3 = 0.05F;
 						entityitem.motionX = (float)random.nextGaussian() * f3;
 						entityitem.motionY = (float)random.nextGaussian() * f3 + 0.2F;
@@ -135,22 +135,22 @@ public class BlockOpenCrate extends BlockModContainer<TileOpenCrate> implements 
 				}
 			}
 
-			par1World.func_147453_f(par2, par3, par4, par5);
+			world.func_147453_f(x, y, z, blockBroken);
 		}
 
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+		super.breakBlock(world, x, y, z, blockBroken, meta);
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		iconSide = IconHelper.forBlock(par1IconRegister, this, 0);
-		iconBottom = IconHelper.forBlock(par1IconRegister, this, 1);
-		iconSideCraft = IconHelper.forBlock(par1IconRegister, this, 2);
-		iconBottomCraft = IconHelper.forBlock(par1IconRegister, this, 3);
+	public void registerBlockIcons(IIconRegister register) {
+		iconSide = IconHelper.forBlock(register, this, 0);
+		iconBottom = IconHelper.forBlock(register, this, 1);
+		iconSideCraft = IconHelper.forBlock(register, this, 2);
+		iconBottomCraft = IconHelper.forBlock(register, this, 3);
 
 		sidePatternIcons = new IIcon[TileCraftCrate.PATTERNS.length];
 		for(int i = 0; i < sidePatternIcons.length; i++)
-			sidePatternIcons[i] = IconHelper.forName(par1IconRegister, "ocPattern" + i);
+			sidePatternIcons[i] = IconHelper.forName(register, "ocPattern" + i);
 	}
 
 	@Override

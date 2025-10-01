@@ -19,24 +19,24 @@ import net.minecraft.world.World;
 
 public class TileRedStringFertilizer extends TileRedString {
 
-	public boolean func_149851_a(World p_149851_1_, boolean p_149851_5_) {
+	public boolean func_149851_a(World world, boolean isClient) {
 		ChunkCoordinates binding = getBinding();
 		Block block = getBlockAtBinding();
 
-		return block instanceof IGrowable ? ((IGrowable) block).func_149851_a(p_149851_1_, binding.posX, binding.posY, binding.posZ, p_149851_5_) : false;
+		return block instanceof IGrowable ? ((IGrowable) block).func_149851_a(world, binding.posX, binding.posY, binding.posZ, isClient) : false;
 	}
 
-	public boolean func_149852_a(World p_149852_1_, Random p_149852_2_) {
+	public boolean func_149852_a(World world, Random random) {
 		ChunkCoordinates binding = getBinding();
 		Block block = getBlockAtBinding();
-		return block instanceof IGrowable ? ((IGrowable) block).func_149852_a(p_149852_1_, p_149852_2_, binding.posX, binding.posY, binding.posZ) : false;
+		return block instanceof IGrowable ? ((IGrowable) block).func_149852_a(world, random, binding.posX, binding.posY, binding.posZ) : false;
 	}
 
-	public void func_149853_b(World p_149853_1_, Random p_149853_2_) {
+	public void func_149853_b(World world, Random random) {
 		ChunkCoordinates binding = getBinding();
 		Block block = getBlockAtBinding();
 		if(block instanceof IGrowable)
-			((IGrowable) block).func_149853_b(p_149853_1_, p_149853_2_, binding.posX, binding.posY, binding.posZ);
+			((IGrowable) block).func_149853_b(world, random, binding.posX, binding.posY, binding.posZ);
 	}
 
 	@Override

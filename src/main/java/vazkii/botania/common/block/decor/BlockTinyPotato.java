@@ -45,9 +45,9 @@ public class BlockTinyPotato extends BlockModContainer<TileTinyPotato> implement
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemBlockTinyPotato.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemBlockTinyPotato.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class BlockTinyPotato extends BlockModContainer<TileTinyPotato> implement
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 
@@ -66,29 +66,29 @@ public class BlockTinyPotato extends BlockModContainer<TileTinyPotato> implement
 	}
 
 	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		TileEntity tile = par1World.getTileEntity(par2, par3, par4);
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float subX, float subY, float subZ) {
+		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TileTinyPotato) {
 			((TileTinyPotato) tile).interact();
-			par5EntityPlayer.addStat(ModAchievements.tinyPotatoPet, 1);
-			par1World.spawnParticle("heart", par2 + minX + Math.random() * (maxX - minX), par3 + maxY, par4 + minZ + Math.random() * (maxZ - minZ), 0, 0 ,0);
+			player.addStat(ModAchievements.tinyPotatoPet, 1);
+			world.spawnParticle("heart", x + minX + Math.random() * (maxX - minX), y + maxY, z + minZ + Math.random() * (maxZ - minZ), 0, 0 ,0);
 		}
 		return true;
 	}
 
 	@Override
-	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLiving, ItemStack par6ItemStack) {
-		int l1 = MathHelper.floor_double(par5EntityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack itemIn) {
+		int l1 = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
-		par1World.setBlockMetadataWithNotify(par2, par3, par4, l1, 2);
-		if (par6ItemStack.hasDisplayName())
-			((TileTinyPotato) par1World.getTileEntity(par2, par3, par4)).name = par6ItemStack.getDisplayName();
+		world.setBlockMetadataWithNotify(x, y, z, l1, 2);
+		if (itemIn.hasDisplayName())
+			((TileTinyPotato) world.getTileEntity(x, y, z)).name = itemIn.getDisplayName();
 	}
 
 	@Override
-	public void onBlockHarvested(World par1World, int par2, int par3, int par4, int par5, EntityPlayer par6EntityPlayer) {
-		if(!par6EntityPlayer.capabilities.isCreativeMode)
-			dropBlockAsItem(par1World, par2, par3, par4, par5, 0);
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player) {
+		if(!player.capabilities.isCreativeMode)
+			dropBlockAsItem(world, x, y, z, meta, 0);
 	}
 
 	@Override

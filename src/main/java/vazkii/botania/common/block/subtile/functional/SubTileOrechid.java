@@ -165,8 +165,8 @@ public class SubTileOrechid extends SubTileFunctional {
 
 		public String s;
 
-		public StringRandomItem(int par1, String s) {
-			super(par1);
+		public StringRandomItem(int weight, String s) {
+			super(weight);
 			this.s = s;
 		}
 

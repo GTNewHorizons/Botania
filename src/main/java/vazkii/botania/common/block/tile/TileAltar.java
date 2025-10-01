@@ -274,21 +274,21 @@ public class TileAltar extends TileSimpleInventory implements ISidedInventory, I
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound cmp) {
-		super.writeCustomNBT(cmp);
+	public void writeCustomNBT(NBTTagCompound compound) {
+		super.writeCustomNBT(compound);
 
-		cmp.setBoolean(TAG_HAS_WATER, hasWater());
-		cmp.setBoolean(TAG_HAS_LAVA, hasLava());
-		cmp.setBoolean(TAG_IS_MOSSY, isMossy);
+		compound.setBoolean(TAG_HAS_WATER, hasWater());
+		compound.setBoolean(TAG_HAS_LAVA, hasLava());
+		compound.setBoolean(TAG_IS_MOSSY, isMossy);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound cmp) {
-		super.readCustomNBT(cmp);
+	public void readCustomNBT(NBTTagCompound compound) {
+		super.readCustomNBT(compound);
 
-		hasWater = cmp.getBoolean(TAG_HAS_WATER);
-		hasLava = cmp.getBoolean(TAG_HAS_LAVA);
-		isMossy = cmp.getBoolean(TAG_IS_MOSSY);
+		hasWater = compound.getBoolean(TAG_HAS_WATER);
+		hasLava = compound.getBoolean(TAG_HAS_LAVA);
+		isMossy = compound.getBoolean(TAG_IS_MOSSY);
 	}
 
 	@Override
