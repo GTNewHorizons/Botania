@@ -18,8 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cpw.mods.fml.common.registry.VillagerRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
@@ -32,6 +34,8 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
+import vazkii.botania.api.block.CatalyzedCocoonSpawn;
+import vazkii.botania.api.block.IEntityProvider;
 import vazkii.botania.api.brew.Brew;
 import vazkii.botania.api.internal.DummyMethodHandler;
 import vazkii.botania.api.internal.DummySubTile;
@@ -77,6 +81,11 @@ public final class BotaniaAPI {
 	public static List<RecipeElvenTrade> elvenTradeRecipes = new ArrayList<>();
 	public static List<RecipeBrew> brewRecipes = new ArrayList<>();
 	public static List<RecipeManaInfusion> miniFlowerRecipes = new ArrayList<>();
+
+	public static final Map<String, IEntityProvider> cocoonSpawnOptions = new HashMap<>();
+	public static final Map<String, Integer> defaultCommonCocoonSpawns = new HashMap<>();
+	public static final Map<String, Integer> defaultRareCocoonSpawns = new HashMap<>();
+	public static final List<CatalyzedCocoonSpawn> defaultCatalyzedCocoonSpawns = new ArrayList<>();
 
 	private static BiMap<String, Class<? extends SubTileEntity>> subTiles = HashBiMap.<String, Class<? extends SubTileEntity>> create();
 	private static Map<Class<? extends SubTileEntity>, SubTileSignature> subTileSignatures = new HashMap<>();
@@ -251,6 +260,65 @@ public final class BotaniaAPI {
 		registerSemiDisposableBlock("stoneBasalt"); // Botania
 		registerSemiDisposableBlock("stoneDiorite"); // Botania
 		registerSemiDisposableBlock("stoneGranite"); // Botania
+
+		registerCocoonSpawnOption("minecraft:villager", world -> {
+			final var villager = new EntityVillager(world);
+			VillagerRegistry.applyRandomTrade(villager, world.rand);
+			return villager;
+		});
+		registerCocoonSpawnOption("minecraft:horse", world -> {
+			final var horse = new EntityHorse(world);
+			horse.setGrowingAge(-24000);
+			return horse;
+		});
+		registerCocoonSpawnOption("minecraft:wolf", world -> {
+			final var wolf = new EntityWolf(world);
+			wolf.setGrowingAge(-24000);
+			return wolf;
+		});
+		registerCocoonSpawnOption("minecraft:ocelot", world -> {
+			final var ocelot = new EntityOcelot(world);
+			ocelot.setGrowingAge(-24000);
+			return ocelot;
+		});
+		registerCocoonSpawnOption("minecraft:sheep", world -> {
+			final var sheep = new EntitySheep(world);
+			sheep.setGrowingAge(-24000);
+			sheep.setFleeceColor(EntitySheep.getRandomFleeceColor(world.rand));
+			return sheep;
+		});
+		registerCocoonSpawnOption("minecraft:cow", world -> {
+			final var cow = new EntityCow(world);
+			cow.setGrowingAge(-24000);
+			return cow;
+		});
+		registerCocoonSpawnOption("minecraft:mooshroom", world -> {
+			final var mooshroom = new EntityMooshroom(world);
+			mooshroom.setGrowingAge(-24000);
+			return mooshroom;
+		});
+		registerCocoonSpawnOption("minecraft:pig", world -> {
+			final var pig = new EntityPig(world);
+			pig.setGrowingAge(-24000);
+			return pig;
+		});
+		registerCocoonSpawnOption("minecraft:chicken", world -> {
+			final var chicken = new EntityChicken(world);
+			chicken.setGrowingAge(-24000);
+			return chicken;
+		});
+
+		addDefaultCommonCocoonSpawn("minecraft:sheep", 100);
+		addDefaultCommonCocoonSpawn("minecraft:cow", 99);
+		addDefaultCommonCocoonSpawn("minecraft:mooshroom", 1);
+		addDefaultCommonCocoonSpawn("minecraft:pig", 100);
+		addDefaultCommonCocoonSpawn("minecraft:chicken", 100);
+
+		addDefaultRareCocoonSpawn("minecraft:horse", 100);
+		addDefaultRareCocoonSpawn("minecraft:wolf", 100);
+		addDefaultRareCocoonSpawn("minecraft:ocelot", 100);
+
+		addDefaultCatalyzedCocoonSpawn("minecraft:villager", new ItemStack(Items.emerald), 20);
 	}
 
 	/**
@@ -675,4 +743,40 @@ public final class BotaniaAPI {
 		return "bm_" + block.getUnlocalizedName() + "@" + meta;
 	}
 
+	/**
+	 * Registers a possible entity for the Cocoon of Caprice to be used in configs or assigned later.
+	 * @param id The ID of the entity spawn method - should be in the form `modid:entity`
+	 * @param entityProvider A method that will instantiate a new Entity & perform any spawning logic - setting age, etc.
+	 */
+	public static void registerCocoonSpawnOption(String id, IEntityProvider entityProvider) {
+		cocoonSpawnOptions.put(id, entityProvider);
+	}
+
+	/**
+	 * Adds an entity to the default common pool of the Cocoon of Caprice
+	 * @param id The ID of the entity spawn method previously registered with {@link BotaniaAPI#registerCocoonSpawnOption}
+	 * @param weight The chance of this entity getting chosen - 100 for the default options
+	 */
+	public static void addDefaultCommonCocoonSpawn(String id, int weight) {
+		defaultCommonCocoonSpawns.put(id, weight);
+	}
+
+	/**
+	 * Adds an entity to the default rare pool of the Cocoon of Caprice
+	 * @param id The ID of the entity spawn method previously registered with {@link BotaniaAPI#registerCocoonSpawnOption}
+	 * @param weight The chance of this entity getting chosen - 100 for the default options
+	 */
+	public static void addDefaultRareCocoonSpawn(String id, int weight) {
+		defaultRareCocoonSpawns.put(id, weight);
+	}
+
+	/**
+	 * Adds an entity to the default possible catalyzed spawns of the Cocoon of Caprice
+	 * @param id The ID of the entity spawn method previously registered with {@link BotaniaAPI#registerCocoonSpawnOption}
+	 * @param catalyst The item needed to increase the chance of this spawn being selected
+	 * @param maxCatalysts The amount of catalysts needed to guarantee that this entity gets chosen
+	 */
+	public static void addDefaultCatalyzedCocoonSpawn(String id, ItemStack catalyst, int maxCatalysts) {
+		defaultCatalyzedCocoonSpawns.add(new CatalyzedCocoonSpawn(catalyst, maxCatalysts, id));
+	}
 }

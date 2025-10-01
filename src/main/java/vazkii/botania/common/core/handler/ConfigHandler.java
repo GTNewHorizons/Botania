@@ -21,12 +21,11 @@ import java.util.stream.Collectors;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import vazkii.botania.api.block.CatalyzedCocoonSpawn;
+import vazkii.botania.api.block.IEntityProvider;
 import vazkii.botania.common.lib.LibMisc;
 import vazkii.botania.common.lib.LibPotionNames;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
@@ -123,6 +122,10 @@ public final class ConfigHandler {
 	public static int potionIDBloodthirst = 94;
 	public static int potionIDAllure = 95;
 	public static int potionIDClear = 96;
+
+	public static final ArrayList<CocoonSpawn> cocoonCommonPool = new ArrayList<>();
+	public static final ArrayList<CocoonSpawn> cocoonRarePool = new ArrayList<>();
+	public static final ArrayList<CatalyzedCocoonSpawn> cocoonCatalyzedSpawns = new ArrayList<>();
 
 	public static void loadConfig(File configFile) {
 		config = new Configuration(configFile);
@@ -419,6 +422,12 @@ public final class ConfigHandler {
 		verifiedPotionArray = true;
 	}
 
+	private static void loadPropCocoonPool(ArrayList<CocoonSpawn> pool, String propName, String comment) {
+		String[] propertyValue = config.getStringList(propName, Configuration.CATEGORY_GENERAL, new String[]{}, comment);
+
+		// TODO Figure out config loading...
+	}
+
 	public static class ConfigAdaptor {
 
 		private boolean enabled;
@@ -543,5 +552,14 @@ public final class ConfigHandler {
 				load();
 		}
 
+	}
+
+	public static class CocoonSpawn extends WeightedRandom.Item {
+		public final IEntityProvider entityProvider;
+
+		public CocoonSpawn(int weight, IEntityProvider entityProvider) {
+			super(weight);
+            this.entityProvider = entityProvider;
+        }
 	}
 }

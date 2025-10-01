@@ -10,6 +10,11 @@
  */
 package vazkii.botania.common.core.proxy;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import ganymedes01.etfuturum.configuration.configs.ConfigBlocksItems;
+import ganymedes01.etfuturum.configuration.configs.ConfigEntities;
+import ganymedes01.etfuturum.entities.EntityShulker;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
@@ -160,6 +165,14 @@ public class CommonProxy {
 		if(Botania.thaumcraftLoaded) {
 			ModBrews.initTC();
 			ModBrewRecipes.initTC();
+		}
+
+		if(Botania.etFuturumLoaded && ConfigEntities.enableShulker) {
+			BotaniaAPI.registerCocoonSpawnOption("etfuturum:shulker", EntityShulker::new);
+
+			if (ConfigBlocksItems.enableChorusFruit) {
+				BotaniaAPI.addDefaultCatalyzedCocoonSpawn("etfuturum:shulker", ganymedes01.etfuturum.ModItems.CHORUS_FRUIT.newItemStack(), 20);
+			}
 		}
 
 		ModBlocks.addDispenserBehaviours();

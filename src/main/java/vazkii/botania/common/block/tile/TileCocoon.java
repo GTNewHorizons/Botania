@@ -23,11 +23,17 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.registry.VillagerRegistry;
+import net.minecraft.util.WeightedRandom;
+import vazkii.botania.api.block.IEntityProvider;
+
+import java.util.ArrayList;
 
 public class TileCocoon extends TileMod {
 
 	private static final String TAG_TIME_PASSED = "timePassed";
 	private static final String TAG_EMERALDS_GIVEN = "emeraldsGiven";
+	private static final String TAG_CATALYSED_ID = "catalyzedId";
+	private static final String TAG_CATALYSTS_GIVEN = "catalystGiven";
 
 	public static final int TOTAL_TIME = 60; // TODO Undo this
 	public static final int MAX_EMERALDS = 20;
@@ -125,5 +131,4 @@ public class TileCocoon extends TileMod {
 		timePassed = cmp.getInteger(TAG_TIME_PASSED);
 		emeraldsGiven = cmp.getInteger(TAG_EMERALDS_GIVEN);
 	}
-
 }
