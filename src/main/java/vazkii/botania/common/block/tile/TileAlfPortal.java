@@ -323,44 +323,44 @@ public class TileAlfPortal extends TileMod {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound cmp) {
-		super.writeToNBT(cmp);
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
 
-		cmp.setInteger(TAG_STACK_COUNT, stacksIn.size());
+		compound.setInteger(TAG_STACK_COUNT, stacksIn.size());
 		int i = 0;
 		for(ItemStack stack : stacksIn) {
 			NBTTagCompound stackcmp = new NBTTagCompound();
 			stack.writeToNBT(stackcmp);
-			cmp.setTag(TAG_STACK + i, stackcmp);
+			compound.setTag(TAG_STACK + i, stackcmp);
 			i++;
 		}
 
-		cmp.setInteger(TAG_OUTPUT_COUNT, stacksOut.size());
+		compound.setInteger(TAG_OUTPUT_COUNT, stacksOut.size());
 		i = 0;
 		for(ItemStack stack : stacksOut) {
 			NBTTagCompound stackcmp = new NBTTagCompound();
 			stack.writeToNBT(stackcmp);
-			cmp.setTag(TAG_OUTPUT_STACK + i, stackcmp);
+			compound.setTag(TAG_OUTPUT_STACK + i, stackcmp);
 			i++;
 		}
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound cmp) {
-		super.readFromNBT(cmp);
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
 
-		int count = cmp.getInteger(TAG_STACK_COUNT);
+		int count = compound.getInteger(TAG_STACK_COUNT);
 		stacksIn.clear();
 		for(int i = 0; i < count; i++) {
-			NBTTagCompound stackcmp = cmp.getCompoundTag(TAG_STACK + i);
+			NBTTagCompound stackcmp = compound.getCompoundTag(TAG_STACK + i);
 			ItemStack stack = ItemStack.loadItemStackFromNBT(stackcmp);
 			stacksIn.add(stack);
 		}
 
-		count = cmp.getInteger(TAG_OUTPUT_COUNT);
+		count = compound.getInteger(TAG_OUTPUT_COUNT);
 		stacksOut.clear();
 		for(int i = 0; i < count; i++) {
-			NBTTagCompound stackcmp = cmp.getCompoundTag(TAG_OUTPUT_STACK + i);
+			NBTTagCompound stackcmp = compound.getCompoundTag(TAG_OUTPUT_STACK + i);
 			ItemStack stack = ItemStack.loadItemStackFromNBT(stackcmp);
 			stacksOut.addLast(stack);
 		}

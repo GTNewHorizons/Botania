@@ -37,15 +37,15 @@ public class BlockForestEye extends BlockModContainer<TileForestEye> implements 
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[6];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
+			icons[i] = IconHelper.forBlock(register, this, i);
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return icons[Math.min(icons.length - 1, par1)];
+	public IIcon getIcon(int side, int meta) {
+		return icons[Math.min(icons.length - 1, side)];
 	}
 
 	@Override
@@ -64,8 +64,8 @@ public class BlockForestEye extends BlockModContainer<TileForestEye> implements 
 	}
 
 	@Override
-	public int getComparatorInputOverride(World par1World, int par2, int par3, int par4, int par5) {
-		TileForestEye eye = (TileForestEye) par1World.getTileEntity(par2, par3, par4);
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
+		TileForestEye eye = (TileForestEye) world.getTileEntity(x, y, z);
 		return Math.min(15, Math.max(0, eye.entities - 1));
 	}
 

@@ -44,9 +44,8 @@ public class TileAvatar extends TileSimpleInventory implements IAvatarTile, ISid
 		}
 
 		ItemStack stack = getStackInSlot(0);
-		if(stack != null && stack.getItem() instanceof IAvatarWieldable) {
-			IAvatarWieldable wieldable = (IAvatarWieldable) stack.getItem();
-			wieldable.onAvatarUpdate(this, stack);
+		if(stack != null && stack.getItem() instanceof IAvatarWieldable wieldable) {
+            wieldable.onAvatarUpdate(this, stack);
 		}
 
 		if(enabled)
@@ -54,19 +53,19 @@ public class TileAvatar extends TileSimpleInventory implements IAvatarTile, ISid
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.writeCustomNBT(par1nbtTagCompound);
-		par1nbtTagCompound.setBoolean(TAG_ENABLED, enabled);
-		par1nbtTagCompound.setInteger(TAG_TICKS_ELAPSED, ticksElapsed);
-		par1nbtTagCompound.setInteger(TAG_MANA, mana);
+	public void writeCustomNBT(NBTTagCompound compound) {
+		super.writeCustomNBT(compound);
+		compound.setBoolean(TAG_ENABLED, enabled);
+		compound.setInteger(TAG_TICKS_ELAPSED, ticksElapsed);
+		compound.setInteger(TAG_MANA, mana);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.readCustomNBT(par1nbtTagCompound);
-		enabled = par1nbtTagCompound.getBoolean(TAG_ENABLED);
-		ticksElapsed = par1nbtTagCompound.getInteger(TAG_TICKS_ELAPSED);
-		mana = par1nbtTagCompound.getInteger(TAG_MANA);
+	public void readCustomNBT(NBTTagCompound compound) {
+		super.readCustomNBT(compound);
+		enabled = compound.getBoolean(TAG_ENABLED);
+		ticksElapsed = compound.getInteger(TAG_TICKS_ELAPSED);
+		mana = compound.getInteger(TAG_MANA);
 	}
 
 	@Override
@@ -85,17 +84,17 @@ public class TileAvatar extends TileSimpleInventory implements IAvatarTile, ISid
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int p_94128_1_) {
+	public int[] getAccessibleSlotsFromSide(int side) {
 		return new int[0];
 	}
 
 	@Override
-	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_, int p_102007_3_) {
+	public boolean canInsertItem(int slot, ItemStack item, int side) {
 		return false;
 	}
 
 	@Override
-	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_, int p_102008_3_) {
+	public boolean canExtractItem(int slot, ItemStack item, int side) {
 		return false;
 	}
 

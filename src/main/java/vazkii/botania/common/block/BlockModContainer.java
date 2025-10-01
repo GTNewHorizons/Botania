@@ -30,17 +30,17 @@ public abstract class BlockModContainer<T extends TileEntity> extends BlockConta
 
 	public int originalLight;
 
-	protected BlockModContainer(Material par2Material) {
-		super(par2Material);
+	protected BlockModContainer(Material material) {
+		super(material);
 		if(registerInCreative())
 			setCreativeTab(BotaniaCreativeTab.INSTANCE);
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
+	public Block setBlockName(String name) {
 		if(shouldRegisterInNameSet())
-			GameRegistry.registerBlock(this, ItemBlockMod.class, par1Str);
-		return super.setBlockName(par1Str);
+			GameRegistry.registerBlock(this, ItemBlockMod.class, name);
+		return super.setBlockName(name);
 	}
 
 	protected boolean shouldRegisterInNameSet() {
@@ -48,15 +48,15 @@ public abstract class BlockModContainer<T extends TileEntity> extends BlockConta
 	}
 
 	@Override
-	public Block setLightLevel(float p_149715_1_) {
-		originalLight = (int) (p_149715_1_ * 15);
-		return super.setLightLevel(p_149715_1_);
+	public Block setLightLevel(float value) {
+		originalLight = (int) (value * 15);
+		return super.setLightLevel(value);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		blockIcon = IconHelper.forBlock(par1IconRegister, this);
+	public void registerBlockIcons(IIconRegister register) {
+		blockIcon = IconHelper.forBlock(register, this);
 	}
 
 	public boolean registerInCreative() {

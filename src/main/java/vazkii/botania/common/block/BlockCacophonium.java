@@ -72,9 +72,9 @@ public class BlockCacophonium extends BlockModContainer<TileCacophonium> {
 	}
 
 	@Override
-	public void onBlockHarvested(World par1World, int par2, int par3, int par4, int par5, EntityPlayer par6EntityPlayer) {
-		if(!par6EntityPlayer.capabilities.isCreativeMode)
-			dropBlockAsItem(par1World, par2, par3, par4, par5, 0);
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player) {
+		if(!player.capabilities.isCreativeMode)
+			dropBlockAsItem(world, x, y, z, meta, 0);
 	}
 
 	@Override

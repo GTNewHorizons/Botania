@@ -47,7 +47,7 @@ public class BlockSpawnerClaw extends BlockModContainer<TileSpawnerClaw> impleme
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		//NO-OP
 	}
 

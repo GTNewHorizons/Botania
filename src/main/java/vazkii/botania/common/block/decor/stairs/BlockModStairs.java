@@ -22,9 +22,9 @@ public class BlockModStairs extends BlockStairs implements ILexiconable {
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemCubeMod.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemCubeMod.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override

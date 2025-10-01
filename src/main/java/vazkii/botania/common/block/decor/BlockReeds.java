@@ -43,16 +43,16 @@ public class BlockReeds extends BlockRotatedPillar implements ILexiconable {
 
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemCubeMod.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemCubeMod.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		blockIcon = IconHelper.forBlock(par1IconRegister, this, 0);
-		topIcon = IconHelper.forBlock(par1IconRegister, this, 1);
+	public void registerBlockIcons(IIconRegister register) {
+		blockIcon = IconHelper.forBlock(register, this, 0);
+		topIcon = IconHelper.forBlock(register, this, 1);
 	}
 
 	@Override

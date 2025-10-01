@@ -75,9 +75,9 @@ public class BlockFloatingFlower extends BlockModContainer<TileMod> implements I
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		register(par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		register(name);
+		return super.setBlockName(name);
 	}
 
 	protected void register(String name) {
@@ -85,16 +85,16 @@ public class BlockFloatingFlower extends BlockModContainer<TileMod> implements I
 	}
 
 	@Override
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		int meta = par1World.getBlockMetadata(par2, par3, par4);
+	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+		int meta = world.getBlockMetadata(x, y, z);
 		float[] color = EntitySheep.fleeceColorTable[meta];
 
-		if(par5Random.nextDouble() < ConfigHandler.flowerParticleFrequency)
-			Botania.proxy.sparkleFX(par1World, par2 + 0.3 + par5Random.nextFloat() * 0.5, par3 + 0.5 + par5Random.nextFloat() * 0.5, par4 + 0.3 + par5Random.nextFloat() * 0.5, color[0], color[1], color[2], par5Random.nextFloat(), 5);
+		if(random.nextDouble() < ConfigHandler.flowerParticleFrequency)
+			Botania.proxy.sparkleFX(world, x + 0.3 + random.nextFloat() * 0.5, y + 0.5 + random.nextFloat() * 0.5, z + 0.3 + random.nextFloat() * 0.5, color[0], color[1], color[2], random.nextFloat(), 5);
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 
@@ -105,8 +105,8 @@ public class BlockFloatingFlower extends BlockModContainer<TileMod> implements I
 	}
 
 	@Override
-	public int damageDropped(int par1) {
-		return par1;
+	public int damageDropped(int meta) {
+		return meta;
 	}
 
 	@Override
@@ -120,8 +120,8 @@ public class BlockFloatingFlower extends BlockModContainer<TileMod> implements I
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return Blocks.dirt.getIcon(par1, par2);
+	public IIcon getIcon(int side, int meta) {
+		return Blocks.dirt.getIcon(side, meta);
 	}
 
 	@Override

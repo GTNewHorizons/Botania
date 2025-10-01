@@ -79,21 +79,21 @@ public class BlockTerraPlate extends BlockModContainer<TileTerraPlate> implement
 	}
 
 	@Override
-	public boolean getBlocksMovement(IBlockAccess p_149655_1_, int p_149655_2_, int p_149655_3_, int p_149655_4_) {
+	public boolean getBlocksMovement(IBlockAccess worldIn, int x, int y, int z) {
 		return false;
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[3];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
-		overlay = IconHelper.forBlock(par1IconRegister, this, "Overlay");
+			icons[i] = IconHelper.forBlock(register, this, i);
+		overlay = IconHelper.forBlock(register, this, "Overlay");
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return icons[Math.min(2, par1)];
+	public IIcon getIcon(int side, int meta) {
+		return icons[Math.min(2, side)];
 	}
 
 	@Override
@@ -112,8 +112,8 @@ public class BlockTerraPlate extends BlockModContainer<TileTerraPlate> implement
 	}
 
 	@Override
-	public int getComparatorInputOverride(World par1World, int par2, int par3, int par4, int par5) {
-		TileTerraPlate plate = (TileTerraPlate) par1World.getTileEntity(par2, par3, par4);
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
+		TileTerraPlate plate = (TileTerraPlate) world.getTileEntity(x, y, z);
 		int val = (int) ((double) plate.getCurrentMana() / (double) TileTerraPlate.MAX_MANA * 15.0);
 		if(plate.getCurrentMana() > 0)
 			val = Math.max(val, 1);

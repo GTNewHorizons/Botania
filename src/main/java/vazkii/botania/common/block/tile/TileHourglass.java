@@ -106,25 +106,25 @@ public class TileHourglass extends TileSimpleInventory {
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.writeCustomNBT(par1nbtTagCompound);
-		par1nbtTagCompound.setInteger(TAG_TIME, time);
-		par1nbtTagCompound.setFloat(TAG_TIME_FRACTION, timeFraction);
-		par1nbtTagCompound.setBoolean(TAG_FLIP, flip);
-		par1nbtTagCompound.setInteger(TAG_FLIP_TICKS, flipTicks);
-		par1nbtTagCompound.setBoolean(TAG_MOVE, move);
-		par1nbtTagCompound.setBoolean(TAG_LOCK, lock);
+	public void writeCustomNBT(NBTTagCompound compound) {
+		super.writeCustomNBT(compound);
+		compound.setInteger(TAG_TIME, time);
+		compound.setFloat(TAG_TIME_FRACTION, timeFraction);
+		compound.setBoolean(TAG_FLIP, flip);
+		compound.setInteger(TAG_FLIP_TICKS, flipTicks);
+		compound.setBoolean(TAG_MOVE, move);
+		compound.setBoolean(TAG_LOCK, lock);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.readCustomNBT(par1nbtTagCompound);
-		time = par1nbtTagCompound.getInteger(TAG_TIME);
-		timeFraction = par1nbtTagCompound.getFloat(TAG_TIME_FRACTION);
-		flip = par1nbtTagCompound.getBoolean(TAG_FLIP);
-		flipTicks = par1nbtTagCompound.getInteger(TAG_FLIP_TICKS);
-		move = par1nbtTagCompound.getBoolean(TAG_MOVE);
-		lock = par1nbtTagCompound.getBoolean(TAG_LOCK);
+	public void readCustomNBT(NBTTagCompound compound) {
+		super.readCustomNBT(compound);
+		time = compound.getInteger(TAG_TIME);
+		timeFraction = compound.getFloat(TAG_TIME_FRACTION);
+		flip = compound.getBoolean(TAG_FLIP);
+		flipTicks = compound.getInteger(TAG_FLIP_TICKS);
+		move = compound.getBoolean(TAG_MOVE);
+		lock = compound.getBoolean(TAG_LOCK);
 	}
 
 	@Override

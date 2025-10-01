@@ -38,19 +38,19 @@ public class TileFakeAir extends TileMod {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound par1nbtTagCompound) {
-		super.writeToNBT(par1nbtTagCompound);
-		par1nbtTagCompound.setInteger(TAG_FLOWER_X, flowerX);
-		par1nbtTagCompound.setInteger(TAG_FLOWER_Y, flowerY);
-		par1nbtTagCompound.setInteger(TAG_FLOWER_Z, flowerZ);
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setInteger(TAG_FLOWER_X, flowerX);
+		compound.setInteger(TAG_FLOWER_Y, flowerY);
+		compound.setInteger(TAG_FLOWER_Z, flowerZ);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound par1nbtTagCompound) {
-		super.readFromNBT(par1nbtTagCompound);
-		flowerX = par1nbtTagCompound.getInteger(TAG_FLOWER_X);
-		flowerY = par1nbtTagCompound.getInteger(TAG_FLOWER_Y);
-		flowerZ = par1nbtTagCompound.getInteger(TAG_FLOWER_Z);
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		flowerX = compound.getInteger(TAG_FLOWER_X);
+		flowerY = compound.getInteger(TAG_FLOWER_Y);
+		flowerZ = compound.getInteger(TAG_FLOWER_Z);
 	}
 
 }
