@@ -59,19 +59,19 @@ public class ItemThornChakram extends ItemMod implements ICraftAchievement {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack p_77659_1_, World p_77659_2_, EntityPlayer p_77659_3_)  {
-		--p_77659_1_.stackSize;
+	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer player)  {
+		--itemStackIn.stackSize;
 
-		p_77659_2_.playSoundAtEntity(p_77659_3_, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+		worldIn.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-		if(!p_77659_2_.isRemote) {
-			EntityThornChakram c = new EntityThornChakram(p_77659_2_, p_77659_3_);
-			c.setFire(p_77659_1_.getItemDamage() != 0);
-			p_77659_2_.spawnEntityInWorld(c);
+		if(!worldIn.isRemote) {
+			EntityThornChakram c = new EntityThornChakram(worldIn, player);
+			c.setFire(itemStackIn.getItemDamage() != 0);
+			worldIn.spawnEntityInWorld(c);
 		}
 
 
-		return p_77659_1_;
+		return itemStackIn;
 	}
 
 	@Override

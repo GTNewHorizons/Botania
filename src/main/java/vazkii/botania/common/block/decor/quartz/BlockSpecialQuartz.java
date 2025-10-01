@@ -51,9 +51,9 @@ public class BlockSpecialQuartz extends BlockMod implements ILexiconable {
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemBlockSpecialQuartz.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemBlockSpecialQuartz.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
@@ -71,51 +71,51 @@ public class BlockSpecialQuartz extends BlockMod implements ILexiconable {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int par1, int par2) {
-		if (par2 != 2 && par2 != 3 && par2 != 4) {
-			if (par1 != 1 && (par1 != 0 || par2 != 1)) {
-				if (par1 == 0)
+	public IIcon getIcon(int side, int meta) {
+		if (meta != 2 && meta != 3 && meta != 4) {
+			if (side != 1 && (side != 0 || meta != 1)) {
+				if (side == 0)
 					return specialQuartzTopIcon;
 				else {
-					if (par2 < 0 || par2 >= specialQuartzIcons.length)
-						par2 = 0;
+					if (meta < 0 || meta >= specialQuartzIcons.length)
+						meta = 0;
 
-					return specialQuartzIcons[par2];
+					return specialQuartzIcons[meta];
 				}
-			} else return par2 == 1 ? chiseledSpecialQuartzIcon : specialQuartzTopIcon;
+			} else return meta == 1 ? chiseledSpecialQuartzIcon : specialQuartzTopIcon;
 		} else
-			return par2 == 2 && (par1 == 1 || par1 == 0) ? pillarSpecialQuartzIcon : par2 == 3 && (par1 == 5 || par1 == 4) ? pillarSpecialQuartzIcon : par2 == 4 && (par1 == 2 || par1 == 3) ? pillarSpecialQuartzIcon : specialQuartzIcons[par2];
+			return meta == 2 && (side == 1 || side == 0) ? pillarSpecialQuartzIcon : meta == 3 && (side == 5 || side == 4) ? pillarSpecialQuartzIcon : meta == 4 && (side == 2 || side == 3) ? pillarSpecialQuartzIcon : specialQuartzIcons[meta];
 	}
 
 	@Override
-	public int onBlockPlaced(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8, int par9) {
-		if (par9 == 2) {
-			switch (par5) {
+	public int onBlockPlaced(World world, int x, int y, int z, int side, float subX, float subY, float subZ, int meta) {
+		if (meta == 2) {
+			switch (side) {
 			case 0:
 			case 1:
-				par9 = 2;
+				meta = 2;
 				break;
 			case 2:
 			case 3:
-				par9 = 4;
+				meta = 4;
 				break;
 			case 4:
 			case 5:
-				par9 = 3;
+				meta = 3;
 			}
 		}
 
-		return par9;
+		return meta;
 	}
 
 	@Override
-	public int damageDropped(int par1) {
-		return par1 != 3 && par1 != 4 ? par1 : 2;
+	public int damageDropped(int meta) {
+		return meta != 3 && meta != 4 ? meta : 2;
 	}
 
 	@Override
-	public ItemStack createStackedBlock(int par1) {
-		return par1 != 3 && par1 != 4 ? super.createStackedBlock(par1) : new ItemStack(this, 1, 2);
+	public ItemStack createStackedBlock(int meta) {
+		return meta != 3 && meta != 4 ? super.createStackedBlock(meta) : new ItemStack(this, 1, 2);
 	}
 
 	@Override
@@ -133,18 +133,18 @@ public class BlockSpecialQuartz extends BlockMod implements ILexiconable {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		specialQuartzIcons = new IIcon[iconNames.length];
 
 		for (int i = 0; i < specialQuartzIcons.length; ++i) {
 			if (iconNames[i] == null)
 				specialQuartzIcons[i] = specialQuartzIcons[i - 1];
-			else specialQuartzIcons[i] = IconHelper.forName(par1IconRegister, iconNames[i]);
+			else specialQuartzIcons[i] = IconHelper.forName(register, iconNames[i]);
 		}
 
-		specialQuartzTopIcon = IconHelper.forName(par1IconRegister, "block"  + type + "Quartz1");
-		chiseledSpecialQuartzIcon = IconHelper.forName(par1IconRegister, "chiseled" + type + "Quartz1");
-		pillarSpecialQuartzIcon = IconHelper.forName(par1IconRegister, "pillar" + type + "Quartz1");
+		specialQuartzTopIcon = IconHelper.forName(register, "block"  + type + "Quartz1");
+		chiseledSpecialQuartzIcon = IconHelper.forName(register, "chiseled" + type + "Quartz1");
+		pillarSpecialQuartzIcon = IconHelper.forName(register, "pillar" + type + "Quartz1");
 	}
 
 	@Override

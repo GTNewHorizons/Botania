@@ -49,14 +49,14 @@ public class BlockLivingrock extends BlockMod implements ILexiconable {
 	}
 
 	@Override
-	public int damageDropped(int par1) {
-		return par1;
+	public int damageDropped(int meta) {
+		return meta;
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemCubeWithMetadataAndName.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemCubeWithMetadataAndName.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
@@ -66,15 +66,15 @@ public class BlockLivingrock extends BlockMod implements ILexiconable {
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[TYPES];
 		for(int i = 0; i < TYPES; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
+			icons[i] = IconHelper.forBlock(register, this, i);
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return icons[Math.min(TYPES - 1, par2)];
+	public IIcon getIcon(int side, int meta) {
+		return icons[Math.min(TYPES - 1, meta)];
 	}
 
 	@Override

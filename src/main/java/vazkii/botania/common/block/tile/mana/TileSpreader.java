@@ -255,90 +255,90 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound cmp) {
-		super.writeCustomNBT(cmp);
+	public void writeCustomNBT(NBTTagCompound compound) {
+		super.writeCustomNBT(compound);
 
 		UUID identity = getIdentifier();
-		cmp.setBoolean(TAG_HAS_IDENTITY, true);
-		cmp.setLong(TAG_UUID_MOST, identity.getMostSignificantBits());
-		cmp.setLong(TAG_UUID_LEAST, identity.getLeastSignificantBits());
+		compound.setBoolean(TAG_HAS_IDENTITY, true);
+		compound.setLong(TAG_UUID_MOST, identity.getMostSignificantBits());
+		compound.setLong(TAG_UUID_LEAST, identity.getLeastSignificantBits());
 
-		cmp.setInteger(TAG_MANA, mana);
-		cmp.setFloat(TAG_ROTATION_X, rotationX);
-		cmp.setFloat(TAG_ROTATION_Y, rotationY);
-		cmp.setBoolean(TAG_REQUEST_UPDATE, requestsClientUpdate);
-		cmp.setInteger(TAG_PADDING_COLOR, paddingColor);
-		cmp.setBoolean(TAG_CAN_SHOOT_BURST, canShootBurst);
+		compound.setInteger(TAG_MANA, mana);
+		compound.setFloat(TAG_ROTATION_X, rotationX);
+		compound.setFloat(TAG_ROTATION_Y, rotationY);
+		compound.setBoolean(TAG_REQUEST_UPDATE, requestsClientUpdate);
+		compound.setInteger(TAG_PADDING_COLOR, paddingColor);
+		compound.setBoolean(TAG_CAN_SHOOT_BURST, canShootBurst);
 
-		cmp.setInteger(TAG_PINGBACK_TICKS, pingbackTicks);
-		cmp.setDouble(TAG_LAST_PINGBACK_X, lastPingbackX);
-		cmp.setDouble(TAG_LAST_PINGBACK_Y, lastPingbackY);
-		cmp.setDouble(TAG_LAST_PINGBACK_Z, lastPingbackZ);
+		compound.setInteger(TAG_PINGBACK_TICKS, pingbackTicks);
+		compound.setDouble(TAG_LAST_PINGBACK_X, lastPingbackX);
+		compound.setDouble(TAG_LAST_PINGBACK_Y, lastPingbackY);
+		compound.setDouble(TAG_LAST_PINGBACK_Z, lastPingbackZ);
 
-		cmp.setString(TAG_INPUT_KEY, inputKey);
-		cmp.setString(TAG_OUTPUT_KEY, outputKey);
+		compound.setString(TAG_INPUT_KEY, inputKey);
+		compound.setString(TAG_OUTPUT_KEY, outputKey);
 
-		cmp.setInteger(TAG_FORCE_CLIENT_BINDING_X, receiver == null ? 0 : ((TileEntity) receiver).xCoord);
-		cmp.setInteger(TAG_FORCE_CLIENT_BINDING_Y, receiver == null ? -1 : ((TileEntity) receiver).yCoord);
-		cmp.setInteger(TAG_FORCE_CLIENT_BINDING_Z, receiver == null ? 0 : ((TileEntity) receiver).zCoord);
+		compound.setInteger(TAG_FORCE_CLIENT_BINDING_X, receiver == null ? 0 : ((TileEntity) receiver).xCoord);
+		compound.setInteger(TAG_FORCE_CLIENT_BINDING_Y, receiver == null ? -1 : ((TileEntity) receiver).yCoord);
+		compound.setInteger(TAG_FORCE_CLIENT_BINDING_Z, receiver == null ? 0 : ((TileEntity) receiver).zCoord);
 
-		cmp.setBoolean(TAG_MAPMAKER_OVERRIDE, mapmakerOverride);
-		cmp.setInteger(TAG_FORCED_COLOR, mmForcedColor);
-		cmp.setInteger(TAG_FORCED_MANA_PAYLOAD, mmForcedManaPayload);
-		cmp.setInteger(TAG_FORCED_TICKS_BEFORE_MANA_LOSS, mmForcedTicksBeforeManaLoss);
-		cmp.setFloat(TAG_FORCED_MANA_LOSS_PER_TICK, mmForcedManaLossPerTick);
-		cmp.setFloat(TAG_FORCED_GRAVITY, mmForcedGravity);
-		cmp.setFloat(TAG_FORCED_VELOCITY_MULTIPLIER, mmForcedVelocityMultiplier);
+		compound.setBoolean(TAG_MAPMAKER_OVERRIDE, mapmakerOverride);
+		compound.setInteger(TAG_FORCED_COLOR, mmForcedColor);
+		compound.setInteger(TAG_FORCED_MANA_PAYLOAD, mmForcedManaPayload);
+		compound.setInteger(TAG_FORCED_TICKS_BEFORE_MANA_LOSS, mmForcedTicksBeforeManaLoss);
+		compound.setFloat(TAG_FORCED_MANA_LOSS_PER_TICK, mmForcedManaLossPerTick);
+		compound.setFloat(TAG_FORCED_GRAVITY, mmForcedGravity);
+		compound.setFloat(TAG_FORCED_VELOCITY_MULTIPLIER, mmForcedVelocityMultiplier);
 
 		requestsClientUpdate = false;
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound cmp) {
-		super.readCustomNBT(cmp);
+	public void readCustomNBT(NBTTagCompound compound) {
+		super.readCustomNBT(compound);
 
-		if(cmp.getBoolean(TAG_HAS_IDENTITY)) {
-			long most = cmp.getLong(TAG_UUID_MOST);
-			long least = cmp.getLong(TAG_UUID_LEAST);
+		if(compound.getBoolean(TAG_HAS_IDENTITY)) {
+			long most = compound.getLong(TAG_UUID_MOST);
+			long least = compound.getLong(TAG_UUID_LEAST);
 			UUID identity = getIdentifierUnsafe();
 			if(identity == null || most != identity.getMostSignificantBits() || least != identity.getLeastSignificantBits())
 				identity = new UUID(most, least);
 		} else getIdentifier();
 
-		mana = cmp.getInteger(TAG_MANA);
-		rotationX = cmp.getFloat(TAG_ROTATION_X);
-		rotationY = cmp.getFloat(TAG_ROTATION_Y);
-		requestsClientUpdate = cmp.getBoolean(TAG_REQUEST_UPDATE);
+		mana = compound.getInteger(TAG_MANA);
+		rotationX = compound.getFloat(TAG_ROTATION_X);
+		rotationY = compound.getFloat(TAG_ROTATION_Y);
+		requestsClientUpdate = compound.getBoolean(TAG_REQUEST_UPDATE);
 
-		if(cmp.hasKey(TAG_INPUT_KEY))
-			inputKey = cmp.getString(TAG_INPUT_KEY);
-		if(cmp.hasKey(TAG_OUTPUT_KEY))
-			inputKey = cmp.getString(TAG_OUTPUT_KEY);
+		if(compound.hasKey(TAG_INPUT_KEY))
+			inputKey = compound.getString(TAG_INPUT_KEY);
+		if(compound.hasKey(TAG_OUTPUT_KEY))
+			inputKey = compound.getString(TAG_OUTPUT_KEY);
 
-		mapmakerOverride = cmp.getBoolean(TAG_MAPMAKER_OVERRIDE);
-		mmForcedColor = cmp.getInteger(TAG_FORCED_COLOR);
-		mmForcedManaPayload = cmp.getInteger(TAG_FORCED_MANA_PAYLOAD);
-		mmForcedTicksBeforeManaLoss = cmp.getInteger(TAG_FORCED_TICKS_BEFORE_MANA_LOSS);
-		mmForcedManaLossPerTick = cmp.getFloat(TAG_FORCED_MANA_LOSS_PER_TICK);
-		mmForcedGravity = cmp.getFloat(TAG_FORCED_GRAVITY);
-		mmForcedVelocityMultiplier = cmp.getFloat(TAG_FORCED_VELOCITY_MULTIPLIER);
+		mapmakerOverride = compound.getBoolean(TAG_MAPMAKER_OVERRIDE);
+		mmForcedColor = compound.getInteger(TAG_FORCED_COLOR);
+		mmForcedManaPayload = compound.getInteger(TAG_FORCED_MANA_PAYLOAD);
+		mmForcedTicksBeforeManaLoss = compound.getInteger(TAG_FORCED_TICKS_BEFORE_MANA_LOSS);
+		mmForcedManaLossPerTick = compound.getFloat(TAG_FORCED_MANA_LOSS_PER_TICK);
+		mmForcedGravity = compound.getFloat(TAG_FORCED_GRAVITY);
+		mmForcedVelocityMultiplier = compound.getFloat(TAG_FORCED_VELOCITY_MULTIPLIER);
 
-		if(cmp.hasKey(TAG_KNOWN_MANA))
-			knownMana = cmp.getInteger(TAG_KNOWN_MANA);
-		if(cmp.hasKey(TAG_PADDING_COLOR))
-			paddingColor = cmp.getInteger(TAG_PADDING_COLOR);
-		if(cmp.hasKey(TAG_CAN_SHOOT_BURST))
-			canShootBurst = cmp.getBoolean(TAG_CAN_SHOOT_BURST);
+		if(compound.hasKey(TAG_KNOWN_MANA))
+			knownMana = compound.getInteger(TAG_KNOWN_MANA);
+		if(compound.hasKey(TAG_PADDING_COLOR))
+			paddingColor = compound.getInteger(TAG_PADDING_COLOR);
+		if(compound.hasKey(TAG_CAN_SHOOT_BURST))
+			canShootBurst = compound.getBoolean(TAG_CAN_SHOOT_BURST);
 
-		pingbackTicks = cmp.getInteger(TAG_PINGBACK_TICKS);
-		lastPingbackX = cmp.getDouble(TAG_LAST_PINGBACK_X);
-		lastPingbackY = cmp.getDouble(TAG_LAST_PINGBACK_Y);
-		lastPingbackZ = cmp.getDouble(TAG_LAST_PINGBACK_Z);
+		pingbackTicks = compound.getInteger(TAG_PINGBACK_TICKS);
+		lastPingbackX = compound.getDouble(TAG_LAST_PINGBACK_X);
+		lastPingbackY = compound.getDouble(TAG_LAST_PINGBACK_Y);
+		lastPingbackZ = compound.getDouble(TAG_LAST_PINGBACK_Z);
 
 		if(requestsClientUpdate && worldObj != null) {
-			int x = cmp.getInteger(TAG_FORCE_CLIENT_BINDING_X);
-			int y = cmp.getInteger(TAG_FORCE_CLIENT_BINDING_Y);
-			int z = cmp.getInteger(TAG_FORCE_CLIENT_BINDING_Z);
+			int x = compound.getInteger(TAG_FORCE_CLIENT_BINDING_X);
+			int y = compound.getInteger(TAG_FORCE_CLIENT_BINDING_Y);
+			int z = compound.getInteger(TAG_FORCE_CLIENT_BINDING_Z);
 			if(y != -1) {
 				TileEntity tile = worldObj.getTileEntity(x, y, z);
 				if(tile instanceof IManaReceiver)

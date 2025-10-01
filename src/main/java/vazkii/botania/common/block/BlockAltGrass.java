@@ -56,9 +56,9 @@ public class BlockAltGrass extends BlockMod implements ILexiconable {
 	}
 	
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemCubeWithMetadataAndName.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemCubeWithMetadataAndName.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
@@ -73,10 +73,10 @@ public class BlockAltGrass extends BlockMod implements ILexiconable {
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[SUBTYPES * 2];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
+			icons[i] = IconHelper.forBlock(register, this, i);
 	}
 
 	@Override
@@ -102,8 +102,8 @@ public class BlockAltGrass extends BlockMod implements ILexiconable {
 	}
 
 	@Override
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
-		return Blocks.dirt.getItemDropped(0, p_149650_2_, p_149650_3_);
+	public Item getItemDropped(int meta, Random random, int fortune) {
+		return Blocks.dirt.getItemDropped(0, random, fortune);
 	}
 
 	@Override

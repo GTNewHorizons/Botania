@@ -66,16 +66,16 @@ public class ItemLivingwoodBow extends ItemBow implements IManaUsingItem {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack p_77659_1_, World p_77659_2_, EntityPlayer p_77659_3_) {
-		ArrowNockEvent event = new ArrowNockEvent(p_77659_3_, p_77659_1_);
+	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer player) {
+		ArrowNockEvent event = new ArrowNockEvent(player, itemStackIn);
 		MinecraftForge.EVENT_BUS.post(event);
 		if(event.isCanceled())
 			return event.result;
 
-		if(canFire(p_77659_1_, p_77659_2_, p_77659_3_, 0))
-			p_77659_3_.setItemInUse(p_77659_1_, getMaxItemUseDuration(p_77659_1_));
+		if(canFire(itemStackIn, worldIn, player, 0))
+			player.setItemInUse(itemStackIn, getMaxItemUseDuration(itemStackIn));
 
-		return p_77659_1_;
+		return itemStackIn;
 	}
 
 	@Override

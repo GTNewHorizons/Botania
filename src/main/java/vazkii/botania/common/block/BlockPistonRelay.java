@@ -76,8 +76,8 @@ public class BlockPistonRelay extends BlockMod implements IWandable, ILexiconabl
 	}
 
 	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
-		mapCoords(par1World.provider.dimensionId, par2, par3, par4, 2);
+	public void breakBlock(World world, int x, int y, int z, Block blockBroken, int meta) {
+		mapCoords(world.provider.dimensionId, x, y, z, 2);
 	}
 
 	public static String getCoordsAsString(int world, int x, int y, int z) {

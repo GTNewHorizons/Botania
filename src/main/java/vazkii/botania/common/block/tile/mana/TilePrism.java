@@ -65,17 +65,17 @@ public class TilePrism extends TileSimpleInventory implements IManaCollisionGhos
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int p_94128_1_) {
+	public int[] getAccessibleSlotsFromSide(int side) {
 		return new int[] { 0 };
 	}
 
 	@Override
-	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_, int p_102007_3_) {
-		return p_102007_2_.getItem() instanceof ILens;
+	public boolean canInsertItem(int slot, ItemStack stack, int side) {
+		return stack.getItem() instanceof ILens;
 	}
 
 	@Override
-	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_, int p_102008_3_) {
+	public boolean canExtractItem(int slot, ItemStack stack, int side) {
 		return true;
 	}
 

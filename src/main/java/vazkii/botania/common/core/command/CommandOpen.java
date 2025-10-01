@@ -27,7 +27,7 @@ public class CommandOpen extends CommandBase {
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender p_71518_1_) {
+	public String getCommandUsage(ICommandSender sender) {
 		return "<entry>";
 	}
 
@@ -50,8 +50,8 @@ public class CommandOpen extends CommandBase {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_) {
-		return p_71519_1_ instanceof EntityPlayer;
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+		return sender instanceof EntityPlayer;
 	}
 
 }

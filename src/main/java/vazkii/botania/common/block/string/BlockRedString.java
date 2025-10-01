@@ -44,9 +44,9 @@ public abstract class BlockRedString extends BlockModContainer<TileRedString> im
 	}
 
 	@Override
-	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-		int orientation = BlockPistonBase.determineOrientation(par1World, par2, par3, par4, par5EntityLivingBase);
-		par1World.setBlockMetadataWithNotify(par2, par3, par4, orientation, 1 | 2);
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack itemIn) {
+		int orientation = BlockPistonBase.determineOrientation(world, x, y, z, placer);
+		world.setBlockMetadataWithNotify(x, y, z, orientation, 1 | 2);
 	}
 
 	@Override
@@ -56,9 +56,9 @@ public abstract class BlockRedString extends BlockModContainer<TileRedString> im
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		senderIcon = IconHelper.forName(par1IconRegister, "redStringSender");
-		sideIcon = registerSideIcon(par1IconRegister);
+	public void registerBlockIcons(IIconRegister register) {
+		senderIcon = IconHelper.forName(register, "redStringSender");
+		sideIcon = registerSideIcon(register);
 	}
 
 	@SideOnly(Side.CLIENT)

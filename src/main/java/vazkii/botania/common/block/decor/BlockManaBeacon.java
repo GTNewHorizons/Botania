@@ -49,15 +49,15 @@ public class BlockManaBeacon extends BlockModContainer<TileManaBeacon> implement
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[2];
 		for(int i = 0; i < 2; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
+			icons[i] = IconHelper.forBlock(register, this, i);
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return icons[par1 == 1 ? 1 : 0];
+	public IIcon getIcon(int side, int meta) {
+		return icons[side == 1 ? 1 : 0];
 	}
 
 	@Override
@@ -67,9 +67,9 @@ public class BlockManaBeacon extends BlockModContainer<TileManaBeacon> implement
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemBlockWithMetadataAndName.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemBlockWithMetadataAndName.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
@@ -88,19 +88,19 @@ public class BlockManaBeacon extends BlockModContainer<TileManaBeacon> implement
 	}
 
 	@Override
-	public int damageDropped(int par1) {
-		return par1;
+	public int damageDropped(int meta) {
+		return meta;
 	}
 
 	@Override
-	public int getRenderColor(int par1) {
-		float[] color = EntitySheep.fleeceColorTable[par1];
+	public int getRenderColor(int meta) {
+		float[] color = EntitySheep.fleeceColorTable[meta];
 		return new Color(color[0], color[1], color[2]).getRGB();
 	}
 
 	@Override
-	public int colorMultiplier(IBlockAccess par1iBlockAccess, int par2, int par3, int par4) {
-		return getRenderColor(par1iBlockAccess.getBlockMetadata(par2, par3, par4));
+	public int colorMultiplier(IBlockAccess worldIn, int x, int y, int z) {
+		return getRenderColor(worldIn.getBlockMetadata(x, y, z));
 	}
 
 	@Override

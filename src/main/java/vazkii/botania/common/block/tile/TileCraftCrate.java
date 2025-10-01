@@ -109,7 +109,7 @@ public class TileCraftCrate extends TileOpenCrate {
 
 		InventoryCrafting craft = new InventoryCrafting(new Container() {
 			@Override
-			public boolean canInteractWith(EntityPlayer p_75145_1_) {
+			public boolean canInteractWith(EntityPlayer player) {
 				return false;
 			}
 		}, 3, 3);
@@ -157,15 +157,15 @@ public class TileCraftCrate extends TileOpenCrate {
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.writeCustomNBT(par1nbtTagCompound);
-		par1nbtTagCompound.setInteger(TAG_PATTERN, pattern);
+	public void writeCustomNBT(NBTTagCompound compound) {
+		super.writeCustomNBT(compound);
+		compound.setInteger(TAG_PATTERN, pattern);
 	}
 
 	@Override
-	public void readCustomNBT(NBTTagCompound par1nbtTagCompound) {
-		super.readCustomNBT(par1nbtTagCompound);
-		pattern = par1nbtTagCompound.getInteger(TAG_PATTERN);
+	public void readCustomNBT(NBTTagCompound compound) {
+		super.readCustomNBT(compound);
+		pattern = compound.getInteger(TAG_PATTERN);
 	}
 
 	@Override

@@ -57,11 +57,11 @@ public abstract class EntityThrowableCopy extends Entity implements IProjectile 
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean isInRangeToRenderDist(double p_70112_1_)
+	public boolean isInRangeToRenderDist(double distance)
 	{
 		double d1 = boundingBox.getAverageEdgeLength() * 4.0D;
 		d1 *= 64.0D;
-		return p_70112_1_ < d1 * d1;
+		return distance < d1 * d1;
 	}
 
 	public EntityThrowableCopy(World p_i1777_1_, EntityLivingBase p_i1777_2_)
@@ -131,17 +131,17 @@ public abstract class EntityThrowableCopy extends Entity implements IProjectile 
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_)
+	public void setVelocity(double x, double y, double z)
 	{
-		motionX = p_70016_1_;
-		motionY = p_70016_3_;
-		motionZ = p_70016_5_;
+		motionX = x;
+		motionY = y;
+		motionZ = z;
 
 		if (prevRotationPitch == 0.0F && prevRotationYaw == 0.0F)
 		{
-			float f = MathHelper.sqrt_double(p_70016_1_ * p_70016_1_ + p_70016_5_ * p_70016_5_);
-			prevRotationYaw = rotationYaw = (float)(Math.atan2(p_70016_1_, p_70016_5_) * 180.0D / Math.PI);
-			prevRotationPitch = rotationPitch = (float)(Math.atan2(p_70016_3_, f) * 180.0D / Math.PI);
+			float f = MathHelper.sqrt_double(x * x + z * z);
+			prevRotationYaw = rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
+			prevRotationPitch = rotationPitch = (float)(Math.atan2(y, f) * 180.0D / Math.PI);
 		}
 	}
 
@@ -312,36 +312,36 @@ public abstract class EntityThrowableCopy extends Entity implements IProjectile 
 	 * (abstract) Protected helper method to write subclass entity data to NBT.
 	 */
 	@Override
-	public void writeEntityToNBT(NBTTagCompound p_70014_1_)
+	public void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
-		p_70014_1_.setShort("xTile", (short)field_145788_c);
-		p_70014_1_.setShort("yTile", (short)field_145786_d);
-		p_70014_1_.setShort("zTile", (short)field_145787_e);
-		p_70014_1_.setByte("inTile", (byte)Block.getIdFromBlock(field_145785_f));
-		p_70014_1_.setByte("shake", (byte)throwableShake);
-		p_70014_1_.setByte("inGround", (byte)(inGround ? 1 : 0));
+		tagCompound.setShort("xTile", (short)field_145788_c);
+		tagCompound.setShort("yTile", (short)field_145786_d);
+		tagCompound.setShort("zTile", (short)field_145787_e);
+		tagCompound.setByte("inTile", (byte)Block.getIdFromBlock(field_145785_f));
+		tagCompound.setByte("shake", (byte)throwableShake);
+		tagCompound.setByte("inGround", (byte)(inGround ? 1 : 0));
 
 		if ((throwerName == null || throwerName.length() == 0) && thrower != null && thrower instanceof EntityPlayer)
 		{
 			throwerName = thrower.getCommandSenderName();
 		}
 
-		p_70014_1_.setString("ownerName", throwerName == null ? "" : throwerName);
+		tagCompound.setString("ownerName", throwerName == null ? "" : throwerName);
 	}
 
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
 	@Override
-	public void readEntityFromNBT(NBTTagCompound p_70037_1_)
+	public void readEntityFromNBT(NBTTagCompound tagCompund)
 	{
-		field_145788_c = p_70037_1_.getShort("xTile");
-		field_145786_d = p_70037_1_.getShort("yTile");
-		field_145787_e = p_70037_1_.getShort("zTile");
-		field_145785_f = Block.getBlockById(p_70037_1_.getByte("inTile") & 255);
-		throwableShake = p_70037_1_.getByte("shake") & 255;
-		inGround = p_70037_1_.getByte("inGround") == 1;
-		throwerName = p_70037_1_.getString("ownerName");
+		field_145788_c = tagCompund.getShort("xTile");
+		field_145786_d = tagCompund.getShort("yTile");
+		field_145787_e = tagCompund.getShort("zTile");
+		field_145785_f = Block.getBlockById(tagCompund.getByte("inTile") & 255);
+		throwableShake = tagCompund.getByte("shake") & 255;
+		inGround = tagCompund.getByte("inGround") == 1;
+		throwerName = tagCompund.getString("ownerName");
 
 		if (throwerName != null && throwerName.length() == 0)
 		{

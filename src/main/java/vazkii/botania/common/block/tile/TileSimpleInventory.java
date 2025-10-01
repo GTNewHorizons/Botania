@@ -21,8 +21,8 @@ public abstract class TileSimpleInventory extends TileMod implements IInventory 
 	ItemStack[] inventorySlots = new ItemStack[getSizeInventory()];
 
 	@Override
-	public void readCustomNBT(NBTTagCompound par1NBTTagCompound) {
-		NBTTagList var2 = par1NBTTagCompound.getTagList("Items", 10);
+	public void readCustomNBT(NBTTagCompound compound) {
+		NBTTagList var2 = compound.getTagList("Items", 10);
 		inventorySlots = new ItemStack[getSizeInventory()];
 		for (int var3 = 0; var3 < var2.tagCount(); ++var3) {
 			NBTTagCompound var4 = var2.getCompoundTagAt(var3);
@@ -33,7 +33,7 @@ public abstract class TileSimpleInventory extends TileMod implements IInventory 
 	}
 
 	@Override
-	public void writeCustomNBT(NBTTagCompound par1NBTTagCompound) {
+	public void writeCustomNBT(NBTTagCompound compound) {
 		NBTTagList var2 = new NBTTagList();
 		for (int var3 = 0; var3 < inventorySlots.length; ++var3) {
 			if (inventorySlots[var3] != null) {
@@ -43,7 +43,7 @@ public abstract class TileSimpleInventory extends TileMod implements IInventory 
 				var2.appendTag(var4);
 			}
 		}
-		par1NBTTagCompound.setTag("Items", var2);
+		compound.setTag("Items", var2);
 	}
 
 	@Override

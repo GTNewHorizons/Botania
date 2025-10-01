@@ -29,12 +29,12 @@ public class GuiBaubleBox extends InventoryEffectRenderer {
 	}
 
 	@Override
-	protected boolean checkHotbarKeys(int p_146983_1_) {
+	protected boolean checkHotbarKeys(int keyCode) {
 		return false;
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(texture);
 		int k = (width - xSize) / 2;
@@ -47,7 +47,7 @@ public class GuiBaubleBox extends InventoryEffectRenderer {
 				drawTexturedModalRect(k+slot.xDisplayPosition, l+slot.yDisplayPosition, 200, 0, 16, 16);
 		}
 
-		GuiInventory.func_147046_a(guiLeft + 43, guiTop + 61, 20, guiLeft + 43 - p_146976_2_, guiTop + 45 - 30 - p_146976_3_, mc.thePlayer);
+		GuiInventory.func_147046_a(guiLeft + 43, guiTop + 61, 20, guiLeft + 43 - mouseX, guiTop + 45 - 30 - mouseY, mc.thePlayer);
 	}
 
 }

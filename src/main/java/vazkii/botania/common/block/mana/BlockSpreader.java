@@ -66,13 +66,13 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemBlockWithMetadataAndName.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemBlockWithMetadataAndName.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 
@@ -83,10 +83,10 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 	}
 
 	@Override
-	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-		int orientation = BlockPistonBase.determineOrientation(par1World, par2, par3, par4, par5EntityLivingBase);
-		TileSpreader spreader = (TileSpreader) par1World.getTileEntity(par2, par3, par4);
-		par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getItemDamage(), 1 | 2);
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack itemIn) {
+		int orientation = BlockPistonBase.determineOrientation(world, x, y, z, placer);
+		TileSpreader spreader = (TileSpreader) world.getTileEntity(x, y, z);
+		world.setBlockMetadataWithNotify(x, y, z, itemIn.getItemDamage(), 1 | 2);
 
 		switch(orientation) {
 		case 0:
@@ -110,8 +110,8 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 	}
 
 	@Override
-	public int damageDropped(int par1) {
-		return par1;
+	public int damageDropped(int meta) {
+		return meta;
 	}
 
 	@Override
@@ -125,8 +125,8 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return par2 >= 2 ? ModBlocks.dreamwood.getIcon(par1, 0) : ModBlocks.livingwood.getIcon(par1, 0);
+	public IIcon getIcon(int side, int meta) {
+		return meta >= 2 ? ModBlocks.dreamwood.getIcon(side, 0) : ModBlocks.livingwood.getIcon(side, 0);
 	}
 
 	@Override
@@ -135,14 +135,14 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 	}
 
 	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		TileEntity tile = par1World.getTileEntity(par2, par3, par4);
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float subX, float subY, float subZ) {
+		TileEntity tile = world.getTileEntity(x, y, z);
 		if(!(tile instanceof TileSpreader))
 			return false;
 
 		TileSpreader spreader = (TileSpreader) tile;
 		ItemStack lens = spreader.getStackInSlot(0);
-		ItemStack heldItem = par5EntityPlayer.getCurrentEquippedItem();
+		ItemStack heldItem = player.getCurrentEquippedItem();
 		boolean isHeldItemLens = heldItem != null && heldItem.getItem() instanceof ILens;
 		boolean wool = heldItem != null && heldItem.getItem() == Item.getItemFromBlock(Blocks.wool);
 
@@ -151,15 +151,15 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 				return false;
 
 		if(lens == null && isHeldItemLens) {
-			if (!par5EntityPlayer.capabilities.isCreativeMode)
-				par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, null);
+			if (!player.capabilities.isCreativeMode)
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 
 			spreader.setInventorySlotContents(0, heldItem.copy());
 			spreader.markDirty();
 		} else if(lens != null && !wool) {
 			ItemStack add = lens.copy();
-			if(!par5EntityPlayer.inventory.addItemStackToInventory(add))
-				par5EntityPlayer.dropPlayerItemWithRandomChoice(add, false);
+			if(!player.inventory.addItemStackToInventory(add))
+				player.dropPlayerItemWithRandomChoice(add, false);
 			spreader.setInventorySlotContents(0, null);
 			spreader.markDirty();
 		}
@@ -168,11 +168,11 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 			spreader.paddingColor = heldItem.getItemDamage();
 			heldItem.stackSize--;
 			if(heldItem.stackSize == 0)
-				par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, null);
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 		} else if(heldItem == null && spreader.paddingColor != -1 && lens == null) {
 			ItemStack pad = new ItemStack(Blocks.wool, 1, spreader.paddingColor);
-			if(!par5EntityPlayer.inventory.addItemStackToInventory(pad))
-				par5EntityPlayer.dropPlayerItemWithRandomChoice(pad, false);
+			if(!player.inventory.addItemStackToInventory(pad))
+				player.dropPlayerItemWithRandomChoice(pad, false);
 			spreader.paddingColor = -1;
 			spreader.markDirty();
 		}
@@ -181,8 +181,8 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 	}
 
 	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
-		TileEntity tile = par1World.getTileEntity(par2, par3, par4);
+	public void breakBlock(World world, int x, int y, int z, Block blockBroken, int meta) {
+		TileEntity tile = world.getTileEntity(x, y, z);
 		if(!(tile instanceof TileSpreader))
 			return;
 
@@ -197,14 +197,14 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 					float f1 = random.nextFloat() * 0.8F + 0.1F;
 					EntityItem entityitem;
 
-					for (float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; par1World.spawnEntityInWorld(entityitem)) {
+					for (float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem)) {
 						int k1 = random.nextInt(21) + 10;
 
 						if (k1 > itemstack.stackSize)
 							k1 = itemstack.stackSize;
 
 						itemstack.stackSize -= k1;
-						entityitem = new EntityItem(par1World, par2 + f, par3 + f1, par4 + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
+						entityitem = new EntityItem(world, x + f, y + f1, z + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
 						float f3 = 0.05F;
 						entityitem.motionX = (float)random.nextGaussian() * f3;
 						entityitem.motionY = (float)random.nextGaussian() * f3 + 0.2F;
@@ -216,10 +216,10 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 				}
 			}
 
-			par1World.func_147453_f(par2, par3, par4, par5);
+			world.func_147453_f(x, y, z, blockBroken);
 		}
 
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+		super.breakBlock(world, x, y, z, blockBroken, meta);
 	}
 
 	@Override

@@ -60,9 +60,9 @@ public class BlockEnchanter extends BlockModContainer<TileEnchanter> implements 
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		super.registerBlockIcons(par1IconRegister);
-		overlay = IconHelper.forBlock(par1IconRegister, this, "Overlay");
+	public void registerBlockIcons(IIconRegister register) {
+		super.registerBlockIcons(register);
+		overlay = IconHelper.forBlock(register, this, "Overlay");
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class BlockEnchanter extends BlockModContainer<TileEnchanter> implements 
 	}
 
 	@Override
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+	public Item getItemDropped(int meta, Random random, int fortune) {
 		return Item.getItemFromBlock(Blocks.lapis_block);
 	}
 
@@ -81,9 +81,9 @@ public class BlockEnchanter extends BlockModContainer<TileEnchanter> implements 
 	}
 
 	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		TileEnchanter enchanter = (TileEnchanter) par1World.getTileEntity(par2, par3, par4);
-		ItemStack stack = par5EntityPlayer.getCurrentEquippedItem();
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float subX, float subY, float subZ) {
+		TileEnchanter enchanter = (TileEnchanter) world.getTileEntity(x, y, z);
+		ItemStack stack = player.getCurrentEquippedItem();
 		if(stack != null && stack.getItem() == ModItems.twigWand)
 			return false;
 
@@ -92,22 +92,22 @@ public class BlockEnchanter extends BlockModContainer<TileEnchanter> implements 
 		if(enchanter.itemToEnchant == null) {
 			if(stackEnchantable) {
 				enchanter.itemToEnchant = stack.copy();
-				par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, null);
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 				enchanter.sync();
 			}
 		} else if(enchanter.stage == 0) {
-			if(par5EntityPlayer.inventory.addItemStackToInventory(enchanter.itemToEnchant.copy())) {
+			if(player.inventory.addItemStackToInventory(enchanter.itemToEnchant.copy())) {
 				enchanter.itemToEnchant = null;
 				enchanter.sync();
-			} else par5EntityPlayer.addChatMessage(new ChatComponentTranslation("botaniamisc.invFull"));
+			} else player.addChatMessage(new ChatComponentTranslation("botaniamisc.invFull"));
 		}
 
 		return true;
 	}
 
 	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
-		TileEnchanter enchanter = (TileEnchanter) par1World.getTileEntity(par2, par3, par4);
+	public void breakBlock(World world, int x, int y, int z, Block blockBroken, int meta) {
+		TileEnchanter enchanter = (TileEnchanter) world.getTileEntity(x, y, z);
 
 		ItemStack itemstack = enchanter.itemToEnchant;
 
@@ -116,14 +116,14 @@ public class BlockEnchanter extends BlockModContainer<TileEnchanter> implements 
 			float f1 = random.nextFloat() * 0.8F + 0.1F;
 			EntityItem entityitem;
 
-			for (float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; par1World.spawnEntityInWorld(entityitem)) {
+			for (float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem)) {
 				int k1 = random.nextInt(21) + 10;
 
 				if (k1 > itemstack.stackSize)
 					k1 = itemstack.stackSize;
 
 				itemstack.stackSize -= k1;
-				entityitem = new EntityItem(par1World, par2 + f, par3 + f1, par4 + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
+				entityitem = new EntityItem(world, x + f, y + f1, z + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
 				float f3 = 0.05F;
 				entityitem.motionX = (float)random.nextGaussian() * f3 * 0.5;
 				entityitem.motionY = (float)random.nextGaussian() * f3 + 0.2F;
@@ -134,9 +134,9 @@ public class BlockEnchanter extends BlockModContainer<TileEnchanter> implements 
 			}
 		}
 
-		par1World.func_147453_f(par2, par3, par4, par5);
+		world.func_147453_f(x, y, z, blockBroken);
 
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+		super.breakBlock(world, x, y, z, blockBroken, meta);
 	}
 
 	@Override

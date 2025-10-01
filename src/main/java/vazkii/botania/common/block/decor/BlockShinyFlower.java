@@ -55,8 +55,8 @@ public class BlockShinyFlower extends BlockModFlower implements IInfusionStabili
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return (ConfigHandler.altFlowerTextures ? iconsAlt : icons)[Math.min(icons.length - 1, par2)];
+	public IIcon getIcon(int side, int meta) {
+		return (ConfigHandler.altFlowerTextures ? iconsAlt : icons)[Math.min(icons.length - 1, meta)];
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class BlockShinyFlower extends BlockModFlower implements IInfusionStabili
 	}
 
 	@Override
-	public boolean func_149851_a(World world, int x, int y, int z, boolean fuckifiknow) {
+	public boolean func_149851_a(World world, int x, int y, int z, boolean isClient) {
 		return false;
 	}
 

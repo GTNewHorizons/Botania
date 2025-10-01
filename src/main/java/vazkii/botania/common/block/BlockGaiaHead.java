@@ -39,29 +39,29 @@ public class BlockGaiaHead extends BlockSkull {
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemBlockMod.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemBlockMod.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_) {
+	public Item getItem(World world, int x, int y, int z) {
 		return ModItems.gaiaHead;
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister p_149651_1_) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World p_149749_1_, int p_149749_2_, int p_149749_3_, int p_149749_4_, int p_149749_6_, int fortune) {
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
 		ArrayList<ItemStack> ret = new ArrayList<>();
 
-		if((p_149749_6_ & 8) == 0) {
+		if((meta & 8) == 0) {
 			ItemStack itemstack = new ItemStack(ModItems.gaiaHead, 1);
-			TileEntitySkull tileentityskull = (TileEntitySkull)p_149749_1_.getTileEntity(p_149749_2_, p_149749_3_, p_149749_4_);
+			TileEntitySkull tileentityskull = (TileEntitySkull)world.getTileEntity(x, y, z);
 
 			if(tileentityskull == null)
 				return ret;
@@ -72,29 +72,29 @@ public class BlockGaiaHead extends BlockSkull {
 	}
 
 	@Override
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+	public Item getItemDropped(int meta, Random random, int fortune) {
 		return ModItems.gaiaHead;
 	}
 
 	@Override
-	public int getDamageValue(World p_149643_1_, int p_149643_2_, int p_149643_3_, int p_149643_4_)  {
+	public int getDamageValue(World world, int x, int y, int z)  {
 		return 0;
 	}
 
 	@Override
-	public int damageDropped(int p_149692_1_) {
+	public int damageDropped(int meta) {
 		return 0;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileGaiaHead();
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
-		return Blocks.coal_block.getBlockTextureFromSide(p_149691_1_);
+	public IIcon getIcon(int side, int meta) {
+		return Blocks.coal_block.getBlockTextureFromSide(side);
 	}
 
 }

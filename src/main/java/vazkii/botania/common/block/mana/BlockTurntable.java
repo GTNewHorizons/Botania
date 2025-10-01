@@ -40,15 +40,15 @@ public class BlockTurntable extends BlockModContainer<TileTurntable> implements 
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[2];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
+			icons[i] = IconHelper.forBlock(register, this, i);
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return par1 == 1 ? icons[0] : icons[1];
+	public IIcon getIcon(int side, int meta) {
+		return side == 1 ? icons[0] : icons[1];
 	}
 
 	@Override

@@ -19,17 +19,17 @@ import net.minecraft.tileentity.TileEntity;
 public class TileMod extends TileEntity {
 
 	@Override
-	public void writeToNBT(NBTTagCompound par1nbtTagCompound) {
-		super.writeToNBT(par1nbtTagCompound);
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
 
-		writeCustomNBT(par1nbtTagCompound);
+		writeCustomNBT(compound);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound par1nbtTagCompound) {
-		super.readFromNBT(par1nbtTagCompound);
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
 
-		readCustomNBT(par1nbtTagCompound);
+		readCustomNBT(compound);
 	}
 
 	public void writeCustomNBT(NBTTagCompound cmp) {

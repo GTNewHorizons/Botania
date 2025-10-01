@@ -31,8 +31,8 @@ public abstract class BlockCamo extends BlockModContainer<TileCamo> {
 
 	static List<Integer> validRenderTypes = Arrays.asList(0, 31, 39);
 
-	protected BlockCamo(Material par2Material) {
-		super(par2Material);
+	protected BlockCamo(Material material) {
+		super(material);
 	}
 
 	@Override
@@ -59,12 +59,12 @@ public abstract class BlockCamo extends BlockModContainer<TileCamo> {
 	}
 
 	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		TileEntity tile = par1World.getTileEntity(par2, par3, par4);
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float subX, float subY, float subZ) {
+		TileEntity tile = world.getTileEntity(x, y, z);
 
 		if(tile instanceof TileCamo) {
 			TileCamo camo = (TileCamo) tile;
-			ItemStack currentStack = par5EntityPlayer.getCurrentEquippedItem();
+			ItemStack currentStack = player.getCurrentEquippedItem();
 
 			if(currentStack == null)
 				currentStack = new ItemStack(Block.getBlockFromName("air"), 1, 0);
@@ -87,7 +87,7 @@ public abstract class BlockCamo extends BlockModContainer<TileCamo> {
 			if(doChange && currentStack.getItem() != null) {
 				int metadata = currentStack.getItemDamage();
 				if(block instanceof BlockDirectional) {
-					switch (par6) {
+					switch (side) {
 					case 0:
 					case 1:
 						break;
@@ -107,7 +107,7 @@ public abstract class BlockCamo extends BlockModContainer<TileCamo> {
 				}
 				camo.camo = Block.getBlockFromItem(currentStack.getItem());
 				camo.camoMeta = metadata;
-				par1World.markBlockForUpdate(par2,par3,par4);
+				world.markBlockForUpdate(x,y,z);
 
 				return true;
 			}
@@ -128,8 +128,8 @@ public abstract class BlockCamo extends BlockModContainer<TileCamo> {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int colorMultiplier(IBlockAccess par1World, int par2, int par3, int par4) {
-		TileEntity tile = par1World.getTileEntity(par2, par3, par4);
+	public int colorMultiplier(IBlockAccess worldIn, int x, int y, int z) {
+		TileEntity tile = worldIn.getTileEntity(x, y, z);
 		if(tile instanceof TileCamo) {
 			TileCamo camo = (TileCamo) tile;
 			Block block = camo.camo;

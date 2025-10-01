@@ -44,8 +44,9 @@ public class BlockCorporeaRetainer extends BlockModContainer<TileCorporeaRetaine
 		if(power && !powered) {
 			((TileCorporeaRetainer) world.getTileEntity(x, y, z)).fulfilRequest();
 			world.setBlockMetadataWithNotify(x, y, z, meta | 8, 4);
-		} else if(!power && powered)
+		} else if(!power && powered) {
 			world.setBlockMetadataWithNotify(x, y, z, meta & -9, 4);
+		}
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class BlockCorporeaRetainer extends BlockModContainer<TileCorporeaRetaine
 	}
 
 	@Override
-	public int getComparatorInputOverride(World world, int x, int y, int z, int s) {
+	public int getComparatorInputOverride(World world, int x, int y, int z, int side) {
 		return ((TileCorporeaRetainer) world.getTileEntity(x, y, z)).hasPendingRequest() ? 15 : 0;
 	}
 
