@@ -51,7 +51,7 @@ public class BlockFakeAir extends BlockModContainer<TileFakeAir> {
 	}
 
 	@Override
-	public int tickRate(World p_149738_1_) {
+	public int tickRate(World world) {
 		return 4;
 	}
 
@@ -76,7 +76,7 @@ public class BlockFakeAir extends BlockModContainer<TileFakeAir> {
 	}
 
 	@Override
-	public boolean canCollideCheck(int par1, boolean par2) {
+	public boolean canCollideCheck(int meta, boolean includeLiquid) {
 		return false;
 	}
 
@@ -86,7 +86,7 @@ public class BlockFakeAir extends BlockModContainer<TileFakeAir> {
 	}
 
 	@Override
-	public boolean canDropFromExplosion(Explosion par1Explosion) {
+	public boolean canDropFromExplosion(Explosion explosion) {
 		return false;
 	}
 
@@ -96,7 +96,7 @@ public class BlockFakeAir extends BlockModContainer<TileFakeAir> {
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
 		return null;
 	}
 

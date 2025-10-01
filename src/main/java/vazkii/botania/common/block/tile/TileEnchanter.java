@@ -494,14 +494,14 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 		}
 
 		@Override
-		public Block setBlockName(String par1Str) {
+		public Block setBlockName(String name) {
 			GameRegistry.registerBlock(this, ItemBlockMod.class, "flower_structurelib");
 			return this;
 		}
 
 		@Override
-		public IIcon getIcon(int par1, int par2) {
-			return super.getIcon(par1, (int) (BotaniaAPI.internalHandler.getWorldElapsedTicks() / 20) % 16);
+		public IIcon getIcon(int side, int meta) {
+			return super.getIcon(side, (int) (BotaniaAPI.internalHandler.getWorldElapsedTicks() / 20) % 16);
 		}
 
 		@Override
@@ -510,7 +510,7 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 		}
 
 		@Override
-		public void registerBlockIcons(IIconRegister par1IconRegister) {
+		public void registerBlockIcons(IIconRegister register) {
 			//has to be empty
 		}
 

@@ -52,14 +52,14 @@ public class ItemDye extends Item16Colors {
 	}
 
 	@Override
-	public boolean itemInteractionForEntity(ItemStack p_111207_1_, EntityPlayer p_111207_2_, EntityLivingBase p_111207_3_) {
-		if(p_111207_3_ instanceof EntitySheep) {
-			EntitySheep entitysheep = (EntitySheep)p_111207_3_;
-			int i = p_111207_1_.getItemDamage();
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target) {
+		if(target instanceof EntitySheep) {
+			EntitySheep entitysheep = (EntitySheep)target;
+			int i = stack.getItemDamage();
 
 			if(!entitysheep.getSheared() && entitysheep.getFleeceColor() != i) {
 				entitysheep.setFleeceColor(i);
-				--p_111207_1_.stackSize;
+				--stack.stackSize;
 			}
 
 			return true;

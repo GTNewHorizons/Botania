@@ -22,19 +22,19 @@ import vazkii.botania.api.wand.IWandable;
 public class BehaviourWand extends BehaviorDefaultDispenseItem {
 
 	@Override
-	protected ItemStack dispenseStack(IBlockSource par1IBlockSource, ItemStack par2ItemStack) {
-		ForgeDirection facing = ForgeDirection.getOrientation(BlockDispenser.func_149937_b(par1IBlockSource.getBlockMetadata()).ordinal());
-		int x = par1IBlockSource.getXInt() + facing.offsetX;
-		int y = par1IBlockSource.getYInt() + facing.offsetY;
-		int z = par1IBlockSource.getZInt() + facing.offsetZ;
-		World world = par1IBlockSource.getWorld();
+	protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+		ForgeDirection facing = ForgeDirection.getOrientation(BlockDispenser.func_149937_b(source.getBlockMetadata()).ordinal());
+		int x = source.getXInt() + facing.offsetX;
+		int y = source.getYInt() + facing.offsetY;
+		int z = source.getZInt() + facing.offsetZ;
+		World world = source.getWorld();
 		Block block = world.getBlock(x, y, z);
 		if(block instanceof IWandable) {
-			((IWandable) block).onUsedByWand(null, par2ItemStack, world, x, y, z, facing.getOpposite().ordinal());
-			return par2ItemStack;
+			((IWandable) block).onUsedByWand(null, stack, world, x, y, z, facing.getOpposite().ordinal());
+			return stack;
 		}
 
-		return super.dispenseStack(par1IBlockSource, par2ItemStack);
+		return super.dispenseStack(source, stack);
 	}
 
 }

@@ -19,8 +19,8 @@ public abstract class BlockLivingSlab extends BlockModSlab {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int par1, int par2) {
-		return source.getIcon(par1, meta);
+	public IIcon getIcon(int side, int meta) {
+		return source.getIcon(side, this.meta);
 	}
 
 }

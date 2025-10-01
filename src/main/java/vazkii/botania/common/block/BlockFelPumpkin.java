@@ -49,38 +49,38 @@ public class BlockFelPumpkin extends BlockMod implements ILexiconable {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
-		return p_149691_1_ == 1 ? top : p_149691_1_ == 0 ? top : p_149691_2_ == 2 && p_149691_1_ == 2 ? face : p_149691_2_ == 3 && p_149691_1_ == 5 ? face : p_149691_2_ == 0 && p_149691_1_ == 3 ? face : p_149691_2_ == 1 && p_149691_1_ == 4 ? face : blockIcon;
+	public IIcon getIcon(int side, int meta) {
+		return side == 1 ? top : side == 0 ? top : meta == 2 && side == 2 ? face : meta == 3 && side == 5 ? face : meta == 0 && side == 3 ? face : meta == 1 && side == 4 ? face : blockIcon;
 	}
 
 	@Override
-	public void onBlockAdded(World p_149726_1_, int p_149726_2_, int p_149726_3_, int p_149726_4_) {
-		super.onBlockAdded(p_149726_1_, p_149726_2_, p_149726_3_, p_149726_4_);
+	public void onBlockAdded(World world, int x, int y, int z) {
+		super.onBlockAdded(world, x, y, z);
 
-		if(!p_149726_1_.isRemote && p_149726_1_.getBlock(p_149726_2_, p_149726_3_ - 1, p_149726_4_) == Blocks.iron_bars && p_149726_1_.getBlock(p_149726_2_, p_149726_3_ - 2, p_149726_4_) == Blocks.iron_bars) {
-			p_149726_1_.setBlock(p_149726_2_, p_149726_3_, p_149726_4_, getBlockById(0), 0, 2);
-			p_149726_1_.setBlock(p_149726_2_, p_149726_3_ - 1, p_149726_4_, getBlockById(0), 0, 2);
-			p_149726_1_.setBlock(p_149726_2_, p_149726_3_ - 2, p_149726_4_, getBlockById(0), 0, 2);
-			EntityBlaze blaze = new EntityBlaze(p_149726_1_);
-			blaze.setLocationAndAngles(p_149726_2_ + 0.5D, p_149726_3_ - 1.95D, p_149726_4_ + 0.5D, 0.0F, 0.0F);
+		if(!world.isRemote && world.getBlock(x, y - 1, z) == Blocks.iron_bars && world.getBlock(x, y - 2, z) == Blocks.iron_bars) {
+			world.setBlock(x, y, z, getBlockById(0), 0, 2);
+			world.setBlock(x, y - 1, z, getBlockById(0), 0, 2);
+			world.setBlock(x, y - 2, z, getBlockById(0), 0, 2);
+			EntityBlaze blaze = new EntityBlaze(world);
+			blaze.setLocationAndAngles(x + 0.5D, y - 1.95D, z + 0.5D, 0.0F, 0.0F);
 			blaze.getEntityData().setBoolean(TAG_FEL_SPAWNED, true);
-			p_149726_1_.spawnEntityInWorld(blaze);
-			p_149726_1_.notifyBlockChange(p_149726_2_, p_149726_3_, p_149726_4_, getBlockById(0));
-			p_149726_1_.notifyBlockChange(p_149726_2_, p_149726_3_ - 1, p_149726_4_, getBlockById(0));
-			p_149726_1_.notifyBlockChange(p_149726_2_, p_149726_3_ - 2, p_149726_4_, getBlockById(0));
+			world.spawnEntityInWorld(blaze);
+			world.notifyBlockChange(x, y, z, getBlockById(0));
+			world.notifyBlockChange(x, y - 1, z, getBlockById(0));
+			world.notifyBlockChange(x, y - 2, z, getBlockById(0));
 		}
 	}
 
 	@Override
-	public void onBlockPlacedBy(World p_149689_1_, int p_149689_2_, int p_149689_3_, int p_149689_4_, EntityLivingBase p_149689_5_, ItemStack p_149689_6_) {
-		int l = MathHelper.floor_double(p_149689_5_.rotationYaw * 4.0F / 360.0F + 2.5D) & 3;
-		p_149689_1_.setBlockMetadataWithNotify(p_149689_2_, p_149689_3_, p_149689_4_, l, 2);
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack itemIn) {
+		int l = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 2.5D) & 3;
+		world.setBlockMetadataWithNotify(x, y, z, l, 2);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister p_149651_1_)  {
-		face = IconHelper.forBlock(p_149651_1_, this);
+	public void registerBlockIcons(IIconRegister register)  {
+		face = IconHelper.forBlock(register, this);
 		top = Blocks.pumpkin.getIcon(0, 0);
 		blockIcon = Blocks.pumpkin.getIcon(2, 0);
 	}

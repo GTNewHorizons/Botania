@@ -60,15 +60,15 @@ public class BlockModMushroom extends BlockMushroom implements IInfusionStabilis
 	}
 
 	@Override
-	public void updateTick(World p_149674_1_, int p_149674_2_, int p_149674_3_, int p_149674_4_, Random p_149674_5_) {
+	public void updateTick(World world, int x, int y, int z, Random random) {
 		// NO-OP, to prevent spreading
 	}
 
 	@Override
-	public boolean canBlockStay(World p_149718_1_, int p_149718_2_, int p_149718_3_, int p_149718_4_) {
-		if(p_149718_3_ >= 0 && p_149718_3_ < 256) {
-			Block block = p_149718_1_.getBlock(p_149718_2_, p_149718_3_ - 1, p_149718_4_);
-			return block == Blocks.mycelium || block == Blocks.dirt && p_149718_1_.getBlockMetadata(p_149718_2_, p_149718_3_ - 1, p_149718_4_) == 2 || block.canSustainPlant(p_149718_1_, p_149718_2_, p_149718_3_ - 1, p_149718_4_, ForgeDirection.UP, this);
+	public boolean canBlockStay(World world, int x, int y, int z) {
+		if(y >= 0 && y < 256) {
+			Block block = world.getBlock(x, y - 1, z);
+			return block == Blocks.mycelium || block == Blocks.dirt && world.getBlockMetadata(x, y - 1, z) == 2 || block.canSustainPlant(world, x, y - 1, z, ForgeDirection.UP, this);
 		}
 
 		return false;
@@ -81,24 +81,24 @@ public class BlockModMushroom extends BlockMushroom implements IInfusionStabilis
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemBlockWithMetadataAndName.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemBlockWithMetadataAndName.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[16];
 
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
+			icons[i] = IconHelper.forBlock(register, this, i);
 	}
 
 	@Override
-	public Block setLightLevel(float p_149715_1_) {
-		originalLight = (int) (p_149715_1_ * 15);
-		return super.setLightLevel(p_149715_1_);
+	public Block setLightLevel(float value) {
+		originalLight = (int) (value * 15);
+		return super.setLightLevel(value);
 	}
 
 	@Override
@@ -108,22 +108,22 @@ public class BlockModMushroom extends BlockMushroom implements IInfusionStabilis
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return icons[par2];
+	public IIcon getIcon(int side, int meta) {
+		return icons[meta];
 	}
 
 	@Override
-	public int damageDropped(int par1) {
-		return par1;
+	public int damageDropped(int meta) {
+		return meta;
 	}
 
 	@Override
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		int meta = par1World.getBlockMetadata(par2, par3, par4);
+	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+		int meta = world.getBlockMetadata(x, y, z);
 		float[] color = EntitySheep.fleeceColorTable[meta];
 
-		if(par5Random.nextDouble() < ConfigHandler.flowerParticleFrequency * 0.25F)
-			Botania.proxy.sparkleFX(par1World, par2 + 0.3 + par5Random.nextFloat() * 0.5, par3 + 0.5 + par5Random.nextFloat() * 0.5, par4 + 0.3 + par5Random.nextFloat() * 0.5, color[0], color[1], color[2], par5Random.nextFloat(), 5);
+		if(random.nextDouble() < ConfigHandler.flowerParticleFrequency * 0.25F)
+			Botania.proxy.sparkleFX(world, x + 0.3 + random.nextFloat() * 0.5, y + 0.5 + random.nextFloat() * 0.5, z + 0.3 + random.nextFloat() * 0.5, color[0], color[1], color[2], random.nextFloat(), 5);
 	}
 
 	@Override

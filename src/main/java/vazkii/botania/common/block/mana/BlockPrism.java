@@ -53,10 +53,10 @@ public class BlockPrism extends BlockModContainer<TilePrism> implements IManaTri
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[2];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
+			icons[i] = IconHelper.forBlock(register, this, i);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class BlockPrism extends BlockModContainer<TilePrism> implements IManaTri
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
 		return null;
 	}
 
@@ -85,31 +85,31 @@ public class BlockPrism extends BlockModContainer<TilePrism> implements IManaTri
 	}
 
 	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		TileEntity tile = par1World.getTileEntity(par2, par3, par4);
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float subX, float subY, float subZ) {
+		TileEntity tile = world.getTileEntity(x, y, z);
 		if(!(tile instanceof TilePrism))
 			return false;
 
 		TilePrism prism = (TilePrism) tile;
 		ItemStack lens = prism.getStackInSlot(0);
-		ItemStack heldItem = par5EntityPlayer.getCurrentEquippedItem();
+		ItemStack heldItem = player.getCurrentEquippedItem();
 		boolean isHeldItemLens = heldItem != null && heldItem.getItem() instanceof ILens;
-		int meta = par1World.getBlockMetadata(par2, par3, par4);
+		int meta = world.getBlockMetadata(x, y, z);
 
 		if(lens == null && isHeldItemLens) {
-			if(!par5EntityPlayer.capabilities.isCreativeMode)
-				par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, null);
+			if(!player.capabilities.isCreativeMode)
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 
 			prism.setInventorySlotContents(0, heldItem.copy());
 			prism.markDirty();
-			par1World.setBlockMetadataWithNotify(par2, par3, par4, meta | 1, 1 | 2);
+			world.setBlockMetadataWithNotify(x, y, z, meta | 1, 1 | 2);
 		} else if(lens != null) {
 			ItemStack add = lens.copy();
-			if(!par5EntityPlayer.inventory.addItemStackToInventory(add))
-				par5EntityPlayer.dropPlayerItemWithRandomChoice(add, false);
+			if(!player.inventory.addItemStackToInventory(add))
+				player.dropPlayerItemWithRandomChoice(add, false);
 			prism.setInventorySlotContents(0, null);
 			prism.markDirty();
-			par1World.setBlockMetadataWithNotify(par2, par3, par4, meta & 14, 1 | 2);
+			world.setBlockMetadataWithNotify(x, y, z, meta & 14, 1 | 2);
 		}
 
 		return true;
@@ -130,8 +130,8 @@ public class BlockPrism extends BlockModContainer<TilePrism> implements IManaTri
 	}
 
 	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6) {
-		TileEntity tile = par1World.getTileEntity(par2, par3, par4);
+	public void breakBlock(World world, int x, int y, int z, Block blockBroken, int meta) {
+		TileEntity tile = world.getTileEntity(x, y, z);
 		if(!(tile instanceof TileSimpleInventory))
 			return;
 
@@ -146,14 +146,14 @@ public class BlockPrism extends BlockModContainer<TilePrism> implements IManaTri
 					float f1 = random.nextFloat() * 0.8F + 0.1F;
 					EntityItem entityitem;
 
-					for (float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; par1World.spawnEntityInWorld(entityitem)) {
+					for (float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem)) {
 						int k1 = random.nextInt(21) + 10;
 
 						if (k1 > itemstack.stackSize)
 							k1 = itemstack.stackSize;
 
 						itemstack.stackSize -= k1;
-						entityitem = new EntityItem(par1World, par2 + f, par3 + f1, par4 + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
+						entityitem = new EntityItem(world, x + f, y + f1, z + f2, new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
 						float f3 = 0.05F;
 						entityitem.motionX = (float)random.nextGaussian() * f3;
 						entityitem.motionY = (float)random.nextGaussian() * f3 + 0.2F;
@@ -165,10 +165,10 @@ public class BlockPrism extends BlockModContainer<TilePrism> implements IManaTri
 				}
 			}
 
-			par1World.func_147453_f(par2, par3, par4, par5);
+			world.func_147453_f(x, y, z, blockBroken);
 		}
 
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+		super.breakBlock(world, x, y, z, blockBroken, meta);
 	}
 
 	@Override

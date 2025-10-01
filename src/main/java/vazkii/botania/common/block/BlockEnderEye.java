@@ -37,9 +37,9 @@ public class BlockEnderEye extends BlockModContainer<TileEnderEye> implements IL
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		iconOff = IconHelper.forBlock(par1IconRegister, this, 0);
-		iconOn = IconHelper.forBlock(par1IconRegister, this, 1);
+	public void registerBlockIcons(IIconRegister register) {
+		iconOff = IconHelper.forBlock(register, this, 0);
+		iconOn = IconHelper.forBlock(register, this, 1);
 	}
 
 	@Override

@@ -35,11 +35,11 @@ public class BlockElfGlass extends BlockManaGlass implements IElvenItem, ILexico
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		icons = new IIcon[ICON_COUNT];
 		for(int i = 0; i < ICON_COUNT; i++)
-			icons[i] = IconHelper.forBlock(par1IconRegister, this, i);
-		blockIcon = IconHelper.forBlock(par1IconRegister, this);
+			icons[i] = IconHelper.forBlock(register, this, i);
+		blockIcon = IconHelper.forBlock(register, this);
 	}
 
 	@Override

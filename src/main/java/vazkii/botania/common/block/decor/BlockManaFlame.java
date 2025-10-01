@@ -55,7 +55,7 @@ public class BlockManaFlame extends BlockModContainer<TileManaFlame> implements 
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 
@@ -75,17 +75,17 @@ public class BlockManaFlame extends BlockModContainer<TileManaFlame> implements 
 	}
 
 	@Override
-	public boolean getBlocksMovement(IBlockAccess p_149655_1_, int p_149655_2_, int p_149655_3_, int p_149655_4_) {
+	public boolean getBlocksMovement(IBlockAccess worldIn, int x, int y, int z) {
 		return true;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
 		return null;
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int s, float xs, float ys, float zs) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int s, float subX, float subY, float subZ) {
 		if(WorldTypeSkyblock.isWorldSkyblock(world)) {
 			ItemStack stack = player.getCurrentEquippedItem();
 			if(stack != null && stack.getItem() == Item.getItemFromBlock(Blocks.sapling) && !player.inventory.hasItem(ModItems.lexicon)) {

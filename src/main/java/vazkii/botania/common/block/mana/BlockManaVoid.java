@@ -39,9 +39,9 @@ public class BlockManaVoid extends BlockModContainer<TileManaVoid> implements IL
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		blockIcon = IconHelper.forBlock(par1IconRegister, this, 0);
-		overlay = IconHelper.forBlock(par1IconRegister, this, 1);
+	public void registerBlockIcons(IIconRegister register) {
+		blockIcon = IconHelper.forBlock(register, this, 0);
+		overlay = IconHelper.forBlock(register, this, 1);
 	}
 
 	@Override

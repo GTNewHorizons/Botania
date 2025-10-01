@@ -50,7 +50,7 @@ public class BlockShimmerrock extends BlockMod implements ILexiconable {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 

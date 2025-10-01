@@ -79,9 +79,9 @@ public class BlockIncensePlate extends BlockModContainer<TileIncensePlate> imple
 	}
 
 	@Override
-	public void onBlockPlacedBy(World p_149689_1_, int p_149689_2_, int p_149689_3_, int p_149689_4_, EntityLivingBase p_149689_5_, ItemStack p_149689_6_) {
-		int l = MathHelper.floor_double(p_149689_5_.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-		p_149689_1_.setBlockMetadataWithNotify(p_149689_2_, p_149689_3_, p_149689_4_, META_ROTATIONS[l], 2);
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack itemIn) {
+		int l = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+		world.setBlockMetadataWithNotify(x, y, z, META_ROTATIONS[l], 2);
 	}
 
 	@Override
@@ -116,12 +116,12 @@ public class BlockIncensePlate extends BlockModContainer<TileIncensePlate> imple
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
+	public void registerBlockIcons(IIconRegister register) {
 		// NO-OP
 	}
 
 	@Override
-	public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
+	public IIcon getIcon(int side, int meta) {
 		return ModBlocks.livingwood.getIcon(0, 0);
 	}
 

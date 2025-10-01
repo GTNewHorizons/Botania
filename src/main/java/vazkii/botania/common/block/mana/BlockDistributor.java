@@ -38,14 +38,14 @@ public class BlockDistributor extends BlockModContainer<TileDistributor> impleme
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister par1IconRegister) {
-		iconTop = IconHelper.forBlock(par1IconRegister, this, 0);
-		iconSide = IconHelper.forBlock(par1IconRegister, this, 1);
+	public void registerBlockIcons(IIconRegister register) {
+		iconTop = IconHelper.forBlock(register, this, 0);
+		iconSide = IconHelper.forBlock(register, this, 1);
 	}
 
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return par1 == 0 ? ModBlocks.livingrock.getIcon(0, 0) : par1 == 1 ? iconTop : iconSide;
+	public IIcon getIcon(int side, int meta) {
+		return side == 0 ? ModBlocks.livingrock.getIcon(0, 0) : side == 1 ? iconTop : iconSide;
 	}
 
 	@Override

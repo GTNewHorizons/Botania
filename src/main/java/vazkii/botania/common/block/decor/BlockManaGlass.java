@@ -41,15 +41,15 @@ public class BlockManaGlass extends BlockMod implements ILexiconable {
 		return false;
 	}
 
-	public boolean shouldSideBeRendered1(IBlockAccess p_149646_1_, int p_149646_2_, int p_149646_3_, int p_149646_4_, int p_149646_5_) {
-		Block block = p_149646_1_.getBlock(p_149646_2_, p_149646_3_, p_149646_4_);
+	public boolean shouldSideBeRendered1(IBlockAccess worldIn, int x, int y, int z, int side) {
+		Block block = worldIn.getBlock(x, y, z);
 
-		return block == this ? false : super.shouldSideBeRendered(p_149646_1_, p_149646_2_, p_149646_3_, p_149646_4_, p_149646_5_);
+		return block == this ? false : super.shouldSideBeRendered(worldIn, x, y, z, side);
 	}
 
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess p_149646_1_, int p_149646_2_, int p_149646_3_, int p_149646_4_, int p_149646_5_) {
-		return shouldSideBeRendered1(p_149646_1_, p_149646_2_, p_149646_3_, p_149646_4_, 1 - p_149646_5_);
+	public boolean shouldSideBeRendered(IBlockAccess worldIn, int x, int y, int z, int side) {
+		return shouldSideBeRendered1(worldIn, x, y, z, 1 - side);
 	}
 
 	@Override

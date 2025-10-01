@@ -34,12 +34,12 @@ public class BlockRoot extends BlockMod implements ILexiconable {
 
 
 	@Override
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+	public Item getItemDropped(int meta, Random random, int fortune) {
 		return ModItems.manaResource;
 	}
 
 	@Override
-	public int damageDropped(int p_149692_1_) {
+	public int damageDropped(int meta) {
 		return 20;
 	}
 

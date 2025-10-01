@@ -51,9 +51,9 @@ public class BlockUnstable extends BlockMod implements ILexiconable {
 	}
 
 	@Override
-	public Block setBlockName(String par1Str) {
-		GameRegistry.registerBlock(this, ItemBlockWithMetadataAndName.class, par1Str);
-		return super.setBlockName(par1Str);
+	public Block setBlockName(String name) {
+		GameRegistry.registerBlock(this, ItemBlockWithMetadataAndName.class, name);
+		return super.setBlockName(name);
 	}
 
 	@Override
@@ -72,30 +72,30 @@ public class BlockUnstable extends BlockMod implements ILexiconable {
 	}
 
 	@Override
-	public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-		int color = getRenderColor(par1World.getBlockMetadata(par2, par3, par4));
+	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+		int color = getRenderColor(world.getBlockMetadata(x, y, z));
 		int colorBright = new Color(color).brighter().getRGB();
 		int colorDark = new Color(color).darker().getRGB();
 
-		Vector3 origVector = new Vector3(par2 + 0.5, par3 + 0.5, par4 + 0.5);
-		Vector3 endVector = origVector.copy().add(par1World.rand.nextDouble() * 2 - 1, par1World.rand.nextDouble() * 2 - 1, par1World.rand.nextDouble() * 2 - 1);
-		Botania.proxy.lightningFX(par1World, origVector, endVector, 5F, colorDark, colorBright);
+		Vector3 origVector = new Vector3(x + 0.5, y + 0.5, z + 0.5);
+		Vector3 endVector = origVector.copy().add(world.rand.nextDouble() * 2 - 1, world.rand.nextDouble() * 2 - 1, world.rand.nextDouble() * 2 - 1);
+		Botania.proxy.lightningFX(world, origVector, endVector, 5F, colorDark, colorBright);
 	}
 
 	@Override
-	public int damageDropped(int par1) {
-		return par1;
+	public int damageDropped(int meta) {
+		return meta;
 	}
 
 	@Override
-	public int getRenderColor(int par1) {
-		float[] color = EntitySheep.fleeceColorTable[par1];
+	public int getRenderColor(int meta) {
+		float[] color = EntitySheep.fleeceColorTable[meta];
 		return new Color(color[0], color[1], color[2]).getRGB();
 	}
 
 	@Override
-	public int colorMultiplier(IBlockAccess par1iBlockAccess, int par2, int par3, int par4) {
-		return getRenderColor(par1iBlockAccess.getBlockMetadata(par2, par3, par4));
+	public int colorMultiplier(IBlockAccess worldIn, int x, int y, int z) {
+		return getRenderColor(worldIn.getBlockMetadata(x, y, z));
 	}
 
 	@Override

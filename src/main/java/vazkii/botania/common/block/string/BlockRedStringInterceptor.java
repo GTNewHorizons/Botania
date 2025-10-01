@@ -50,7 +50,7 @@ public class BlockRedStringInterceptor extends BlockRedString {
 	}
 
 	@Override
-	public int tickRate(World p_149738_1_) {
+	public int tickRate(World world) {
 		return 2;
 	}
 
