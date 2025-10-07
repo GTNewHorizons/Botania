@@ -82,7 +82,7 @@ public class ItemBlackHoleTalisman extends ItemMod implements IBlockProvider {
 			int bmeta = getBlockMeta(stack);
 
 			TileEntity tile = world.getTileEntity(x, y, z);
-			if(tile != null && tile instanceof IInventory) {
+			if(tile instanceof IInventory) {
 				IInventory inv = (IInventory) tile;
 				int[] slots = inv instanceof ISidedInventory ? ((ISidedInventory) inv).getAccessibleSlotsFromSide(side) : InventoryHelper.buildSlotsForLinearInventory(inv);
 				for(int slot : slots) {

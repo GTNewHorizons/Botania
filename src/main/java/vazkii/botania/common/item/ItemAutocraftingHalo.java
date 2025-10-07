@@ -31,9 +31,8 @@ public class ItemAutocraftingHalo extends ItemCraftingHalo {
 	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
 		super.onUpdate(stack, world, entity, invSlot, isHeld);
 
-		if(entity instanceof EntityPlayer && !isHeld) {
-			EntityPlayer player = (EntityPlayer) entity;
-			IInventory inv = getFakeInv(player);
+		if(entity instanceof EntityPlayer player && !isHeld) {
+            IInventory inv = getFakeInv(player);
 
 			for(int i = 1; i < SEGMENTS; i++)
 				tryCraft(player, stack, i, false, inv, false);

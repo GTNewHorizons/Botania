@@ -178,7 +178,7 @@ public class ItemTwigWand extends Item16Colors implements ICoordBoundItem {
 	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
 		ChunkCoordinates coords = getBoundTile(stack);
 		TileEntity tile = world.getTileEntity(coords.posX, coords.posY, coords.posZ);
-		if(tile == null || !(tile instanceof IWandBindable))
+		if(!(tile instanceof IWandBindable))
 			setBoundTile(stack, 0, -1, 0);
 	}
 
@@ -302,7 +302,7 @@ public class ItemTwigWand extends Item16Colors implements ICoordBoundItem {
 		MovingObjectPosition pos = Minecraft.getMinecraft().objectMouseOver;
 		if(pos != null) {
 			TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(pos.blockX, pos.blockY, pos.blockZ);
-			if(tile != null && tile instanceof ITileBound) {
+			if(tile instanceof ITileBound) {
 				ChunkCoordinates coords = ((ITileBound) tile).getBinding();
 				return coords;
 			}

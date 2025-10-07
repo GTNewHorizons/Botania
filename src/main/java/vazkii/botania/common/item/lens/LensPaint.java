@@ -31,7 +31,7 @@ public class LensPaint extends Lens {
 	public boolean collideBurst(IManaBurst burst, EntityThrowable entity, MovingObjectPosition pos, boolean isManaBlock, boolean dead, ItemStack stack) {
 		int storedColor = ItemLens.getStoredColor(stack);
 		if(!burst.isFake() && storedColor > -1 && storedColor < 17) {
-			if(pos.entityHit != null && pos.entityHit instanceof EntitySheep) {
+			if(pos.entityHit instanceof EntitySheep) {
 				int r = 20;
 				int sheepColor = ((EntitySheep) pos.entityHit).getFleeceColor();
 				List<EntitySheep> sheepList = entity.worldObj.getEntitiesWithinAABB(EntitySheep.class, AxisAlignedBB.getBoundingBox(pos.entityHit.posX - r, pos.entityHit.posY - r, pos.entityHit.posZ - r, pos.entityHit.posX + r, pos.entityHit.posY + r, pos.entityHit.posZ + r));

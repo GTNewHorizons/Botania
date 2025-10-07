@@ -107,7 +107,7 @@ public class ItemManaMirror extends ItemMod implements IManaItem, ICoordBoundIte
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		if(player.isSneaking() && !world.isRemote) {
 			TileEntity tile = world.getTileEntity(x, y, z);
-			if(tile != null && tile instanceof IManaPool) {
+			if(tile instanceof IManaPool) {
 				bindPool(stack, tile);
 				world.playSoundAtEntity(player, "botania:ding", 1F, 1F);
 				return true;
@@ -201,7 +201,7 @@ public class ItemManaMirror extends ItemMod implements IManaItem, ICoordBoundIte
 
 		if(world != null) {
 			TileEntity tile = world.getTileEntity(coords.posX, coords.posY, coords.posZ);
-			if(tile != null && tile instanceof IManaPool)
+			if(tile instanceof IManaPool)
 				return (IManaPool) tile;
 		}
 

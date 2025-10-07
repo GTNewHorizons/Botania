@@ -34,7 +34,7 @@ public class ItemObedienceStick extends ItemMod {
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		TileEntity tileAt = world.getTileEntity(x, y, z);
-		if(tileAt != null && (tileAt instanceof IManaPool || tileAt instanceof IManaCollector)) {
+		if((tileAt instanceof IManaPool || tileAt instanceof IManaCollector)) {
 			boolean pool = tileAt instanceof IManaPool;
 			Actuator act = pool ? Actuator.functionalActuator : Actuator.generatingActuator;
 			int range = pool ? SubTileFunctional.RANGE : SubTileGenerating.RANGE;

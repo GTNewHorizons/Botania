@@ -80,7 +80,7 @@ public class ItemGaiaHead extends ItemMod {
 		// Update the skull's orientation if it lets us.
 		TileEntity tileentity = world.getTileEntity(x, y, z);
 
-		if (tileentity != null && tileentity instanceof TileEntitySkull) {
+		if (tileentity instanceof TileEntitySkull) {
 			((TileEntitySkull) tileentity).func_145903_a(headAngle);
 			((BlockSkull) Blocks.skull).func_149965_a(world, x, y, z, (TileEntitySkull) tileentity);
 		}
