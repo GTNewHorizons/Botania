@@ -61,39 +61,39 @@ public class ItemBlackHoleTalisman extends ItemMod implements IBlockProvider {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if(getBlock(par1ItemStack) != Blocks.air && par3EntityPlayer.isSneaking()) {
-			int dmg = par1ItemStack.getItemDamage();
-			par1ItemStack.setItemDamage(~dmg & 1);
-			par2World.playSoundAtEntity(par3EntityPlayer, "random.orb", 0.3F, 0.1F);
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if(getBlock(stack) != Blocks.air && player.isSneaking()) {
+			int dmg = stack.getItemDamage();
+			stack.setItemDamage(~dmg & 1);
+			world.playSoundAtEntity(player, "random.orb", 0.3F, 0.1F);
 		}
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		Block block = par3World.getBlock(par4, par5, par6);
-		int meta = par3World.getBlockMetadata(par4, par5, par6);
-		boolean set = setBlock(par1ItemStack, block, meta);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		Block block = world.getBlock(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z);
+		boolean set = setBlock(stack, block, meta);
 
 		if(!set) {
-			Block bBlock = getBlock(par1ItemStack);
-			int bmeta = getBlockMeta(par1ItemStack);
+			Block bBlock = getBlock(stack);
+			int bmeta = getBlockMeta(stack);
 
-			TileEntity tile = par3World.getTileEntity(par4, par5, par6);
+			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile != null && tile instanceof IInventory) {
 				IInventory inv = (IInventory) tile;
-				int[] slots = inv instanceof ISidedInventory ? ((ISidedInventory) inv).getAccessibleSlotsFromSide(par7) : InventoryHelper.buildSlotsForLinearInventory(inv);
+				int[] slots = inv instanceof ISidedInventory ? ((ISidedInventory) inv).getAccessibleSlotsFromSide(side) : InventoryHelper.buildSlotsForLinearInventory(inv);
 				for(int slot : slots) {
 					ItemStack stackInSlot = inv.getStackInSlot(slot);
 					if(stackInSlot == null) {
-						ItemStack stack = new ItemStack(bBlock, 1, bmeta);
-						int maxSize = stack.getMaxStackSize();
-						stack.stackSize = remove(par1ItemStack, maxSize);
-						if(stack.stackSize != 0) {
-							if(inv.isItemValidForSlot(slot, stack) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stack, par7))) {
-								inv.setInventorySlotContents(slot, stack);
+						ItemStack blockStack = new ItemStack(bBlock, 1, bmeta);
+						int maxSize = blockStack.getMaxStackSize();
+						blockStack.stackSize = remove(stack, maxSize);
+						if(blockStack.stackSize != 0) {
+							if(inv.isItemValidForSlot(slot, blockStack) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, blockStack, side))) {
+								inv.setInventorySlotContents(slot, blockStack);
 								inv.markDirty();
 								set = true;
 							}
@@ -101,36 +101,36 @@ public class ItemBlackHoleTalisman extends ItemMod implements IBlockProvider {
 					} else if(stackInSlot.getItem() == Item.getItemFromBlock(bBlock) && stackInSlot.getItemDamage() == bmeta) {
 						int maxSize = stackInSlot.getMaxStackSize();
 						int missing = maxSize - stackInSlot.stackSize;
-						if(inv.isItemValidForSlot(slot, stackInSlot) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stackInSlot, par7))) {
-							stackInSlot.stackSize += remove(par1ItemStack, missing);
+						if(inv.isItemValidForSlot(slot, stackInSlot) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stackInSlot, side))) {
+							stackInSlot.stackSize += remove(stack, missing);
 							inv.markDirty();
 							set = true;
 						}
 					}
 				}
 			} else {
-				ForgeDirection dir = ForgeDirection.getOrientation(par7);
-				int entities = par3World.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(par4 + dir.offsetX, par5 + dir.offsetY, par6 + dir.offsetZ, par4 + dir.offsetX + 1, par5 + dir.offsetY + 1, par6 + dir.offsetZ + 1)).size();
+				ForgeDirection dir = ForgeDirection.getOrientation(side);
+				int entities = world.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, x + dir.offsetX + 1, y + dir.offsetY + 1, z + dir.offsetZ + 1)).size();
 
 				if(entities == 0) {
-					int remove = par2EntityPlayer.capabilities.isCreativeMode ? 1 : remove(par1ItemStack, 1);
+					int remove = player.capabilities.isCreativeMode ? 1 : remove(stack, 1);
 					if(remove > 0) {
-						ItemStack stack = new ItemStack(bBlock, 1, bmeta);
-						ItemsRemainingRenderHandler.set(stack, getBlockCount(par1ItemStack));
+						ItemStack blockStack = new ItemStack(bBlock, 1, bmeta);
+						ItemsRemainingRenderHandler.set(blockStack, getBlockCount(stack));
 
-						Item.getItemFromBlock(bBlock).onItemUse(stack, par2EntityPlayer, par3World, par4, par5, par6, par7, par8, par9, par10);
+						Item.getItemFromBlock(bBlock).onItemUse(blockStack, player, world, x, y, z, side, subX, subY, subZ);
 						set = true;
 					}
 				}
 			}
 		}
 
-		par2EntityPlayer.setCurrentItemOrArmor(0, par1ItemStack);
+		player.setCurrentItemOrArmor(0, stack);
 		return set;
 	}
 
 	@Override
-	public void onUpdate(ItemStack itemstack, World worldIn, Entity entity, int p_77663_4_, boolean p_77663_5_) {
+	public void onUpdate(ItemStack itemstack, World world, Entity entity, int invSlot, boolean isHeld) {
 		Block block = getBlock(itemstack);
 		if(!entity.worldObj.isRemote && itemstack.getItemDamage() == 1 && block != Blocks.air && entity instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) entity;
@@ -187,12 +187,12 @@ public class ItemBlackHoleTalisman extends ItemMod implements IBlockProvider {
 	}
 
 	@Override
-	public String getItemStackDisplayName(ItemStack par1ItemStack) {
-		Block block = getBlock(par1ItemStack);
-		int meta = getBlockMeta(par1ItemStack);
-		ItemStack stack = new ItemStack(block, 1, meta);
+	public String getItemStackDisplayName(ItemStack stack) {
+		Block block = getBlock(stack);
+		int meta = getBlockMeta(stack);
+		ItemStack blockStack = new ItemStack(block, 1, meta);
 
-		return super.getItemStackDisplayName(par1ItemStack) + (stack == null || stack.getItem() == null ? "" : " (" + EnumChatFormatting.GREEN + stack.getDisplayName() + EnumChatFormatting.RESET + ")");
+		return super.getItemStackDisplayName(stack) + (blockStack == null || blockStack.getItem() == null ? "" : " (" + EnumChatFormatting.GREEN + blockStack.getDisplayName() + EnumChatFormatting.RESET + ")");
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public class ItemBlackHoleTalisman extends ItemMod implements IBlockProvider {
 	}
 
 	@Override
-	public boolean doesContainerItemLeaveCraftingGrid(ItemStack p_77630_1_) {
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack stack) {
 		return false;
 	}
 
@@ -238,20 +238,20 @@ public class ItemBlackHoleTalisman extends ItemMod implements IBlockProvider {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this, 0);
-		enabledIcon = IconHelper.forItem(par1IconRegister, this, 1);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this, 0);
+		enabledIcon = IconHelper.forItem(register, this, 1);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamage(int par1) {
-		return par1 == 1 ? enabledIcon : itemIcon;
+	public IIcon getIconFromDamage(int meta) {
+		return meta == 1 ? enabledIcon : itemIcon;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		Block block = getBlock(stack);
 		if(block != null && block != Blocks.air) {
 			int count = getBlockCount(stack);

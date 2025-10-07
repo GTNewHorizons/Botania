@@ -59,9 +59,9 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		super.registerIcons(par1IconRegister);
-		willIcon = IconHelper.forName(par1IconRegister, "willFlame");
+	public void registerIcons(IIconRegister register) {
+		super.registerIcons(register);
+		willIcon = IconHelper.forName(register, "willFlame");
 	}
 
 	@Override

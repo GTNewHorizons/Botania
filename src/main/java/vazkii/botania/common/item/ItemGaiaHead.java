@@ -30,7 +30,7 @@ public class ItemGaiaHead extends ItemMod {
 
 	// I couldn't deal with it.
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float sideX, float sideY, float sideZ) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		// The side of the wall the head is being used on.
 		ForgeDirection sideDir = ForgeDirection.getOrientation(side);
 

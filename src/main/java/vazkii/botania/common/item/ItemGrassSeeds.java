@@ -73,16 +73,16 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[SUBTYPES];
 		for(int i = 0; i < SUBTYPES; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+			icons[i] = IconHelper.forItem(register, this, i);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamage(int par1) {
-		return icons[Math.min(icons.length - 1, par1)];
+	public IIcon getIconFromDamage(int meta) {
+		return icons[Math.min(icons.length - 1, meta)];
 	}
 
 	@Override
@@ -91,19 +91,19 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		Block block = par3World.getBlock(par4, par5, par6);
-		int bmeta = par3World.getBlockMetadata(par4, par5, par6);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		Block block = world.getBlock(x, y, z);
+		int bmeta = world.getBlockMetadata(x, y, z);
 
-		if((block == Blocks.dirt || block == Blocks.grass && par1ItemStack.getItemDamage() != 0) && bmeta == 0) {
-			int meta = par1ItemStack.getItemDamage();
+		if((block == Blocks.dirt || block == Blocks.grass && stack.getItemDamage() != 0) && bmeta == 0) {
+			int meta = stack.getItemDamage();
 
-			BlockSwapper swapper = addBlockSwapper(par3World, par4, par5, par6, meta);
-			par3World.setBlock(par4, par5, par6, swapper.blockToSet, swapper.metaToSet, 1 | 2);
+			BlockSwapper swapper = addBlockSwapper(world, x, y, z, meta);
+			world.setBlock(x, y, z, swapper.blockToSet, swapper.metaToSet, 1 | 2);
 			for(int i = 0; i < 50; i++) {
-				double x = (Math.random() - 0.5) * 3;
-				double y = Math.random() - 0.5 + 1;
-				double z = (Math.random() - 0.5) * 3;
+				double dx = (Math.random() - 0.5) * 3;
+				double dy = Math.random() - 0.5 + 1;
+				double dz = (Math.random() - 0.5) * 3;
 
 				float r = 0F;
 				float g = 0.4F;
@@ -161,10 +161,10 @@ public class ItemGrassSeeds extends ItemMod implements IFloatingFlowerVariant {
 
 				float velMul = 0.025F;
 
-				Botania.proxy.wispFX(par3World, par4 + 0.5 + x, par5 + 0.5 + y, par6 + 0.5 + z, r, g, b, (float) Math.random() * 0.15F + 0.15F, (float) -x * velMul, (float) -y * velMul, (float) -z * velMul);
+				Botania.proxy.wispFX(world, x + 0.5 + dx, y + 0.5 + dy, z + 0.5 + dz, r, g, b, (float) Math.random() * 0.15F + 0.15F, (float) -dx * velMul, (float) -dy * velMul, (float) -dz * velMul);
 			}
 
-			par1ItemStack.stackSize--;
+			stack.stackSize--;
 		}
 
 		return true;

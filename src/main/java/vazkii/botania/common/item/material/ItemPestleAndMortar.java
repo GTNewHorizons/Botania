@@ -24,7 +24,7 @@ public class ItemPestleAndMortar extends ItemMod {
 	}
 
 	@Override
-	public boolean doesContainerItemLeaveCraftingGrid(ItemStack par1ItemStack) {
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack stack) {
 		return false;
 	}
 

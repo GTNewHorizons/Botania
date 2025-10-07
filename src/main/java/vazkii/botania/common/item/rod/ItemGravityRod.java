@@ -50,8 +50,8 @@ public class ItemGravityRod extends ItemMod implements IManaUsingItem {
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity par3Entity, int p_77663_4_, boolean p_77663_5_) {
-		if(!(par3Entity instanceof EntityPlayer))
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(!(entity instanceof EntityPlayer))
 			return;
 
 		int ticksTillExpire = ItemNBTHelper.getInt(stack, TAG_TICKS_TILL_EXPIRE, 0);
@@ -69,7 +69,7 @@ public class ItemGravityRod extends ItemMod implements IManaUsingItem {
 		ItemNBTHelper.setInt(stack, TAG_TICKS_TILL_EXPIRE, ticksTillExpire);
 		ItemNBTHelper.setInt(stack, TAG_TICKS_COOLDOWN, ticksCooldown);
 
-		EntityPlayer player = (EntityPlayer) par3Entity;
+		EntityPlayer player = (EntityPlayer) entity;
 		PotionEffect haste = player.getActivePotionEffect(Potion.digSpeed);
 		float check = haste == null ? 0.16666667F : haste.getAmplifier() == 1 ? 0.5F : 0.4F;
 		if(player.getCurrentEquippedItem() == stack && player.swingProgress == check && !world.isRemote)

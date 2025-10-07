@@ -182,8 +182,8 @@ public class ItemBottledMana extends ItemMod {
 	}
 
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		getSeed(par1ItemStack);
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		getSeed(stack);
 	}
 
 	public void randomEffect(EntityPlayer player, ItemStack stack) {
@@ -204,46 +204,46 @@ public class ItemBottledMana extends ItemMod {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		infoList.add(StatCollector.translateToLocal("botaniamisc.bottleTooltip"));
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[6];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+			icons[i] = IconHelper.forItem(register, this, i);
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int par1) {
-		return icons[Math.min(icons.length - 1, par1)];
+	public IIcon getIconFromDamage(int meta) {
+		return icons[Math.min(icons.length - 1, meta)];
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
-		return par1ItemStack;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		player.setItemInUse(stack, getMaxItemUseDuration(stack));
+		return stack;
 	}
 
 	@Override
-	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		randomEffect(par3EntityPlayer, par1ItemStack);
-		par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() + 1);
-		randomSeed(par1ItemStack);
+	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+		randomEffect(player, stack);
+		stack.setItemDamage(stack.getItemDamage() + 1);
+		randomSeed(stack);
 
-		if(par1ItemStack.getItemDamage() == 6)
+		if(stack.getItemDamage() == 6)
 			return new ItemStack(Items.glass_bottle);
-		return par1ItemStack;
+		return stack;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 20;
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.drink;
 	}
 

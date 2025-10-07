@@ -75,12 +75,12 @@ public class ItemBlockSpecialFlower extends ItemBlockMod implements IRecipeKeyPr
 	}
 
 	@Override
-	public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-		return getUnlocalizedNameInefficiently_(par1ItemStack);
+	public String getUnlocalizedNameInefficiently(ItemStack stack) {
+		return getUnlocalizedNameInefficiently_(stack);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		String type = getType(stack);
 		SubTileSignature sig = BotaniaAPI.getSignatureForName(type);
 

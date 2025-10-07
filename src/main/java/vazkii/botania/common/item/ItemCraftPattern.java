@@ -35,7 +35,7 @@ public class ItemCraftPattern extends ItemMod {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer p, World world, int x, int y, int z, int s, float xs, float ys, float zs) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile != null && tile instanceof TileCraftCrate && !world.isRemote) {
 			TileCraftCrate crate = (TileCraftCrate) tile;
@@ -52,20 +52,20 @@ public class ItemCraftPattern extends ItemMod {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[TileCraftCrate.PATTERNS.length];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+			icons[i] = IconHelper.forItem(register, this, i);
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int dmg) {
-		return icons[Math.min(icons.length - 1, dmg)];
+	public IIcon getIconFromDamage(int meta) {
+		return icons[Math.min(icons.length - 1, meta)];
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return super.getUnlocalizedName(par1ItemStack) + par1ItemStack.getItemDamage();
+	public String getUnlocalizedName(ItemStack stack) {
+		return super.getUnlocalizedName(stack) + stack.getItemDamage();
 	}
 
 }

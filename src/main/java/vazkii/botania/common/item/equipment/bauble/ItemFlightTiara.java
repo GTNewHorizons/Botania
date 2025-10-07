@@ -102,11 +102,11 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this, 0);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this, 0);
 		wingIcons = new IIcon[WING_TYPES];
 		for(int i = 0; i < WING_TYPES; i++)
-			wingIcons[i] = IconHelper.forItem(par1IconRegister, this, i + 1);
+			wingIcons[i] = IconHelper.forItem(register, this, i + 1);
 	}
 
 	@Override

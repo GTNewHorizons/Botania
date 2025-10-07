@@ -53,24 +53,24 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if(!EntityDoppleganger.isTruePlayer(par3EntityPlayer))
-			return par1ItemStack;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if(!EntityDoppleganger.isTruePlayer(player))
+			return stack;
 
-		if(canEquip(par1ItemStack, par3EntityPlayer)) {
-			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(par3EntityPlayer);
+		if(canEquip(stack, player)) {
+			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
 			for(int i = 0; i < baubles.getSizeInventory(); i++) {
-				if(baubles.isItemValidForSlot(i, par1ItemStack)) {
+				if(baubles.isItemValidForSlot(i, stack)) {
 					ItemStack stackInSlot = baubles.getStackInSlot(i);
-					if(stackInSlot == null || ((IBauble) stackInSlot.getItem()).canUnequip(stackInSlot, par3EntityPlayer)) {
-						if(!par2World.isRemote) {
-							baubles.setInventorySlotContents(i, par1ItemStack.copy());
-							if(!par3EntityPlayer.capabilities.isCreativeMode)
-								par3EntityPlayer.inventory.setInventorySlotContents(par3EntityPlayer.inventory.currentItem, null);
+					if(stackInSlot == null || ((IBauble) stackInSlot.getItem()).canUnequip(stackInSlot, player)) {
+						if(!world.isRemote) {
+							baubles.setInventorySlotContents(i, stack.copy());
+							if(!player.capabilities.isCreativeMode)
+								player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
 						}
 
 						if(stackInSlot != null) {
-							((IBauble) stackInSlot.getItem()).onUnequipped(stackInSlot, par3EntityPlayer);
+							((IBauble) stackInSlot.getItem()).onUnequipped(stackInSlot, player);
 							return stackInSlot.copy();
 						}
 						break;
@@ -79,14 +79,14 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 			}
 		}
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		if(GuiScreen.isShiftKeyDown())
-			addHiddenTooltip(stack, player, infoList, adv);
+			addHiddenTooltip(stack, player, infoList, advanced);
 		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), infoList);
 	}
 
@@ -181,7 +181,7 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 	}
 
 	@Override
-	public boolean doesContainerItemLeaveCraftingGrid(ItemStack p_77630_1_) {
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack stack) {
 		return false;
 	}
 

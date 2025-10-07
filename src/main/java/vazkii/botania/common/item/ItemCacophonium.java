@@ -82,7 +82,7 @@ public class ItemCacophonium extends ItemMod implements ICraftAchievement {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int s, float xs, float ys, float zs) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		boolean can = isDOIT(stack);
 		if(!can) {
 			String sound = ItemNBTHelper.getString(stack, TAG_SOUND, "");
@@ -105,7 +105,7 @@ public class ItemCacophonium extends ItemMod implements ICraftAchievement {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		if(isDOIT(stack))
 			infoList.add(StatCollector.translateToLocal("botaniamisc.justDoIt"));
 		else if(ItemNBTHelper.getBoolean(stack, TAG_HAS_SOUND, false))
@@ -113,20 +113,20 @@ public class ItemCacophonium extends ItemMod implements ICraftAchievement {
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.block;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 72000;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if(ItemNBTHelper.getBoolean(par1ItemStack, TAG_HAS_SOUND, false) || isDOIT(par1ItemStack))
-			par3EntityPlayer.setItemInUse(par1ItemStack, 72000);
-		return par1ItemStack;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if(ItemNBTHelper.getBoolean(stack, TAG_HAS_SOUND, false) || isDOIT(stack))
+			player.setItemInUse(stack, 72000);
+		return stack;
 	}
 
 	@Override

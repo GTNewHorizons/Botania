@@ -28,19 +28,19 @@ public class ItemMod extends Item {
 	}
 
 	@Override
-	public Item setUnlocalizedName(String par1Str) {
-		GameRegistry.registerItem(this, par1Str);
-		return super.setUnlocalizedName(par1Str);
+	public Item setUnlocalizedName(String name) {
+		GameRegistry.registerItem(this, name);
+		return super.setUnlocalizedName(name);
 	}
 
 	@Override
-	public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-		return super.getUnlocalizedNameInefficiently(par1ItemStack).replaceAll("item\\.", "item." + LibResources.PREFIX_MOD);
+	public String getUnlocalizedNameInefficiently(ItemStack stack) {
+		return super.getUnlocalizedNameInefficiently(stack).replaceAll("item\\.", "item." + LibResources.PREFIX_MOD);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this);
 	}
 }

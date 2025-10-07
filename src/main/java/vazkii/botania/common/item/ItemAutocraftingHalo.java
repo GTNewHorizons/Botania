@@ -28,10 +28,10 @@ public class ItemAutocraftingHalo extends ItemCraftingHalo {
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int pos, boolean equipped) {
-		super.onUpdate(stack, world, entity, pos, equipped);
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		super.onUpdate(stack, world, entity, invSlot, isHeld);
 
-		if(entity instanceof EntityPlayer && !equipped) {
+		if(entity instanceof EntityPlayer && !isHeld) {
 			EntityPlayer player = (EntityPlayer) entity;
 			IInventory inv = getFakeInv(player);
 

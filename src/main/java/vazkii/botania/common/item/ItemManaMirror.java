@@ -53,9 +53,9 @@ public class ItemManaMirror extends ItemMod implements IManaItem, ICoordBoundIte
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-		float mana = getMana(par1ItemStack);
-		return par2 == 1 ? Color.HSBtoRGB(0.528F,  mana / TilePool.MAX_MANA, 1F) : 0xFFFFFF;
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		float mana = getMana(stack);
+		return renderPass == 1 ? Color.HSBtoRGB(0.528F,  mana / TilePool.MAX_MANA, 1F) : 0xFFFFFF;
 	}
 
 	@Override
@@ -70,10 +70,10 @@ public class ItemManaMirror extends ItemMod implements IManaItem, ICoordBoundIte
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[2];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+			icons[i] = IconHelper.forItem(register, this, i);
 	}
 
 	@Override
@@ -87,29 +87,29 @@ public class ItemManaMirror extends ItemMod implements IManaItem, ICoordBoundIte
 	}
 
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		if(par2World.isRemote)
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(world.isRemote)
 			return;
 
-		IManaPool pool = getManaPool(par1ItemStack);
+		IManaPool pool = getManaPool(stack);
 		if(!(pool instanceof DummyPool)) {
 			if(pool == null)
-				setMana(par1ItemStack, 0);
+				setMana(stack, 0);
 			else {
-				pool.recieveMana(getManaBacklog(par1ItemStack));
-				setManaBacklog(par1ItemStack, 0);
-				setMana(par1ItemStack, pool.getCurrentMana());
+				pool.recieveMana(getManaBacklog(stack));
+				setManaBacklog(stack, 0);
+				setMana(stack, pool.getCurrentMana());
 			}
 		}
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		if(par2EntityPlayer.isSneaking() && !par3World.isRemote) {
-			TileEntity tile = par3World.getTileEntity(par4, par5, par6);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		if(player.isSneaking() && !world.isRemote) {
+			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile != null && tile instanceof IManaPool) {
-				bindPool(par1ItemStack, tile);
-				par3World.playSoundAtEntity(par2EntityPlayer, "botania:ding", 1F, 1F);
+				bindPool(stack, tile);
+				world.playSoundAtEntity(player, "botania:ding", 1F, 1F);
 				return true;
 			}
 		}

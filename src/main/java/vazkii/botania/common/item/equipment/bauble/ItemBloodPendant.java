@@ -71,10 +71,10 @@ public class ItemBloodPendant extends ItemBauble implements IBrewContainer, IBre
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[4];
 		for(int i = 0; i < 4; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+			icons[i] = IconHelper.forItem(register, this, i);
 	}
 
 	@Override
@@ -88,8 +88,8 @@ public class ItemBloodPendant extends ItemBauble implements IBrewContainer, IBre
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack stack, int pass) {
-		if(pass == 0)
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		if(renderPass == 0)
 			return 0xFFFFFF;
 
 		Brew brew = getBrew(stack);

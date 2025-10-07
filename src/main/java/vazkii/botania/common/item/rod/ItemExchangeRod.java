@@ -68,37 +68,37 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		Block wblock = par3World.getBlock(par4, par5, par6);
-		int wmeta = par3World.getBlockMetadata(par4, par5, par6);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		Block wblock = world.getBlock(x, y, z);
+		int wmeta = world.getBlockMetadata(x, y, z);
 
-		if(par2EntityPlayer.isSneaking()) {
-			TileEntity tile = par3World.getTileEntity(par4, par5, par6);
+		if(player.isSneaking()) {
+			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile == null) {
 				if(BlockCamo.isValidBlock(wblock)) {
 					Item item = Item.getItemFromBlock(wblock);
 					if(!item.getHasSubtypes())
 						wmeta = 0;
 
-					boolean set = setBlock(par1ItemStack, wblock, wmeta);
-					par2EntityPlayer.setCurrentItemOrArmor(0, par1ItemStack);
+					boolean set = setBlock(stack, wblock, wmeta);
+					player.setCurrentItemOrArmor(0, stack);
 
-					displayRemainderCounter(par2EntityPlayer, par1ItemStack);
+					displayRemainderCounter(player, stack);
 					return set;
 				}
 			}
-		} else if(canExchange(par1ItemStack) && !ItemNBTHelper.getBoolean(par1ItemStack, TAG_SWAPPING, false)) {
-			Block block = getBlock(par1ItemStack);
-			int meta = getBlockMeta(par1ItemStack);
-			List<ChunkCoordinates> swap = getBlocksToSwap(par3World, par1ItemStack, block, meta, par4, par5, par6, null, 0);
+		} else if(canExchange(stack) && !ItemNBTHelper.getBoolean(stack, TAG_SWAPPING, false)) {
+			Block block = getBlock(stack);
+			int meta = getBlockMeta(stack);
+			List<ChunkCoordinates> swap = getBlocksToSwap(world, stack, block, meta, x, y, z, null, 0);
 			if(swap.size() > 0) {
-				ItemNBTHelper.setBoolean(par1ItemStack, TAG_SWAPPING, true);
-				ItemNBTHelper.setInt(par1ItemStack, TAG_SELECT_X, par4);
-				ItemNBTHelper.setInt(par1ItemStack, TAG_SELECT_Y, par5);
-				ItemNBTHelper.setInt(par1ItemStack, TAG_SELECT_Z, par6);
-				setTargetBlock(par1ItemStack, wblock, wmeta);
-				if(par3World.isRemote)
-					par2EntityPlayer.swingItem();
+				ItemNBTHelper.setBoolean(stack, TAG_SWAPPING, true);
+				ItemNBTHelper.setInt(stack, TAG_SELECT_X, x);
+				ItemNBTHelper.setInt(stack, TAG_SELECT_Y, y);
+				ItemNBTHelper.setInt(stack, TAG_SELECT_Z, z);
+				setTargetBlock(stack, wblock, wmeta);
+				if(world.isRemote)
+					player.swingItem();
 			}
 		}
 
@@ -116,7 +116,7 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int something, boolean somethingelse) {
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
 		if(!canExchange(stack) || !(entity instanceof EntityPlayer))
 			return;
 
@@ -349,10 +349,10 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 	}
 
 	@Override
-	public String getItemStackDisplayName(ItemStack par1ItemStack) {
-		Block block = getBlock(par1ItemStack);
-		int meta = getBlockMeta(par1ItemStack);
-		return super.getItemStackDisplayName(par1ItemStack) + (block == null ? "" : " (" + EnumChatFormatting.GREEN + new ItemStack(block, 1, meta).getDisplayName() + EnumChatFormatting.RESET + ")");
+	public String getItemStackDisplayName(ItemStack stack) {
+		Block block = getBlock(stack);
+		int meta = getBlockMeta(stack);
+		return super.getItemStackDisplayName(stack) + (block == null ? "" : " (" + EnumChatFormatting.GREEN + new ItemStack(block, 1, meta).getDisplayName() + EnumChatFormatting.RESET + ")");
 	}
 
 	public static String getBlockName(ItemStack stack) {
