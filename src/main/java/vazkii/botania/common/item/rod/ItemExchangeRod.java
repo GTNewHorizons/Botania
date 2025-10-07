@@ -117,12 +117,10 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
-		if(!canExchange(stack) || !(entity instanceof EntityPlayer))
+		if(!canExchange(stack) || !(entity instanceof EntityPlayer player))
 			return;
 
-		EntityPlayer player = (EntityPlayer) entity;
-
-		int extraRange = ItemNBTHelper.getInt(stack, TAG_EXTRA_RANGE, 1);
+        int extraRange = ItemNBTHelper.getInt(stack, TAG_EXTRA_RANGE, 1);
 		int extraRangeNew = IManaProficiencyArmor.Helper.hasProficiency(player) ? 3 : 1;
 		if(extraRange != extraRangeNew)
 			ItemNBTHelper.setInt(stack, TAG_EXTRA_RANGE, extraRangeNew);
@@ -312,9 +310,8 @@ public class ItemExchangeRod extends ItemMod implements IManaUsingItem, IWirefra
 			if(item == Item.getItemFromBlock(block) && invStack.getItemDamage() == meta)
 				count += invStack.stackSize;
 
-			if(item instanceof IBlockProvider) {
-				IBlockProvider prov = (IBlockProvider) item;
-				int provCount = prov.getBlockCount(player, stack, invStack, block, meta);
+			if(item instanceof IBlockProvider prov) {
+                int provCount = prov.getBlockCount(player, stack, invStack, block, meta);
 				if(provCount == -1)
 					return -1;
 				count += provCount;

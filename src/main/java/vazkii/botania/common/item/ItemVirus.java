@@ -50,9 +50,8 @@ public class ItemVirus extends ItemMod {
 
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
-		if(entity instanceof EntityHorse) {
-			EntityHorse horse = (EntityHorse) entity;
-			if(horse.getHorseType() != 3 && horse.getHorseType() != 4 && horse.isTame()) {
+		if(entity instanceof EntityHorse horse) {
+            if(horse.getHorseType() != 3 && horse.getHorseType() != 4 && horse.isTame()) {
 				horse.setHorseType(3 + stack.getItemDamage());
 				BaseAttributeMap attributes = horse.getAttributeMap();
 				IAttributeInstance movementSpeed = attributes.getAttributeInstance(SharedMonsterAttributes.movementSpeed);
@@ -75,9 +74,8 @@ public class ItemVirus extends ItemMod {
 		if(entity.ridingEntity instanceof EntityLivingBase)
 			entity = (EntityLivingBase) entity.ridingEntity;
 
-		if(entity instanceof EntityHorse && event.source == DamageSource.fall) {
-			EntityHorse horse = (EntityHorse) entity;
-			if((horse.getHorseType() == 3 || horse.getHorseType() == 4) && horse.isTame())
+		if(entity instanceof EntityHorse horse && event.source == DamageSource.fall) {
+            if((horse.getHorseType() == 3 || horse.getHorseType() == 4) && horse.isTame())
 				event.setCanceled(true);
 		}
 	}

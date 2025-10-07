@@ -132,9 +132,8 @@ public class ItemBloodPendant extends ItemBauble implements IBrewContainer, IBre
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
 		Brew brew = getBrew(stack);
-		if(brew != BotaniaAPI.fallbackBrew && player instanceof EntityPlayer && !player.worldObj.isRemote) {
-			EntityPlayer eplayer = (EntityPlayer) player;
-			PotionEffect effect = brew.getPotionEffects(stack).get(0);
+		if(brew != BotaniaAPI.fallbackBrew && player instanceof EntityPlayer eplayer && !player.worldObj.isRemote) {
+            PotionEffect effect = brew.getPotionEffects(stack).get(0);
 			float cost = (float) brew.getManaCost(stack) / effect.getDuration() / (1 + effect.getAmplifier()) * 2.5F;
 			boolean doRand = cost < 1;
 			if(ManaItemHandler.requestManaExact(stack, eplayer, (int) Math.ceil(cost), false)) {

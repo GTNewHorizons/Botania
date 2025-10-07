@@ -396,10 +396,9 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 			
 			@Override
 			public boolean equals(Object other) {
-				if(!(other instanceof SwapCandidate)) return false;
-				
-				SwapCandidate cand = (SwapCandidate) other;
-				return coordinates.equals(cand.coordinates) && range == cand.range;
+				if(!(other instanceof SwapCandidate cand)) return false;
+
+                return coordinates.equals(cand.coordinates) && range == cand.range;
 			}
 		}
 	}

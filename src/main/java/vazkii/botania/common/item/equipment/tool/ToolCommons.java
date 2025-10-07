@@ -124,11 +124,10 @@ public final class ToolCommons {
 			return 0;
 
 		Item item = stack.getItem();
-		if(!(item instanceof ItemTool))
+		if(!(item instanceof ItemTool tool))
 			return 0;
 
-		ItemTool tool = (ItemTool) item;
-		ToolMaterial material = tool.func_150913_i();
+        ToolMaterial material = tool.func_150913_i();
 		int materialLevel = 0;
 		if(material == BotaniaAPI.manasteelToolMaterial)
 			materialLevel = 10;

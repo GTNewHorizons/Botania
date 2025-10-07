@@ -39,9 +39,8 @@ public class ItemDye extends Item16Colors {
 		}
 		
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof IDyablePool) {
-			IDyablePool dyable = (IDyablePool) tile;
-			if(meta != dyable.getColor()) {
+		if(tile instanceof IDyablePool dyable) {
+            if(meta != dyable.getColor()) {
 				dyable.setColor(meta);
 				stack.stackSize--;
 				return true;
@@ -53,9 +52,8 @@ public class ItemDye extends Item16Colors {
 
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target) {
-		if(target instanceof EntitySheep) {
-			EntitySheep entitysheep = (EntitySheep)target;
-			int i = stack.getItemDamage();
+		if(target instanceof EntitySheep entitysheep) {
+            int i = stack.getItemDamage();
 
 			if(!entitysheep.getSheared() && entitysheep.getFleeceColor() != i) {
 				entitysheep.setFleeceColor(i);

@@ -81,10 +81,9 @@ public abstract class ItemBagBase extends ItemMod {
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int s, float subX, float subY, float subZ) {
         TileEntity tile = world.getTileEntity(x, y, z);
-        if(tile instanceof IInventory) {
+        if(tile instanceof IInventory inv) {
             if(!world.isRemote) {
                 ForgeDirection side = ForgeDirection.getOrientation(s);
-                IInventory inv = (IInventory) tile;
                 ItemStack[] stacks = loadStacks(stack);
                 ItemStack[] newStacks = new ItemStack[stacks.length];
                 boolean putAny = false;

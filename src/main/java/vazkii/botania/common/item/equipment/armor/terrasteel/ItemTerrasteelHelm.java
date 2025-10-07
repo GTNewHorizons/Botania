@@ -132,9 +132,8 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 
 	public void onEntityAttacked(LivingHurtEvent event) {
 		Entity attacker = event.source.getEntity();
-		if (attacker instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) attacker;
-			if (hasArmorSet(player)) {
+		if (attacker instanceof EntityPlayer player) {
+            if (hasArmorSet(player)) {
 				boolean crit = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(Potion.blindness) && player.ridingEntity == null;
 				ItemStack stack = player.inventory.armorItemInSlot(3);
 				if (crit && stack != null && stack.getItem() instanceof ItemTerrasteelHelm) {

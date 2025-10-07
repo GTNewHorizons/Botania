@@ -82,9 +82,8 @@ public class ItemBlackHoleTalisman extends ItemMod implements IBlockProvider {
 			int bmeta = getBlockMeta(stack);
 
 			TileEntity tile = world.getTileEntity(x, y, z);
-			if(tile instanceof IInventory) {
-				IInventory inv = (IInventory) tile;
-				int[] slots = inv instanceof ISidedInventory ? ((ISidedInventory) inv).getAccessibleSlotsFromSide(side) : InventoryHelper.buildSlotsForLinearInventory(inv);
+			if(tile instanceof IInventory inv) {
+                int[] slots = inv instanceof ISidedInventory ? ((ISidedInventory) inv).getAccessibleSlotsFromSide(side) : InventoryHelper.buildSlotsForLinearInventory(inv);
 				for(int slot : slots) {
 					ItemStack stackInSlot = inv.getStackInSlot(slot);
 					if(stackInSlot == null) {
@@ -132,9 +131,8 @@ public class ItemBlackHoleTalisman extends ItemMod implements IBlockProvider {
 	@Override
 	public void onUpdate(ItemStack itemstack, World world, Entity entity, int invSlot, boolean isHeld) {
 		Block block = getBlock(itemstack);
-		if(!entity.worldObj.isRemote && itemstack.getItemDamage() == 1 && block != Blocks.air && entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
-			int meta = getBlockMeta(itemstack);
+		if(!entity.worldObj.isRemote && itemstack.getItemDamage() == 1 && block != Blocks.air && entity instanceof EntityPlayer player) {
+            int meta = getBlockMeta(itemstack);
 
 			int highest = -1;
 			int[] counts = new int[player.inventory.getSizeInventory() - player.inventory.armorInventory.length];

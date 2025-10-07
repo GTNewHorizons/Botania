@@ -30,17 +30,14 @@ public class ItemSwapRing extends ItemBauble {
 
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase entity) {
-		if(!(entity instanceof EntityPlayer))
+		if(!(entity instanceof EntityPlayer player))
 			return;
 
-		EntityPlayer player = (EntityPlayer) entity;
-		ItemStack currentStack = player.getCurrentEquippedItem();
-		if(currentStack == null || !(currentStack.getItem() instanceof ISortableTool))
+        ItemStack currentStack = player.getCurrentEquippedItem();
+		if(currentStack == null || !(currentStack.getItem() instanceof ISortableTool tool))
 			return;
 
-		ISortableTool tool = (ISortableTool) currentStack.getItem();
-
-		MovingObjectPosition pos = ToolCommons.raytraceFromEntity(entity.worldObj, entity, true, 4.5F);
+        MovingObjectPosition pos = ToolCommons.raytraceFromEntity(entity.worldObj, entity, true, 4.5F);
 		ToolType typeToFind = null;
 
 		if(player.isSwingInProgress && pos != null) {
@@ -66,9 +63,8 @@ public class ItemSwapRing extends ItemBauble {
 
 		for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack stackInSlot = player.inventory.getStackInSlot(i);
-			if (stackInSlot != null && stackInSlot.getItem() instanceof ISortableTool && stackInSlot != currentStack) {
-				ISortableTool toolInSlot = (ISortableTool) stackInSlot.getItem();
-				if(toolInSlot.getSortingType(stackInSlot).equals(typeToFind)) {
+			if (stackInSlot != null && stackInSlot.getItem() instanceof ISortableTool toolInSlot && stackInSlot != currentStack) {
+                if(toolInSlot.getSortingType(stackInSlot).equals(typeToFind)) {
 					int priority = toolInSlot.getSortingPriority(stackInSlot);
 					if(priority > bestToolPriority) {
 						bestTool = stackInSlot;

@@ -37,9 +37,8 @@ public class ItemCraftPattern extends ItemMod {
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof TileCraftCrate && !world.isRemote) {
-			TileCraftCrate crate = (TileCraftCrate) tile;
-			crate.pattern = stack.getItemDamage();
+		if(tile instanceof TileCraftCrate crate && !world.isRemote) {
+            crate.pattern = stack.getItemDamage();
 			world.markBlockForUpdate(x, y, z);
 		}
 		return false;

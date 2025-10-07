@@ -39,9 +39,8 @@ public class ItemStarSword extends ItemManasteelSword implements ICraftAchieveme
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
 		super.onUpdate(stack, world, entity, invSlot, isHeld);
-		if(entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
-			PotionEffect haste = player.getActivePotionEffect(Potion.digSpeed);
+		if(entity instanceof EntityPlayer player) {
+            PotionEffect haste = player.getActivePotionEffect(Potion.digSpeed);
 			float check = haste == null ? 0.16666667F : haste.getAmplifier() == 1 ? 0.5F : 0.4F;
 
 			if(player.getCurrentEquippedItem() == stack && player.swingProgress == check && !world.isRemote && world.rand.nextInt(2) == 0) {

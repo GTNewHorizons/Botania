@@ -57,9 +57,8 @@ public class ItemTornadoRod extends ItemMod implements IManaUsingItem, IAvatarWi
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
-		if(entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
-			player.getCurrentEquippedItem();
+		if(entity instanceof EntityPlayer player) {
+            player.getCurrentEquippedItem();
 			boolean damaged = stack.getItemDamage() > 0;
 
 			if(damaged && !isFlying(stack))

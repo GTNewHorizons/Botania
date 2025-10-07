@@ -56,9 +56,8 @@ public class ItemBlockTinyPotato extends ItemBlockMod {
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
-		if(!world.isRemote && entity instanceof EntityPlayer && entity.ticksExisted % 30 == 0 && TYPOS.contains(stack.getDisplayName().toLowerCase())) {
-			EntityPlayer player = (EntityPlayer) entity;
-			int ticks = ItemNBTHelper.getInt(stack, TAG_TICKS, 0);
+		if(!world.isRemote && entity instanceof EntityPlayer player && entity.ticksExisted % 30 == 0 && TYPOS.contains(stack.getDisplayName().toLowerCase())) {
+            int ticks = ItemNBTHelper.getInt(stack, TAG_TICKS, 0);
 			if(ticks < NOT_MY_NAME.length) {
 				player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + NOT_MY_NAME[ticks]));
 				ItemNBTHelper.setInt(stack, TAG_TICKS, ticks + 1);

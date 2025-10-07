@@ -51,7 +51,7 @@ public class ItemGravityRod extends ItemMod implements IManaUsingItem {
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
-		if(!(entity instanceof EntityPlayer))
+		if(!(entity instanceof EntityPlayer player))
 			return;
 
 		int ticksTillExpire = ItemNBTHelper.getInt(stack, TAG_TICKS_TILL_EXPIRE, 0);
@@ -69,8 +69,7 @@ public class ItemGravityRod extends ItemMod implements IManaUsingItem {
 		ItemNBTHelper.setInt(stack, TAG_TICKS_TILL_EXPIRE, ticksTillExpire);
 		ItemNBTHelper.setInt(stack, TAG_TICKS_COOLDOWN, ticksCooldown);
 
-		EntityPlayer player = (EntityPlayer) entity;
-		PotionEffect haste = player.getActivePotionEffect(Potion.digSpeed);
+        PotionEffect haste = player.getActivePotionEffect(Potion.digSpeed);
 		float check = haste == null ? 0.16666667F : haste.getAmplifier() == 1 ? 0.5F : 0.4F;
 		if(player.getCurrentEquippedItem() == stack && player.swingProgress == check && !world.isRemote)
 			leftClick(player);
@@ -133,9 +132,8 @@ public class ItemGravityRod extends ItemMod implements IManaUsingItem {
 					if(item instanceof EntityItem)
 						((EntityItem)item).delayBeforeCanPickup = 5;
 
-					if(item instanceof EntityLivingBase) {
-						EntityLivingBase targetEntity = (EntityLivingBase)item;
-						targetEntity.fallDistance = 0.0F;
+					if(item instanceof EntityLivingBase targetEntity) {
+                        targetEntity.fallDistance = 0.0F;
 						if(targetEntity.getActivePotionEffect(Potion.moveSlowdown) == null)
 							targetEntity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 2, 3, true));
 					}

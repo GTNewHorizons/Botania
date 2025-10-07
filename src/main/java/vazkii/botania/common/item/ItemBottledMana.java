@@ -115,9 +115,8 @@ public class ItemBottledMana extends ItemMod {
 			for(int i = 256; i > 0; i--) {
 				Block block = player.worldObj.getBlock(x, i, z);
 				if(!block.isAir(player.worldObj, x, i, z)) {
-					if(player instanceof EntityPlayerMP) {
-						EntityPlayerMP mp = (EntityPlayerMP) player;
-						mp.playerNetServerHandler.setPlayerLocation(player.posX, i + 1.6, player.posZ, player.rotationYaw, player.rotationPitch);
+					if(player instanceof EntityPlayerMP mp) {
+                        mp.playerNetServerHandler.setPlayerLocation(player.posX, i + 1.6, player.posZ, player.rotationYaw, player.rotationPitch);
 					}
 					break;
 				}

@@ -38,9 +38,8 @@ public class ItemSpark extends ItemMod implements ICraftAchievement, IManaGiving
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof ISparkAttachable) {
-			ISparkAttachable attach = (ISparkAttachable) tile;
-			if(attach.canAttachSpark(stack) && attach.getAttachedSpark() == null) {
+		if(tile instanceof ISparkAttachable attach) {
+            if(attach.canAttachSpark(stack) && attach.getAttachedSpark() == null) {
 				stack.stackSize--;
 				if(!world.isRemote) {
 					EntitySpark spark = new EntitySpark(world);

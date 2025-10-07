@@ -28,10 +28,9 @@ public class LensRedirect extends Lens {
 		ChunkCoordinates coords = burst.getBurstSourceChunkCoordinates();
 		if(!entity.worldObj.isRemote && pos.entityHit == null && coords.posY != -1 && (pos.blockX != coords.posX || pos.blockY != coords.posY || pos.blockZ != coords.posZ)) {
 			TileEntity tile = entity.worldObj.getTileEntity(pos.blockX, pos.blockY, pos.blockZ);
-			if(tile instanceof IRedirectable) {
+			if(tile instanceof IRedirectable redir) {
 				if(!burst.isFake()) {
-					IRedirectable redir = (IRedirectable) tile;
-					Vector3 tileVec = Vector3.fromTileEntityCenter(tile);
+                    Vector3 tileVec = Vector3.fromTileEntityCenter(tile);
 					Vector3 sourceVec = new Vector3(coords.posX + 0.5, coords.posY + 0.5, coords.posZ + 0.5);
 
 					AxisAlignedBB axis = entity.worldObj.getBlock(coords.posX, coords.posY, coords.posZ).getCollisionBoundingBoxFromPool(entity.worldObj, coords.posX, coords.posY, coords.posZ);

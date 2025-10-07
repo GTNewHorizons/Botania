@@ -65,10 +65,9 @@ public class ItemIcePendant extends ItemBauble implements IBaubleRender {
 	public void onWornTick(ItemStack stack, EntityLivingBase entity) {
 		super.onWornTick(stack, entity);
 
-		if(entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
+		if(entity instanceof EntityPlayer player) {
 
-			if(!player.worldObj.isRemote)
+            if(!player.worldObj.isRemote)
 				tickIceRemovers(player);
 
 			if(!player.isSneaking() && !player.isInsideOfMaterial(Material.water) && !player.worldObj.isRemote) {
