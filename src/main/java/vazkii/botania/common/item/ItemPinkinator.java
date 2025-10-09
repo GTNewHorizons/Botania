@@ -54,7 +54,7 @@ public class ItemPinkinator extends ItemMod {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		infoList.add(StatCollector.translateToLocal("botaniamisc.pinkinatorDesc"));
 	}
 

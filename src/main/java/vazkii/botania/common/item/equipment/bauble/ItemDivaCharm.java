@@ -50,9 +50,8 @@ public class ItemDivaCharm extends ItemBauble implements IManaUsingItem, IBauble
 	}
 
 	public void onEntityDamaged(LivingHurtEvent event) {
-		if(event.source.getEntity() instanceof EntityPlayer && event.entityLiving instanceof EntityLiving && !event.entityLiving.worldObj.isRemote && Math.random() < 0.6F) {
-			EntityPlayer player = (EntityPlayer) event.source.getEntity();
-			ItemStack amulet = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
+		if(event.source.getEntity() instanceof EntityPlayer player && event.entityLiving instanceof EntityLiving && !event.entityLiving.worldObj.isRemote && Math.random() < 0.6F) {
+            ItemStack amulet = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
 			if(amulet != null && amulet.getItem() == this) {
 				final int cost = 250;
 				if(ManaItemHandler.requestManaExact(amulet, player, cost, false)) {

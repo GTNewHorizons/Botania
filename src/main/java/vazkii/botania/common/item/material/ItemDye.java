@@ -29,21 +29,20 @@ public class ItemDye extends Item16Colors {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		Block block = par3World.getBlock(par4, par5, par6);
-		int meta = par1ItemStack.getItemDamage();
-		if(meta != par3World.getBlockMetadata(par4, par5, par6) && (block == Blocks.wool || block == Blocks.carpet)) {
-			par3World.setBlockMetadataWithNotify(par4, par5, par6, meta, 1 | 2);
-			par1ItemStack.stackSize--;
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		Block block = world.getBlock(x, y, z);
+		int meta = stack.getItemDamage();
+		if(meta != world.getBlockMetadata(x, y, z) && (block == Blocks.wool || block == Blocks.carpet)) {
+			world.setBlockMetadataWithNotify(x, y, z, meta, 1 | 2);
+			stack.stackSize--;
 			return true;
 		}
 		
-		TileEntity tile = par3World.getTileEntity(par4, par5, par6);
-		if(tile instanceof IDyablePool) {
-			IDyablePool dyable = (IDyablePool) tile;
-			if(meta != dyable.getColor()) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof IDyablePool dyable) {
+            if(meta != dyable.getColor()) {
 				dyable.setColor(meta);
-				par1ItemStack.stackSize--;
+				stack.stackSize--;
 				return true;
 			}
 		}
@@ -53,9 +52,8 @@ public class ItemDye extends Item16Colors {
 
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target) {
-		if(target instanceof EntitySheep) {
-			EntitySheep entitysheep = (EntitySheep)target;
-			int i = stack.getItemDamage();
+		if(target instanceof EntitySheep entitysheep) {
+            int i = stack.getItemDamage();
 
 			if(!entitysheep.getSheared() && entitysheep.getFleeceColor() != i) {
 				entitysheep.setFleeceColor(i);

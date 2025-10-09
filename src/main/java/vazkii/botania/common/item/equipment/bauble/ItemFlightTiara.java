@@ -102,11 +102,11 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this, 0);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this, 0);
 		wingIcons = new IIcon[WING_TYPES];
 		for(int i = 0; i < WING_TYPES; i++)
-			wingIcons[i] = IconHelper.forItem(par1IconRegister, this, i + 1);
+			wingIcons[i] = IconHelper.forItem(register, this, i + 1);
 	}
 
 	@Override
@@ -165,9 +165,8 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
 		super.onWornTick(stack, player);
 
-		if(player instanceof EntityPlayer) {
-			EntityPlayer p = (EntityPlayer) player;
-			boolean flying = p.capabilities.isFlying;
+		if(player instanceof EntityPlayer p) {
+            boolean flying = p.capabilities.isFlying;
 
 			boolean wasSprting = ItemNBTHelper.getBoolean(stack, TAG_IS_SPRINTING, false);
 			boolean isSprinting = p.isSprinting();
@@ -220,9 +219,8 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 	}
 
 	public void updatePlayerFlyStatus(LivingUpdateEvent event) {
-		if(event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			ItemStack tiara = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
+		if(event.entityLiving instanceof EntityPlayer player) {
+            ItemStack tiara = PlayerHandler.getPlayerBaubles(player).getStackInSlot(0);
 			int left = ItemNBTHelper.getInt(tiara, TAG_TIME_LEFT, MAX_FLY_TIME);
 
 			if(playersWithFlight.contains(playerStr(player))) {

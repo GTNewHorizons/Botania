@@ -39,20 +39,20 @@ public class ItemManaCookie extends ItemFood {
 	}
 
 	@Override
-	protected void onFoodEaten(ItemStack p_77849_1_, World p_77849_2_, EntityPlayer p_77849_3_) {
-		super.onFoodEaten(p_77849_1_, p_77849_2_, p_77849_3_);
-		p_77849_3_.addStat(ModAchievements.manaCookieEat, 1);
+	protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
+		super.onFoodEaten(stack, world, player);
+		player.addStat(ModAchievements.manaCookieEat, 1);
 	}
 
 	@Override
-	public Item setUnlocalizedName(String par1Str) {
-		GameRegistry.registerItem(this, par1Str);
-		return super.setUnlocalizedName(par1Str);
+	public Item setUnlocalizedName(String name) {
+		GameRegistry.registerItem(this, name);
+		return super.setUnlocalizedName(name);
 	}
 
 	@Override
-	public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-		return super.getUnlocalizedNameInefficiently(par1ItemStack).replaceAll("item.", "item." + LibResources.PREFIX_MOD);
+	public String getUnlocalizedNameInefficiently(ItemStack stack) {
+		return super.getUnlocalizedNameInefficiently(stack).replaceAll("item.", "item." + LibResources.PREFIX_MOD);
 	}
 
 	@Override
@@ -67,9 +67,9 @@ public class ItemManaCookie extends ItemFood {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this);
-		totalBiscuitIcon = IconHelper.forName(par1IconRegister, "totalBiscuit");
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this);
+		totalBiscuitIcon = IconHelper.forName(register, "totalBiscuit");
 	}
 
 }

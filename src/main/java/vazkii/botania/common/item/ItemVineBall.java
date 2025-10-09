@@ -23,16 +23,16 @@ public class ItemVineBall extends ItemMod {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if(!par3EntityPlayer.capabilities.isCreativeMode)
-			--par1ItemStack.stackSize;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if(!player.capabilities.isCreativeMode)
+			--stack.stackSize;
 
-		par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 0.5F, 0.4F / (par2World.rand.nextFloat() * 0.4F + 0.8F));
+		world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 
-		if(!par2World.isRemote)
-			par2World.spawnEntityInWorld(new EntityVineBall(par3EntityPlayer, true));
+		if(!world.isRemote)
+			world.spawnEntityInWorld(new EntityVineBall(player, true));
 
-		return par1ItemStack;
+		return stack;
 	}
 
 }

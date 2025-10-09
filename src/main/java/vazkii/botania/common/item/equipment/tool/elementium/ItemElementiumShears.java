@@ -32,31 +32,31 @@ public class ItemElementiumShears extends ItemManasteelShears {
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.bow;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 72000;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
-		return par1ItemStack;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		player.setItemInUse(stack, getMaxItemUseDuration(stack));
+		return stack;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		super.registerIcons(par1IconRegister);
-		dammitReddit = IconHelper.forName(par1IconRegister, "dammitReddit");
+	public void registerIcons(IIconRegister register) {
+		super.registerIcons(register);
+		dammitReddit = IconHelper.forName(register, "dammitReddit");
 	}
 
 	@Override
-	public IIcon getIconIndex(ItemStack par1ItemStack) {
-		return par1ItemStack.getDisplayName().equalsIgnoreCase("dammit reddit") ? dammitReddit : super.getIconIndex(par1ItemStack);
+	public IIcon getIconIndex(ItemStack stack) {
+		return stack.getDisplayName().equalsIgnoreCase("dammit reddit") ? dammitReddit : super.getIconIndex(stack);
 	}
 
 	@Override

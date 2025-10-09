@@ -57,16 +57,16 @@ public class ItemGrassHorn extends ItemMod {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[SUBTYPES];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
-		vuvuzelaIcon = IconHelper.forName(par1IconRegister, "vuvuzela");
+			icons[i] = IconHelper.forItem(register, this, i);
+		vuvuzelaIcon = IconHelper.forName(register, "vuvuzela");
 	}
 
 	@Override
-	public IIcon getIconIndex(ItemStack par1ItemStack) {
-		return par1ItemStack.getDisplayName().toLowerCase().contains("vuvuzela") ? vuvuzelaIcon : super.getIconIndex(par1ItemStack);
+	public IIcon getIconIndex(ItemStack stack) {
+		return stack.getDisplayName().toLowerCase().contains("vuvuzela") ? vuvuzelaIcon : super.getIconIndex(stack);
 	}
 
 	@Override
@@ -75,33 +75,33 @@ public class ItemGrassHorn extends ItemMod {
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int par1) {
-		return icons[Math.min(icons.length - 1, par1)];
+	public IIcon getIconFromDamage(int meta) {
+		return icons[Math.min(icons.length - 1, meta)];
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return getUnlocalizedNameLazy(par1ItemStack) + par1ItemStack.getItemDamage();
+	public String getUnlocalizedName(ItemStack stack) {
+		return getUnlocalizedNameLazy(stack) + stack.getItemDamage();
 	}
 
-	String getUnlocalizedNameLazy(ItemStack par1ItemStack) {
-		return super.getUnlocalizedName(par1ItemStack);
+	String getUnlocalizedNameLazy(ItemStack stack) {
+		return super.getUnlocalizedName(stack);
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.bow;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 72000;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
-		return par1ItemStack;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		player.setItemInUse(stack, getMaxItemUseDuration(stack));
+		return stack;
 	}
 
 	@Override
