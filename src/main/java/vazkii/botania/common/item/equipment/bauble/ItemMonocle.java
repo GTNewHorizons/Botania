@@ -111,9 +111,8 @@ public class ItemMonocle extends ItemBauble implements IBurstViewerBauble, ICosm
 				if(item instanceof IBurstViewerBauble)
 					return true;
 
-				if(item instanceof ICosmeticAttachable) {
-					ICosmeticAttachable attach = (ICosmeticAttachable) item;
-					ItemStack cosmetic = attach.getCosmeticItem(stack);
+				if(item instanceof ICosmeticAttachable attach) {
+                    ItemStack cosmetic = attach.getCosmeticItem(stack);
 					if(cosmetic != null && cosmetic.getItem() instanceof IBurstViewerBauble)
 						return true;
 				}

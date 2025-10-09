@@ -42,8 +42,8 @@ public class ItemThunderSword extends ItemManasteelSword implements ICraftAchiev
 	}
 
 	@Override
-	public boolean hitEntity(ItemStack stack, EntityLivingBase entity, EntityLivingBase attacker) {
-		if(!(entity instanceof EntityPlayer) && entity != null) {
+	public boolean hitEntity(ItemStack stack, EntityLivingBase victim, EntityLivingBase attacker) {
+		if(!(victim instanceof EntityPlayer) && victim != null) {
 			double range = 8;
 			final List<EntityLivingBase> alreadyTargetedEntities = new ArrayList<>();
 			int dmg = 5;
@@ -52,9 +52,9 @@ public class ItemThunderSword extends ItemManasteelSword implements ICraftAchiev
 			IEntitySelector selector = e -> e instanceof EntityLivingBase && e instanceof IMob && !(e instanceof EntityPlayer) && !alreadyTargetedEntities.contains(e);
 
 			Random rand = new Random(lightningSeed);
-			EntityLivingBase lightningSource = entity;
+			EntityLivingBase lightningSource = victim;
 			for(int i = 0; i < 4; i++) {
-				List<Entity> entities = entity.worldObj.getEntitiesWithinAABBExcludingEntity(lightningSource, AxisAlignedBB.getBoundingBox(lightningSource.posX - range, lightningSource.posY - range, lightningSource.posZ - range, lightningSource.posX + range, lightningSource.posY + range, lightningSource.posZ + range), selector);
+				List<Entity> entities = victim.worldObj.getEntitiesWithinAABBExcludingEntity(lightningSource, AxisAlignedBB.getBoundingBox(lightningSource.posX - range, lightningSource.posY - range, lightningSource.posZ - range, lightningSource.posX + range, lightningSource.posY + range, lightningSource.posZ + range), selector);
 				if(entities.isEmpty())
 					break;
 
@@ -63,19 +63,19 @@ public class ItemThunderSword extends ItemManasteelSword implements ICraftAchiev
 					target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), dmg);
 				else target.attackEntityFrom(DamageSource.causeMobDamage(attacker), dmg);
 
-				Botania.proxy.lightningFX(entity.worldObj, Vector3.fromEntityCenter(lightningSource), Vector3.fromEntityCenter(target), 1, 0x0179C4, 0xAADFFF);
+				Botania.proxy.lightningFX(victim.worldObj, Vector3.fromEntityCenter(lightningSource), Vector3.fromEntityCenter(target), 1, 0x0179C4, 0xAADFFF);
 
 				alreadyTargetedEntities.add(target);
 				lightningSource = target;
 				dmg--;
 			}
 
-			if(!entity.worldObj.isRemote)
-				ItemNBTHelper.setLong(stack, TAG_LIGHTNING_SEED, entity.worldObj.rand.nextLong());
+			if(!victim.worldObj.isRemote)
+				ItemNBTHelper.setLong(stack, TAG_LIGHTNING_SEED, victim.worldObj.rand.nextLong());
 		}
 
 
-		return super.hitEntity(stack, entity, attacker);
+		return super.hitEntity(stack, victim, attacker);
 	}
 
 	@Override

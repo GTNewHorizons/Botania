@@ -35,8 +35,8 @@ public class ItemSpellCloth extends ItemMod {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-		return Color.HSBtoRGB(0.55F, ((float) par1ItemStack.getMaxDamage() - (float) par1ItemStack.getItemDamage()) / par1ItemStack.getMaxDamage() * 0.5F, 1F);
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		return Color.HSBtoRGB(0.55F, ((float) stack.getMaxDamage() - (float) stack.getItemDamage()) / stack.getMaxDamage() * 0.5F, 1F);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class ItemSpellCloth extends ItemMod {
 	}
 
 	@Override
-	public boolean doesContainerItemLeaveCraftingGrid(ItemStack par1ItemStack) {
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack stack) {
 		return false;
 	}
 

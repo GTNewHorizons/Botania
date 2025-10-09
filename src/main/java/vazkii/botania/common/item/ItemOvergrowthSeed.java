@@ -25,7 +25,7 @@ public class ItemOvergrowthSeed extends ItemMod {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int s, float xs, float ys, float zs) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		Block block = world.getBlock(x, y, z);
 		ItemStack blockStack = new ItemStack(block);
 		int[] ids = OreDictionary.getOreIDs(blockStack);

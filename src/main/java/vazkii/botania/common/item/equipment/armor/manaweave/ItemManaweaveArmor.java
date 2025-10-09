@@ -49,9 +49,9 @@ public class ItemManaweaveArmor extends ItemManasteelArmor implements ICraftAchi
 	}
 	
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		super.registerIcons(par1IconRegister);
-		iconChristmas = IconHelper.forItem(par1IconRegister, this, "Holiday");
+	public void registerIcons(IIconRegister register) {
+		super.registerIcons(register);
+		iconChristmas = IconHelper.forItem(register, this, "Holiday");
 	}
 	
 	@Override
@@ -60,8 +60,8 @@ public class ItemManaweaveArmor extends ItemManasteelArmor implements ICraftAchi
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int dmg) {
-		return ClientProxy.jingleTheBells ? iconChristmas : super.getIconFromDamage(dmg);
+	public IIcon getIconFromDamage(int meta) {
+		return ClientProxy.jingleTheBells ? iconChristmas : super.getIconFromDamage(meta);
 	}
 	
 	@Override
@@ -74,8 +74,8 @@ public class ItemManaweaveArmor extends ItemManasteelArmor implements ICraftAchi
 	}
 	
 	@Override
-	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
-		return par2ItemStack.getItem() == ModItems.manaResource && par2ItemStack.getItemDamage() == 22 ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+	public boolean getIsRepairable(ItemStack stack, ItemStack repairMaterial) {
+		return repairMaterial.getItem() == ModItems.manaResource && repairMaterial.getItemDamage() == 22 ? true : super.getIsRepairable(stack, repairMaterial);
 	}
 
 	static ItemStack[] armorset;

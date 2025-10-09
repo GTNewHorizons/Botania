@@ -38,15 +38,15 @@ public class ItemCrystalBow extends ItemLivingwoodBow {
 	}
 
 	@Override
-	boolean canFire(ItemStack p_77615_1_, World p_77615_2_, EntityPlayer p_77615_3_, int p_77615_4_) {
-		int infinity = EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, p_77615_1_);
-		return ManaItemHandler.requestManaExactForTool(p_77615_1_, p_77615_3_, ARROW_COST / (infinity + 1), false);
+	boolean canFire(ItemStack stack, World world, EntityPlayer player, int itemInUseCount) {
+		int infinity = EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack);
+		return ManaItemHandler.requestManaExactForTool(stack, player, ARROW_COST / (infinity + 1), false);
 	}
 
 	@Override
-	void onFire(ItemStack p_77615_1_, World p_77615_2_, EntityPlayer p_77615_3_, int p_77615_4_, boolean infinity, EntityArrow arrow) {
+	void onFire(ItemStack stack, World world, EntityPlayer player, int itemInUseCount, boolean infinity, EntityArrow arrow) {
 		arrow.canBePickedUp = 2;
-		ManaItemHandler.requestManaExactForTool(p_77615_1_, p_77615_3_, ARROW_COST / (infinity ? 2 : 1), false);
+		ManaItemHandler.requestManaExactForTool(stack, player, ARROW_COST / (infinity ? 2 : 1), false);
 	}
 
 }

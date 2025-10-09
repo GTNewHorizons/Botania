@@ -62,9 +62,8 @@ public class ItemOdinRing extends ItemRelicBauble {
 	}
 
 	public void onPlayerAttacked(LivingAttackEvent event) {
-		if(event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			if(getOdinRing(player) != null && damageNegations.contains(event.source.damageType))
+		if(event.entityLiving instanceof EntityPlayer player) {
+            if(getOdinRing(player) != null && damageNegations.contains(event.source.damageType))
 				event.setCanceled(true);
 		}
 	}

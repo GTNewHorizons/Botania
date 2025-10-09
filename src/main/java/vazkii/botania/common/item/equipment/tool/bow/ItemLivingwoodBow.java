@@ -55,41 +55,41 @@ public class ItemLivingwoodBow extends ItemBow implements IManaUsingItem {
 	}
 
 	@Override
-	public Item setUnlocalizedName(String par1Str) {
-		GameRegistry.registerItem(this, par1Str);
-		return super.setUnlocalizedName(par1Str);
+	public Item setUnlocalizedName(String name) {
+		GameRegistry.registerItem(this, name);
+		return super.setUnlocalizedName(name);
 	}
 
 	@Override
-	public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-		return super.getUnlocalizedNameInefficiently(par1ItemStack).replaceAll("item.", "item." + LibResources.PREFIX_MOD);
+	public String getUnlocalizedNameInefficiently(ItemStack stack) {
+		return super.getUnlocalizedNameInefficiently(stack).replaceAll("item.", "item." + LibResources.PREFIX_MOD);
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer player) {
-		ArrowNockEvent event = new ArrowNockEvent(player, itemStackIn);
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		ArrowNockEvent event = new ArrowNockEvent(player, stack);
 		MinecraftForge.EVENT_BUS.post(event);
 		if(event.isCanceled())
 			return event.result;
 
-		if(canFire(itemStackIn, worldIn, player, 0))
-			player.setItemInUse(itemStackIn, getMaxItemUseDuration(itemStackIn));
+		if(canFire(stack, world, player, 0))
+			player.setItemInUse(stack, getMaxItemUseDuration(stack));
 
-		return itemStackIn;
+		return stack;
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack p_77615_1_, World p_77615_2_, EntityPlayer p_77615_3_, int p_77615_4_) {
-		int j = (int) ((getMaxItemUseDuration(p_77615_1_) - p_77615_4_) * chargeVelocityMultiplier());
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int itemInUseCount) {
+		int j = (int) ((getMaxItemUseDuration(stack) - itemInUseCount) * chargeVelocityMultiplier());
 
-		ArrowLooseEvent event = new ArrowLooseEvent(p_77615_3_, p_77615_1_, j);
+		ArrowLooseEvent event = new ArrowLooseEvent(player, stack, j);
 		MinecraftForge.EVENT_BUS.post(event);
 		if(event.isCanceled())
 			return;
 		j = event.charge;
 
-		boolean flag = canFire(p_77615_1_, p_77615_2_, p_77615_3_, p_77615_4_);
-		boolean infinity = EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, p_77615_1_) > 0;
+		boolean flag = canFire(stack, world, player, itemInUseCount);
+		boolean infinity = EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
 
 		if(flag) {
 			float f = j / 20.0F;
@@ -101,31 +101,31 @@ public class ItemLivingwoodBow extends ItemBow implements IManaUsingItem {
 			if(f > 1.0F)
 				f = 1.0F;
 
-			EntityArrow entityarrow = makeArrow(p_77615_1_, p_77615_2_, p_77615_3_, p_77615_4_, f);
+			EntityArrow entityarrow = makeArrow(stack, world, player, itemInUseCount, f);
 
 			if(f == 1.0F)
 				entityarrow.setIsCritical(true);
 
-			int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, p_77615_1_);
+			int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, stack);
 
 			if(k > 0)
 				entityarrow.setDamage(entityarrow.getDamage() + k * 0.5D + 0.5D);
 
-			int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, p_77615_1_);
+			int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, stack);
 
 			if(l > 0)
 				entityarrow.setKnockbackStrength(l);
 
-			if(EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, p_77615_1_) > 0)
+			if(EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, stack) > 0)
 				entityarrow.setFire(100);
 
-			ToolCommons.damageItem(p_77615_1_, 1, p_77615_3_, MANA_PER_DAMAGE);
-			p_77615_2_.playSoundAtEntity(p_77615_3_, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+			ToolCommons.damageItem(stack, 1, player, MANA_PER_DAMAGE);
+			world.playSoundAtEntity(player, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
-			onFire(p_77615_1_, p_77615_2_, p_77615_3_, p_77615_4_, infinity, entityarrow);
+			onFire(stack, world, player, itemInUseCount, infinity, entityarrow);
 
-			if(!p_77615_2_.isRemote)
-				p_77615_2_.spawnEntityInWorld(entityarrow);
+			if(!world.isRemote)
+				world.spawnEntityInWorld(entityarrow);
 		}
 	}
 
@@ -137,37 +137,37 @@ public class ItemLivingwoodBow extends ItemBow implements IManaUsingItem {
 		return true;
 	}
 
-	EntityArrow makeArrow(ItemStack p_77615_1_, World p_77615_2_, EntityPlayer p_77615_3_, int p_77615_4_, float f) {
-		return new EntityArrow(p_77615_2_, p_77615_3_, f * 2.0F);
+	EntityArrow makeArrow(ItemStack stack, World world, EntityPlayer player, int itemInUseCount, float f) {
+		return new EntityArrow(world, player, f * 2.0F);
 	}
 
-	boolean canFire(ItemStack p_77615_1_, World p_77615_2_, EntityPlayer p_77615_3_, int p_77615_4_) {
-		return p_77615_3_.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, p_77615_1_) > 0 || p_77615_3_.inventory.hasItem(Items.arrow);
+	boolean canFire(ItemStack stack, World world, EntityPlayer player, int itemInUseCount) {
+		return player.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0 || player.inventory.hasItem(Items.arrow);
 	}
 
-	void onFire(ItemStack p_77615_1_, World p_77615_2_, EntityPlayer p_77615_3_, int p_77615_4_, boolean infinity, EntityArrow arrow) {
+	void onFire(ItemStack stack, World world, EntityPlayer player, int itemInUseCount, boolean infinity, EntityArrow arrow) {
 		if(infinity)
 			arrow.canBePickedUp = 2;
-		else p_77615_3_.inventory.consumeInventoryItem(Items.arrow);
+		else player.inventory.consumeInventoryItem(Items.arrow);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this, 0);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this, 0);
 		for(int i = 0; i < 3; i++)
-			pullIcons[i] = IconHelper.forItem(par1IconRegister, this, i + 1);
+			pullIcons[i] = IconHelper.forItem(register, this, i + 1);
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity player, int par4, boolean par5) {
-		if(!world.isRemote && player instanceof EntityPlayer && stack.getItemDamage() > 0 && ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) player, MANA_PER_DAMAGE * 2, true))
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(!world.isRemote && entity instanceof EntityPlayer && stack.getItemDamage() > 0 && ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, MANA_PER_DAMAGE * 2, true))
 			stack.setItemDamage(stack.getItemDamage() - 1);
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
-		return par2ItemStack.getItem() == ModItems.manaResource && par2ItemStack.getItemDamage() == 3 ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+	public boolean getIsRepairable(ItemStack stack, ItemStack repairMaterial) {
+		return repairMaterial.getItem() == ModItems.manaResource && repairMaterial.getItemDamage() == 3 ? true : super.getIsRepairable(stack, repairMaterial);
 	}
 
 	@Override

@@ -73,51 +73,51 @@ public class ItemManaGun extends ItemMod implements IManaUsingItem {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		int effCd = COOLDOWN;
-		PotionEffect effect = par3EntityPlayer.getActivePotionEffect(Potion.digSpeed);
+		PotionEffect effect = player.getActivePotionEffect(Potion.digSpeed);
 		if(effect != null)
 			effCd -= (effect.getAmplifier() + 1) * 8;
 
-		if(par3EntityPlayer.isSneaking() && hasClip(par1ItemStack)) {
-			rotatePos(par1ItemStack);
-			par2World.playSoundAtEntity(par3EntityPlayer, "random.click", 0.6F, (1.0F + (par2World.rand.nextFloat() - par2World.rand.nextFloat()) * 0.2F) * 0.7F);
-			if(par2World.isRemote)
-				par3EntityPlayer.swingItem();
-			ItemStack lens = getLens(par1ItemStack);
+		if(player.isSneaking() && hasClip(stack)) {
+			rotatePos(stack);
+			world.playSoundAtEntity(player, "random.click", 0.6F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
+			if(world.isRemote)
+				player.swingItem();
+			ItemStack lens = getLens(stack);
 			ItemsRemainingRenderHandler.set(lens, -2);
-			par1ItemStack.setItemDamage(effCd);
-		} else if(par1ItemStack.getItemDamage() == 0) {
-			EntityManaBurst burst = getBurst(par3EntityPlayer, par1ItemStack, true);
-			if(burst != null && ManaItemHandler.requestManaExact(par1ItemStack, par3EntityPlayer, burst.getMana(), true)) {
-				if(!par2World.isRemote) {
-					par2World.playSoundAtEntity(par3EntityPlayer, "botania:manaBlaster", 0.6F, 1F);
-					par3EntityPlayer.addStat(ModAchievements.manaBlasterShoot, 1);
-					if(isSugoiKawaiiDesuNe(par1ItemStack))
-						par3EntityPlayer.addStat(ModAchievements.desuGun, 1);
-					par2World.spawnEntityInWorld(burst);
+			stack.setItemDamage(effCd);
+		} else if(stack.getItemDamage() == 0) {
+			EntityManaBurst burst = getBurst(player, stack, true);
+			if(burst != null && ManaItemHandler.requestManaExact(stack, player, burst.getMana(), true)) {
+				if(!world.isRemote) {
+					world.playSoundAtEntity(player, "botania:manaBlaster", 0.6F, 1F);
+					player.addStat(ModAchievements.manaBlasterShoot, 1);
+					if(isSugoiKawaiiDesuNe(stack))
+						player.addStat(ModAchievements.desuGun, 1);
+					world.spawnEntityInWorld(burst);
 				} else {
-					par3EntityPlayer.swingItem();
-					par3EntityPlayer.motionX -= burst.motionX * 0.1;
-					par3EntityPlayer.motionY -= burst.motionY * 0.3;
-					par3EntityPlayer.motionZ -= burst.motionZ * 0.1;
+					player.swingItem();
+					player.motionX -= burst.motionX * 0.1;
+					player.motionY -= burst.motionY * 0.3;
+					player.motionZ -= burst.motionZ * 0.1;
 				}
-				par1ItemStack.setItemDamage(effCd);
-			} else if(!par2World.isRemote)
-				par2World.playSoundAtEntity(par3EntityPlayer, "random.click", 0.6F, (1.0F + (par2World.rand.nextFloat() - par2World.rand.nextFloat()) * 0.2F) * 0.7F);
+				stack.setItemDamage(effCd);
+			} else if(!world.isRemote)
+				world.playSoundAtEntity(player, "random.click", 0.6F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 		}
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		int states = 3;
 		icons = new IIcon[states * 2];
 
 		for(int i = 0; i < states; i++) {
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
-			icons[states + i] = IconHelper.forName(par1IconRegister, "desuGun" + i);
+			icons[i] = IconHelper.forItem(register, this, i);
+			icons[states + i] = IconHelper.forName(register, "desuGun" + i);
 		}
 	}
 
@@ -156,11 +156,11 @@ public class ItemManaGun extends ItemMod implements IManaUsingItem {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-		if(par2 == 0)
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		if(renderPass == 0)
 			return 0xFFFFFF;
 
-		EntityManaBurst burst = getBurst(Minecraft.getMinecraft().thePlayer, par1ItemStack, false);
+		EntityManaBurst burst = getBurst(Minecraft.getMinecraft().thePlayer, stack, false);
 		Color color = new Color(burst == null ? 0x20FF20 : burst.getColor());
 
 		float mul = (float) (Math.sin((double) ClientTickHandler.ticksInGame / 5) * 0.15F);
@@ -180,7 +180,7 @@ public class ItemManaGun extends ItemMod implements IManaUsingItem {
 	}
 
 	@Override
-	public boolean doesContainerItemLeaveCraftingGrid(ItemStack p_77630_1_) {
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack stack) {
 		return false;
 	}
 
@@ -216,7 +216,7 @@ public class ItemManaGun extends ItemMod implements IManaUsingItem {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		boolean clip = hasClip(stack);
 		if(clip && !GuiScreen.isShiftKeyDown()) {
 			addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), infoList);
@@ -250,9 +250,9 @@ public class ItemManaGun extends ItemMod implements IManaUsingItem {
 	}
 
 	@Override
-	public String getItemStackDisplayName(ItemStack par1ItemStack) {
-		ItemStack lens = getLens(par1ItemStack);
-		return super.getItemStackDisplayName(par1ItemStack) + (lens == null ? "" : " (" + EnumChatFormatting.GREEN + lens.getDisplayName() + EnumChatFormatting.RESET + ")");
+	public String getItemStackDisplayName(ItemStack stack) {
+		ItemStack lens = getLens(stack);
+		return super.getItemStackDisplayName(stack) + (lens == null ? "" : " (" + EnumChatFormatting.GREEN + lens.getDisplayName() + EnumChatFormatting.RESET + ")");
 	}
 
 	public static boolean hasClip(ItemStack stack) {
@@ -335,9 +335,9 @@ public class ItemManaGun extends ItemMod implements IManaUsingItem {
 	}
 
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		if(par1ItemStack.isItemDamaged())
-			par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() - 1);
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(stack.isItemDamaged())
+			stack.setItemDamage(stack.getItemDamage() - 1);
 	}
 
 	@Override
