@@ -34,14 +34,14 @@ public class GuiButtonDoot extends GuiButtonLexicon {
 	}
 
 	@Override
-	public void drawButton(Minecraft par1Minecraft, int par2, int par3) {
-		field_146123_n = par2 >= xPosition && par3 >= yPosition && par2 < xPosition + width && par3 < yPosition + height;
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		field_146123_n = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 		int k = getHoverState(field_146123_n);
 
-		par1Minecraft.renderEngine.bindTexture(TextureMap.locationItemsTexture);
+		mc.renderEngine.bindTexture(TextureMap.locationItemsTexture);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		RenderItem.getInstance().renderItemIntoGUI(par1Minecraft.fontRenderer, par1Minecraft.renderEngine, new ItemStack(ModItems.cacophonium), xPosition, yPosition);
-		RenderItem.getInstance().renderItemIntoGUI(par1Minecraft.fontRenderer, par1Minecraft.renderEngine, new ItemStack(Items.fireworks), xPosition + 8, yPosition + 2);
+		RenderItem.getInstance().renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, new ItemStack(ModItems.cacophonium), xPosition, yPosition);
+		RenderItem.getInstance().renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, new ItemStack(Items.fireworks), xPosition + 8, yPosition + 2);
 
 		GL11.glDisable(GL11.GL_LIGHTING);
 

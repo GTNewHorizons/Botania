@@ -60,8 +60,8 @@ public class GuiLexiconChallenge extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	public void drawScreen(int par1, int par2, float par3) {
-		super.drawScreen(par1, par2, par3);
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		RenderHelper.enableGUIStandardItemLighting();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -83,15 +83,15 @@ public class GuiLexiconChallenge extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	protected void keyTyped(char par1, int par2) {
-		if(par2 == 14 && !notesEnabled) // Backspace
+	protected void keyTyped(char typedChar, int keyCode) {
+		if(keyCode == 14 && !notesEnabled) // Backspace
 			back();
-		else if(par2 == 199) { // Home
+		else if(keyCode == 199) { // Home
 			mc.displayGuiScreen(new GuiLexicon());
 			ClientTickHandler.notifyPageChange();
 		}
 
-		super.keyTyped(par1, par2);
+		super.keyTyped(typedChar, keyCode);
 	}
 
 	@Override
@@ -103,17 +103,17 @@ public class GuiLexiconChallenge extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton par1GuiButton) {
-		if(par1GuiButton.id >= BOOKMARK_START)
-			super.actionPerformed(par1GuiButton);
-		else if(par1GuiButton.id == 12) {
+	protected void actionPerformed(GuiButton button) {
+		if(button.id >= BOOKMARK_START)
+			super.actionPerformed(button);
+		else if(button.id == 12) {
 			mc.displayGuiScreen(parent);
 			ClientTickHandler.notifyPageChange();
-		} else if(par1GuiButton.id == 13) {
+		} else if(button.id == 13) {
 			challenge.complete = !challenge.complete;
 			setCompleteButtonTitle();
 			PersistentVariableHelper.saveSafe();
-		} else if(par1GuiButton.id == NOTES_BUTTON_ID)
+		} else if(button.id == NOTES_BUTTON_ID)
 			notesEnabled = !notesEnabled;
 	}
 

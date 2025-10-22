@@ -129,16 +129,16 @@ public class GuiLexiconEntry extends GuiLexicon implements IGuiLexiconEntry, IPa
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton par1GuiButton) {
+	protected void actionPerformed(GuiButton button) {
 		LexiconPage currentPage = entry.pages.get(page);
 		LexiconPage newPage;
 
-		if(par1GuiButton.id >= BOOKMARK_START)
-			handleBookmark(par1GuiButton);
-		else if(par1GuiButton.id == NOTES_BUTTON_ID)
+		if(button.id >= BOOKMARK_START)
+			handleBookmark(button);
+		else if(button.id == NOTES_BUTTON_ID)
 			notesEnabled = !notesEnabled;
 		else
-			switch(par1GuiButton.id) {
+			switch(button.id) {
 			case 0 :
 				currentPage.onClosed(this);
 				mc.displayGuiScreen(GuiScreen.isShiftKeyDown() ? new GuiLexicon() : parent);
@@ -177,7 +177,7 @@ public class GuiLexiconEntry extends GuiLexicon implements IGuiLexiconEntry, IPa
 			}
 
 		updatePageButtons();
-		currentPage.onActionPerformed(this, par1GuiButton);
+		currentPage.onActionPerformed(this, button);
 	}
 
 	public GuiLexiconEntry setFirstEntry() {
@@ -193,11 +193,11 @@ public class GuiLexiconEntry extends GuiLexicon implements IGuiLexiconEntry, IPa
 	}
 
 	@Override
-	public void drawScreen(int par1, int par2, float par3) {
-		super.drawScreen(par1, par2, par3);
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		LexiconPage page = entry.pages.get(this.page);
-		page.renderScreen(this, par1, par2);
+		page.renderScreen(this, mouseX, mouseY);
 	}
 
 	@Override
@@ -312,22 +312,22 @@ public class GuiLexiconEntry extends GuiLexicon implements IGuiLexiconEntry, IPa
 	}
 
 	@Override
-	protected void keyTyped(char par1, int par2) {
-		handleNoteKey(par1, par2);
+	protected void keyTyped(char typedChar, int keyCode) {
+		handleNoteKey(typedChar, keyCode);
 
 		LexiconPage page = entry.pages.get(this.page);
-		page.onKeyPressed(par1, par2);
+		page.onKeyPressed(typedChar, keyCode);
 
-		if(par2 == 1) {
+		if(keyCode == 1) {
 			mc.displayGuiScreen((GuiScreen)null);
 			mc.setIngameFocus();
-		} else if(par2 == 203 || par2 == 200 || par2 == 201) // Left, Up, Page Up
+		} else if(keyCode == 203 || keyCode == 200 || keyCode == 201) // Left, Up, Page Up
 			prevPage();
-		else if(par2 == 205 || par2 == 208 || par2 == 209) // Right, Down Page Down
+		else if(keyCode == 205 || keyCode == 208 || keyCode == 209) // Right, Down Page Down
 			nextPage();
-		if(par2 == 14 && !notesEnabled) // Backspace
+		if(keyCode == 14 && !notesEnabled) // Backspace
 			back();
-		else if(par2 == 199) { // Home
+		else if(keyCode == 199) { // Home
 			mc.displayGuiScreen(new GuiLexicon());
 			ClientTickHandler.notifyPageChange();
 		}

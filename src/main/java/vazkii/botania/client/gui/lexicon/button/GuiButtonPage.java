@@ -30,17 +30,17 @@ public class GuiButtonPage extends GuiButtonLexicon {
 	}
 
 	@Override
-	public void drawButton(Minecraft par1Minecraft, int par2, int par3) {
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		if(enabled) {
-			field_146123_n = par2 >= xPosition && par3 >= yPosition && par2 < xPosition + width && par3 < yPosition + height;
+			field_146123_n = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 			int k = getHoverState(field_146123_n);
 
-			par1Minecraft.renderEngine.bindTexture(GuiLexicon.texture);
+			mc.renderEngine.bindTexture(GuiLexicon.texture);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			drawTexturedModalRect(xPosition, yPosition, k == 2 ? 18 : 0, right ? 180 : 190, 18, 10);
 
 			if(k == 2)
-				RenderHelper.renderTooltip(par2, par3, Arrays.asList(StatCollector.translateToLocal(right ? "botaniamisc.nextPage" : "botaniamisc.prevPage")));
+				RenderHelper.renderTooltip(mouseX, mouseY, Arrays.asList(StatCollector.translateToLocal(right ? "botaniamisc.nextPage" : "botaniamisc.prevPage")));
 		}
 	}
 
