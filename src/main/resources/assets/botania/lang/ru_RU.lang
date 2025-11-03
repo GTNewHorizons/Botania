@@ -1247,7 +1247,7 @@ tile.botania:flower.nightshadePrime.name=Ночное начало
 tile.botania:flower.nightshadePrime.reference=Вы не должны держать это
 tile.botania:flower.nightshadeDecor.name=Декоративный Паслён
 tile.botania:flower.nightshadeDecor.reference=Призрачная подпись
-tile.botania:flower.arcanerose.name=Тайная роза
+tile.botania:flower.arcanerose.name=Роза тайн
 tile.botania:flower.arcanerose.reference=e=mc2
 tile.botania:flower.munchdew.name=Жвачник крапчатый
 tile.botania:flower.munchdew.reference=Ом-ном-ном
@@ -2557,10 +2557,10 @@ botania.page.thermalily3=Размещение &1Лавы&0 в мире, безу
 botania.page.thermalily1=&oОн мог бы съесть и солнце.
 
 # -- ROSA ARCANA
-botania.entry.arcanerose=Тайная роза
+botania.entry.arcanerose=Роза тайн
 botania.tagline.arcanerose=Мана из опыта
-botania.page.arcanerose0=&4Очки опыта&0 - это своего рода форма магии. &1Тайная роза&0 может высасывать опыт из игроков находящихся рядом с цветком, превращая его в &1ману&0. Но этот цветок не может поглощать сферы опыта.
-botania.page.arcanerose1=&oОсторожно! Этот цветок может стать умнее вас...
+botania.page.arcanerose0=&4Очки опыта&0 — это своего рода форма магии. &1Роза тайн&0 может взаимодействовать с этой магией и поглощать опыт игроков поблизости, превращая его в &1ману&0.<br>Она также может синтезировать &1ману&0 из выпавших сфер опыта и зачарованных предметов.
+botania.page.arcanerose1=&oОсторожно! Этот цветок может стать умнее вас&r...
 
 # -- MUNCHDEW
 botania.entry.munchdew=Жвачник крапчатый
