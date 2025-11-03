@@ -2544,8 +2544,8 @@ botania.page.thermalily1=&o0108 Style&r.
 # -- ROSA ARCANA
 botania.entry.arcanerose=Rosa Arcana
 botania.tagline.arcanerose=Mana pela experiência
-botania.page.arcanerose0=&4Pontos de Experiência&0 são uma forma de magia. A &1Rosa Arcana&0 pode aproveitar isso, absorvendo a experiência de jogadores ao redor dela, produzindo &1Mana&0.<br>A flor não consegue coletar orbes do chão, o jogador deve pegá-las antes.
-botania.page.arcanerose1=&oQuando essa carta é ativada, jogue uma moeda&r.
+botania.page.arcanerose0=&4Pontos de Experiência&0 possuem uma certa magia neles. A &1Rosa Arcana&0 pode fazer uso dessa magia, absorvendo a experiência de jogadores próximos e convertendo ela em &1Mana&0.$<br>Ela pode também sintetizar mana a partir de orbes de experiência e itens encantados no mundo.
+botania.page.arcanerose1=&oQuando essa flor é plantada, jogue uma moeda&r.
 
 # -- MUNCHDEW
 botania.entry.munchdew=Munchdew
