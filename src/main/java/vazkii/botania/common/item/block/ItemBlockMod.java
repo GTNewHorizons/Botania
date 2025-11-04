@@ -28,8 +28,8 @@ public class ItemBlockMod extends ItemBlock implements IPickupAchievement, ICraf
 	}
 
 	@Override
-	public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-		return getUnlocalizedNameInefficiently_(par1ItemStack).replaceAll("tile.", "tile." + LibResources.PREFIX_MOD);
+	public String getUnlocalizedNameInefficiently(ItemStack stack) {
+		return getUnlocalizedNameInefficiently_(stack).replaceAll("tile.", "tile." + LibResources.PREFIX_MOD);
 	}
 
 	public String getUnlocalizedNameInefficiently_(ItemStack stack) {

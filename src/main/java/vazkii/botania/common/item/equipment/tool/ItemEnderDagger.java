@@ -38,9 +38,9 @@ public class ItemEnderDagger extends ItemManasteelSword {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		iconFront = IconHelper.forItem(par1IconRegister, this, 0);
-		iconOverlay = IconHelper.forItem(par1IconRegister, this, 1);
+	public void registerIcons(IIconRegister register) {
+		iconFront = IconHelper.forItem(register, this, 0);
+		iconOverlay = IconHelper.forItem(register, this, 1);
 	}
 
 	@Override
@@ -54,28 +54,28 @@ public class ItemEnderDagger extends ItemManasteelSword {
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-		if(par2 == 0)
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		if(renderPass == 0)
 			return 0xFFFFFF;
 
 		return Color.HSBtoRGB(0.75F, 1F, 1.5F - (float) Math.min(1F, Math.sin(System.currentTimeMillis() / 100D) * 0.5 + 1.2F));
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.none;
 	}
 
 	@Override
-	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLivingBase, EntityLivingBase par3EntityLivingBase) {
-		if(par2EntityLivingBase instanceof EntityEnderman && par3EntityLivingBase instanceof EntityPlayer)
-			par2EntityLivingBase.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) par3EntityLivingBase), 20);
-		par1ItemStack.damageItem(1, par3EntityLivingBase);
+	public boolean hitEntity(ItemStack stack, EntityLivingBase victim, EntityLivingBase attacker) {
+		if(victim instanceof EntityEnderman && attacker instanceof EntityPlayer)
+			victim.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), 20);
+		stack.damageItem(1, attacker);
 		return true;
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity player, int par4, boolean par5) {
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
 		// NO-OP
 	}
 

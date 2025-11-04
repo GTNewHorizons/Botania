@@ -31,7 +31,7 @@ public class ItemBlockElven extends ItemBlockMod implements IElvenItem {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		if (ConfigHandler.noMobSpawnOnBlocks)
 			infoList.add(StatCollector.translateToLocal("nomobspawnsonthisblock.tip"));
 	}

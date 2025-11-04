@@ -48,19 +48,19 @@ public class ItemAncientWill extends ItemMod {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[SUBTYPES];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+			icons[i] = IconHelper.forItem(register, this, i);
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int dmg) {
-		return icons[Math.min(icons.length - 1, dmg)];
+	public IIcon getIconFromDamage(int meta) {
+		return icons[Math.min(icons.length - 1, meta)];
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.craftToAddWill"), infoList);
 		addStringToTooltip(StatCollector.translateToLocal("botania.armorset.will" + stack.getItemDamage() + ".shortDesc"), infoList);
 	}
@@ -70,8 +70,8 @@ public class ItemAncientWill extends ItemMod {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return super.getUnlocalizedName(par1ItemStack) + par1ItemStack.getItemDamage();
+	public String getUnlocalizedName(ItemStack stack) {
+		return super.getUnlocalizedName(stack) + stack.getItemDamage();
 	}
 
 

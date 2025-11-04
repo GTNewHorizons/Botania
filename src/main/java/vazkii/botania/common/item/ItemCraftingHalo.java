@@ -114,12 +114,12 @@ public class ItemCraftingHalo extends ItemMod implements ICraftAchievement {
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int pos, boolean equipped) {
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
 		boolean eqLastTick = wasEquipped(stack);
-		if(eqLastTick != equipped)
-			setEquipped(stack, equipped);
+		if(eqLastTick != isHeld)
+			setEquipped(stack, isHeld);
 
-		if(!equipped && entity instanceof EntityLivingBase) {
+		if(!isHeld && entity instanceof EntityLivingBase) {
 			int angles = 360;
 			int segAngles = angles / SEGMENTS;
 			float shift = segAngles / 2;

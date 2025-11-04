@@ -38,9 +38,8 @@ public class ItemUnholyCloak extends ItemHolyCloak {
 			int range = 6;
 			List<IMob> mobs = player.worldObj.getEntitiesWithinAABB(IMob.class, AxisAlignedBB.getBoundingBox(player.posX - range, player.posY - range, player.posZ - range, player.posX + range, player.posY + range, player.posZ + range));
 			for(IMob mob : mobs)
-				if(mob instanceof EntityLivingBase) {
-					EntityLivingBase entity = (EntityLivingBase) mob;
-					entity.attackEntityFrom(DamageSource.causePlayerDamage(player), event.ammount);
+				if(mob instanceof EntityLivingBase entity) {
+                    entity.attackEntityFrom(DamageSource.causePlayerDamage(player), event.ammount);
 				}
 
 			player.worldObj.playSoundAtEntity(player, "botania:unholyCloak", 1F, 1F);

@@ -89,43 +89,43 @@ public class ItemTerraPick extends ItemManasteelPick implements IManaItem, ISequ
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer p, List<String> list, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		String rankFormat = StatCollector.translateToLocal("botaniamisc.toolRank");
 		String rank = StatCollector.translateToLocal("botania.rank" + getLevel(stack));
-		list.add(String.format(rankFormat, rank).replaceAll("&", "\u00a7"));
+		infoList.add(String.format(rankFormat, rank).replaceAll("&", "\u00a7"));
 		if(getMana(stack) == Integer.MAX_VALUE)
-			list.add(EnumChatFormatting.RED + StatCollector.translateToLocal("botaniamisc.getALife"));
+			infoList.add(EnumChatFormatting.RED + StatCollector.translateToLocal("botaniamisc.getALife"));
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		getMana(par1ItemStack);
-		int level = getLevel(par1ItemStack);
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		getMana(stack);
+		int level = getLevel(stack);
 
 		if(level != 0) {
-			setEnabled(par1ItemStack, !isEnabled(par1ItemStack));
-			if(!par2World.isRemote)
-				par2World.playSoundAtEntity(par3EntityPlayer, "botania:terraPickMode", 0.5F, 0.4F);
+			setEnabled(stack, !isEnabled(stack));
+			if(!world.isRemote)
+				world.playSoundAtEntity(player, "botania:terraPickMode", 0.5F, 0.4F);
 		}
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int s, float sx, float sy, float sz) {
-		return player.isSneaking() && super.onItemUse(stack, player, world, x, y, z, s, sx, sy, sz);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		return player.isSneaking() && super.onItemUse(stack, player, world, x, y, z, side, subX, subY, subZ);
 	}
 
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		super.onUpdate(par1ItemStack, par2World, par3Entity, par4, par5);
-		if(isEnabled(par1ItemStack)) {
-			int level = getLevel(par1ItemStack);
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		super.onUpdate(stack, world, entity, invSlot, isHeld);
+		if(isEnabled(stack)) {
+			int level = getLevel(stack);
 
 			if(level == 0)
-				setEnabled(par1ItemStack, false);
-			else if(par3Entity instanceof EntityPlayer && !((EntityPlayer) par3Entity).isSwingInProgress)
-				addMana(par1ItemStack, -level);
+				setEnabled(stack, false);
+			else if(entity instanceof EntityPlayer && !((EntityPlayer) entity).isSwingInProgress)
+				addMana(stack, -level);
 		}
 	}
 
@@ -189,10 +189,10 @@ public class ItemTerraPick extends ItemManasteelPick implements IManaItem, ISequ
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		iconTool = IconHelper.forItem(par1IconRegister, this, 0);
-		iconOverlay = IconHelper.forItem(par1IconRegister, this, 1);
-		iconTipped = IconHelper.forItem(par1IconRegister, this, 2);
+	public void registerIcons(IIconRegister register) {
+		iconTool = IconHelper.forItem(register, this, 0);
+		iconOverlay = IconHelper.forItem(register, this, 1);
+		iconTipped = IconHelper.forItem(register, this, 2);
 	}
 
 	@Override
@@ -224,8 +224,8 @@ public class ItemTerraPick extends ItemManasteelPick implements IManaItem, ISequ
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-		if(par2 == 0 || !isEnabled(par1ItemStack))
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		if(renderPass == 0 || !isEnabled(stack))
 			return 0xFFFFFF;
 
 		return Color.HSBtoRGB(0.375F, (float) Math.min(1F, Math.sin(System.currentTimeMillis() / 200D) * 0.5 + 1F), 1F);
@@ -293,8 +293,8 @@ public class ItemTerraPick extends ItemManasteelPick implements IManaItem, ISequ
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
-		return par2ItemStack.getItem() == ModItems.manaResource && par2ItemStack.getItemDamage() == 4 ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+	public boolean getIsRepairable(ItemStack stack, ItemStack repairMaterial) {
+		return repairMaterial.getItem() == ModItems.manaResource && repairMaterial.getItemDamage() == 4 ? true : super.getIsRepairable(stack, repairMaterial);
 	}
 
 	@Override

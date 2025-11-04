@@ -56,21 +56,20 @@ public class ItemTornadoRod extends ItemMod implements IManaUsingItem, IAvatarWi
 	}
 
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean holding) {
-		if(par3Entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) par3Entity;
-			player.getCurrentEquippedItem();
-			boolean damaged = par1ItemStack.getItemDamage() > 0;
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(entity instanceof EntityPlayer player) {
+            player.getCurrentEquippedItem();
+			boolean damaged = stack.getItemDamage() > 0;
 
-			if(damaged && !isFlying(par1ItemStack))
-				par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() - 1);
+			if(damaged && !isFlying(stack))
+				stack.setItemDamage(stack.getItemDamage() - 1);
 
 			int max = FALL_MULTIPLIER * FLY_TIME;
-			if(par1ItemStack.getItemDamage() >= max) {
-				setFlying(par1ItemStack, false);
+			if(stack.getItemDamage() >= max) {
+				setFlying(stack, false);
 				player.stopUsingItem();
-			} else if(isFlying(par1ItemStack)) {
-				if(holding) {
+			} else if(isFlying(stack)) {
+				if(isHeld) {
 					player.fallDistance = 0F;
 					player.motionY = IManaProficiencyArmor.Helper.hasProficiency(player) ? 1.6 : 1.25;
 
@@ -79,9 +78,9 @@ public class ItemTornadoRod extends ItemMod implements IManaUsingItem, IAvatarWi
 						Botania.proxy.wispFX(player.worldObj, player.posX, player.posY, player.posZ, 0.25F, 0.25F, 0.25F, 0.35F + (float) Math.random() * 0.1F, 0.2F * (float) (Math.random() - 0.5), -0.01F * (float) Math.random(), 0.2F * (float) (Math.random() - 0.5));
 				}
 
-				par1ItemStack.setItemDamage(Math.min(max, par1ItemStack.getItemDamage() + FALL_MULTIPLIER));
-				if(par1ItemStack.getItemDamage() == MAX_DAMAGE)
-					setFlying(par1ItemStack, false);
+				stack.setItemDamage(Math.min(max, stack.getItemDamage() + FALL_MULTIPLIER));
+				if(stack.getItemDamage() == MAX_DAMAGE)
+					setFlying(stack, false);
 			}
 
 			if(damaged)
@@ -90,17 +89,17 @@ public class ItemTornadoRod extends ItemMod implements IManaUsingItem, IAvatarWi
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		int meta = par1ItemStack.getItemDamage();
-		if(meta != 0 || ManaItemHandler.requestManaExactForTool(par1ItemStack, par3EntityPlayer, COST, false)) {
-			par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		int meta = stack.getItemDamage();
+		if(meta != 0 || ManaItemHandler.requestManaExactForTool(stack, player, COST, false)) {
+			player.setItemInUse(stack, getMaxItemUseDuration(stack));
 			if(meta == 0) {
-				setFlying(par1ItemStack, true);
-				ManaItemHandler.requestManaExactForTool(par1ItemStack, par3EntityPlayer, COST, true);
+				setFlying(stack, true);
+				ManaItemHandler.requestManaExactForTool(stack, player, COST, true);
 			}
 		}
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	@Override
@@ -109,8 +108,8 @@ public class ItemTornadoRod extends ItemMod implements IManaUsingItem, IAvatarWi
 	}
 
 	@Override
-	public IIcon getIconIndex(ItemStack par1ItemStack) {
-		return isFlying(par1ItemStack) ? iconFlying : iconIdle;
+	public IIcon getIconIndex(ItemStack stack) {
+		return isFlying(stack) ? iconFlying : iconIdle;
 	}
 
 	@Override
@@ -119,19 +118,19 @@ public class ItemTornadoRod extends ItemMod implements IManaUsingItem, IAvatarWi
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.bow;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 720000;
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		iconIdle = IconHelper.forItem(par1IconRegister, this, 0);
-		iconFlying = IconHelper.forItem(par1IconRegister, this, 1);
+	public void registerIcons(IIconRegister register) {
+		iconIdle = IconHelper.forItem(register, this, 0);
+		iconFlying = IconHelper.forItem(register, this, 1);
 	}
 
 	public boolean isFlying(ItemStack stack) {

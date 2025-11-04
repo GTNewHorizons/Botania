@@ -87,11 +87,10 @@ public class ItemDice extends ItemRelic {
 	}
 
 	boolean hasRelicAlready(EntityPlayer player, int relic) {
-		if(relic < 0 || relic > 5 || !(player instanceof EntityPlayerMP))
+		if(relic < 0 || relic > 5 || !(player instanceof EntityPlayerMP mpPlayer))
 			return true;
 
-		EntityPlayerMP mpPlayer = (EntityPlayerMP) player;
-		Item item = relicStacks[relic].getItem();
+        Item item = relicStacks[relic].getItem();
 		IRelic irelic = (IRelic) item;
 		Achievement achievement = irelic.getBindAchievement();
 		return mpPlayer.func_147099_x().hasAchievementUnlocked(achievement);

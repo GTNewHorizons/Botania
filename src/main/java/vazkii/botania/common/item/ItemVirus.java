@@ -49,11 +49,10 @@ public class ItemVirus extends ItemMod {
 	}
 
 	@Override
-	public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, EntityLivingBase par3EntityLivingBase) {
-		if(par3EntityLivingBase instanceof EntityHorse) {
-			EntityHorse horse = (EntityHorse) par3EntityLivingBase;
-			if(horse.getHorseType() != 3 && horse.getHorseType() != 4 && horse.isTame()) {
-				horse.setHorseType(3 + par1ItemStack.getItemDamage());
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
+		if(entity instanceof EntityHorse horse) {
+            if(horse.getHorseType() != 3 && horse.getHorseType() != 4 && horse.isTame()) {
+				horse.setHorseType(3 + stack.getItemDamage());
 				BaseAttributeMap attributes = horse.getAttributeMap();
 				IAttributeInstance movementSpeed = attributes.getAttributeInstance(SharedMonsterAttributes.movementSpeed);
 				IAttributeInstance health = attributes.getAttributeInstance(SharedMonsterAttributes.maxHealth);
@@ -61,9 +60,9 @@ public class ItemVirus extends ItemMod {
 				movementSpeed.applyModifier(new AttributeModifier("Ermergerd Virus D:", movementSpeed.getBaseValue(), 0));
 				IAttributeInstance jumpHeight = attributes.getAttributeInstance(ReflectionHelper.<IAttribute, EntityHorse>getPrivateValue(EntityHorse.class, null, LibObfuscation.HORSE_JUMP_STRENGTH));
 				jumpHeight.applyModifier(new AttributeModifier("Ermergerd Virus D:", jumpHeight.getBaseValue() * 0.5, 0));
-				par2EntityPlayer.worldObj.playSound(par3EntityLivingBase.posX + 0.5D, par3EntityLivingBase.posY + 0.5D, par3EntityLivingBase.posZ + 0.5D, "mob.zombie.remedy", 1.0F + par3EntityLivingBase.worldObj.rand.nextFloat(), par3EntityLivingBase.worldObj.rand.nextFloat() * 0.7F + 1.3F, false);
+				player.worldObj.playSound(entity.posX + 0.5D, entity.posY + 0.5D, entity.posZ + 0.5D, "mob.zombie.remedy", 1.0F + entity.worldObj.rand.nextFloat(), entity.worldObj.rand.nextFloat() * 0.7F + 1.3F, false);
 
-				par1ItemStack.stackSize--;
+				stack.stackSize--;
 				return true;
 			}
 		}
@@ -75,9 +74,8 @@ public class ItemVirus extends ItemMod {
 		if(entity.ridingEntity instanceof EntityLivingBase)
 			entity = (EntityLivingBase) entity.ridingEntity;
 
-		if(entity instanceof EntityHorse && event.source == DamageSource.fall) {
-			EntityHorse horse = (EntityHorse) entity;
-			if((horse.getHorseType() == 3 || horse.getHorseType() == 4) && horse.isTame())
+		if(entity instanceof EntityHorse horse && event.source == DamageSource.fall) {
+            if((horse.getHorseType() == 3 || horse.getHorseType() == 4) && horse.isTame())
 				event.setCanceled(true);
 		}
 	}
@@ -91,25 +89,25 @@ public class ItemVirus extends ItemMod {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamage(int par1) {
-		return icons[Math.min(icons.length - 1, par1)];
+	public IIcon getIconFromDamage(int meta) {
+		return icons[Math.min(icons.length - 1, meta)];
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return getUnlocalizedNameLazy(par1ItemStack) + par1ItemStack.getItemDamage();
+	public String getUnlocalizedName(ItemStack stack) {
+		return getUnlocalizedNameLazy(stack) + stack.getItemDamage();
 	}
 
-	String getUnlocalizedNameLazy(ItemStack par1ItemStack) {
-		return super.getUnlocalizedName(par1ItemStack);
+	String getUnlocalizedNameLazy(ItemStack stack) {
+		return super.getUnlocalizedName(stack);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[SUBTYPES];
 		for(int i = 0; i < SUBTYPES; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+			icons[i] = IconHelper.forItem(register, this, i);
 	}
 
 	public class EventHandler{

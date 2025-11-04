@@ -22,17 +22,17 @@ public class ItemWaterRod extends ItemMod implements IManaUsingItem {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		if(ManaItemHandler.requestManaExactForTool(par1ItemStack, par2EntityPlayer, COST, false) && !par3World.provider.isHellWorld) {
-			ForgeDirection dir = ForgeDirection.getOrientation(par7);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		if(ManaItemHandler.requestManaExactForTool(stack, player, COST, false) && !world.provider.isHellWorld) {
+			ForgeDirection dir = ForgeDirection.getOrientation(side);
 
 			ItemStack stackToPlace = new ItemStack(Blocks.flowing_water);
-			stackToPlace.tryPlaceItemIntoWorld(par2EntityPlayer, par3World, par4, par5, par6, par7, par8, par9, par10);
+			stackToPlace.tryPlaceItemIntoWorld(player, world, x, y, z, side, subX, subY, subZ);
 
 			if(stackToPlace.stackSize == 0) {
-				ManaItemHandler.requestManaExactForTool(par1ItemStack, par2EntityPlayer, COST, true);
+				ManaItemHandler.requestManaExactForTool(stack, player, COST, true);
 				for(int i = 0; i < 6; i++)
-					Botania.proxy.sparkleFX(par3World, par4 + dir.offsetX + Math.random(), par5 + dir.offsetY + Math.random(), par6 + dir.offsetZ + Math.random(), 0.2F, 0.2F, 1F, 1F, 5);
+					Botania.proxy.sparkleFX(world, x + dir.offsetX + Math.random(), y + dir.offsetY + Math.random(), z + dir.offsetZ + Math.random(), 0.2F, 0.2F, 1F, 1F, 5);
 			}
 		}
 		return true;
