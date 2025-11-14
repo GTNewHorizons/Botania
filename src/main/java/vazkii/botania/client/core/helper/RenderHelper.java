@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -248,5 +249,16 @@ public final class RenderHelper {
 			}
 
 		return key;
+	}
+
+	public static void renderIcon(int x, int y, IIcon icon, int width, int height, int brightness) {
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.setBrightness(brightness);
+		tessellator.addVertexWithUV(x, y + height, 0, icon.getMinU(), icon.getMaxV());
+		tessellator.addVertexWithUV(x + width, y + height, 0, icon.getMaxU(), icon.getMaxV());
+		tessellator.addVertexWithUV(x + width, y, 0, icon.getMaxU(), icon.getMinV());
+		tessellator.addVertexWithUV(x, y, 0, icon.getMinU(), icon.getMinV());
+		tessellator.draw();
 	}
 }

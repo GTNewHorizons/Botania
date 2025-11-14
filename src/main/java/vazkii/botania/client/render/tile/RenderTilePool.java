@@ -30,6 +30,7 @@ import org.lwjgl.opengl.GL12;
 import vazkii.botania.api.mana.IPoolOverlayProvider;
 import vazkii.botania.client.core.handler.ClientTickHandler;
 import vazkii.botania.client.core.handler.MultiblockRenderHandler;
+import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.core.helper.ShaderHelper;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.client.model.ModelPool;
@@ -117,7 +118,7 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 					GL11.glRotatef(90F, 1F, 0F, 0F);
 					GL11.glScalef(s, s, s);
 
-					renderIcon(0, 0, overlay, 16, 16, 240);
+					RenderHelper.renderIcon(0, 0, overlay, 16, 16, 240);
 
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
 					GL11.glDisable(GL11.GL_BLEND);
@@ -138,7 +139,7 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 			GL11.glScalef(s, s, s);
 
 			ShaderHelper.useShader(ShaderHelper.manaPool);
-			renderIcon(0, 0, BlockPool.manaIcon, 16, 16, 240);
+			RenderHelper.renderIcon(0, 0, BlockPool.manaIcon, 16, 16, 240);
 			ShaderHelper.releaseShader();
 
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -151,16 +152,4 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 		forceMana = false;
 		forceManaNumber = -1;
 	}
-
-	public void renderIcon(int par1, int par2, IIcon par3Icon, int par4, int par5, int brightness) {
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.setBrightness(brightness);
-		tessellator.addVertexWithUV(par1 + 0, par2 + par5, 0, par3Icon.getMinU(), par3Icon.getMaxV());
-		tessellator.addVertexWithUV(par1 + par4, par2 + par5, 0, par3Icon.getMaxU(), par3Icon.getMaxV());
-		tessellator.addVertexWithUV(par1 + par4, par2 + 0, 0, par3Icon.getMaxU(), par3Icon.getMinV());
-		tessellator.addVertexWithUV(par1 + 0, par2 + 0, 0, par3Icon.getMinU(), par3Icon.getMinV());
-		tessellator.draw();
-	}
-
 }

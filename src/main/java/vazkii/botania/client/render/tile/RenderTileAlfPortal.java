@@ -20,6 +20,7 @@ import net.minecraft.util.IIcon;
 import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.client.core.handler.ClientTickHandler;
+import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.common.block.BlockAlfPortal;
 import vazkii.botania.common.block.tile.TileAlfPortal;
 
@@ -53,11 +54,11 @@ public class RenderTileAlfPortal extends TileEntitySpecialRenderer {
 
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_LIGHTING);
-		renderIcon(0, 0, BlockAlfPortal.portalTex, 3, 3, 240);
+		RenderHelper.renderIcon(0, 0, BlockAlfPortal.portalTex, 3, 3, 240);
 
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glTranslated(0F, 0F, 0.5F);
-		renderIcon(0, 0, BlockAlfPortal.portalTex, 3, 3, 240);
+		RenderHelper.renderIcon(0, 0, BlockAlfPortal.portalTex, 3, 3, 240);
 
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -66,16 +67,4 @@ public class RenderTileAlfPortal extends TileEntitySpecialRenderer {
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glPopMatrix();
 	}
-
-	public void renderIcon(int par1, int par2, IIcon par3Icon, int par4, int par5, int brightness) {
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.setBrightness(brightness);
-		tessellator.addVertexWithUV(par1 + 0, par2 + par5, 0, par3Icon.getMinU(), par3Icon.getMaxV());
-		tessellator.addVertexWithUV(par1 + par4, par2 + par5, 0, par3Icon.getMaxU(), par3Icon.getMaxV());
-		tessellator.addVertexWithUV(par1 + par4, par2 + 0, 0, par3Icon.getMaxU(), par3Icon.getMinV());
-		tessellator.addVertexWithUV(par1 + 0, par2 + 0, 0, par3Icon.getMinU(), par3Icon.getMinV());
-		tessellator.draw();
-	}
-
 }

@@ -21,6 +21,7 @@ import net.minecraft.util.IIcon;
 import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.client.core.handler.ClientTickHandler;
+import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.core.helper.ShaderHelper;
 import vazkii.botania.common.block.mana.BlockTerraPlate;
 import vazkii.botania.common.block.tile.TileTerraPlate;
@@ -57,7 +58,7 @@ public class RenderTileTerraPlate extends TileEntitySpecialRenderer {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 
 		ShaderHelper.useShader(ShaderHelper.terraPlateRune);
-		renderIcon(0, 0, BlockTerraPlate.overlay, 1, 1, 240);
+		RenderHelper.renderIcon(0, 0, BlockTerraPlate.overlay, 1, 1, 240);
 		ShaderHelper.releaseShader();
 
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -65,16 +66,4 @@ public class RenderTileTerraPlate extends TileEntitySpecialRenderer {
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glPopMatrix();
 	}
-
-	public void renderIcon(int par1, int par2, IIcon par3Icon, int par4, int par5, int brightness) {
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.setBrightness(brightness);
-		tessellator.addVertexWithUV(par1 + 0, par2 + par5, 0, par3Icon.getMinU(), par3Icon.getMaxV());
-		tessellator.addVertexWithUV(par1 + par4, par2 + par5, 0, par3Icon.getMaxU(), par3Icon.getMaxV());
-		tessellator.addVertexWithUV(par1 + par4, par2 + 0, 0, par3Icon.getMaxU(), par3Icon.getMinV());
-		tessellator.addVertexWithUV(par1 + 0, par2 + 0, 0, par3Icon.getMinU(), par3Icon.getMinV());
-		tessellator.draw();
-	}
-
 }
