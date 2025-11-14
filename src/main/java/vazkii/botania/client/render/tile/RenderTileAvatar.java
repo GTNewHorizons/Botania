@@ -42,13 +42,13 @@ public class RenderTileAvatar extends TileEntitySpecialRenderer {
 	private static final ModelAvatar model = new ModelAvatar();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float pticks) {
-		TileAvatar avatar = (TileAvatar) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TileAvatar avatar = (TileAvatar) tileEntity;
 
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		int meta = avatar.getWorldObj() != null ? avatar.getBlockMetadata() : 0;

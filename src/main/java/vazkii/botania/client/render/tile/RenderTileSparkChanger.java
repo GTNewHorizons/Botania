@@ -28,13 +28,13 @@ import vazkii.botania.common.block.tile.TileSparkChanger;
 public class RenderTileSparkChanger extends TileEntitySpecialRenderer {
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float pticks) {
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
 		GL11.glPushMatrix();
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 		GL11.glRotated(90F, 1F, 0F, 0F);
 		GL11.glTranslatef(0.8F, 0.2F, -0.22F);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		ItemStack stack = ((TileSparkChanger) tileentity).getStackInSlot(0);
+		ItemStack stack = ((TileSparkChanger) tileEntity).getStackInSlot(0);
 		if(stack != null) {
 			GL11.glPushMatrix();
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);

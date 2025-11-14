@@ -47,12 +47,12 @@ public class RenderTileSpreader extends TileEntitySpecialRenderer {
 	private static final ModelSpreader model = new ModelSpreader();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float ticks) {
-		TileSpreader spreader = (TileSpreader) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TileSpreader spreader = (TileSpreader) tileEntity;
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 
 		GL11.glTranslatef(0.5F, 1.5F, 0.5F);
 		GL11.glRotatef(spreader.rotationX + 90F, 0F, 1F, 0F);
@@ -67,7 +67,7 @@ public class RenderTileSpreader extends TileEntitySpecialRenderer {
 		Minecraft.getMinecraft().renderEngine.bindTexture(r);
 		GL11.glScalef(1F, -1F, -1F);
 
-		double time = ClientTickHandler.ticksInGame + ticks;
+		double time = ClientTickHandler.ticksInGame + partialTicks;
 
 		if(spreader.isULTRA_SPREADER()) {
 			Color color = Color.getHSBColor((float) ((time * 5 + new Random(spreader.xCoord ^ spreader.yCoord ^ spreader.zCoord).nextInt(10000)) % 360) / 360F, 0.4F, 0.9F);
@@ -77,7 +77,7 @@ public class RenderTileSpreader extends TileEntitySpecialRenderer {
 		GL11.glColor3f(1F, 1F, 1F);
 
 		GL11.glPushMatrix();
-		double worldTicks = tileentity.getWorldObj() == null ? 0 : time;
+		double worldTicks = tileEntity.getWorldObj() == null ? 0 : time;
 		GL11.glRotatef((float) worldTicks % 360, 0F, 1F, 0F);
 		GL11.glTranslatef(0F, (float) Math.sin(worldTicks / 20.0) * 0.05F, 0F);
 		model.renderCube();

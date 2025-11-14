@@ -29,13 +29,13 @@ import vazkii.botania.common.block.tile.TileTerraPlate;
 public class RenderTileTerraPlate extends TileEntitySpecialRenderer {
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float f) {
-		TileTerraPlate plate = (TileTerraPlate) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TileTerraPlate plate = (TileTerraPlate) tileEntity;
 
 		float max = TileTerraPlate.MAX_MANA / 10F;
 		float alphaMod = Math.min(max, plate.getCurrentMana()) / max;
 		GL11.glPushMatrix();
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 
 		GL11.glRotated(90F, 1F, 0F, 0F);
 		GL11.glTranslatef(0F, 0F, -3F / 16F - 0.001F);
@@ -44,7 +44,7 @@ public class RenderTileTerraPlate extends TileEntitySpecialRenderer {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		float alpha = (float) ((Math.sin((ClientTickHandler.ticksInGame + f) / 8D) + 1D) / 5D + 0.6D) * alphaMod;
+		float alpha = (float) ((Math.sin((ClientTickHandler.ticksInGame + partialTicks) / 8D) + 1D) / 5D + 0.6D) * alphaMod;
 		if(ShaderHelper.useShaders())
 			GL11.glColor4f(1F, 1F, 1F, alpha);
 		else {
@@ -52,7 +52,7 @@ public class RenderTileTerraPlate extends TileEntitySpecialRenderer {
 			int lightmapX = light % 65536;
 			int lightmapY = light / 65536;
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightmapX, lightmapY);
-			GL11.glColor4f(0.6F + (float) ((Math.cos((ClientTickHandler.ticksInGame + f) / 6D) + 1D) / 5D), 0.1F, 0.9F, alpha);
+			GL11.glColor4f(0.6F + (float) ((Math.cos((ClientTickHandler.ticksInGame + partialTicks) / 6D) + 1D) / 5D), 0.1F, 0.9F, alpha);
 		}
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);

@@ -32,20 +32,20 @@ public class RenderTileTeruTeruBozu extends TileEntitySpecialRenderer {
 	ModelTeruTeruBozu model = new ModelTeruTeruBozu();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float f) {
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 		Minecraft.getMinecraft().renderEngine.bindTexture(ClientProxy.dootDoot ? textureHalloween : texture);
 		GL11.glRotatef(180F, 1F, 0F, 0F);
-		double time = Botania.proxy.getWorldElapsedTicks() + f;
-		boolean hasWorld = tileentity.getWorldObj() != null;
+		double time = Botania.proxy.getWorldElapsedTicks() + partialTicks;
+		boolean hasWorld = tileEntity.getWorldObj() != null;
 		if(hasWorld)
-			time += new Random(tileentity.xCoord ^ tileentity.yCoord ^ tileentity.zCoord).nextInt(1000);
+			time += new Random(tileEntity.xCoord ^ tileEntity.yCoord ^ tileEntity.zCoord).nextInt(1000);
 
 		GL11.glTranslatef(0.5F, -1.25F + (hasWorld ? (float) Math.sin(time * 0.01F) * 0.05F : 0F), -0.5F);
 		if(hasWorld) {

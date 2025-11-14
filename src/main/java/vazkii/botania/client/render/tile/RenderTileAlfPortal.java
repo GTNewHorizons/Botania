@@ -27,14 +27,14 @@ import vazkii.botania.common.block.tile.TileAlfPortal;
 public class RenderTileAlfPortal extends TileEntitySpecialRenderer {
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float f) {
-		TileAlfPortal portal = (TileAlfPortal) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TileAlfPortal portal = (TileAlfPortal) tileEntity;
 		int meta = portal.getBlockMetadata();
 		if(meta == 0)
 			return;
 
 		GL11.glPushMatrix();
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 		GL11.glTranslatef(-1F, 1F, 0.25F);
 
 		GL11.glEnable(GL11.GL_BLEND);
@@ -42,7 +42,7 @@ public class RenderTileAlfPortal extends TileEntitySpecialRenderer {
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glEnable(GL11.GL_CULL_FACE);
-		float alpha = (float) Math.min(1F, (Math.sin((ClientTickHandler.ticksInGame + f) / 8D) + 1D) / 7D + 0.6D) * (Math.min(60, portal.ticksOpen) / 60F) * 0.5F;
+		float alpha = (float) Math.min(1F, (Math.sin((ClientTickHandler.ticksInGame + partialTicks) / 8D) + 1D) / 7D + 0.6D) * (Math.min(60, portal.ticksOpen) / 60F) * 0.5F;
 		GL11.glColor4f(1F, 1F, 1F, alpha);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);

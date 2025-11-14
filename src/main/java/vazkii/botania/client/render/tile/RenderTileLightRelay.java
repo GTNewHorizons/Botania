@@ -28,9 +28,9 @@ import vazkii.botania.common.block.BlockLightRelay;
 public class RenderTileLightRelay extends TileEntitySpecialRenderer {
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float pticks) {
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
 		Minecraft mc = Minecraft.getMinecraft();
-		IIcon iicon = tile.getBlockMetadata() > 0 ? BlockLightRelay.worldIconRed : BlockLightRelay.worldIcon;
+		IIcon iicon = tileEntity.getBlockMetadata() > 0 ? BlockLightRelay.worldIconRed : BlockLightRelay.worldIcon;
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y + 0.3, z + 0.5);
@@ -39,7 +39,7 @@ public class RenderTileLightRelay extends TileEntitySpecialRenderer {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.05F);
 
-		double time = ClientTickHandler.ticksInGame + pticks;
+		double time = ClientTickHandler.ticksInGame + partialTicks;
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 
 		float scale = 0.75F;
