@@ -364,12 +364,12 @@ public class GuiLexiconIndex extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	protected void mouseClicked(int par1, int par2, int par3) {
-		super.mouseClicked(par1, par2, par3);
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 
-		searchField.mouseClicked(par1, par2, par3);
-		fx = par1;
-		switch(par3) {
+		searchField.mouseClicked(mouseX, mouseY, mouseButton);
+		fx = mouseX;
+		switch(mouseButton) {
 		case 1:
 			back();
 			break;

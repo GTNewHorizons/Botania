@@ -280,11 +280,11 @@ public class GuiLexiconEntry extends GuiLexicon implements IGuiLexiconEntry, IPa
 	}
 
 	@Override
-	protected void mouseClicked(int par1, int par2, int par3) {
-		super.mouseClicked(par1, par2, par3);
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 
-		fx = par1;
-		switch(par3) {
+		fx = mouseX;
+		switch(mouseButton) {
 		case 1:
 			back();
 			break;

@@ -13,8 +13,8 @@ public class GuiButtonBookmark extends GuiButtonLexicon {
 
 	GuiLexicon gui;
 
-	public GuiButtonBookmark(int par1, int par2, int par3, GuiLexicon gui, String str) {
-		super(par1, par2, par3, gui.bookmarkWidth(str) + 5, 11, str);
+	public GuiButtonBookmark(int id, int xPos, int yPos, GuiLexicon gui, String text) {
+		super(id, xPos, yPos, gui.bookmarkWidth(text) + 5, 11, text);
 		this.gui = gui;
 	}
 

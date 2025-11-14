@@ -22,8 +22,8 @@ public class GuiButtonChallengeInfo extends GuiButtonLexicon {
 
 	GuiLexicon gui;
 
-	public GuiButtonChallengeInfo(int par1, int par2, int par3, String str, GuiLexicon gui) {
-		super(par1, par2, par3, gui.bookmarkWidth(str) + 5, 11, str);
+	public GuiButtonChallengeInfo(int id, int xPos, int yPos, String text, GuiLexicon gui) {
+		super(id, xPos, yPos, gui.bookmarkWidth(text) + 5, 11, text);
 		this.gui = gui;
 	}
 

@@ -24,8 +24,8 @@ import vazkii.botania.client.gui.lexicon.GuiLexicon;
 
 public class GuiButtonShare extends GuiButtonLexicon {
 
-	public GuiButtonShare(int par1, int par2, int par3) {
-		super(par1, par2, par3, 10, 12, "");
+	public GuiButtonShare(int id, int xPos, int yPos) {
+		super(id, xPos, yPos, 10, 12, "");
 	}
 
 	@Override

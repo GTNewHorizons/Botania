@@ -39,8 +39,8 @@ public class GuiButtonInvisible extends GuiButtonLexicon {
 	boolean enableDog = false;
 	double dogPos = 0;
 
-	public GuiButtonInvisible(GuiLexiconIndex gui, int par1, int par2, int par3, int par4, int par5, String par6Str) {
-		super(par1, par2, par3, par4, par5, par6Str);
+	public GuiButtonInvisible(GuiLexiconIndex gui, int id, int xPos, int yPos, int width, int height, String text) {
+		super(id, xPos, yPos, width, height, text);
 		this.gui = gui;
 	}
 	

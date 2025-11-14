@@ -23,8 +23,8 @@ import vazkii.botania.client.gui.lexicon.GuiLexicon;
 
 public class GuiButtonBack extends GuiButtonLexicon {
 
-	public GuiButtonBack(int par1, int par2, int par3) {
-		super(par1, par2, par3, 18, 9, "");
+	public GuiButtonBack(int id, int xPos, int yPos) {
+		super(id, xPos, yPos, 18, 9, "");
 	}
 
 	@Override
