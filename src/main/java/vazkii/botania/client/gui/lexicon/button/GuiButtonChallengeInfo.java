@@ -22,15 +22,15 @@ public class GuiButtonChallengeInfo extends GuiButtonLexicon {
 
 	GuiLexicon gui;
 
-	public GuiButtonChallengeInfo(int par1, int par2, int par3, String str, GuiLexicon gui) {
-		super(par1, par2, par3, gui.bookmarkWidth(str) + 5, 11, str);
+	public GuiButtonChallengeInfo(int id, int xPos, int yPos, String text, GuiLexicon gui) {
+		super(id, xPos, yPos, gui.bookmarkWidth(text) + 5, 11, text);
 		this.gui = gui;
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int par2, int par3) {
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		gui.drawBookmark(xPosition, yPosition, displayString, false);
-		field_146123_n = par2 >= xPosition && par3 >= yPosition && par2 < xPosition + width && par3 < yPosition + height;
+		field_146123_n = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 		int k = getHoverState(field_146123_n);
 
 		List<String> tooltip = new ArrayList<>();
@@ -38,7 +38,7 @@ public class GuiButtonChallengeInfo extends GuiButtonLexicon {
 
 		int tooltipY = (tooltip.size() + 1) * 5;
 		if(k == 2)
-			RenderHelper.renderTooltip(par2, par3 + tooltipY, tooltip);
+			RenderHelper.renderTooltip(mouseX, mouseY + tooltipY, tooltip);
 	}
 
 }

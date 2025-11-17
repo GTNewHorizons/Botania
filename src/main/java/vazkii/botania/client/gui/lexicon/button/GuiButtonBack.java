@@ -23,24 +23,24 @@ import vazkii.botania.client.gui.lexicon.GuiLexicon;
 
 public class GuiButtonBack extends GuiButtonLexicon {
 
-	public GuiButtonBack(int par1, int par2, int par3) {
-		super(par1, par2, par3, 18, 9, "");
+	public GuiButtonBack(int id, int xPos, int yPos) {
+		super(id, xPos, yPos, 18, 9, "");
 	}
 
 	@Override
-	public void drawButton(Minecraft par1Minecraft, int par2, int par3) {
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		if(enabled) {
-			field_146123_n = par2 >= xPosition && par3 >= yPosition && par2 < xPosition + width && par3 < yPosition + height;
+			field_146123_n = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 			int k = getHoverState(field_146123_n);
 
-			par1Minecraft.renderEngine.bindTexture(GuiLexicon.texture);
+			mc.renderEngine.bindTexture(GuiLexicon.texture);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			drawTexturedModalRect(xPosition, yPosition, 36, k == 2 ? 180 : 189, 18, 9);
 
 			List<String> tooltip = getTooltip();
 			int tooltipY = (tooltip.size() - 1) * 10;
 			if(k == 2)
-				RenderHelper.renderTooltip(par2, par3 + tooltipY, tooltip);
+				RenderHelper.renderTooltip(mouseX, mouseY + tooltipY, tooltip);
 		}
 	}
 

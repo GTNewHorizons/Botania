@@ -12,12 +12,12 @@ package vazkii.botania.client.core.helper;
 
 public final class FontHelper {
 
-	public static boolean isFormatColor(char par0) {
-		return par0 >= 48 && par0 <= 57 || par0 >= 97 && par0 <= 102 || par0 >= 65 && par0 <= 70;
+	public static boolean isFormatColor(char letter) {
+		return letter >= 48 && letter <= 57 || letter >= 97 && letter <= 102 || letter >= 65 && letter <= 70;
 	}
 
-	public static boolean isFormatSpecial(char par0) {
-		return par0 >= 107 && par0 <= 111 || par0 >= 75 && par0 <= 79 || par0 == 114 || par0 == 82;
+	public static boolean isFormatSpecial(char letter) {
+		return letter >= 107 && letter <= 111 || letter >= 75 && letter <= 79 || letter == 114 || letter == 82;
 	}
 
 	public static String getFormatFromString(String par0Str) {

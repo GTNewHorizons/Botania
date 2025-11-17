@@ -20,8 +20,8 @@ public class EntitySignalFlare extends Entity {
 
 	private static final String COLOR_TAG = "color";
 
-	public EntitySignalFlare(World par1World) {
-		super(par1World);
+	public EntitySignalFlare(World world) {
+		super(world);
 		setSize(0F, 0F);
 		dataWatcher.addObject(30, 0);
 		dataWatcher.setObjectWatched(30);

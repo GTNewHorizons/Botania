@@ -61,12 +61,12 @@ public class BlockReeds extends BlockRotatedPillar implements ILexiconable {
 	}
 
 	@Override
-	protected IIcon getSideIcon(int p_150163_1_) {
+	protected IIcon getSideIcon(int lowBits) {
 		return blockIcon;
 	}
 
 	@Override
-	protected IIcon getTopIcon(int p_150161_1_) {
+	protected IIcon getTopIcon(int lowBits) {
 		return topIcon;
 	}
 

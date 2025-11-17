@@ -36,8 +36,8 @@ public class RenderTileCorporeaCrystalCube extends TileEntitySpecialRenderer {
 	EntityItem entity = null;
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float f) {
-		TileCorporeaCrystalCube cube = (TileCorporeaCrystalCube) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TileCorporeaCrystalCube cube = (TileCorporeaCrystalCube) tileEntity;
 
 		if(entity == null)
 			entity = new EntityItem(cube.getWorldObj(), cube.xCoord, cube.yCoord, cube.zCoord, new ItemStack(Blocks.stone));
@@ -46,8 +46,8 @@ public class RenderTileCorporeaCrystalCube extends TileEntitySpecialRenderer {
 		ItemStack stack = cube.getRequestTarget();
 		entity.setEntityItemStack(stack);
 
-		double time = ClientTickHandler.ticksInGame + f;
-		double worldTicks = tileentity.getWorldObj() == null ? 0 : time;
+		double time = ClientTickHandler.ticksInGame + partialTicks;
+		double worldTicks = tileEntity.getWorldObj() == null ? 0 : time;
 
 		Minecraft mc = Minecraft.getMinecraft();
 		GL11.glPushMatrix();
@@ -55,7 +55,7 @@ public class RenderTileCorporeaCrystalCube extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 		mc.renderEngine.bindTexture(texture);
 		GL11.glTranslatef(0.5F, 1.5F, 0.5F);
 		GL11.glScalef(1F, -1F, -1F);
@@ -67,7 +67,7 @@ public class RenderTileCorporeaCrystalCube extends TileEntitySpecialRenderer {
 			GL11.glTranslatef(0F, 0.8F, 0F);
 			GL11.glScalef(s, s, s);
 			GL11.glRotatef(180F, 0F, 0F, 1F);
-			((Render) RenderManager.instance.entityRenderMap.get(EntityItem.class)).doRender(entity, 0, 0, 0, 1F, f);
+			((Render) RenderManager.instance.entityRenderMap.get(EntityItem.class)).doRender(entity, 0, 0, 0, 1F, partialTicks);
 			GL11.glPopMatrix();
 			mc.renderEngine.bindTexture(texture);
 		}

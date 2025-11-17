@@ -43,18 +43,18 @@ public class RenderTileBrewery extends TileEntitySpecialRenderer {
 	public static boolean rotate = true;
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float f) {
-		brewery = (TileBrewery) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		brewery = (TileBrewery) tileEntity;
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		GL11.glScalef(1F, -1F, -1F);
 		GL11.glTranslatef(0.5F, -1.5F, -0.5F);
 
-		double time = ClientTickHandler.ticksInGame + f;
+		double time = ClientTickHandler.ticksInGame + partialTicks;
 		if(!rotate)
 			time = -1;
 

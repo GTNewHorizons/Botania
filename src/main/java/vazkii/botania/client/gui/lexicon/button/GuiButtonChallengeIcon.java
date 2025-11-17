@@ -34,20 +34,20 @@ public class GuiButtonChallengeIcon extends GuiButtonLexicon {
 	}
 
 	@Override
-	public void drawButton(Minecraft par1Minecraft, int par2, int par3) {
-		field_146123_n = par2 >= xPosition && par3 >= yPosition && par2 < xPosition + width && par3 < yPosition + height;
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		field_146123_n = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 		int k = getHoverState(field_146123_n);
 
 		RenderHelper.enableGUIStandardItemLighting();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-		RenderItem.getInstance().renderItemIntoGUI(par1Minecraft.fontRenderer, par1Minecraft.renderEngine, challenge.icon, xPosition, yPosition);
+		RenderItem.getInstance().renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, challenge.icon, xPosition, yPosition);
 		RenderHelper.disableStandardItemLighting();
 		GL11.glEnable(GL11.GL_BLEND);
 
 		if(challenge.complete) {
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			par1Minecraft.fontRenderer.drawStringWithShadow("\u2714", xPosition + 10, yPosition + 9, 0x004C00);
-			par1Minecraft.fontRenderer.drawStringWithShadow("\u2714", xPosition + 10, yPosition + 8, 0x0BD20D);
+			mc.fontRenderer.drawStringWithShadow("\u2714", xPosition + 10, yPosition + 9, 0x004C00);
+			mc.fontRenderer.drawStringWithShadow("\u2714", xPosition + 10, yPosition + 8, 0x0BD20D);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 		}
 
@@ -57,7 +57,7 @@ public class GuiButtonChallengeIcon extends GuiButtonLexicon {
 
 		int tooltipY = (tooltip.size() - 1) * 10;
 		if(k == 2)
-			vazkii.botania.client.core.helper.RenderHelper.renderTooltip(par2, par3 + tooltipY, tooltip);
+			vazkii.botania.client.core.helper.RenderHelper.renderTooltip(mouseX, mouseY + tooltipY, tooltip);
 	}
 
 }

@@ -54,8 +54,8 @@ public class GuiLexiconChallengesList extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	public void drawScreen(int par1, int par2, float par3) {
-		super.drawScreen(par1, par2, par3);
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		boolean unicode = fontRendererObj.getUnicodeFlag();
 		fontRendererObj.setUnicodeFlag(true);
@@ -72,36 +72,36 @@ public class GuiLexiconChallengesList extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	protected void keyTyped(char par1, int par2) {
-		if(par2 == 14 && !notesEnabled) // Backspace
+	protected void keyTyped(char typedChar, int keyCode) {
+		if(keyCode == 14 && !notesEnabled) // Backspace
 			back();
-		else if(par2 == 199) { // Home
+		else if(keyCode == 199) { // Home
 			mc.displayGuiScreen(new GuiLexicon());
 			ClientTickHandler.notifyPageChange();
 		}
 
-		super.keyTyped(par1, par2);
+		super.keyTyped(typedChar, keyCode);
 	}
 
 	@Override
-	protected void mouseClicked(int par1, int par2, int par3) {
-		super.mouseClicked(par1, par2, par3);
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 
-		if(par3 == 1)
+		if(mouseButton == 1)
 			back();
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton par1GuiButton) {
-		if(par1GuiButton.id >= BOOKMARK_START)
-			super.actionPerformed(par1GuiButton);
-		else if(par1GuiButton.id == 12) {
+	protected void actionPerformed(GuiButton button) {
+		if(button.id >= BOOKMARK_START)
+			super.actionPerformed(button);
+		else if(button.id == 12) {
 			mc.displayGuiScreen(parent);
 			ClientTickHandler.notifyPageChange();
-		} else if(par1GuiButton instanceof GuiButtonChallengeIcon) {
-			GuiButtonChallengeIcon cbutton = (GuiButtonChallengeIcon) par1GuiButton;
+		} else if(button instanceof GuiButtonChallengeIcon) {
+			GuiButtonChallengeIcon cbutton = (GuiButtonChallengeIcon) button;
 			mc.displayGuiScreen(new GuiLexiconChallenge(this, cbutton.challenge));
-		} else if(par1GuiButton.id == NOTES_BUTTON_ID)
+		} else if(button.id == NOTES_BUTTON_ID)
 			notesEnabled = !notesEnabled;
 	}
 

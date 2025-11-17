@@ -30,6 +30,7 @@ import org.lwjgl.opengl.GL12;
 import vazkii.botania.api.mana.IPoolOverlayProvider;
 import vazkii.botania.client.core.handler.ClientTickHandler;
 import vazkii.botania.client.core.handler.MultiblockRenderHandler;
+import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.core.helper.ShaderHelper;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.client.model.ModelPool;
@@ -50,8 +51,8 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 	public static int forceManaNumber = -1;
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float f) {
-		TilePool pool = (TilePool) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TilePool pool = (TilePool) tileEntity;
 
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_BLEND);
@@ -59,10 +60,10 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		float a = MultiblockRenderHandler.rendering ? 0.6F : 1F;
 		GL11.glColor4f(1F, 1F, 1F, a);
-		GL11.glTranslated(d0, d1, d2);
-		boolean inf = tileentity.getWorldObj() == null ? forceMeta == 1 : tileentity.getBlockMetadata() == 1;
-		boolean dil = tileentity.getWorldObj() == null ? forceMeta == 2 : tileentity.getBlockMetadata() == 2;
-		boolean fab = tileentity.getWorldObj() == null ? forceMeta == 3 : tileentity.getBlockMetadata() == 3;
+		GL11.glTranslated(x, y, z);
+		boolean inf = tileEntity.getWorldObj() == null ? forceMeta == 1 : tileEntity.getBlockMetadata() == 1;
+		boolean dil = tileEntity.getWorldObj() == null ? forceMeta == 2 : tileEntity.getBlockMetadata() == 2;
+		boolean fab = tileEntity.getWorldObj() == null ? forceMeta == 3 : tileEntity.getBlockMetadata() == 3;
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(inf ? textureInf : dil ? textureDil : texture);
 
@@ -70,8 +71,8 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 		GL11.glScalef(1F, -1F, -1F);
 		if(fab) {
 			float time = ClientTickHandler.ticksInGame + ClientTickHandler.partialTicks;
-			if(tileentity != null)
-				time += new Random(tileentity.xCoord ^ tileentity.yCoord ^ tileentity.zCoord).nextInt(100000);
+			if(tileEntity != null)
+				time += new Random(tileEntity.xCoord ^ tileEntity.yCoord ^ tileEntity.zCoord).nextInt(100000);
 
 			Color color = Color.getHSBColor(time * 0.005F, 0.6F, 1F);
 			GL11.glColor4ub((byte) color.getRed(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) 255);
@@ -112,12 +113,12 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 					GL11.glDisable(GL11.GL_ALPHA_TEST);
-					GL11.glColor4f(1F, 1F, 1F, a * (float) ((Math.sin((ClientTickHandler.ticksInGame + f) / 20.0) + 1) * 0.3 + 0.2));
+					GL11.glColor4f(1F, 1F, 1F, a * (float) ((Math.sin((ClientTickHandler.ticksInGame + partialTicks) / 20.0) + 1) * 0.3 + 0.2));
 					GL11.glTranslatef(-0.5F, -1F - 0.43F, -0.5F);
 					GL11.glRotatef(90F, 1F, 0F, 0F);
 					GL11.glScalef(s, s, s);
 
-					renderIcon(0, 0, overlay, 16, 16, 240);
+					RenderHelper.renderIcon(0, 0, overlay, 16, 16, 240);
 
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
 					GL11.glDisable(GL11.GL_BLEND);
@@ -138,7 +139,7 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 			GL11.glScalef(s, s, s);
 
 			ShaderHelper.useShader(ShaderHelper.manaPool);
-			renderIcon(0, 0, BlockPool.manaIcon, 16, 16, 240);
+			RenderHelper.renderIcon(0, 0, BlockPool.manaIcon, 16, 16, 240);
 			ShaderHelper.releaseShader();
 
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -151,16 +152,4 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 		forceMana = false;
 		forceManaNumber = -1;
 	}
-
-	public void renderIcon(int par1, int par2, IIcon par3Icon, int par4, int par5, int brightness) {
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.setBrightness(brightness);
-		tessellator.addVertexWithUV(par1 + 0, par2 + par5, 0, par3Icon.getMinU(), par3Icon.getMaxV());
-		tessellator.addVertexWithUV(par1 + par4, par2 + par5, 0, par3Icon.getMaxU(), par3Icon.getMaxV());
-		tessellator.addVertexWithUV(par1 + par4, par2 + 0, 0, par3Icon.getMaxU(), par3Icon.getMinV());
-		tessellator.addVertexWithUV(par1 + 0, par2 + 0, 0, par3Icon.getMinU(), par3Icon.getMinV());
-		tessellator.draw();
-	}
-
 }

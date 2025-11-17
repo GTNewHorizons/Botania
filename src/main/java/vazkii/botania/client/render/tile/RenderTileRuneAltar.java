@@ -39,8 +39,8 @@ public class RenderTileRuneAltar extends TileEntitySpecialRenderer {
 	RenderBlocks renderBlocks = new RenderBlocks();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float partticks) {
-		TileRuneAltar altar = (TileRuneAltar) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TileRuneAltar altar = (TileRuneAltar) tileEntity;
 
 		GL11.glPushMatrix();
 		GL11.glColor4f(1F, 1F, 1F, 1F);
@@ -58,7 +58,7 @@ public class RenderTileRuneAltar extends TileEntitySpecialRenderer {
 		for(int i = 0; i < angles.length; i++)
 			angles[i] = totalAngle += anglePer;
 
-		double time = ClientTickHandler.ticksInGame + partticks;
+		double time = ClientTickHandler.ticksInGame + partialTicks;
 
 		for(int i = 0; i < altar.getSizeInventory(); i++) {
 			GL11.glPushMatrix();

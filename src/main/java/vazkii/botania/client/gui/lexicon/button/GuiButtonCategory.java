@@ -72,8 +72,8 @@ public class GuiButtonCategory extends GuiButtonLexicon {
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mx, int my) {
-		boolean inside = mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height;
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		boolean inside = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 		if(inside)
 			ticksHovered = Math.min(time, ticksHovered + gui.timeDelta);
 		else ticksHovered = Math.max(0F, ticksHovered - gui.timeDelta);
