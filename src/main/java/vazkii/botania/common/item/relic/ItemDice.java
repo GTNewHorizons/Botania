@@ -39,6 +39,7 @@ public class ItemDice extends ItemRelic {
 
 		relicStacks = new ItemStack[] {
 				new ItemStack(ModItems.infiniteFruit),
+                new ItemStack(ModItems.excaliber),
 				new ItemStack(ModItems.kingKey),
 				new ItemStack(ModItems.flugelEye),
 				new ItemStack(ModItems.thorRing),
@@ -87,7 +88,7 @@ public class ItemDice extends ItemRelic {
 	}
 
 	boolean hasRelicAlready(EntityPlayer player, int relic) {
-		if(relic < 0 || relic > 5 || !(player instanceof EntityPlayerMP mpPlayer))
+		if(relic < 0 || relic > 6 || !(player instanceof EntityPlayerMP mpPlayer))
 			return true;
 
         Item item = relicStacks[relic].getItem();
