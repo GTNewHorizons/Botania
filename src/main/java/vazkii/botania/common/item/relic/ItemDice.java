@@ -57,7 +57,7 @@ public class ItemDice extends ItemRelic {
 			if(hasRelicAlready(player, relic)) {
 				List<Integer> possible = new ArrayList<>();
 				List<Integer> alreadyHas = new ArrayList<>();
-				for(int i = 0; i < 6; i++)
+				for(int i = 0; i < 7; i++)
 					if(hasRelicAlready(player, i))
 						alreadyHas.add(i);
 					else possible.add(i);
@@ -88,7 +88,7 @@ public class ItemDice extends ItemRelic {
 	}
 
 	boolean hasRelicAlready(EntityPlayer player, int relic) {
-		if(relic < 0 || relic > 6 || !(player instanceof EntityPlayerMP mpPlayer))
+		if(relic < 0 || relic > 7 || !(player instanceof EntityPlayerMP mpPlayer))
 			return true;
 
         Item item = relicStacks[relic].getItem();
