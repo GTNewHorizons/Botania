@@ -64,6 +64,7 @@ import vazkii.botania.common.item.ItemTwigWand;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.bauble.ItemFlightTiara;
 import vazkii.botania.common.item.equipment.bauble.ItemMonocle;
+import vazkii.botania.common.item.relic.ItemFlugelEye;
 import vazkii.botania.common.lib.LibObfuscation;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -153,11 +154,11 @@ public final class HUDHandler {
 				profiler.endSection();
 			}
 
-			/*if(equippedStack != null && equippedStack.getItem() == ModItems.flugelEye) {
-				profiler.startSection("flugelEye");
-				ItemFlugelEye.renderHUD(event.resolution, mc.thePlayer, equippedStack);
-				profiler.endSection();
-			}*/
+            if(equippedStack != null && equippedStack.getItem() == ModItems.flugelEye) {
+                profiler.startSection("flugelEye");
+                ItemFlugelEye.renderHUD(event.resolution, mc.thePlayer, equippedStack);
+                profiler.endSection();
+            }
 
 			if(Botania.proxy.isClientPlayerWearingMonocle()) {
 				profiler.startSection("monocle");
