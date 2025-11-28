@@ -503,6 +503,23 @@ entity.Botania.botania:manaStorm.name=Manastorm Epicenter
 entity.Botania.botania:babylonWeapon.name=Treasury Weapon
 entity.Botania.botania:fallingStar.name=Falling Star
 
+#LOKI
+botaniamisc.toggleLoki=Ring of Loki Switch Key
+botaniamisc.ringOfLokiClear=Clear Ring of Loki Selection
+botaniamisc.lokiOn=On
+botaniamisc.lokiOff=Off
+botaniamisc.breaking=Breaking
+botaniamisc.lokiClear=Successfully cleared all selection
+botaniamisc.lokiDescription=Builder's wand but §c§oC§6§oo§e§oo§a§ol§9§oe§5§or
+botaniamisc.lokiDescription2=Can Place/Interact/Break with multiple blocks at once!
+botaniamisc.lokiToggleDescription=Loki Switch Key to turn ring
+botaniamisc.lokiBreakingDescription=Loki Switch Key + Shift to toggle breaking
+botaniamisc.lokiCurrent=Current
+botaniamisc.lokiState=Ring
+botaniamisc.lokiMirror=Current mirror:
+botaniamisc.insufficient_mana=Not enough mana!
+
+
 # ACHIEVEMENT NAMES + DESC
 achievement.botania:flowerPickup=Sky of Beginning
 achievement.botania:flowerPickup.desc=Pick up a Mystical Flower from the world
