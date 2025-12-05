@@ -2006,8 +2006,8 @@ botania.page.thermalily1=&o0108 Style&r.
 
 # -- ROSA ARCANA
 botania.entry.arcanerose=Rosa Arcana
-botania.page.arcanerose0=&4Experience Points&0 are a form of magic of sorts. The &1Rosa Arcana&0 can tap into it and absorb the experience of players on the ground around it, turning it into &1Mana&0. 
-botania.page.arcanerose1=&oWhen this card is Summoned, toss a coin&r.
+botania.page.arcanerose0="Les &4orbes d'expérience&0 sont magiques elles aussi. La &1rosa arcana$(&0 se sert de cette magie pour la convertir en &1mana&0.<br>Les objets enchantés peuvent également être transformés en &1mana&0.",
+botania.page.arcanerose1=&orosae, rosas, rosarum&r.
 
 # -- MUNCHDEW
 botania.entry.munchdew=Munchdew

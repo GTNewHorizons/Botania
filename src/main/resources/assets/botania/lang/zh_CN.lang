@@ -2562,8 +2562,8 @@ botania.page.thermalily1=&o0108款&r.
 # -- ROSA ARCANA
 botania.entry.arcanerose=阿卡纳蔷薇
 botania.tagline.arcanerose=经验当魔力使
-botania.page.arcanerose0=&4经验点&0是一种形式的魔力. &1阿卡纳蔷薇&0能吸收附近玩家 的经验,并利用它产生&1魔力&0. 
-botania.page.arcanerose1=&o该卡被召唤时,投掷硬币&r.
+botania.page.arcanerose0="&4经验点&0是一种形式的魔力.&1阿卡纳蔷薇&0能吸收附近玩家的经验，并利用它产生&1魔力&0。<br>它也可以吸收世界中掉落的经验球或利用附魔物品来产生魔力"
+botania.page.arcanerose1=&o该花被种植时，投掷一枚硬币&r.
 
 # -- MUNCHDEW
 botania.entry.munchdew=咀叶花

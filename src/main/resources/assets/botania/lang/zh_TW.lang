@@ -2551,8 +2551,8 @@ botania.page.thermalily1=&o0108 Style&r.
 # -- ROSA ARCANA
 botania.entry.arcanerose=阿卡納薔薇
 botania.tagline.arcanerose=經驗化作魔力
-botania.page.arcanerose0=&4經驗球&0是一種形式的瑪那. &1阿卡納薔薇&0能吸收附近玩家 的經驗,並利用它產生&1瑪那&0. <br>花不能從地面吸取經驗珠。他們必須由玩家來收集。
-botania.page.arcanerose1=&o該卡被召喚時,投擲硬幣&r.
+botania.page.arcanerose0=&4經驗點&0是一種形式的瑪那。&1阿卡納薔薇&0能吸收附近玩家的經驗，並利用它產生&1瑪那&0。<br>它也可以吸收世界中掉落的經驗球或利用附魔物品來產生瑪那
+botania.page.arcanerose1=&o該花被種植時，投擲一枚硬幣&r.
 
 # -- MUNCHDEW
 botania.entry.munchdew=咀葉花
