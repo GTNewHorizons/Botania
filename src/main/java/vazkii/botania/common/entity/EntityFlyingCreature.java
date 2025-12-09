@@ -17,30 +17,30 @@ import net.minecraft.world.World;
 
 public class EntityFlyingCreature extends EntityAmbientCreature {
 
-	public EntityFlyingCreature(World par1World) {
-		super(par1World);
+	public EntityFlyingCreature(World world) {
+		super(world);
 	}
 
 	@Override
-	protected void fall(float par1) {
+	protected void fall(float distance) {
 		// NO-OP
 	}
 
 	@Override
-	protected void updateFallState(double par1, boolean par3) {
+	protected void updateFallState(double distanceFallenThisTick, boolean isOnGround) {
 		// NO-OP
 	}
 
 	@Override
-	public void moveEntityWithHeading(float par1, float par2) {
+	public void moveEntityWithHeading(float strafe, float forward) {
 		if(isInWater()) {
-			moveFlying(par1, par2, 0.02F);
+			moveFlying(strafe, forward, 0.02F);
 			moveEntity(motionX, motionY, motionZ);
 			motionX *= 0.800000011920929D;
 			motionY *= 0.800000011920929D;
 			motionZ *= 0.800000011920929D;
 		} else if(handleLavaMovement()) {
-			moveFlying(par1, par2, 0.02F);
+			moveFlying(strafe, forward, 0.02F);
 			moveEntity(motionX, motionY, motionZ);
 			motionX *= 0.5D;
 			motionY *= 0.5D;
@@ -55,7 +55,7 @@ public class EntityFlyingCreature extends EntityAmbientCreature {
 			}
 
 			float f3 = 0.16277136F / (f2 * f2 * f2);
-			moveFlying(par1, par2, onGround ? 0.1F * f3 : 0.02F);
+			moveFlying(strafe, forward, onGround ? 0.1F * f3 : 0.02F);
 			f2 = 0.91F;
 
 			if (onGround) {

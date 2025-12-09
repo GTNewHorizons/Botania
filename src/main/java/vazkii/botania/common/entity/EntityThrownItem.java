@@ -25,8 +25,8 @@ import vazkii.botania.common.core.helper.Vector3;
 
 public class EntityThrownItem extends EntityItem {
 
-	public EntityThrownItem(World par1World) {
-		super(par1World);
+	public EntityThrownItem(World world) {
+		super(world);
 	}
 
 	public EntityThrownItem(World worldIn, double x,

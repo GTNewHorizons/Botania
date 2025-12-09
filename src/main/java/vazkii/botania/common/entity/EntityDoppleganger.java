@@ -366,14 +366,14 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-		Entity e = par1DamageSource.getEntity();
-		if((par1DamageSource.damageType.equals("player") || e instanceof EntityPixie) && e != null && isTruePlayer(e) && getInvulTime() == 0) {
+	public boolean attackEntityFrom(DamageSource source, float amount) {
+		Entity e = source.getEntity();
+		if((source.damageType.equals("player") || e instanceof EntityPixie) && e != null && isTruePlayer(e) && getInvulTime() == 0) {
 			EntityPlayer player = (EntityPlayer) e;
 			if(!playersWhoAttacked.contains(player.getCommandSenderName()))
 				playersWhoAttacked.add(player.getCommandSenderName());
 
-			float dmg = par2;
+			float dmg = amount;
 			boolean crit = false;
 			if(e instanceof EntityPlayer) {
 				EntityPlayer p = (EntityPlayer) e;
@@ -381,7 +381,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 			}
 
 			int cap = crit ? 60 : 40;
-			return super.attackEntityFrom(par1DamageSource, Math.min(cap, dmg) * (isHardMode() ? 0.6F : 1F));
+			return super.attackEntityFrom(source, Math.min(cap, dmg) * (isHardMode() ? 0.6F : 1F));
 		}
 		return false;
 	}
@@ -420,8 +420,8 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 	}
 
 	@Override
-	public void onDeath(DamageSource p_70645_1_) {
-		super.onDeath(p_70645_1_);
+	public void onDeath(DamageSource source) {
+		super.onDeath(source);
 		EntityLivingBase entitylivingbase = func_94060_bK();
 		if(entitylivingbase instanceof EntityPlayer) {
 			((EntityPlayer) entitylivingbase).addStat(ModAchievements.gaiaGuardianKill, 1);

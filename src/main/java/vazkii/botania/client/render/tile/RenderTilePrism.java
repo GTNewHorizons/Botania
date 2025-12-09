@@ -26,11 +26,11 @@ import vazkii.botania.common.block.tile.mana.TilePrism;
 public class RenderTilePrism extends TileEntitySpecialRenderer {
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float partTicks) {
-		TilePrism prism = (TilePrism) tile;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TilePrism prism = (TilePrism) tileEntity;
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);
-		float pos = (float) Math.sin((ClientTickHandler.ticksInGame + partTicks) * 0.05F) * 0.5F * (1F - 1F / 16F) - 0.5F;
+		float pos = (float) Math.sin((ClientTickHandler.ticksInGame + partialTicks) * 0.05F) * 0.5F * (1F - 1F / 16F) - 0.5F;
 
 		ItemStack stack = prism.getStackInSlot(0);
 

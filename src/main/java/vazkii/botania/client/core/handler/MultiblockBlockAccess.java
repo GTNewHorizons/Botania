@@ -51,9 +51,9 @@ public class MultiblockBlockAccess implements IBlockAccess {
 	}
 
 	@Override
-	public int getLightBrightnessForSkyBlocks(int x, int y, int z, int p_72802_4_) {
+	public int getLightBrightnessForSkyBlocks(int x, int y, int z, int lightValue) {
 		if(hasBlockAccess)
-			return originalBlockAccess.getLightBrightnessForSkyBlocks(x,y,z,p_72802_4_);
+			return originalBlockAccess.getLightBrightnessForSkyBlocks(x, y, z, lightValue);
 		return 15728640;
 	}
 

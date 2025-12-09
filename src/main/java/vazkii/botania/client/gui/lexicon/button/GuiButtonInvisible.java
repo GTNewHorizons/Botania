@@ -39,8 +39,8 @@ public class GuiButtonInvisible extends GuiButtonLexicon {
 	boolean enableDog = false;
 	double dogPos = 0;
 
-	public GuiButtonInvisible(GuiLexiconIndex gui, int par1, int par2, int par3, int par4, int par5, String par6Str) {
-		super(par1, par2, par3, par4, par5, par6Str);
+	public GuiButtonInvisible(GuiLexiconIndex gui, int id, int xPos, int yPos, int width, int height, String text) {
+		super(id, xPos, yPos, width, height, text);
 		this.gui = gui;
 	}
 	
@@ -51,11 +51,11 @@ public class GuiButtonInvisible extends GuiButtonLexicon {
 	}
 
 	@Override
-	public void drawButton(Minecraft par1Minecraft, int par2, int par3) {
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		if(enableDog) {
 			dogPos += ClientTickHandler.delta * 10;
 			
-			par1Minecraft.renderEngine.bindTexture(dogResource);
+			mc.renderEngine.bindTexture(dogResource);
 			float f = 1F / 64F;
 			GL11.glTranslated(dogPos, 0, 0);
 			GL11.glColor4f(1F, 1F, 1F, 1F);
@@ -65,7 +65,7 @@ public class GuiButtonInvisible extends GuiButtonLexicon {
 			GL11.glTranslated(-dogPos, 0, 0);
 		}
 		
-		field_146123_n = par2 >= xPosition && par3 >= yPosition && par2 < xPosition + width && par3 < yPosition + height;
+		field_146123_n = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 		int k = getHoverState(field_146123_n);
 		boolean showStack = displayStack != null && !displayString.isEmpty();
 
@@ -100,16 +100,16 @@ public class GuiButtonInvisible extends GuiButtonLexicon {
 		drawRect(xPosition - 5, yPosition, (int) (xPosition - 5 + timeHover * 24), yPosition + height, alpha << 24 | color);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 
-		boolean unicode = par1Minecraft.fontRenderer.getUnicodeFlag();
-		par1Minecraft.fontRenderer.setUnicodeFlag(true);
-		par1Minecraft.fontRenderer.drawString(displayString, xPosition + (showStack ? 7 : 0), yPosition + (height - 8) / 2, 0);
-		par1Minecraft.fontRenderer.setUnicodeFlag(unicode);
+		boolean unicode = mc.fontRenderer.getUnicodeFlag();
+		mc.fontRenderer.setUnicodeFlag(true);
+		mc.fontRenderer.drawString(displayString, xPosition + (showStack ? 7 : 0), yPosition + (height - 8) / 2, 0);
+		mc.fontRenderer.setUnicodeFlag(unicode);
 
 		if(showStack) {
 			GL11.glScalef(0.5F, 0.5F, 0.5F);
 			RenderHelper.enableGUIStandardItemLighting();
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-			RenderItem.getInstance().renderItemIntoGUI(par1Minecraft.fontRenderer, par1Minecraft.renderEngine, displayStack, xPosition * 2 - 6, yPosition * 2 + 4);
+			RenderItem.getInstance().renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, displayStack, xPosition * 2 - 6, yPosition * 2 + 4);
 			RenderHelper.disableStandardItemLighting();
 			GL11.glEnable(GL11.GL_BLEND);
 		}
