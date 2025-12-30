@@ -12,9 +12,12 @@ package vazkii.botania.common.block.subtile.generating;
 
 import java.util.List;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.ExplosionEvent;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileGenerating;
@@ -22,6 +25,10 @@ import vazkii.botania.common.Botania;
 import vazkii.botania.common.lexicon.LexiconData;
 
 public class SubTileEntropinnyum extends SubTileGenerating {
+
+    public SubTileEntropinnyum() {
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
+    }
 
 	private static final int RANGE = 12;
 
@@ -70,4 +77,51 @@ public class SubTileEntropinnyum extends SubTileGenerating {
 		return LexiconData.entropinnyum;
 	}
 
+    public class EventHandler {
+
+        @SubscribeEvent
+        public void consumeExplosion(ExplosionEvent.Start event) {
+            if (mana == 0) {
+
+                if (Math.abs(supertile.xCoord - event.explosion.explosionX) <= RANGE && Math.abs(supertile.yCoord - event.explosion.explosionY) <= RANGE && Math.abs(supertile.zCoord - event.explosion.explosionZ) <= RANGE) {
+                    if (!event.world.isRemote) {
+                        event.explosion.exploder.setDead();
+                        mana += getMaxMana();
+                        supertile.getWorldObj().playSoundEffect(event.explosion.explosionX, event.explosion.explosionY, event.explosion.explosionZ, "random.explode", 0.2F, (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
+                        sync();
+
+                    }
+
+                    for(int i = 0; i < 50; i++)
+                        Botania.proxy.sparkleFX(event.world, event.explosion.explosionX + Math.random() * 4 - 2, event.explosion.explosionY + Math.random() * 4 - 2, event.explosion.explosionZ + Math.random() * 4 - 2, 1F, (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, (float) (Math.random() * 0.65F + 1.25F), 12);
+
+                    supertile.getWorldObj().spawnParticle("hugeexplosion", event.explosion.explosionX, event.explosion.explosionY, event.explosion.explosionZ, 1D, 0D, 0D);
+
+                    event.setCanceled(true);
+                }
+            }
+        }
+
+        @SubscribeEvent
+        public void consumeExplosion(ic2.api.event.ExplosionEvent event) {
+            if (mana == 0) {
+
+                if (Math.abs(supertile.xCoord - event.x) <= RANGE && Math.abs(supertile.yCoord - event.y) <= RANGE && Math.abs(supertile.zCoord - event.x) <= RANGE) {
+                    if (!event.world.isRemote) {
+                        event.entity.setDead();
+                        mana += getMaxMana();
+                        supertile.getWorldObj().playSoundEffect(event.x, event.y, event.x, "random.explode", 0.2F, (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
+                        sync();
+                    }
+
+                    for(int i = 0; i < 50; i++)
+                        Botania.proxy.sparkleFX(event.world, event.x + Math.random() * 4 - 2, event.y + Math.random() * 4 - 2, event.x + Math.random() * 4 - 2, 1F, (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, (float) (Math.random() * 0.65F + 1.25F), 12);
+
+                    supertile.getWorldObj().spawnParticle("hugeexplosion", event.x, event.y, event.x, 1D, 0D, 0D);
+
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
 }

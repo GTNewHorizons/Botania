@@ -12,6 +12,8 @@ dependencies {
     compileOnly('curse.maven:cofh-lib-220333:2388748')
     compileOnly('curse.maven:minefactory-reloaded-66672:2366150')
     compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')
+    compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
+
 
     compileOnly("com.github.GTNewHorizons:StructureLib:1.4.24:dev")
 }
