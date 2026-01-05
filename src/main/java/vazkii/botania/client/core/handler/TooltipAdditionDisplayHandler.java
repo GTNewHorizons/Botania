@@ -25,7 +25,6 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -34,11 +33,11 @@ import vazkii.botania.api.lexicon.ILexicon;
 import vazkii.botania.api.lexicon.LexiconRecipeMappings;
 import vazkii.botania.api.lexicon.LexiconRecipeMappings.EntryData;
 import vazkii.botania.api.mana.IManaTooltipDisplay;
+import vazkii.botania.api.mana.ITieredManaTooltipDisplay;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.item.ItemLexicon;
 import vazkii.botania.common.item.ModItems;
-import vazkii.botania.common.item.equipment.tool.terrasteel.ItemTerraPick;
 import vazkii.botania.common.lib.LibObfuscation;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 
@@ -83,10 +82,10 @@ public final class TooltipAdditionDisplayHandler {
 					if(offscreen)
 						offx = -13 - width;
 
-					if(stack.getItem() instanceof ItemTerraPick)
-						drawTerraPick(stack, mouseX, mouseY, offx, offy, width, height, font);
-					else if(stack.getItem() instanceof IManaTooltipDisplay)
-						drawManaBar(stack, (IManaTooltipDisplay) stack.getItem(), mouseX, mouseY, offx, offy, width, height);
+					if(stack.getItem() instanceof ITieredManaTooltipDisplay tieredItem)
+						drawTieredManaBar(stack, tieredItem, mouseX, mouseY, offx, offy, width, height, font);
+					else if(stack.getItem() instanceof IManaTooltipDisplay manaItem)
+						drawManaBar(stack, manaItem, mouseX, mouseY, offx, offy, width, height);
 
 					EntryData data = LexiconRecipeMappings.getDataForStack(stack);
 					if(data != null) {
@@ -169,33 +168,37 @@ public final class TooltipAdditionDisplayHandler {
 		} else lexiconLookupTime = 0F;
 	}
 
-	private static void drawTerraPick(ItemStack stack, int mouseX, int mouseY, int offx, int offy, int width, int height, FontRenderer font) {
-		int level = ItemTerraPick.getLevel(stack);
-		int max = ItemTerraPick.LEVELS[Math.min(ItemTerraPick.LEVELS.length - 1, level + 1)];
-		boolean ss = level >= ItemTerraPick.LEVELS.length - 1;
-		int curr = ItemTerraPick.getMana_(stack);
-		float percent = level == 0 ? 0F : (float) curr / (float) max;
-		int rainbowWidth = Math.min(width - (ss ? 0 : 1), (int) (width * percent));
-		float huePer = width == 0 ? 0F : 1F / width;
-		float hueOff = (ClientTickHandler.ticksInGame + ClientTickHandler.partialTicks) * 0.01F;
+    private static void drawTieredManaBar(ItemStack stack, ITieredManaTooltipDisplay item, int mouseX, int mouseY, int offx, int offy, int width, int height, FontRenderer font) {
+        float percent = item.getManaFractionForDisplay(stack);
+        int manaBarWidth = Math.min(width - (percent == 1 ? 0 : 1), (int) (width * percent));
+        float huePer = width == 0 ? 0F : 1F / width;
+        float hueOff = (ClientTickHandler.ticksInGame + ClientTickHandler.partialTicks) * 0.01F;
 
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		Gui.drawRect(mouseX + offx - 1, mouseY - offy - height - 1, mouseX + offx + width + 1, mouseY - offy, 0xFF000000);
-		for(int i = 0; i < rainbowWidth; i++)
-			Gui.drawRect(mouseX + offx + i, mouseY - offy - height, mouseX + offx + i + 1, mouseY - offy, Color.HSBtoRGB(hueOff + huePer * i, 1F, 1F));
-		Gui.drawRect(mouseX + offx + rainbowWidth, mouseY - offy - height, mouseX + offx + width, mouseY - offy, 0xFF555555);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        Gui.drawRect(mouseX + offx - 1, mouseY - offy - height - 1, mouseX + offx + width + 1, mouseY - offy, 0xFF000000);
+        if (item.isRainbowEffect(stack)) {
+            for (int i = 0; i < manaBarWidth; i++) {
+                Gui.drawRect(mouseX + offx + i, mouseY - offy - height, mouseX + offx + i + 1, mouseY - offy, Color.HSBtoRGB(hueOff + huePer * i, 1F, 1F));
+            }
+        } else {
+            Gui.drawRect(mouseX + offx, mouseY - offy - height, mouseX + offx + manaBarWidth, mouseY - offy, Color.HSBtoRGB(0.528F, ((float) Math.sin((ClientTickHandler.ticksInGame + ClientTickHandler.partialTicks) * 0.2) + 1F) * 0.3F + 0.4F, 1F));
+        }
+        Gui.drawRect(mouseX + offx + manaBarWidth, mouseY - offy - height, mouseX + offx + width, mouseY - offy, 0xFF555555);
 
-		String rank = StatCollector.translateToLocal("botania.rank" + level).replaceAll("&", "\u00a7");
-		GL11.glPushAttrib(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		font.drawStringWithShadow(rank, mouseX + offx, mouseY - offy - 12, 0xFFFFFF);
-		if(!ss) {
-			rank = StatCollector.translateToLocal("botania.rank" + (level + 1)).replaceAll("&", "\u00a7");
-			font.drawStringWithShadow(rank, mouseX + offx + width - font.getStringWidth(rank), mouseY - offy - 12, 0xFFFFFF);
-		}
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glPopAttrib();
-	}
+        GL11.glPushAttrib(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        String leftRank = item.getLeftManaLabel(stack).replaceAll("&", "\u00a7");
+        if (!leftRank.isEmpty()) {
+            font.drawStringWithShadow(leftRank, mouseX + offx, mouseY - offy - 12, 0xFFFFFF);
+        }
+        String rightRank = item.getRightManaLabel(stack).replaceAll("&", "\u00a7");
+        if (!rightRank.isEmpty()) {
+            font.drawStringWithShadow(rightRank, mouseX + offx + width - font.getStringWidth(rightRank), mouseY - offy - 12, 0xFFFFFF);
+        }
+
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glPopAttrib();
+    }
 
 	private static void drawManaBar(ItemStack stack, IManaTooltipDisplay display, int mouseX, int mouseY, int offx, int offy, int width, int height) {
 		float fraction = display.getManaFractionForDisplay(stack);
