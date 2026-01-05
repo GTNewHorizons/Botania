@@ -96,7 +96,7 @@ public class SubTileEntropinnyum extends SubTileGenerating {
         }
 
         private boolean processExplosion(World world, Entity explosionSource, double posX, double posY, double posZ) {
-            if (world.isRemote || mana != 0 || Math.abs(supertile.xCoord - posX) <= RANGE && Math.abs(supertile.yCoord - posY) <= RANGE && Math.abs(supertile.zCoord - posZ) <= RANGE) {
+            if (world.isRemote || mana != 0 || !(Math.abs(supertile.xCoord - posX) <= RANGE && Math.abs(supertile.yCoord - posY) <= RANGE && Math.abs(supertile.zCoord - posZ) <= RANGE)) {
                 return false;
             }
 
