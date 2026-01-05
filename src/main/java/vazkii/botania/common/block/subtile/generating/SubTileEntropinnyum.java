@@ -83,29 +83,23 @@ public class SubTileEntropinnyum extends SubTileGenerating {
 
         @SubscribeEvent
         public void consumeExplosion(ExplosionEvent.Start event) {
-            if (mana == 0) {
-                if (Math.abs(supertile.xCoord - event.explosion.explosionX) <= RANGE && Math.abs(supertile.yCoord - event.explosion.explosionY) <= RANGE && Math.abs(supertile.zCoord - event.explosion.explosionZ) <= RANGE) {
-                    if (!event.world.isRemote) {
-                        processExplosion(event.world, event.explosion.exploder, event.explosion.explosionX, event.explosion.explosionY, event.explosion.explosionZ);
-                        event.setCanceled(true);
-                    }
-                }
+            if(processExplosion(event.world, event.explosion.exploder, event.explosion.explosionX, event.explosion.explosionY, event.explosion.explosionZ)) {
+                event.setCanceled(true);
             }
         }
 
         @SubscribeEvent
         public void consumeExplosionIC2(ic2.api.event.ExplosionEvent event) {
-            if (mana == 0) {
-                if (Math.abs(supertile.xCoord - event.x) <= RANGE && Math.abs(supertile.yCoord - event.y) <= RANGE && Math.abs(supertile.zCoord - event.z) <= RANGE) {
-                    if (!event.world.isRemote) {
-                        processExplosion(event.world, event.entity, event.x, event.y, event.z);
-                        event.setCanceled(true);
-                    }
-                }
+            if(processExplosion(event.world, event.entity, event.x, event.y, event.z)) {
+                event.setCanceled(true);
             }
         }
 
-        private void processExplosion(World world, Entity explosionSource, double posX, double posY, double posZ) {
+        private boolean processExplosion(World world, Entity explosionSource, double posX, double posY, double posZ) {
+            if (world.isRemote || mana != 0 || Math.abs(supertile.xCoord - posX) <= RANGE && Math.abs(supertile.yCoord - posY) <= RANGE && Math.abs(supertile.zCoord - posZ) <= RANGE) {
+                return false;
+            }
+
             explosionSource.setDead();
             mana += getMaxMana();
             supertile.getWorldObj().playSoundEffect(posX, posY, posZ, "random.explode", 0.2F, (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
@@ -116,6 +110,7 @@ public class SubTileEntropinnyum extends SubTileGenerating {
             }
 
             supertile.getWorldObj().spawnParticle("hugeexplosion", posX, posY, posZ, 1D, 0D, 0D);
+            return true;
         }
     }
 }
