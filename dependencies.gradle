@@ -2,7 +2,7 @@
 
 dependencies {
     api('com.github.GTNewHorizons:Baubles-Expanded:2.2.6-GTNH:dev')
-    api('com.github.GTNewHorizons:GTNHLib:0.8.44:dev')
+    api('com.github.GTNewHorizons:GTNHLib:0.9.0:dev')
 
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.48:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:ForgeMultipart:1.7.2:dev') {transitive=false}
@@ -15,6 +15,6 @@ dependencies {
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
 
 
-    compileOnly("com.github.GTNewHorizons:StructureLib:1.4.25:dev")
+    compileOnly("com.github.GTNewHorizons:StructureLib:1.4.27:dev")
 }
 
