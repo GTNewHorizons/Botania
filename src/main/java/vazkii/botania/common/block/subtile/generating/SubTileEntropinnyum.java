@@ -12,6 +12,7 @@ package vazkii.botania.common.block.subtile.generating;
 
 import java.util.List;
 
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityTNTPrimed;
@@ -89,6 +90,7 @@ public class SubTileEntropinnyum extends SubTileGenerating {
         }
 
         @SubscribeEvent
+        @Optional.Method(modid = "IC2")
         public void consumeExplosionIC2(ic2.api.event.ExplosionEvent event) {
             if(processExplosion(event.world, event.entity, event.x, event.y, event.z)) {
                 event.setCanceled(true);
