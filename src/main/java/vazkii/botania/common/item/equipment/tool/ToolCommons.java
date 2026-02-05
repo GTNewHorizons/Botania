@@ -29,7 +29,6 @@ import net.minecraft.world.World;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.mana.ManaItemHandler;
 import vazkii.botania.common.core.handler.ConfigHandler;
-import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.tool.elementium.ItemElementiumPick;
 import vazkii.botania.common.item.equipment.tool.terrasteel.ItemTerraPick;
 
@@ -137,8 +136,8 @@ public final class ToolCommons {
 			materialLevel = 20;
 
 		int modifier = 0;
-		if(item == ModItems.terraPick)
-			modifier = ItemTerraPick.getLevel(stack);
+		if(item instanceof ItemTerraPick pick)
+			modifier = pick.getLevel(stack);
 
 		int efficiency = EnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency.effectId, stack);
 		return materialLevel * 100 + modifier * 10 + efficiency;
