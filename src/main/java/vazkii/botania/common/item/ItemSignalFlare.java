@@ -54,47 +54,47 @@ public class ItemSignalFlare extends ItemMod {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if(par1ItemStack.getItemDamage() == 0) {
-			if(par2World.isRemote)
-				par3EntityPlayer.swingItem();
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if(stack.getItemDamage() == 0) {
+			if(world.isRemote)
+				player.swingItem();
 			else {
-				EntitySignalFlare flare = new EntitySignalFlare(par2World);
-				flare.setPosition(par3EntityPlayer.posX, par3EntityPlayer.posY, par3EntityPlayer.posZ);
-				flare.setColor(getColor(par1ItemStack));
-				par2World.playSoundAtEntity(par3EntityPlayer, "random.explode", 40F, (1.0F + (par2World.rand.nextFloat() - par2World.rand.nextFloat()) * 0.2F) * 0.7F);
+				EntitySignalFlare flare = new EntitySignalFlare(world);
+				flare.setPosition(player.posX, player.posY, player.posZ);
+				flare.setColor(getColor(stack));
+				world.playSoundAtEntity(player, "random.explode", 40F, (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 
-				par2World.spawnEntityInWorld(flare);
+				world.spawnEntityInWorld(flare);
 
 				int stunned = 0;
 				int range = 5;
-				List<EntityLivingBase> entities = par2World.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(par3EntityPlayer.posX - range, par3EntityPlayer.posY - range, par3EntityPlayer.posZ - range, par3EntityPlayer.posX + range, par3EntityPlayer.posY + range, par3EntityPlayer.posZ + range));
+				List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(player.posX - range, player.posY - range, player.posZ - range, player.posX + range, player.posY + range, player.posZ + range));
 				for(EntityLivingBase entity : entities)
-					if(entity != par3EntityPlayer && (!(entity instanceof EntityPlayer) || MinecraftServer.getServer() == null || MinecraftServer.getServer().isPVPEnabled())) {
+					if(entity != player && (!(entity instanceof EntityPlayer) || MinecraftServer.getServer() == null || MinecraftServer.getServer().isPVPEnabled())) {
 						entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 50, 5));
 						stunned++;
 					}
 
 				if(stunned >= 100)
-					par3EntityPlayer.addStat(ModAchievements.signalFlareStun, 1);
+					player.addStat(ModAchievements.signalFlareStun, 1);
 			}
-			par1ItemStack.damageItem(200, par3EntityPlayer);
+			stack.damageItem(200, player);
 		}
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		if(par1ItemStack.isItemDamaged())
-			par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() - 1);
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(stack.isItemDamaged())
+			stack.setItemDamage(stack.getItemDamage() - 1);
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[2];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+			icons[i] = IconHelper.forItem(register, this, i);
 	}
 
 	@Override
@@ -103,22 +103,22 @@ public class ItemSignalFlare extends ItemMod {
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-		if(par2 == 0)
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		if(renderPass == 0)
 			return 0xFFFFFF;
 
-		int colorv = getColor(par1ItemStack);
+		int colorv = getColor(stack);
 		if(colorv >= EntitySheep.fleeceColorTable.length || colorv < 0)
 			return 0xFFFFFF;
 
-		float[] color = EntitySheep.fleeceColorTable[getColor(par1ItemStack)];
+		float[] color = EntitySheep.fleeceColorTable[getColor(stack)];
 		return new Color(color[0], color[1], color[2]).getRGB();
 	}
 
 	@Override
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List) {
+	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
 		for(int i = 0; i < 16; i++)
-			par3List.add(forColor(i));
+			list.add(forColor(i));
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class ItemSignalFlare extends ItemMod {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer p, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		int storedColor = getColor(stack);
 		infoList.add(String.format(StatCollector.translateToLocal("botaniamisc.flareColor"), StatCollector.translateToLocal("botania.color" + storedColor)));
 	}

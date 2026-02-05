@@ -50,36 +50,36 @@ public class ItemRainbowRod extends ItemMod implements IManaUsingItem, IAvatarWi
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if(!par2World.isRemote && par1ItemStack.getItemDamage() == 0 && ManaItemHandler.requestManaExactForTool(par1ItemStack, par3EntityPlayer, MANA_COST, false)) {
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if(!world.isRemote && stack.getItemDamage() == 0 && ManaItemHandler.requestManaExactForTool(stack, player, MANA_COST, false)) {
 			Block place = ModBlocks.bifrost;
-			Vector3 vector = new Vector3(par3EntityPlayer.getLookVec()).normalize();
+			Vector3 vector = new Vector3(player.getLookVec()).normalize();
 
-			double x = par3EntityPlayer.posX;
-			double y = par3EntityPlayer.posY;
-			double z = par3EntityPlayer.posZ;
+			double x = player.posX;
+			double y = player.posY;
+			double z = player.posZ;
 
 			double lx = 0;
 			double ly = -1;
 			double lz = 0;
 
 			int count = 0;
-			boolean prof = IManaProficiencyArmor.Helper.hasProficiency(par3EntityPlayer);
+			boolean prof = IManaProficiencyArmor.Helper.hasProficiency(player);
 			int maxlen = prof ? 160 : 100;
 			int time = prof ? (int) (TIME * 1.6) : TIME;
 
-			while(count < maxlen && (int) lx == (int) x && (int) ly == (int) y && (int) lz == (int) z || count < 4 || par2World.getBlock((int) x, (int) y, (int) z).isAir(par2World, (int) x, (int) y, (int) z) || par2World.getBlock((int) x, (int) y, (int) z) == place) {
+			while(count < maxlen && (int) lx == (int) x && (int) ly == (int) y && (int) lz == (int) z || count < 4 || world.getBlock((int) x, (int) y, (int) z).isAir(world, (int) x, (int) y, (int) z) || world.getBlock((int) x, (int) y, (int) z) == place) {
 				if(y >= 256 || y <= 0)
 					break;
 
 				for(int i = -2; i < 1; i++)
 					for(int j = -2; j < 1; j++)
-						if(par2World.getBlock((int) x + i, (int) y, (int) z + j).isAir(par2World, (int) x + i, (int) y, (int) z + j) || par2World.getBlock((int) x + i, (int) y, (int) z + j) == place) {
-							par2World.setBlock((int) x + i, (int) y, (int) z + j, place);
-							TileBifrost tile = (TileBifrost) par2World.getTileEntity((int) x + i, (int) y, (int) z + j);
+						if(world.getBlock((int) x + i, (int) y, (int) z + j).isAir(world, (int) x + i, (int) y, (int) z + j) || world.getBlock((int) x + i, (int) y, (int) z + j) == place) {
+							world.setBlock((int) x + i, (int) y, (int) z + j, place);
+							TileBifrost tile = (TileBifrost) world.getTileEntity((int) x + i, (int) y, (int) z + j);
 							if(tile != null) {
 								for(int k = 0; k < 4; k++)
-									Botania.proxy.sparkleFX(par2World, tile.xCoord + Math.random(), tile.yCoord + Math.random(), tile.zCoord + Math.random(), (float) Math.random(), (float) Math.random(), (float) Math.random(), 0.45F + 0.2F * (float) Math.random(), 6);
+									Botania.proxy.sparkleFX(world, tile.xCoord + Math.random(), tile.yCoord + Math.random(), tile.zCoord + Math.random(), (float) Math.random(), (float) Math.random(), (float) Math.random(), 0.45F + 0.2F * (float) Math.random(), 6);
 								tile.ticks = time;
 							}
 						}
@@ -95,13 +95,13 @@ public class ItemRainbowRod extends ItemMod implements IManaUsingItem, IAvatarWi
 			}
 
 			if(count > 0) {
-				par2World.playSoundAtEntity(par3EntityPlayer, "botania:bifrostRod", 0.5F, 0.25F);
-				ManaItemHandler.requestManaExactForTool(par1ItemStack, par3EntityPlayer, MANA_COST, false);
-				par1ItemStack.setItemDamage(TIME);
+				world.playSoundAtEntity(player, "botania:bifrostRod", 0.5F, 0.25F);
+				ManaItemHandler.requestManaExactForTool(stack, player, MANA_COST, false);
+				stack.setItemDamage(TIME);
 			}
 		}
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	@Override
@@ -115,14 +115,14 @@ public class ItemRainbowRod extends ItemMod implements IManaUsingItem, IAvatarWi
 	}
 
 	@Override
-	public boolean doesContainerItemLeaveCraftingGrid(ItemStack par1ItemStack) {
+	public boolean doesContainerItemLeaveCraftingGrid(ItemStack stack) {
 		return false;
 	}
 
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		if(par1ItemStack.isItemDamaged())
-			par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() - 1);
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(stack.isItemDamaged())
+			stack.setItemDamage(stack.getItemDamage() - 1);
 	}
 
 	@Override

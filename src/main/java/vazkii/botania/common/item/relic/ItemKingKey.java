@@ -40,19 +40,19 @@ public class ItemKingKey extends ItemRelic implements IManaUsingItem {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		super.registerIcons(par1IconRegister);
+	public void registerIcons(IIconRegister register) {
+		super.registerIcons(register);
 
 		weaponIcons = new IIcon[WEAPON_TYPES];
 		for(int i = 0; i < WEAPON_TYPES; i++)
-			weaponIcons[i] = IconHelper.forName(par1IconRegister, "gateWeapon" + i);
+			weaponIcons[i] = IconHelper.forName(register, "gateWeapon" + i);
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
-		setCharging(par1ItemStack, true);
-		return par1ItemStack;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		player.setItemInUse(stack, getMaxItemUseDuration(stack));
+		setCharging(stack, true);
+		return stack;
 	}
 
 	@Override
@@ -105,12 +105,12 @@ public class ItemKingKey extends ItemRelic implements IManaUsingItem {
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.bow;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 72000;
 	}
 

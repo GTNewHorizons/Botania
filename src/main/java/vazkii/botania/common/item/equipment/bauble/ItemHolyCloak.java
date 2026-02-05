@@ -53,13 +53,11 @@ public class ItemHolyCloak extends ItemBauble implements IBaubleRender {
 	}
 
 	public void onPlayerDamage(LivingHurtEvent event) {
-		if(event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
-			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
+		if(event.entityLiving instanceof EntityPlayer player) {
+            InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
 			ItemStack belt = baubles.getStackInSlot(3);
-			if(belt != null && belt.getItem() instanceof ItemHolyCloak && !isInEffect(belt)) {
-				ItemHolyCloak cloak = (ItemHolyCloak) belt.getItem();
-				int cooldown = getCooldown(belt);
+			if(belt != null && belt.getItem() instanceof ItemHolyCloak cloak && !isInEffect(belt)) {
+                int cooldown = getCooldown(belt);
 
 				// Used to prevent StackOverflows with mobs that deal damage when damaged
 				setInEffect(belt, true);

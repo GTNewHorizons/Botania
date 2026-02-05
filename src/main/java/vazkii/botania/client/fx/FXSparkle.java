@@ -162,85 +162,96 @@ public class FXSparkle extends EntityFX {
 		particleGravity = value;
 	}
 
-	protected boolean pushOutOfBlocks(double par1, double par3, double par5) {
-		int var7 = MathHelper.floor_double(par1);
-		int var8 = MathHelper.floor_double(par3);
-		int var9 = MathHelper.floor_double(par5);
-		double var10 = par1 - var7;
-		double var12 = par3 - var8;
-		double var14 = par5 - var9;
+	protected boolean pushOutOfBlocks(double x, double y, double z) {
+		int blockX = MathHelper.floor_double(x);
+		int blockY = MathHelper.floor_double(y);
+		int blockZ = MathHelper.floor_double(z);
+		double dx = x - blockX;
+		double dy = y - blockY;
+		double dz = z - blockZ;
 
-		if (!worldObj.isAirBlock(var7, var8, var9)) {
-			boolean var16 = !worldObj.isBlockNormalCubeDefault(var7 - 1, var8, var9, false);
-			boolean var17 = !worldObj.isBlockNormalCubeDefault(var7 + 1, var8, var9, false);
-			boolean var18 = !worldObj.isBlockNormalCubeDefault(var7, var8 - 1, var9, false);
-			boolean var19 = !worldObj.isBlockNormalCubeDefault(var7, var8 + 1, var9, false);
-			boolean var20 = !worldObj.isBlockNormalCubeDefault(var7, var8, var9 - 1, false);
-			boolean var21 = !worldObj.isBlockNormalCubeDefault(var7, var8, var9 + 1, false);
-			byte var22 = -1;
-			double var23 = 9999.0D;
+		if (!worldObj.isAirBlock(blockX, blockY, blockZ)) {
+			boolean westFree = !worldObj.isBlockNormalCubeDefault(blockX - 1, blockY, blockZ, false);
+			boolean eastFree = !worldObj.isBlockNormalCubeDefault(blockX + 1, blockY, blockZ, false);
+			boolean downFree = !worldObj.isBlockNormalCubeDefault(blockX, blockY - 1, blockZ, false);
+			boolean upFree = !worldObj.isBlockNormalCubeDefault(blockX, blockY + 1, blockZ, false);
+			boolean northFree = !worldObj.isBlockNormalCubeDefault(blockX, blockY, blockZ - 1, false);
+			boolean southFree = !worldObj.isBlockNormalCubeDefault(blockX, blockY, blockZ + 1, false);
+			byte direction = -1;
+			double minDist = 9999.0D;
 
-			if (var16 && var10 < var23) {
-				var23 = var10;
-				var22 = 0;
+			if (westFree && dx < minDist) {
+				minDist = dx;
+				direction = 0;
 			}
 
-			if (var17 && 1.0D - var10 < var23) {
-				var23 = 1.0D - var10;
-				var22 = 1;
+			if (eastFree && (1.0D - dx) < minDist) {
+				minDist = 1.0D - dx;
+				direction = 1;
 			}
 
-			if (var18 && var12 < var23) {
-				var23 = var12;
-				var22 = 2;
+			if (downFree && dy < minDist) {
+				minDist = dy;
+				direction = 2;
 			}
 
-			if (var19 && 1.0D - var12 < var23) {
-				var23 = 1.0D - var12;
-				var22 = 3;
+			if (upFree && (1.0D - dy) < minDist) {
+				minDist = 1.0D - dy;
+				direction = 3;
 			}
 
-			if (var20 && var14 < var23) {
-				var23 = var14;
-				var22 = 4;
+			if (northFree && dz < minDist) {
+				minDist = dz;
+				direction = 4;
 			}
 
-			if (var21 && 1.0D - var14 < var23) {
-				var23 = 1.0D - var14;
-				var22 = 5;
+			if (southFree && (1.0D - dz) < minDist) {
+				minDist = 1.0D - dz;
+				direction = 5;
 			}
 
-			float var25 = rand.nextFloat() * 0.05F + 0.025F;
-			float var26 = (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+			float mainVel = rand.nextFloat() * 0.05F + 0.025F;
+			float sideVel1 = (rand.nextFloat() - rand.nextFloat()) * 0.1F;
+			float sideVel2 = (rand.nextFloat() - rand.nextFloat()) * 0.1F;
 
-			if (var22 == 0) {
-				motionX = -var25;
-				motionY=motionZ=var26;
-			}
+			switch(direction) {
+				case 0 -> {
+					motionX = -mainVel;
+					motionY = sideVel1;
+					motionZ = sideVel2;
+				}
 
-			if (var22 == 1) {
-				motionX = var25;
-				motionY=motionZ=var26;
-			}
+				case 1 -> {
+					motionX = mainVel;
+					motionY = sideVel1;
+					motionZ = sideVel2;
+				}
 
-			if (var22 == 2) {
-				motionY = -var25;
-				motionX=motionZ=var26;
-			}
+				case 2 -> {
+					motionY = -mainVel;
+					motionX = sideVel1;
+					motionZ = sideVel2;
+				}
 
-			if (var22 == 3) {
-				motionY = var25;
-				motionX=motionZ=var26;
-			}
+				case 3 -> {
+					motionY = mainVel;
+					motionX = sideVel1;
+					motionZ = sideVel2;
+				}
 
-			if (var22 == 4) {
-				motionZ = -var25;
-				motionY=motionX=var26;
-			}
+				case 4 -> {
+					motionZ = -mainVel;
+					motionY = sideVel1;
+					motionX = sideVel2;
+				}
 
-			if (var22 == 5) {
-				motionZ = var25;
-				motionY=motionX=var26;
+				case 5 -> {
+					motionZ = mainVel;
+					motionY = sideVel1;
+					motionX = sideVel2;
+				}
+
+				default -> {}
 			}
 
 			return true;

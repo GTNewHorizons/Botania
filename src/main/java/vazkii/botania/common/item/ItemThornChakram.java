@@ -43,14 +43,14 @@ public class ItemThornChakram extends ItemMod implements ICraftAchievement {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this, 0);
-		iconFire = IconHelper.forItem(par1IconRegister, this, 1);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this, 0);
+		iconFire = IconHelper.forItem(register, this, 1);
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int dmg) {
-		return dmg == 0 ? itemIcon : iconFire;
+	public IIcon getIconFromDamage(int meta) {
+		return meta == 0 ? itemIcon : iconFire;
 	}
 
 	@Override
@@ -59,19 +59,19 @@ public class ItemThornChakram extends ItemMod implements ICraftAchievement {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer player)  {
-		--itemStackIn.stackSize;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)  {
+		--stack.stackSize;
 
-		worldIn.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+		world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-		if(!worldIn.isRemote) {
-			EntityThornChakram c = new EntityThornChakram(worldIn, player);
-			c.setFire(itemStackIn.getItemDamage() != 0);
-			worldIn.spawnEntityInWorld(c);
+		if(!world.isRemote) {
+			EntityThornChakram c = new EntityThornChakram(world, player);
+			c.setFire(stack.getItemDamage() != 0);
+			world.spawnEntityInWorld(c);
 		}
 
 
-		return itemStackIn;
+		return stack;
 	}
 
 	@Override

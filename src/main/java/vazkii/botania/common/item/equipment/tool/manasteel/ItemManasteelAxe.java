@@ -54,25 +54,25 @@ public class ItemManasteelAxe extends ItemAxe implements IManaUsingItem, ISortab
 	}
 
 	@Override
-	public Item setUnlocalizedName(String par1Str) {
-		GameRegistry.registerItem(this, par1Str);
-		return super.setUnlocalizedName(par1Str);
+	public Item setUnlocalizedName(String name) {
+		GameRegistry.registerItem(this, name);
+		return super.setUnlocalizedName(name);
 	}
 
 	@Override
-	public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-		return super.getUnlocalizedNameInefficiently(par1ItemStack).replaceAll("item.", "item." + LibResources.PREFIX_MOD);
+	public String getUnlocalizedNameInefficiently(ItemStack stack) {
+		return super.getUnlocalizedNameInefficiently(stack).replaceAll("item.", "item." + LibResources.PREFIX_MOD);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this);
 	}
 
 	@Override
-	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLivingBase, EntityLivingBase par3EntityLivingBase) {
-		ToolCommons.damageItem(par1ItemStack, 1, par3EntityLivingBase, getManaPerDamage());
+	public boolean hitEntity(ItemStack stack, EntityLivingBase victim, EntityLivingBase attacker) {
+		ToolCommons.damageItem(stack, 1, attacker, getManaPerDamage());
 		return true;
 	}
 
@@ -89,11 +89,11 @@ public class ItemManasteelAxe extends ItemAxe implements IManaUsingItem, ISortab
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int s, float sx, float sy, float sz) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack stackAt = player.inventory.getStackInSlot(i);
 			if(stackAt != null && SAPLING_PATTERN.matcher(stackAt.getItem().getUnlocalizedName()).find()) {
-				boolean did = stackAt.getItem().onItemUse(stackAt, player, world, x, y, z, s, sx, sy, sz);
+				boolean did = stackAt.getItem().onItemUse(stackAt, player, world, x, y, z, side, subX, subY, subZ);
 				if(stackAt.stackSize == 0)
 					player.inventory.setInventorySlotContents(i, null);
 
@@ -107,14 +107,14 @@ public class ItemManasteelAxe extends ItemAxe implements IManaUsingItem, ISortab
 
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity player, int par4, boolean par5) {
-		if(!world.isRemote && player instanceof EntityPlayer && stack.getItemDamage() > 0 && ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) player, getManaPerDamage() * 2, true))
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(!world.isRemote && entity instanceof EntityPlayer && stack.getItemDamage() > 0 && ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, getManaPerDamage() * 2, true))
 			stack.setItemDamage(stack.getItemDamage() - 1);
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
-		return par2ItemStack.getItem() == ModItems.manaResource && par2ItemStack.getItemDamage() == 0 ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+	public boolean getIsRepairable(ItemStack stack, ItemStack repairMaterial) {
+		return repairMaterial.getItem() == ModItems.manaResource && repairMaterial.getItemDamage() == 0 ? true : super.getIsRepairable(stack, repairMaterial);
 	}
 
 	@Override

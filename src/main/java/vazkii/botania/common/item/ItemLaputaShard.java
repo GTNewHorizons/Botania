@@ -66,18 +66,18 @@ public class ItemLaputaShard extends ItemMod implements ILensEffect, ITinyPlanet
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		infoList.add(String.format(StatCollector.translateToLocal("botaniamisc.shardLevel"), StatCollector.translateToLocal("botania.roman" + (stack.getItemDamage() + 1))));
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		if(par5 < 160 && !par3World.provider.isHellWorld) {
-			par3World.playSound(par4 + 0.5D, par5 + 0.5D, par6 + 0.5D, "botania:laputaStart", 1.0F + par3World.rand.nextFloat(), par3World.rand.nextFloat() * 0.7F + 1.3F, false);
-			spawnBurstFirst(par3World, par4, par5, par6, par1ItemStack);
-			par1ItemStack.stackSize--;
-			if(par1ItemStack.getItemDamage() == 19)
-				par2EntityPlayer.addStat(ModAchievements.l20ShardUse, 1);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		if(y < 160 && !world.provider.isHellWorld) {
+			world.playSound(x + 0.5D, y + 0.5D, z + 0.5D, "botania:laputaStart", 1.0F + world.rand.nextFloat(), world.rand.nextFloat() * 0.7F + 1.3F, false);
+			spawnBurstFirst(world, x, y, z, stack);
+			stack.stackSize--;
+			if(stack.getItemDamage() == 19)
+				player.addStat(ModAchievements.l20ShardUse, 1);
 		}
 
 		return true;

@@ -62,8 +62,8 @@ public class EntityPoolMinecart extends EntityMinecart {
 	}
 
 	@Override
-	public void killMinecart(DamageSource p_94095_1_) {
-		super.killMinecart(p_94095_1_);
+	public void killMinecart(DamageSource source) {
+		super.killMinecart(source);
 		func_145778_a(Item.getItemFromBlock(ModBlocks.pool), 1, 0.0F);
 	}
 

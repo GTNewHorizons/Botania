@@ -83,9 +83,9 @@ public class ContainerBaubleBox extends Container {
 	}
 
 	@Override
-	public void putStacksInSlots(ItemStack[] p_75131_1_) {
+	public void putStacksInSlots(ItemStack[] stacks) {
 		baubles.blockEvents = true;
-		super.putStacksInSlots(p_75131_1_);
+		super.putStacksInSlots(stacks);
 	}
 
 	@Override

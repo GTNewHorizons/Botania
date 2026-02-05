@@ -36,11 +36,10 @@ public class ItemSpark extends ItemMod implements ICraftAchievement, IManaGiving
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float xv, float yv, float zv) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if(tile instanceof ISparkAttachable) {
-			ISparkAttachable attach = (ISparkAttachable) tile;
-			if(attach.canAttachSpark(stack) && attach.getAttachedSpark() == null) {
+		if(tile instanceof ISparkAttachable attach) {
+            if(attach.canAttachSpark(stack) && attach.getAttachedSpark() == null) {
 				stack.stackSize--;
 				if(!world.isRemote) {
 					EntitySpark spark = new EntitySpark(world);
@@ -56,13 +55,13 @@ public class ItemSpark extends ItemMod implements ICraftAchievement, IManaGiving
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		invIcon = IconHelper.forItem(par1IconRegister, this, 0);
-		worldIcon = IconHelper.forItem(par1IconRegister, this, 1);
+	public void registerIcons(IIconRegister register) {
+		invIcon = IconHelper.forItem(register, this, 0);
+		worldIcon = IconHelper.forItem(register, this, 1);
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int p_77617_1_) {
+	public IIcon getIconFromDamage(int meta) {
 		return invIcon;
 	}
 

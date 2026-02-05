@@ -39,8 +39,8 @@ public class RenderTileIncensePlate extends TileEntitySpecialRenderer {
 	ModelIncensePlate model = new ModelIncensePlate();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float ticks) {
-		TileIncensePlate plate = (TileIncensePlate) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TileIncensePlate plate = (TileIncensePlate) tileEntity;
 
 		int meta = plate.getWorldObj() != null ? plate.getBlockMetadata() : 0;
 
@@ -49,7 +49,7 @@ public class RenderTileIncensePlate extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		GL11.glTranslatef(0.5F, 1.5F, 0.5F);
 		GL11.glScalef(1F, -1F, -1F);

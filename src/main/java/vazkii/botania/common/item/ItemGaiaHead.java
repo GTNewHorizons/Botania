@@ -30,7 +30,7 @@ public class ItemGaiaHead extends ItemMod {
 
 	// I couldn't deal with it.
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float sideX, float sideY, float sideZ) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
 		// The side of the wall the head is being used on.
 		ForgeDirection sideDir = ForgeDirection.getOrientation(side);
 
@@ -80,7 +80,7 @@ public class ItemGaiaHead extends ItemMod {
 		// Update the skull's orientation if it lets us.
 		TileEntity tileentity = world.getTileEntity(x, y, z);
 
-		if (tileentity != null && tileentity instanceof TileEntitySkull) {
+		if (tileentity instanceof TileEntitySkull) {
 			((TileEntitySkull) tileentity).func_145903_a(headAngle);
 			((BlockSkull) Blocks.skull).func_149965_a(world, x, y, z, (TileEntitySkull) tileentity);
 		}

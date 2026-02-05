@@ -193,15 +193,15 @@ public class GuiLexicon extends GuiScreen {
 	}
 
 	@Override
-	public void drawScreen(int par1, int par2, float par3) {
-		float time = ClientTickHandler.ticksInGame + par3;
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		float time = ClientTickHandler.ticksInGame + partialTicks;
 		timeDelta = time - lastTime;
 		lastTime = time;
-		partialTicks = par3;
+		this.partialTicks = partialTicks;
 
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		mc.renderEngine.bindTexture(texture);
-		drawNotes(par3);
+		drawNotes(partialTicks);
 
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		mc.renderEngine.bindTexture(texture);
@@ -227,7 +227,7 @@ public class GuiLexicon extends GuiScreen {
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			mc.renderEngine.bindTexture(texture);
 			drawTexturedModalRect(left - 19, top + 42, 67, 180, 19, 26);
-			if(par1 >= left - 19 && par1 < left && par2 >= top + 62 && par2 < top + 88) {
+			if(mouseX >= left - 19 && mouseX < left && mouseY >= top + 62 && mouseY < top + 88) {
 				mc.renderEngine.bindTexture(textureToff);
 				GL11.glPushMatrix();
 				GL11.glScalef(0.5F, 0.5F, 0.5F);
@@ -237,24 +237,24 @@ public class GuiLexicon extends GuiScreen {
 
 				int w = 256;
 				int h = 152;
-				int x = (int) ((ClientTickHandler.ticksInGame + par3) * 6) % (width + w) - w;
-				int y = (int) (top + guiHeight / 2 - h / 4 + Math.sin((ClientTickHandler.ticksInGame + par3) / 6.0) * 40);
+				int x = (int) ((ClientTickHandler.ticksInGame + partialTicks) * 6) % (width + w) - w;
+				int y = (int) (top + guiHeight / 2 - h / 4 + Math.sin((ClientTickHandler.ticksInGame + partialTicks) / 6.0) * 40);
 
 				drawTexturedModalRect(x * 2, y * 2, 0, 0, w, h);
 				GL11.glDisable(GL11.GL_BLEND);
 				GL11.glPopMatrix();
 
-				RenderHelper.renderTooltip(par1, par2, Arrays.asList(EnumChatFormatting.GOLD + "#goldfishchris", EnumChatFormatting.AQUA + "IT SAYS MANUAL"));
+				RenderHelper.renderTooltip(mouseX, mouseY, Arrays.asList(EnumChatFormatting.GOLD + "#goldfishchris", EnumChatFormatting.AQUA + "IT SAYS MANUAL"));
 			}
 		}
 
-		super.drawScreen(par1, par2, par3);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		if(hasTutorialArrow) {
 			mc.renderEngine.bindTexture(texture);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(1F, 1F, 1F, 0.7F + (float) (Math.sin((ClientTickHandler.ticksInGame + par3) * 0.3F) + 1) * 0.15F);
+			GL11.glColor4f(1F, 1F, 1F, 0.7F + (float) (Math.sin((ClientTickHandler.ticksInGame + partialTicks) * 0.3F) + 1) * 0.15F);
 			drawTexturedModalRect(tutorialArrowX, tutorialArrowY, 20, 200, TUTORIAL_ARROW_WIDTH, TUTORIAL_ARROW_HEIGHT);
 			GL11.glDisable(GL11.GL_BLEND);
 		}
@@ -349,20 +349,20 @@ public class GuiLexicon extends GuiScreen {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton par1GuiButton) {
-		if(par1GuiButton.id >= BOOKMARK_START) {
-			if(par1GuiButton.id >= BOOKMARK_START + MAX_BOOKMARK_COUNT) {
-				if(par1GuiButton instanceof GuiButtonChallengeInfo)
+	protected void actionPerformed(GuiButton button) {
+		if(button.id >= BOOKMARK_START) {
+			if(button.id >= BOOKMARK_START + MAX_BOOKMARK_COUNT) {
+				if(button instanceof GuiButtonChallengeInfo)
 					mc.displayGuiScreen(new GuiLexiconEntry(LexiconData.challenges, this));
 				else mc.displayGuiScreen(new GuiLexiconHistory());
 				ClientTickHandler.notifyPageChange();
-			} else handleBookmark(par1GuiButton);
-		} else if(par1GuiButton instanceof GuiButtonCategory) {
-			LexiconCategory category = ((GuiButtonCategory) par1GuiButton).getCategory();
+			} else handleBookmark(button);
+		} else if(button instanceof GuiButtonCategory) {
+			LexiconCategory category = ((GuiButtonCategory) button).getCategory();
 
 			mc.displayGuiScreen(new GuiLexiconIndex(category));
 			ClientTickHandler.notifyPageChange();
-		} else switch(par1GuiButton.id) {
+		} else switch(button.id) {
 		case -1 :
 			mc.displayGuiScreen(new GuiBotaniaConfig(this));
 			break;
@@ -383,8 +383,8 @@ public class GuiLexicon extends GuiScreen {
 			} else {
 				PersistentVariableHelper.lastBotaniaVersion = LibMisc.VERSION;
 				PersistentVariableHelper.saveSafe();
-				par1GuiButton.visible = false;
-				par1GuiButton.enabled = false;
+				button.visible = false;
+				button.enabled = false;
 			}
 
 			break;
@@ -394,9 +394,9 @@ public class GuiLexicon extends GuiScreen {
 		}
 	}
 
-	public void handleBookmark(GuiButton par1GuiButton) {
+	public void handleBookmark(GuiButton button) {
 		boolean modified = false;
-		int i = par1GuiButton.id - BOOKMARK_START;
+		int i = button.id - BOOKMARK_START;
 		String key = getNotesKey();
 		if(i == bookmarks.size()) {
 			if(!bookmarkKeys.contains(key)) {
@@ -561,15 +561,15 @@ public class GuiLexicon extends GuiScreen {
 	}
 
 	@Override
-	protected void keyTyped(char par1, int par2) {
-		handleNoteKey(par1, par2);
+	protected void keyTyped(char typedChar, int keyCode) {
+		handleNoteKey(typedChar, keyCode);
 
-		if(!notesEnabled && closeScreenOnInvKey() && mc.gameSettings.keyBindInventory.getKeyCode() == par2) {
+		if(!notesEnabled && closeScreenOnInvKey() && mc.gameSettings.keyBindInventory.getKeyCode() == keyCode) {
 			mc.displayGuiScreen(null);
 			mc.setIngameFocus();
 		}
 
-		if(par2 == KONAMI_CODE[konamiIndex]) {
+		if(keyCode == KONAMI_CODE[konamiIndex]) {
 			konamiIndex++;
 			if(konamiIndex >= KONAMI_CODE.length) {
 				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation("botania:way")));
@@ -577,15 +577,15 @@ public class GuiLexicon extends GuiScreen {
 			}
 		} else konamiIndex = 0;
 
-		super.keyTyped(par1, par2);
+		super.keyTyped(typedChar, keyCode);
 	}
 
-	public void handleNoteKey(char par1, int par2) {
+	public void handleNoteKey(char typedChar, int keyCode) {
 		if(notesEnabled) {
 			Keyboard.enableRepeatEvents(true);
 			boolean changed = false;
 
-			if(par2 == 14 && note.length() > 0) {
+			if(keyCode == 14 && note.length() > 0) {
 				if(isCtrlKeyDown())
 					note = "";
 				else {
@@ -596,8 +596,8 @@ public class GuiLexicon extends GuiScreen {
 				changed = true;
 			}
 
-			if((ChatAllowedCharacters.isAllowedCharacter(par1) || par2 == 28) && note.length() < 250) {
-				note += par2 == 28 ? "<br>" : par1;
+			if((ChatAllowedCharacters.isAllowedCharacter(typedChar) || keyCode == 28) && note.length() < 250) {
+				note += keyCode == 28 ? "<br>" : typedChar;
 				changed = true;
 			}
 

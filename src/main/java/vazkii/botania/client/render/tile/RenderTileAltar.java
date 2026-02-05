@@ -57,13 +57,13 @@ public class RenderTileAltar extends TileEntitySpecialRenderer {
 	public static int forceMeta = -1;
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float pticks) {
-		TileAltar altar = (TileAltar) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double d0, double d1, double d2, float partialTicks) {
+		TileAltar altar = (TileAltar) tileEntity;
 
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(altar.isMossy ? textureMossy : textures[Math.min(textures.length - 1, forceMeta == -1 ? tileentity.getBlockMetadata() : forceMeta)]);
+		Minecraft.getMinecraft().renderEngine.bindTexture(altar.isMossy ? textureMossy : textures[Math.min(textures.length - 1, forceMeta == -1 ? tileEntity.getBlockMetadata() : forceMeta)]);
 
 		GL11.glTranslated(d0 + 0.5, d1 + 1.5, d2 + 0.5);
 		GL11.glScalef(1F, -1F, -1F);
@@ -93,7 +93,7 @@ public class RenderTileAltar extends TileEntitySpecialRenderer {
 					final float radiusBase = 1.2F;
 					final float radiusMod = 0.1F;
 
-					double ticks = (ClientTickHandler.ticksInGame + pticks) * 0.5;
+					double ticks = (ClientTickHandler.ticksInGame + partialTicks) * 0.5;
 					float offsetPerPetal = 360 / petals;
 
 					GL11.glPushMatrix();

@@ -152,12 +152,12 @@ public class ItemLens extends ItemMod implements ILensControl, ICompositableLens
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		iconGlass = IconHelper.forName(par1IconRegister, "lensInside");
+	public void registerIcons(IIconRegister register) {
+		iconGlass = IconHelper.forName(register, "lensInside");
 
 		ringIcons = new IIcon[SUBTYPES];
 		for(int i = 0; i < ringIcons.length; i++)
-			ringIcons[i] = IconHelper.forName(par1IconRegister, LibItemNames.LENS_NAMES[i]);
+			ringIcons[i] = IconHelper.forName(register, LibItemNames.LENS_NAMES[i]);
 	}
 
 	@Override
@@ -172,27 +172,27 @@ public class ItemLens extends ItemMod implements ILensControl, ICompositableLens
 	}
 
 	@Override
-	public IIcon getIconFromDamageForRenderPass(int par1, int par2) {
-		return par2 == 1 ? ringIcons[Math.min(SUBTYPES - 1, par1)] : iconGlass;
+	public IIcon getIconFromDamageForRenderPass(int meta, int renderPass) {
+		return renderPass == 1 ? ringIcons[Math.min(SUBTYPES - 1, meta)] : iconGlass;
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int par1) {
-		return getIconFromDamageForRenderPass(par1, 0);
+	public IIcon getIconFromDamage(int meta) {
+		return getIconFromDamageForRenderPass(meta, 0);
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-		return par2 == 0 ? getLensColor(par1ItemStack) : 0xFFFFFF;
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		return renderPass == 0 ? getLensColor(stack) : 0xFFFFFF;
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return "item." + LibItemNames.LENS_NAMES[Math.min(SUBTYPES - 1, par1ItemStack.getItemDamage())];
+	public String getUnlocalizedName(ItemStack stack) {
+		return "item." + LibItemNames.LENS_NAMES[Math.min(SUBTYPES - 1, stack.getItemDamage())];
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		int storedColor = getStoredColor(stack);
 		if(storedColor != -1)
 			infoList.add(String.format(StatCollector.translateToLocal("botaniamisc.color"), StatCollector.translateToLocal("botania.color" + storedColor)));

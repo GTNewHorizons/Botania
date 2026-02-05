@@ -85,13 +85,13 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		iconOn = IconHelper.forItem(par1IconRegister, this, 0);
-		iconOff = IconHelper.forItem(par1IconRegister, this, 1);
+	public void registerIcons(IIconRegister register) {
+		iconOn = IconHelper.forItem(register, this, 0);
+		iconOff = IconHelper.forItem(register, this, 1);
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int p_77617_1_) {
+	public IIcon getIconFromDamage(int meta) {
 		return iconOn;
 	}
 
@@ -396,10 +396,9 @@ public class ItemTerraAxe extends ItemManasteelAxe implements ISequentialBreaker
 			
 			@Override
 			public boolean equals(Object other) {
-				if(!(other instanceof SwapCandidate)) return false;
-				
-				SwapCandidate cand = (SwapCandidate) other;
-				return coordinates.equals(cand.coordinates) && range == cand.range;
+				if(!(other instanceof SwapCandidate cand)) return false;
+
+                return coordinates.equals(cand.coordinates) && range == cand.range;
 			}
 		}
 	}

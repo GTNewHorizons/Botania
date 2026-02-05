@@ -36,7 +36,7 @@ public class RenderTileStarfield extends TileEntitySpecialRenderer {
 	private static final Random field_147527_e = new Random(31100L);
 	FloatBuffer field_147528_b = GLAllocation.createDirectFloatBuffer(16);
 	@Override
-	public void renderTileEntityAt(TileEntity p_147500_1_, double p_147500_2_, double p_147500_4_, double p_147500_6_, float p_147500_8_) {
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
 		float f1 = (float)field_147501_a.field_147560_j;
 		float f2 = (float)field_147501_a.field_147561_k;
 		float f3 = (float)field_147501_a.field_147558_l;
@@ -66,11 +66,11 @@ public class RenderTileStarfield extends TileEntitySpecialRenderer {
 				f6 = 0.5F;
 			}
 
-			float f8 = (float)-(p_147500_4_ + f4);
+			float f8 = (float)-(y + f4);
 			float f9 = f8 + ActiveRenderInfo.objectY;
 			float f10 = f8 + f5 + ActiveRenderInfo.objectY;
 			float f11 = f9 / f10;
-			f11 += (float)(p_147500_4_ + f4);
+			f11 += (float)(y + f4);
 			GL11.glTranslatef(f1, f11, f3);
 			GL11.glTexGeni(GL11.GL_S, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
 			GL11.glTexGeni(GL11.GL_T, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
@@ -105,10 +105,10 @@ public class RenderTileStarfield extends TileEntitySpecialRenderer {
 			float f13 = color.getBlue() / 255F;
 
 			tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + f4, p_147500_6_);
-			tessellator.addVertex(p_147500_2_, p_147500_4_ + f4, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + f4, p_147500_6_ + 1.0D);
-			tessellator.addVertex(p_147500_2_ + 1.0D, p_147500_4_ + f4, p_147500_6_);
+			tessellator.addVertex(x, y + f4, z);
+			tessellator.addVertex(x, y + f4, z + 1.0D);
+			tessellator.addVertex(x + 1.0D, y + f4, z + 1.0D);
+			tessellator.addVertex(x + 1.0D, y + f4, z);
 			tessellator.draw();
 			GL11.glPopMatrix();
 			GL11.glMatrixMode(GL11.GL_MODELVIEW);

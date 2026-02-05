@@ -17,7 +17,7 @@ botaniamisc.statusUnknown=알 수 없는 상태
 botaniamisc.color=%s 색
 botaniamisc.manaUsage=마나 사용량
 botaniamisc.shiftToRead=Shift  우클릭으로 더 많은 정보를 얻으세요
-botaniamisc.clickToRecipe=Shift  좌클릭으로 조합법을 얻으세요
+botaniamisc.clickToSeeRecipe=Shift  좌클릭으로 조합법을 얻으세요
 botaniamisc.clickToIndex=Shift 클릭시 목차로 이동
 botaniamisc.flareColor=%s 색
 botaniamisc.outputtingPower=아이템에 마나를 주입합니다
@@ -2765,7 +2765,7 @@ botania.page.slimeBottle1=JUMPYDOLL
 # -- ROD OF THE SHIFTING CRUST
 botania.entry.exchangeRod=Rod of the Shifting Crust
 botania.page.exchangeRod0=&1Rod of the Shifting Crust&0 is a magical device with the ability to swap blocks in the world at very fast speeds. In order to achieve this, one must first select a block to swap with, this is done by shift-right clicking that block in the world.<br>After this block is selected, left clicking any other block in the world will swap it for that block, assuming it's present in the user's inventory.
-botania.page.exchangeRod1=Right clicking on a block in the world will start a larger transformation, which will swap all highlighted blocks into the one selected. Obviously, these blocks do come from the user's inventory as well. Only proper, full size blocks can be used for this swap, so no flowers, torches or other shenenigans of the sort. Using this power does, naturally, require &4Mana&0 from the user's inventory.
+botania.page.exchangeRod1=Right clicking on a block in the world will start a larger transformation, which will swap all highlighted blocks into the one selected. Obviously, these blocks do come from the user's inventory as well. Only proper, full size blocks can be used for this swap, so no flowers, torches or other shenanigans of the sort. Using this power does, naturally, require &4Mana&0 from the user's inventory.
 botania.page.exchangeRod2=Other rods or devices can be used to extend the power of the &1Rod of the Shifting Crust&0.<br>For example, having a &1Rod of the Lands&0 in one's inventory provides the &1Rod of the Shifting Crust&0 with an endless supply of &1Dirt&0, assuming the &4Mana&0 cost for the &1Rod of the Lands&0' dirt conjuration is fulfiled.
 botania.page.exchangeRod3=Bootlegged equal trade
 

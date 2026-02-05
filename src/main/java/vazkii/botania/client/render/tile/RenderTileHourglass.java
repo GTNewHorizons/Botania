@@ -31,8 +31,8 @@ public class RenderTileHourglass extends TileEntitySpecialRenderer {
 	ModelHourglass model = new ModelHourglass();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float ticks) {
-		TileHourglass hourglass = (TileHourglass) tileentity;
+	public void renderTileEntityAt(TileEntity tileEntity, double d0, double d1, double d2, float partialTicks) {
+		TileHourglass hourglass = (TileHourglass) tileEntity;
 
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_BLEND);
@@ -41,11 +41,11 @@ public class RenderTileHourglass extends TileEntitySpecialRenderer {
 		GL11.glTranslated(d0, d1, d2);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
-		int wtime = tileentity.getWorldObj() == null ? 0 : ClientTickHandler.ticksInGame;
+		int wtime = tileEntity.getWorldObj() == null ? 0 : ClientTickHandler.ticksInGame;
 		if(wtime != 0)
-			wtime += new Random(tileentity.xCoord ^ tileentity.yCoord ^ tileentity.zCoord).nextInt(360);
+			wtime += new Random(tileEntity.xCoord ^ tileEntity.yCoord ^ tileEntity.zCoord).nextInt(360);
 
-		float time = wtime == 0 ? 0 : wtime + ticks;
+		float time = wtime == 0 ? 0 : wtime + partialTicks;
 		float x = 0.5F + (float) Math.cos(time * 0.05F) * 0.025F;
 		float y = 0.55F + (float) (Math.sin(time * 0.04F) + 1F) * 0.05F;
 		float z = 0.5F + (float) Math.sin(time * 0.05F) * 0.025F;
@@ -57,7 +57,7 @@ public class RenderTileHourglass extends TileEntitySpecialRenderer {
 
 		float rot = hourglass.flip ? 180F : 1F;
 		if(hourglass.flipTicks > 0)
-			rot += (hourglass.flipTicks - ticks) * (180F / 4F);
+			rot += (hourglass.flipTicks - partialTicks) * (180F / 4F);
 		GL11.glRotatef(rot, 0F, 0F, 1F);
 
 		GL11.glScalef(1F, -1F, -1F);

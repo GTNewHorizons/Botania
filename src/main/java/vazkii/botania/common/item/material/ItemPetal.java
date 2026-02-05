@@ -26,13 +26,13 @@ public class ItemPetal extends Item16Colors implements IFlowerComponent {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		ItemStack stackToPlace = new ItemStack(ModBlocks.buriedPetals, 1, par1ItemStack.getItemDamage());
-		stackToPlace.tryPlaceItemIntoWorld(par2EntityPlayer, par3World, par4, par5, par6, par7, par8, par9, par10);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		ItemStack stackToPlace = new ItemStack(ModBlocks.buriedPetals, 1, stack.getItemDamage());
+		stackToPlace.tryPlaceItemIntoWorld(player, world, x, y, z, side, subX, subY, subZ);
 
 		if(stackToPlace.stackSize == 0) {
-			if(!par2EntityPlayer.capabilities.isCreativeMode)
-				par1ItemStack.stackSize--;
+			if(!player.capabilities.isCreativeMode)
+				stack.stackSize--;
 
 			return true;
 		}

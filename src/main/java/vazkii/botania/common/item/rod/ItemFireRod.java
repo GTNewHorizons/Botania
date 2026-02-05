@@ -40,24 +40,24 @@ public class ItemFireRod extends ItemMod implements IManaUsingItem, IAvatarWield
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer player, World par3World, int x, int y, int z, int par7, float par8, float par9, float par10) {
-		if(!par3World.isRemote && par1ItemStack.getItemDamage() == 0 && ManaItemHandler.requestManaExactForTool(par1ItemStack, player, COST, false)) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		if(!world.isRemote && stack.getItemDamage() == 0 && ManaItemHandler.requestManaExactForTool(stack, player, COST, false)) {
 			EntityFlameRing entity = new EntityFlameRing(player.worldObj);
 			entity.setPosition(x + 0.5, y + 1, z + 0.5);
 			player.worldObj.spawnEntityInWorld(entity);
 
-			par1ItemStack.setItemDamage(COOLDOWN);
-			ManaItemHandler.requestManaExactForTool(par1ItemStack, player, COST, true);
-			par3World.playSoundAtEntity(player, "mob.blaze.breathe", 1F, 1F);
+			stack.setItemDamage(COOLDOWN);
+			ManaItemHandler.requestManaExactForTool(stack, player, COST, true);
+			world.playSoundAtEntity(player, "mob.blaze.breathe", 1F, 1F);
 		}
 
 		return true;
 	}
 
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		if(par1ItemStack.isItemDamaged() && par3Entity instanceof EntityPlayer)
-			par1ItemStack.setItemDamage(par1ItemStack.getItemDamage() - (IManaProficiencyArmor.Helper.hasProficiency((EntityPlayer) par3Entity) ? 2 : 1));
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(stack.isItemDamaged() && entity instanceof EntityPlayer)
+			stack.setItemDamage(stack.getItemDamage() - (IManaProficiencyArmor.Helper.hasProficiency((EntityPlayer) entity) ? 2 : 1));
 	}
 
 	@Override

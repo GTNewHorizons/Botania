@@ -63,7 +63,7 @@ public abstract class ItemBrewBase extends ItemMod implements IBrewItem, IPickup
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack p_77626_1_) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return drinkSpeed;
 	}
 
@@ -73,9 +73,9 @@ public abstract class ItemBrewBase extends ItemMod implements IBrewItem, IPickup
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer player) {
-		player.setItemInUse(itemStackIn, getMaxItemUseDuration(itemStackIn));
-		return itemStackIn;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		player.setItemInUse(stack, getMaxItemUseDuration(stack));
+		return stack;
 	}
 
 	@Override
@@ -119,12 +119,12 @@ public abstract class ItemBrewBase extends ItemMod implements IBrewItem, IPickup
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forName(par1IconRegister, texName + "0");
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forName(register, texName + "0");
 
 		icons = new IIcon[swigs];
 		for(int i = 0; i < swigs; i++)
-			icons[i] = IconHelper.forName(par1IconRegister, texName + "1_" + i);
+			icons[i] = IconHelper.forName(register, texName + "1_" + i);
 	}
 
 	@Override
@@ -138,8 +138,8 @@ public abstract class ItemBrewBase extends ItemMod implements IBrewItem, IPickup
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack stack, int pass) {
-		if(pass == 0)
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		if(renderPass == 0)
 			return 0xFFFFFF;
 
 		Color color = new Color(getBrew(stack).getColor(stack));
@@ -158,7 +158,7 @@ public abstract class ItemBrewBase extends ItemMod implements IBrewItem, IPickup
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		Brew brew = getBrew(stack);
 		for(PotionEffect effect : brew.getPotionEffects(stack)) {
 			Potion potion = Potion.potionTypes[effect.getPotionID()];

@@ -27,32 +27,30 @@ public class RenderDoubleFlower implements ISimpleBlockRenderingHandler {
 	}
 
 	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int p_147774_2_, int p_147774_3_, int p_147774_4_, Block block, int modelId, RenderBlocks renderer) {
-		BlockDoublePlant p_147774_1_ = (BlockDoublePlant) block;
+	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
+		BlockDoublePlant flower = (BlockDoublePlant) block;
 		Tessellator tessellator = Tessellator.instance;
-		tessellator.setBrightness(p_147774_1_.getMixedBrightnessForBlock(world, p_147774_2_, p_147774_3_, p_147774_4_));
+		tessellator.setBrightness(flower.getMixedBrightnessForBlock(world, x, y, z));
 		tessellator.setColorOpaque_F(1F, 1F, 1F);
-		long j1 = p_147774_2_ * 3129871 ^ p_147774_4_ * 116129781L;
-		j1 = j1 * j1 * 42317861L + j1 * 11L;
-		int i1 = world.getBlockMetadata(p_147774_2_, p_147774_3_, p_147774_4_);
-		boolean flag1 = BlockDoublePlant.func_149887_c(i1);
-		if (flag1)
+        int meta = world.getBlockMetadata(x, y, z);
+		boolean isTopHalf = BlockDoublePlant.func_149887_c(meta);
+		if (isTopHalf)
 		{
-			if (world.getBlock(p_147774_2_, p_147774_3_ - 1, p_147774_4_) != p_147774_1_)
+			if (world.getBlock(x, y - 1, z) != flower)
 			{
 				return false;
 			}
 
-			BlockDoublePlant.func_149890_d(world.getBlockMetadata(p_147774_2_, p_147774_3_ - 1, p_147774_4_));
+			BlockDoublePlant.func_149890_d(world.getBlockMetadata(x, y - 1, z));
 		}
 		else
 		{
-			BlockDoublePlant.func_149890_d(i1);
+			BlockDoublePlant.func_149890_d(meta);
 		}
 
 		// Only change here, to use xyz rather than side/meta
-		IIcon icon = renderer.getBlockIcon(block, world, p_147774_2_, p_147774_3_, p_147774_4_, 0);
-		RenderSpecialFlower.drawCrossedSquares(world, block, icon, p_147774_2_, p_147774_3_, p_147774_4_, p_147774_2_, p_147774_3_, p_147774_4_, 1F, renderer);
+		IIcon icon = renderer.getBlockIcon(block, world, x, y, z, 0);
+		RenderSpecialFlower.drawCrossedSquares(world, block, icon, x, y, z, x, y, z, 1F, renderer);
 		return true;
 	}
 

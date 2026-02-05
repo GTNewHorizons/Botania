@@ -42,13 +42,13 @@ public class ItemBlackLotus extends ItemMod implements IManaDissolvable {
 	}
 
 	@Override
-	public boolean hasEffect(ItemStack par1ItemStack, int pass) {
-		return par1ItemStack.getItemDamage() > 0;
+	public boolean hasEffect(ItemStack stack, int pass) {
+		return stack.getItemDamage() > 0;
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return super.getUnlocalizedName(par1ItemStack) + par1ItemStack.getItemDamage();
+	public String getUnlocalizedName(ItemStack stack) {
+		return super.getUnlocalizedName(stack) + stack.getItemDamage();
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class ItemBlackLotus extends ItemMod implements IManaDissolvable {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		infoList.add(StatCollector.translateToLocal("botaniamisc.lotusDesc"));
 	}
 

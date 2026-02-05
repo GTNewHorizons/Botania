@@ -49,12 +49,12 @@ public class RenderTileTinyPotato extends TileEntitySpecialRenderer {
 	private static final ModelTinyPotato model = new ModelTinyPotato();
 
 	@Override
-	public void renderTileEntityAt(TileEntity var1, double d0, double d1, double d2, float var8) {
-		TileTinyPotato potato = (TileTinyPotato) var1;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		TileTinyPotato potato = (TileTinyPotato) tileEntity;
 		GL11.glPushMatrix();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.renderEngine.bindTexture(ClientProxy.dootDoot ? textureHalloween : texture);
@@ -91,7 +91,7 @@ public class RenderTileTinyPotato extends TileEntitySpecialRenderer {
 
 		float jump = potato.jumpTicks;
 		if(jump > 0)
-			jump -= var8;
+			jump -= partialTicks;
 
 		float up = (float) -Math.abs(Math.sin(jump / 10 * Math.PI)) * 0.2F;
 		float rotZ = (float) Math.sin(jump / 10 * Math.PI) * 2;
@@ -251,7 +251,7 @@ public class RenderTileTinyPotato extends TileEntitySpecialRenderer {
 				GL11.glScalef(1.5F, 1.5F, 1.5F);
 				GL11.glTranslatef(0F, 0.7F, 0F);
 				GL11.glRotatef(90F, 0F, 1F, 0F);
-				ItemFlightTiara.renderHalo(null, var8);
+				ItemFlightTiara.renderHalo(null, partialTicks);
 			} else if(name.equals("nebris")) {
 				mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 				GL11.glRotatef(180F, 1F, 0F, 0F);
@@ -326,7 +326,7 @@ public class RenderTileTinyPotato extends TileEntitySpecialRenderer {
 			GL11.glPopMatrix();
 		}
 
-		MinecraftForge.EVENT_BUS.post(new TinyPotatoRenderEvent(potato, potato.name, d0, d1, d2, var8));
+		MinecraftForge.EVENT_BUS.post(new TinyPotatoRenderEvent(potato, potato.name, x, y, z, partialTicks));
 
 		GL11.glRotatef(-rotZ, 0F, 0F, 1F);
 		GL11.glRotatef(-rotY, 0F, 1F, 0F);

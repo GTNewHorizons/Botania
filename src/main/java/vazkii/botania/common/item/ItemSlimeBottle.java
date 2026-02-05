@@ -31,18 +31,18 @@ public class ItemSlimeBottle extends ItemMod {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this, 0);
-		activeIcon = IconHelper.forItem(par1IconRegister, this, 1);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this, 0);
+		activeIcon = IconHelper.forItem(register, this, 1);
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int dmg) {
-		return dmg == 0 ? itemIcon : activeIcon;
+	public IIcon getIconFromDamage(int meta) {
+		return meta == 0 ? itemIcon : activeIcon;
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int something, boolean somethingelse) {
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
 		if(!world.isRemote) {
 			int x = MathHelper.floor_double(entity.posX);
 			int z = MathHelper.floor_double(entity.posZ);

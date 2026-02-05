@@ -20,8 +20,8 @@ import vazkii.botania.common.block.ModBlocks;
 
 public class EntityVineBall extends EntityThrowable {
 
-	public EntityVineBall(World par1World) {
-		super(par1World);
+	public EntityVineBall(World world) {
+		super(world);
 		dataWatcher.addObject(30, 0F);
 		dataWatcher.setObjectWatched(30);
 	}

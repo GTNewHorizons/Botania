@@ -42,17 +42,17 @@ public class ItemDiviningRod extends ItemMod implements IManaUsingItem, IAvatarW
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer p) {
-		if(ManaItemHandler.requestManaExactForTool(stack, p, COST, true)) {
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if(ManaItemHandler.requestManaExactForTool(stack, player, COST, true)) {
 			if(world.isRemote) {
-				int x = MathHelper.floor_double(p.posX);
-				int y = MathHelper.floor_double(p.posY);
-				int z = MathHelper.floor_double(p.posZ);
-				int range = IManaProficiencyArmor.Helper.hasProficiency(p) ? 20 : 15;
+				int x = MathHelper.floor_double(player.posX);
+				int y = MathHelper.floor_double(player.posY);
+				int z = MathHelper.floor_double(player.posZ);
+				int range = IManaProficiencyArmor.Helper.hasProficiency(player) ? 20 : 15;
 				long seedxor = world.rand.nextLong();
 				doHighlight(world, x, y, z, range, seedxor);
-				p.swingItem();
-			} else world.playSoundAtEntity(p, "botania:divinationRod", 1F, 1F);
+				player.swingItem();
+			} else world.playSoundAtEntity(player, "botania:divinationRod", 1F, 1F);
 		}
 
 		return stack;

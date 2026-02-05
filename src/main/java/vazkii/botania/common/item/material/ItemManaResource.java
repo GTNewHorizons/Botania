@@ -90,33 +90,33 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		if(par1ItemStack.getItemDamage() == 4 || par1ItemStack.getItemDamage() == 14)
-			return EntityDoppleganger.spawn(par2EntityPlayer, par1ItemStack, par3World, par4, par5, par6, par1ItemStack.getItemDamage() == 14);
-		else if(par1ItemStack.getItemDamage() == 20 && net.minecraft.item.ItemDye.applyBonemeal(par1ItemStack, par3World, par4, par5, par6, par2EntityPlayer)) {
-			if(!par3World.isRemote)
-				par3World.playAuxSFX(2005, par4, par5, par6, 0);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		if(stack.getItemDamage() == 4 || stack.getItemDamage() == 14)
+			return EntityDoppleganger.spawn(player, stack, world, x, y, z, stack.getItemDamage() == 14);
+		else if(stack.getItemDamage() == 20 && net.minecraft.item.ItemDye.applyBonemeal(stack, world, x, y, z, player)) {
+			if(!world.isRemote)
+				world.playAuxSFX(2005, x, y, z, 0);
 
 			return true;
 		}
 
-		return super.onItemUse(par1ItemStack, par2EntityPlayer, par3World, par4, par5, par6, par7, par8, par9, par10);
+		return super.onItemUse(stack, player, world, x, y, z, side, subX, subY, subZ);
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par3World, EntityPlayer par2EntityPlayer) {
-		if(par1ItemStack.getItemDamage() == 15) {
-			if(!par2EntityPlayer.capabilities.isCreativeMode)
-				--par1ItemStack.stackSize;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if(stack.getItemDamage() == 15) {
+			if(!player.capabilities.isCreativeMode)
+				--stack.stackSize;
 
-			par3World.playSoundAtEntity(par2EntityPlayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+			world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-			if(!par3World.isRemote)
-				par3World.spawnEntityInWorld(new EntityEnderAirBottle(par3World, par2EntityPlayer));
-			else par2EntityPlayer.swingItem();
+			if(!world.isRemote)
+				world.spawnEntityInWorld(new EntityEnderAirBottle(world, player));
+			else player.swingItem();
 		}
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	@Override
@@ -129,35 +129,35 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[types];
 		for(int i = 0; i < icons.length; i++)
-			icons[i] = IconHelper.forName(par1IconRegister, LibItemNames.MANA_RESOURCE_NAMES[i]);
+			icons[i] = IconHelper.forName(register, LibItemNames.MANA_RESOURCE_NAMES[i]);
 
-		tailIcon = IconHelper.forName(par1IconRegister, "tail");
-		phiFlowerIcon = IconHelper.forName(par1IconRegister, "phiFlower");
-		goldfishIcon = IconHelper.forName(par1IconRegister, "goldfish");
-		nerfBatIcon = IconHelper.forName(par1IconRegister, "nerfBat");
+		tailIcon = IconHelper.forName(register, "tail");
+		phiFlowerIcon = IconHelper.forName(register, "phiFlower");
+		goldfishIcon = IconHelper.forName(register, "goldfish");
+		nerfBatIcon = IconHelper.forName(register, "nerfBat");
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-		if(par1ItemStack.getItemDamage() == 5 || par1ItemStack.getItemDamage() == 14)
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		if(stack.getItemDamage() == 5 || stack.getItemDamage() == 14)
 			return Color.HSBtoRGB(Botania.proxy.getWorldElapsedTicks() * 2 % 360 / 360F, 0.25F, 1F);
 
 		return 0xFFFFFF;
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return "item." + LibItemNames.MANA_RESOURCE_NAMES[Math.min(types - 1, par1ItemStack.getItemDamage())];
+	public String getUnlocalizedName(ItemStack stack) {
+		return "item." + LibItemNames.MANA_RESOURCE_NAMES[Math.min(types - 1, stack.getItemDamage())];
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamage(int par1) {
-		return icons[Math.min(icons.length - 1, par1)];
+	public IIcon getIconFromDamage(int meta) {
+		return icons[Math.min(icons.length - 1, meta)];
 	}
 
 	@Override

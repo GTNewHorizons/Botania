@@ -236,19 +236,19 @@ public class InventoryHelper {
 		}
 
 		@Override
-		public ItemStack decrStackSize(int par1, int par2) {
-			if(inventoryContents[par1] != null) {
+		public ItemStack decrStackSize(int slot, int count) {
+			if(inventoryContents[slot] != null) {
 				ItemStack itemstack;
 
-				if(inventoryContents[par1].stackSize <= par2) {
-					itemstack = inventoryContents[par1];
-					inventoryContents[par1] = null;
+				if(inventoryContents[slot].stackSize <= count) {
+					itemstack = inventoryContents[slot];
+					inventoryContents[slot] = null;
 					return itemstack;
 				}
 
-				itemstack = inventoryContents[par1].splitStack(par2);
-				if(inventoryContents[par1].stackSize == 0)
-					inventoryContents[par1] = null;
+				itemstack = inventoryContents[slot].splitStack(count);
+				if(inventoryContents[slot].stackSize == 0)
+					inventoryContents[slot] = null;
 
 				return itemstack;
 			}

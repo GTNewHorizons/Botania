@@ -37,30 +37,29 @@ public class ItemStarSword extends ItemManasteelSword implements ICraftAchieveme
 	}
 
 	@Override
-	public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5) {
-		super.onUpdate(par1ItemStack, par2World, par3Entity, par4, par5);
-		if(par3Entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) par3Entity;
-			PotionEffect haste = player.getActivePotionEffect(Potion.digSpeed);
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		super.onUpdate(stack, world, entity, invSlot, isHeld);
+		if(entity instanceof EntityPlayer player) {
+            PotionEffect haste = player.getActivePotionEffect(Potion.digSpeed);
 			float check = haste == null ? 0.16666667F : haste.getAmplifier() == 1 ? 0.5F : 0.4F;
 
-			if(player.getCurrentEquippedItem() == par1ItemStack && player.swingProgress == check && !par2World.isRemote && par2World.rand.nextInt(2) == 0) {
-				MovingObjectPosition pos = ToolCommons.raytraceFromEntity(par2World, par3Entity, true, 48);
+			if(player.getCurrentEquippedItem() == stack && player.swingProgress == check && !world.isRemote && world.rand.nextInt(2) == 0) {
+				MovingObjectPosition pos = ToolCommons.raytraceFromEntity(world, entity, true, 48);
 				if(pos != null) {
 					Vector3 posVec = new Vector3(pos.blockX, pos.blockY, pos.blockZ);
 					Vector3 motVec = new Vector3((Math.random() - 0.5) * 18, 24, (Math.random() - 0.5) * 18);
 					posVec.add(motVec);
 					motVec.normalize().negate().multiply(1.5);
 
-					EntityFallingStar star = new EntityFallingStar(par2World, player);
+					EntityFallingStar star = new EntityFallingStar(world, player);
 					star.setPosition(posVec.x, posVec.y, posVec.z);
 					star.motionX = motVec.x;
 					star.motionY = motVec.y;
 					star.motionZ = motVec.z;
-					par2World.spawnEntityInWorld(star);
+					world.spawnEntityInWorld(star);
 
-					ToolCommons.damageItem(par1ItemStack, 1, player, MANA_PER_DAMAGE);
-					par2World.playSoundAtEntity(player, "botania:starcaller", 0.4F, 1.4F);
+					ToolCommons.damageItem(stack, 1, player, MANA_PER_DAMAGE);
+					world.playSoundAtEntity(player, "botania:starcaller", 0.4F, 1.4F);
 				}
 			}
 		}
@@ -72,8 +71,8 @@ public class ItemStarSword extends ItemManasteelSword implements ICraftAchieveme
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
-		return par2ItemStack.getItem() == ModItems.manaResource && par2ItemStack.getItemDamage() == 4 ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+	public boolean getIsRepairable(ItemStack stack, ItemStack repairMaterial) {
+		return repairMaterial.getItem() == ModItems.manaResource && repairMaterial.getItemDamage() == 4 ? true : super.getIsRepairable(stack, repairMaterial);
 	}
 
 	@Override

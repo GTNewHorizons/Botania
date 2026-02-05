@@ -50,9 +50,9 @@ public class ItemLavaPendant extends ItemBauble implements IBaubleRender {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		super.registerIcons(par1IconRegister);
-		gemIcon = IconHelper.forItem(par1IconRegister, this, "Gem");
+	public void registerIcons(IIconRegister register) {
+		super.registerIcons(register);
+		gemIcon = IconHelper.forItem(register, this, "Gem");
 	}
 
 	@Override

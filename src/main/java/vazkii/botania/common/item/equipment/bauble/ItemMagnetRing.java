@@ -64,9 +64,9 @@ public class ItemMagnetRing extends ItemBauble {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this, 0);
-		iconOff = IconHelper.forItem(par1IconRegister, this, 1);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this, 0);
+		iconOff = IconHelper.forItem(register, this, 1);
 	}
 
 	@Override

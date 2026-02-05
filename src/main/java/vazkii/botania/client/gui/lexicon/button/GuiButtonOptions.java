@@ -29,11 +29,11 @@ public class GuiButtonOptions extends GuiButtonLexicon {
 	}
 
 	@Override
-	public void drawButton(Minecraft par1Minecraft, int par2, int par3) {
-		field_146123_n = par2 >= xPosition && par3 >= yPosition && par2 < xPosition + width && par3 < yPosition + height;
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+		field_146123_n = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 		int k = getHoverState(field_146123_n);
 
-		par1Minecraft.renderEngine.bindTexture(GuiLexicon.texture);
+		mc.renderEngine.bindTexture(GuiLexicon.texture);
 		GL11.glColor4f(1F, 1F, 1F, 1F);
 		drawTexturedModalRect(xPosition, yPosition, k == 2 ? 109 : 98, 180, 11, 11);
 
@@ -43,7 +43,7 @@ public class GuiButtonOptions extends GuiButtonLexicon {
 
 		int tooltipY = (tooltip.size() - 1) * 10;
 		if(k == 2)
-			RenderHelper.renderTooltip(par2, par3 + tooltipY, tooltip);
+			RenderHelper.renderTooltip(mouseX, mouseY + tooltipY, tooltip);
 	}
 
 }

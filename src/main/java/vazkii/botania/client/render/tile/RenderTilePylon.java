@@ -46,7 +46,7 @@ public class RenderTilePylon extends TileEntitySpecialRenderer {
 	public static boolean pink = false;
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float pticks) {
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
 		if(model == null)
 			model = ConfigHandler.oldPylonModel ? new ModelPylonOld() : new ModelPylon();
 
@@ -56,25 +56,25 @@ public class RenderTilePylon extends TileEntitySpecialRenderer {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			float a = MultiblockRenderHandler.rendering ? 0.6F : 1F;
 			GL11.glColor4f(1F, 1F, 1F, a);
-			if(tileentity.getWorldObj() != null) {
-				green = tileentity.getBlockMetadata() == 1;
-				pink = tileentity.getBlockMetadata() == 2;
+			if(tileEntity.getWorldObj() != null) {
+				green = tileEntity.getBlockMetadata() == 1;
+				pink = tileEntity.getBlockMetadata() == 2;
 			}
 
 			if(ConfigHandler.oldPylonModel)
 				Minecraft.getMinecraft().renderEngine.bindTexture(pink ? texturePinkOld : green ? textureGreenOld : textureOld);
 			else Minecraft.getMinecraft().renderEngine.bindTexture(pink ? texturePink : green ? textureGreen : texture);
 
-			double worldTime = tileentity.getWorldObj() == null ? 0 : (double) (ClientTickHandler.ticksInGame + pticks);
+			double worldTime = tileEntity.getWorldObj() == null ? 0 : (double) (ClientTickHandler.ticksInGame + partialTicks);
 
-			if(tileentity != null)
-				worldTime += new Random(tileentity.xCoord ^ tileentity.yCoord ^ tileentity.zCoord).nextInt(360);
+			if(tileEntity != null)
+				worldTime += new Random(tileEntity.xCoord ^ tileEntity.yCoord ^ tileEntity.zCoord).nextInt(360);
 
 			if(ConfigHandler.oldPylonModel) {
-				GL11.glTranslated(d0 + 0.5, d1 + 2.2, d2 + 0.5);
+				GL11.glTranslated(x + 0.5, y + 2.2, z + 0.5);
 				GL11.glScalef(1F, -1.5F, -1F);
 			} else {
-				GL11.glTranslated(d0 + 0.2 + (green ? -0.1 : 0), d1 + 0.05, d2 + 0.8 + (green ? 0.1 : 0));
+				GL11.glTranslated(x + 0.2 + (green ? -0.1 : 0), y + 0.05, z + 0.8 + (green ? 0.1 : 0));
 				float scale = green ? 0.8F : 0.6F;
 				GL11.glScalef(scale, 0.6F, scale);
 			}

@@ -32,17 +32,16 @@ public abstract class ItemRelicBauble extends ItemBauble implements IRelic {
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int p_77663_4_, boolean p_77663_5_) {
-		if(entityIn instanceof EntityPlayer)
-			ItemRelic.updateRelic(stack, (EntityPlayer) entityIn);
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(entity instanceof EntityPlayer)
+			ItemRelic.updateRelic(stack, (EntityPlayer) entity);
 	}
 
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
 		super.onWornTick(stack, player);
-		if(player instanceof EntityPlayer) {
-			EntityPlayer ePlayer = (EntityPlayer) player;
-			ItemRelic.updateRelic(stack, ePlayer);
+		if(player instanceof EntityPlayer ePlayer) {
+            ItemRelic.updateRelic(stack, ePlayer);
 			if(ItemRelic.isRightPlayer(ePlayer, stack))
 				onValidPlayerWornTick(stack, ePlayer);
 		}
@@ -84,7 +83,7 @@ public abstract class ItemRelicBauble extends ItemBauble implements IRelic {
 	}
 
 	@Override
-	public EnumRarity getRarity(ItemStack p_77613_1_) {
+	public EnumRarity getRarity(ItemStack stack) {
 		return BotaniaAPI.rarityRelic;
 	}
 

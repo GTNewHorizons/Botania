@@ -63,17 +63,17 @@ public class RenderPixie extends RenderLiving {
 			ShaderHelper.releaseShader();
 	}
 
-	protected int setPixieBrightness(EntityPixie par1EntityPixie, int par2, float par3) {
+	protected int setPixieBrightness(EntityPixie pixie, int par2, float par3) {
 		if (par2 != 0)
 			return -1;
 		else {
-			bindTexture(getEntityTexture(par1EntityPixie));
+			bindTexture(getEntityTexture(pixie));
 			float f1 = 1.0F;
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
 			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 
-			if (par1EntityPixie.isInvisible())
+			if (pixie.isInvisible())
 				GL11.glDepthMask(false);
 			else
 				GL11.glDepthMask(true);
@@ -89,7 +89,7 @@ public class RenderPixie extends RenderLiving {
 	}
 
 	@Override
-	protected int shouldRenderPass(EntityLivingBase par1EntityLivingBase, int par2, float par3) {
-		return setPixieBrightness((EntityPixie)par1EntityLivingBase, par2, par3);
+	protected int shouldRenderPass(EntityLivingBase entity, int par2, float par3) {
+		return setPixieBrightness((EntityPixie)entity, par2, par3);
 	}
 }

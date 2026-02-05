@@ -22,16 +22,16 @@ import java.util.List;
 
 public class ItemBlockModSlab extends ItemSlab {
 
-	public ItemBlockModSlab(Block par1) {
-		super(par1, ((BlockModSlab)par1).getSingleBlock(), ((BlockModSlab)par1).getFullBlock(), false);
+	public ItemBlockModSlab(Block blockSlab) {
+		super(blockSlab, ((BlockModSlab)blockSlab).getSingleBlock(), ((BlockModSlab)blockSlab).getFullBlock(), false);
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
+	public String getUnlocalizedName(ItemStack stack) {
 		return field_150939_a.getUnlocalizedName().replaceAll("tile.", "tile.botania:");
 	}
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		if (ConfigHandler.noMobSpawnOnBlocks)
 			infoList.add(StatCollector.translateToLocal("nomobspawnsonthisblock.tip"));
 	}

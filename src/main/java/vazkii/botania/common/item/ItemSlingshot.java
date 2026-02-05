@@ -25,50 +25,50 @@ public class ItemSlingshot extends ItemMod {
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, int par4) {
-		int j = getMaxItemUseDuration(par1ItemStack) - par4;
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int itemInUseCount) {
+		int j = getMaxItemUseDuration(stack) - itemInUseCount;
 
-		if(par3EntityPlayer.capabilities.isCreativeMode || par3EntityPlayer.inventory.hasItem(ModItems.vineBall)) {
+		if(player.capabilities.isCreativeMode || player.inventory.hasItem(ModItems.vineBall)) {
 			float f = j / 20.0F;
 			f = (f * f + f * 2.0F) / 3.0F;
 
 			if(f < 1F)
 				return;
 
-			if(!par3EntityPlayer.capabilities.isCreativeMode)
-				par3EntityPlayer.inventory.consumeInventoryItem(ModItems.vineBall);
+			if(!player.capabilities.isCreativeMode)
+				player.inventory.consumeInventoryItem(ModItems.vineBall);
 
-			if(!par2World.isRemote) {
-				EntityVineBall ball = new EntityVineBall(par3EntityPlayer, false);
+			if(!world.isRemote) {
+				EntityVineBall ball = new EntityVineBall(player, false);
 				ball.motionX *= 1.6;
 				ball.motionY *= 1.6;
 				ball.motionZ *= 1.6;
-				par2World.spawnEntityInWorld(ball);
+				world.spawnEntityInWorld(ball);
 			}
 		}
 	}
 
 	@Override
-	public ItemStack onEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		return par1ItemStack;
+	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+		return stack;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 72000;
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.bow;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		if(par3EntityPlayer.capabilities.isCreativeMode || par3EntityPlayer.inventory.hasItem(ModItems.vineBall))
-			par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		if(player.capabilities.isCreativeMode || player.inventory.hasItem(ModItems.vineBall))
+			player.setItemInUse(stack, getMaxItemUseDuration(stack));
 
-		return par1ItemStack;
+		return stack;
 	}
 
 }

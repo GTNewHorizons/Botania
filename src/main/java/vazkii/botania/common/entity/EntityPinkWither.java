@@ -37,17 +37,17 @@ public class EntityPinkWither extends EntityWither {
 	}
 
 	@Override
-	public void setAttackTarget(EntityLivingBase p_70624_1_) {
+	public void setAttackTarget(EntityLivingBase target) {
 		// NO-OP
 	}
 
 	@Override
-	protected void attackEntity(Entity p_70785_1_, float p_70785_2_) {
+	protected void attackEntity(Entity entity, float distanceToEntity) {
 		// NO-OP
 	}
 
 	@Override
-	public boolean attackEntityAsMob(Entity p_70652_1_) {
+	public boolean attackEntityAsMob(Entity victim) {
 		return false;
 	}
 
@@ -66,7 +66,7 @@ public class EntityPinkWither extends EntityWither {
 	}
 
 	@Override
-	protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
+	protected void dropFewItems(boolean playerKill, int looting) {
 		// NO-OP
 	}
 

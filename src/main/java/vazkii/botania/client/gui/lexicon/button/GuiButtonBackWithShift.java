@@ -18,8 +18,8 @@ import net.minecraft.util.StatCollector;
 
 public class GuiButtonBackWithShift extends GuiButtonBack {
 
-	public GuiButtonBackWithShift(int par1, int par2, int par3) {
-		super(par1, par2, par3);
+	public GuiButtonBackWithShift(int id, int xPos, int yPos) {
+		super(id, xPos, yPos);
 	}
 
 	@Override

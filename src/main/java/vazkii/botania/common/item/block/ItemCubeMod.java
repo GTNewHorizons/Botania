@@ -14,7 +14,7 @@ public class ItemCubeMod extends ItemBlockMod{
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
         if (ConfigHandler.noMobSpawnOnBlocks)
             infoList.add(StatCollector.translateToLocal("nomobspawnsonthisblock.tip"));
     }

@@ -432,7 +432,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiDescription"), infoList);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiDescription2"), infoList);
 		addStringToTooltip("", infoList);
@@ -443,7 +443,7 @@ public class ItemLokiRing extends ItemRelicBauble implements IExtendedWireframeC
 		addStringToTooltip("", infoList);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiToggleDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET + "/"+ getOnOffString(false), infoList);
 		addStringToTooltip(StatCollector.translateToLocal("botaniamisc.lokiBreakingDescription") + " " + getOnOffString(true) + EnumChatFormatting.RESET+"/" + getOnOffString(false), infoList);
-		super.addInformation(stack, player, infoList, adv);
+		super.addInformation(stack, player, infoList, advanced);
 	}
 
 	@Override

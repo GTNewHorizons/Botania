@@ -56,10 +56,10 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
+	public void registerIcons(IIconRegister register) {
 		icons = new IIcon[SUBTYPES];
 		for(int i = 0; i < SUBTYPES; i++)
-			icons[i] = IconHelper.forItem(par1IconRegister, this, i);
+			icons[i] = IconHelper.forItem(register, this, i);
 	}
 
 	@Override
@@ -69,13 +69,13 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 	}
 
 	@Override
-	public IIcon getIconFromDamage(int dmg) {
-		return icons[Math.min(SUBTYPES - 1, dmg)];
+	public IIcon getIconFromDamage(int meta) {
+		return icons[Math.min(SUBTYPES - 1, meta)];
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return super.getUnlocalizedName(par1ItemStack) + par1ItemStack.getItemDamage();
+	public String getUnlocalizedName(ItemStack stack) {
+		return super.getUnlocalizedName(stack) + stack.getItemDamage();
 	}
 
 	@Override

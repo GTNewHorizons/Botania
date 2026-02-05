@@ -177,8 +177,8 @@ public class GuiLexiconIndex extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	public void drawScreen(int par1, int par2, float par3) {
-		super.drawScreen(par1, par2, par3);
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		if(!searchField.getText().isEmpty()) {
 			drawBookmark(left + 138, top + guiHeight - 24, "  " + searchField.getText(), false);
@@ -209,8 +209,8 @@ public class GuiLexiconIndex extends GuiLexicon implements IParented {
 			infoTime = Math.max(0, infoTime - timeDelta);
 
 			if(currentButton != null && infoTime == 0) {
-				int x = par1 + 10;
-				int y = par2;
+				int x = mouseX + 10;
+				int y = mouseY;
 
 				x = currentButton.xPosition - 20;
 				y = currentButton.yPosition;
@@ -293,13 +293,13 @@ public class GuiLexiconIndex extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton par1GuiButton) {
-		if(par1GuiButton.id >= BOOKMARK_START)
-			handleBookmark(par1GuiButton);
-		else if(par1GuiButton.id == NOTES_BUTTON_ID)
+	protected void actionPerformed(GuiButton button) {
+		if(button.id >= BOOKMARK_START)
+			handleBookmark(button);
+		else if(button.id == NOTES_BUTTON_ID)
 			notesEnabled = !notesEnabled;
 		else
-			switch(par1GuiButton.id) {
+			switch(button.id) {
 			case 12 :
 				mc.displayGuiScreen(parent);
 				ClientTickHandler.notifyPageChange();
@@ -317,10 +317,10 @@ public class GuiLexiconIndex extends GuiLexicon implements IParented {
 				ClientTickHandler.notifyPageChange();
 				break;
 			default :
-				if(par1GuiButton instanceof GuiButtonInvisible && ((GuiButtonInvisible) par1GuiButton).dog)
-					((GuiButtonInvisible) par1GuiButton).click();
+				if(button instanceof GuiButtonInvisible && ((GuiButtonInvisible) button).dog)
+					((GuiButtonInvisible) button).click();
 				else {
-					int index = par1GuiButton.id + page * 12;
+					int index = button.id + page * 12;
 					openEntry(index);
 				}
 			}
@@ -364,12 +364,12 @@ public class GuiLexiconIndex extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	protected void mouseClicked(int par1, int par2, int par3) {
-		super.mouseClicked(par1, par2, par3);
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 
-		searchField.mouseClicked(par1, par2, par3);
-		fx = par1;
-		switch(par3) {
+		searchField.mouseClicked(mouseX, mouseY, mouseButton);
+		fx = mouseX;
+		switch(mouseButton) {
 		case 1:
 			back();
 			break;
@@ -402,27 +402,27 @@ public class GuiLexiconIndex extends GuiLexicon implements IParented {
 	}
 
 	@Override
-	protected void keyTyped(char par1, int par2) {
-		if(par2 == 203 || par2 == 200 || par2 == 201) // Left, Up, Page Up
+	protected void keyTyped(char typedChar, int keyCode) {
+		if(keyCode == 203 || keyCode == 200 || keyCode == 201) // Left, Up, Page Up
 			prevPage();
-		else if(par2 == 205 || par2 == 208 || par2 == 209) // Right, Down Page Down
+		else if(keyCode == 205 || keyCode == 208 || keyCode == 209) // Right, Down Page Down
 			nextPage();
-		else if(par2 == 14 && !notesEnabled && searchField.getText().isEmpty()) // Backspace
+		else if(keyCode == 14 && !notesEnabled && searchField.getText().isEmpty()) // Backspace
 			back();
-		else if(par2 == 199) { // Home
+		else if(keyCode == 199) { // Home
 			mc.displayGuiScreen(new GuiLexicon());
 			ClientTickHandler.notifyPageChange();
-		} else if(par2 == 28 && entriesToDisplay.size() == 1) // Enter
+		} else if(keyCode == 28 && entriesToDisplay.size() == 1) // Enter
 			openEntry(0);
 
 		if(!notesEnabled) {
 			String search = searchField.getText();
-			searchField.textboxKeyTyped(par1, par2);
+			searchField.textboxKeyTyped(typedChar, keyCode);
 			if(!searchField.getText().equalsIgnoreCase(search))
 				updateAll();
 		}
 
-		super.keyTyped(par1, par2);
+		super.keyTyped(typedChar, keyCode);
 	}
 
 	void back() {

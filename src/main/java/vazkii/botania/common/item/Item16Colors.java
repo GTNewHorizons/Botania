@@ -27,11 +27,11 @@ public class Item16Colors extends ItemMod {
 	}
 
 	@Override
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-		if(par1ItemStack.getItemDamage() >= EntitySheep.fleeceColorTable.length)
+	public int getColorFromItemStack(ItemStack stack, int renderPass) {
+		if(stack.getItemDamage() >= EntitySheep.fleeceColorTable.length)
 			return 0xFFFFFF;
 
-		float[] color = EntitySheep.fleeceColorTable[par1ItemStack.getItemDamage()];
+		float[] color = EntitySheep.fleeceColorTable[stack.getItemDamage()];
 		return new Color(color[0], color[1], color[2]).getRGB();
 	}
 
@@ -42,12 +42,12 @@ public class Item16Colors extends ItemMod {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return getUnlocalizedNameLazy(par1ItemStack) + par1ItemStack.getItemDamage();
+	public String getUnlocalizedName(ItemStack stack) {
+		return getUnlocalizedNameLazy(stack) + stack.getItemDamage();
 	}
 
-	String getUnlocalizedNameLazy(ItemStack par1ItemStack) {
-		return super.getUnlocalizedName(par1ItemStack);
+	String getUnlocalizedNameLazy(ItemStack stack) {
+		return super.getUnlocalizedName(stack);
 	}
 
 }

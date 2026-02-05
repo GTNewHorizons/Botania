@@ -17,8 +17,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiButtonLexicon extends GuiButton {
 
-	public GuiButtonLexicon(int stateName, int id, int p_i1021_3_, int p_i1021_4_, int p_i1021_5_, String p_i1021_6_) {
-		super(stateName, id, p_i1021_3_, p_i1021_4_, p_i1021_5_, p_i1021_6_);
+	public GuiButtonLexicon(int id, int xPos, int yPos, int width, int height, String text) {
+		super(id, xPos, yPos, width, height, text);
 	}
 
 	@Override

@@ -42,9 +42,9 @@ public class ItemSpawnerMover extends ItemMod {
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		iconNormal = IconHelper.forItem(par1IconRegister, this, 0);
-		iconSpawner = IconHelper.forItem(par1IconRegister, this, 1);
+	public void registerIcons(IIconRegister register) {
+		iconNormal = IconHelper.forItem(register, this, 0);
+		iconSpawner = IconHelper.forItem(register, this, 1);
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public class ItemSpawnerMover extends ItemMod {
 	}
 
 	@Override
-	public IIcon getIconIndex(ItemStack par1ItemStack) {
-		return hasData(par1ItemStack) ? iconSpawner : iconNormal;
+	public IIcon getIconIndex(ItemStack stack) {
+		return hasData(stack) ? iconSpawner : iconNormal;
 	}
 
 	public static NBTTagCompound getSpawnerTag(ItemStack stack) {
@@ -90,31 +90,31 @@ public class ItemSpawnerMover extends ItemMod {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advancedTooltips) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		String id = getEntityId(stack);
 		if (id != null)
 			infoList.add(StatCollector.translateToLocal("entity." + id + ".name"));
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int par4, boolean par5) {
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
 		NBTTagCompound tag = stack.getTagCompound();
 		if(tag != null && tag.hasKey(TAG_PLACE_DELAY) && tag.getInteger(TAG_PLACE_DELAY) > 0)
 			tag.setInteger(TAG_PLACE_DELAY, tag.getInteger(TAG_PLACE_DELAY) - 1);
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
-		if(getEntityId(itemstack) == null) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		if(getEntityId(stack) == null) {
 			if(world.getBlock(x, y, z).equals(Blocks.mob_spawner)) {
 				TileEntity te = world.getTileEntity(x, y, z);
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setTag(TAG_SPAWNER, new NBTTagCompound());
 				te.writeToNBT(tag.getCompoundTag(TAG_SPAWNER));
 				tag.setInteger(TAG_PLACE_DELAY, 20);
-				itemstack.setTagCompound(tag);
+				stack.setTagCompound(tag);
 				world.setBlockToAir(x, y, z);
-				player.renderBrokenItemStack(itemstack);
+				player.renderBrokenItemStack(stack);
 				for(int i = 0; i < 50; i++) {
 					float red = (float) Math.random();
 					float green = (float) Math.random();
@@ -124,7 +124,7 @@ public class ItemSpawnerMover extends ItemMod {
 				return true;
 			} else return false;
 		} else {
-			if(getDelay(itemstack) <= 0 && placeBlock(itemstack, player, world, x, y, z, side, xOffset, yOffset, zOffset))
+			if(getDelay(stack) <= 0 && placeBlock(stack, player, world, x, y, z, side, subX, subY, subZ))
 				return true;
 			return false;
 		}

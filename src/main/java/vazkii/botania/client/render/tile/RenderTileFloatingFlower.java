@@ -34,21 +34,21 @@ public class RenderTileFloatingFlower extends TileEntitySpecialRenderer {
 	private static final ModelMiniIsland model = new ModelMiniIsland();
 
 	@Override
-	public void renderTileEntityAt(TileEntity tile, double d0, double d1, double d2, float t) {
-		IFloatingFlower flower = (IFloatingFlower) tile;
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
+		IFloatingFlower flower = (IFloatingFlower) tileEntity;
 		GL11.glPushMatrix();
 		GL11.glColor4f(1F, 1F, 1F, 1F);
-		GL11.glTranslated(d0, d1, d2);
+		GL11.glTranslated(x, y, z);
 
-		double worldTime = tile.getWorldObj() == null ? 0 : (double) (ClientTickHandler.ticksInGame + t);
-		if(tile.getWorldObj() != null)
-			worldTime += new Random(tile.xCoord ^ tile.yCoord ^ tile.zCoord).nextInt(1000);
+		double worldTime = tileEntity.getWorldObj() == null ? 0 : (double) (ClientTickHandler.ticksInGame + partialTicks);
+		if(tileEntity.getWorldObj() != null)
+			worldTime += new Random(tileEntity.xCoord ^ tileEntity.yCoord ^ tileEntity.zCoord).nextInt(1000);
 
 		GL11.glTranslatef(0.5F, 0F, 0.5F);
 		GL11.glRotatef(-((float) worldTime * 0.5F), 0F, 1F, 0F);
 		GL11.glTranslatef(-0.5F, 0F, -0.5F);
 
-		if(tile.getWorldObj() != null) {
+		if(tileEntity.getWorldObj() != null) {
 			GL11.glTranslatef(0F, (float) Math.sin(worldTime * 0.05F) * 0.1F, 0F);
 			GL11.glRotatef(4F * (float) Math.sin(worldTime * 0.04F), 1F, 0F, 0F);
 		}

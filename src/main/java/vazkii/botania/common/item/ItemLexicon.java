@@ -55,23 +55,23 @@ public class ItemLexicon extends ItemMod implements ILexicon, IElvenItem {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		if(par2EntityPlayer.isSneaking()) {
-			Block block = par3World.getBlock(par4, par5, par6);
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ) {
+		if(player.isSneaking()) {
+			Block block = world.getBlock(x, y, z);
 
 			if(block != null) {
 				if(block instanceof ILexiconable) {
-					LexiconEntry entry = ((ILexiconable) block).getEntry(par3World, par4, par5, par6, par2EntityPlayer, par1ItemStack);
-					if(entry != null && isKnowledgeUnlocked(par1ItemStack, entry.getKnowledgeType())) {
+					LexiconEntry entry = ((ILexiconable) block).getEntry(world, x, y, z, player, stack);
+					if(entry != null && isKnowledgeUnlocked(stack, entry.getKnowledgeType())) {
 						Botania.proxy.setEntryToOpen(entry);
-						Botania.proxy.setLexiconStack(par1ItemStack);
+						Botania.proxy.setLexiconStack(stack);
 
-						openBook(par2EntityPlayer, par1ItemStack, par3World, false);
+						openBook(player, stack, world, false);
 						return true;
 					}
-				} else if(par3World.isRemote) {
-					MovingObjectPosition pos = new MovingObjectPosition(par4, par5, par6, par7, Vec3.createVectorHelper(par8, par9, par10));
-					return Botania.proxy.openWikiPage(par3World, block, pos);
+				} else if(world.isRemote) {
+					MovingObjectPosition pos = new MovingObjectPosition(x, y, z, side, Vec3.createVectorHelper(subX, subY, subZ));
+					return Botania.proxy.openWikiPage(world, block, pos);
 				}
 			}
 		}
@@ -91,7 +91,7 @@ public class ItemLexicon extends ItemMod implements ILexicon, IElvenItem {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		if(GuiScreen.isShiftKeyDown()) {
 			String edition = EnumChatFormatting.GOLD + String.format(StatCollector.translateToLocal("botaniamisc.edition"), getEdition());
 			if(!edition.isEmpty())
@@ -122,20 +122,20 @@ public class ItemLexicon extends ItemMod implements ILexicon, IElvenItem {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		String force = getForcedPage(par1ItemStack);
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		String force = getForcedPage(stack);
 		if(force != null && !force.isEmpty()) {
-			LexiconEntry entry = getEntryFromForce(par1ItemStack);
+			LexiconEntry entry = getEntryFromForce(stack);
 			if(entry != null)
 				Botania.proxy.setEntryToOpen(entry);
-			else par3EntityPlayer.addChatMessage(new ChatComponentTranslation("botaniamisc.cantOpen").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-			setForcedPage(par1ItemStack, "");
+			else player.addChatMessage(new ChatComponentTranslation("botaniamisc.cantOpen").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			setForcedPage(stack, "");
 		}
 
-		openBook(par3EntityPlayer, par1ItemStack, par2World, skipSound);
+		openBook(player, stack, world, skipSound);
 		skipSound = false;
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	public static void openBook(EntityPlayer player, ItemStack stack, World world, boolean skipSound) {
@@ -160,7 +160,7 @@ public class ItemLexicon extends ItemMod implements ILexicon, IElvenItem {
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int idk, boolean something) {
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
 		int ticks = getQueueTicks(stack);
 		if(ticks > 0 && entity instanceof EntityPlayer) {
 			skipSound = ticks < 5;
@@ -172,7 +172,7 @@ public class ItemLexicon extends ItemMod implements ILexicon, IElvenItem {
 	}
 
 	@Override
-	public EnumRarity getRarity(ItemStack par1ItemStack) {
+	public EnumRarity getRarity(ItemStack stack) {
 		return EnumRarity.uncommon;
 	}
 

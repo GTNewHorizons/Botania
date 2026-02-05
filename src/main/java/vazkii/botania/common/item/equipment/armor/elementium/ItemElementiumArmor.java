@@ -35,8 +35,8 @@ public abstract class ItemElementiumArmor extends ItemManasteelArmor implements 
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
-		return par2ItemStack.getItem() == ModItems.manaResource && par2ItemStack.getItemDamage() == 7 ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+	public boolean getIsRepairable(ItemStack stack, ItemStack repairMaterial) {
+		return repairMaterial.getItem() == ModItems.manaResource && repairMaterial.getItemDamage() == 7 ? true : super.getIsRepairable(stack, repairMaterial);
 	}
 
 	static ItemStack[] armorset;

@@ -19,12 +19,12 @@ import net.minecraft.util.StatCollector;
 
 public class ItemBlockPool extends ItemBlockWithMetadataAndName {
 
-	public ItemBlockPool(Block par2Block) {
-		super(par2Block);
+	public ItemBlockPool(Block block) {
+		super(block);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		if(stack.getItemDamage() == 1)
 			for(int i = 0; i < 2; i++)
 				infoList.add(StatCollector.translateToLocal("botaniamisc.creativePool" + i));

@@ -56,9 +56,8 @@ public class ItemBlockSpecialFlower extends ItemBlockMod implements IRecipeKeyPr
 		if(placed) {
 			String type = getType(stack);
 			TileEntity te = world.getTileEntity(x, y, z);
-			if(te instanceof TileSpecialFlower) {
-				TileSpecialFlower tile = (TileSpecialFlower) te;
-				tile.setSubTile(type);
+			if(te instanceof TileSpecialFlower tile) {
+                tile.setSubTile(type);
 				tile.onBlockAdded(world, x, y, z);
 				tile.onBlockPlacedBy(world, x, y, z, player, stack);
 				if(!world.isRemote)
@@ -75,12 +74,12 @@ public class ItemBlockSpecialFlower extends ItemBlockMod implements IRecipeKeyPr
 	}
 
 	@Override
-	public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-		return getUnlocalizedNameInefficiently_(par1ItemStack);
+	public String getUnlocalizedNameInefficiently(ItemStack stack) {
+		return getUnlocalizedNameInefficiently_(stack);
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
 		String type = getType(stack);
 		SubTileSignature sig = BotaniaAPI.getSignatureForName(type);
 

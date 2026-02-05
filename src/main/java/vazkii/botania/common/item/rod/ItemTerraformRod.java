@@ -74,12 +74,12 @@ public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockP
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.bow;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 72000;
 	}
 
@@ -90,17 +90,17 @@ public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockP
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
-		return par1ItemStack;
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		player.setItemInUse(stack, getMaxItemUseDuration(stack));
+		return stack;
 	}
 
-	public void terraform(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		int range = IManaProficiencyArmor.Helper.hasProficiency(par3EntityPlayer) ? 22 : 16;
+	public void terraform(ItemStack stack, World world, EntityPlayer player) {
+		int range = IManaProficiencyArmor.Helper.hasProficiency(player) ? 22 : 16;
 
-		int xCenter = (int) par3EntityPlayer.posX;
-		int yCenter = (int) par3EntityPlayer.posY - (par2World.isRemote ? 2 : 1);
-		int zCenter = (int) par3EntityPlayer.posZ;
+		int xCenter = (int) player.posX;
+		int yCenter = (int) player.posY - (world.isRemote ? 2 : 1);
+		int zCenter = (int) player.posZ;
 
 		if(yCenter < 62) // Not below sea level
 			return;
@@ -120,8 +120,8 @@ public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockP
 					int y = yStart + k;
 					int z = zCenter + j;
 
-					Block block = par2World.getBlock(x, y, z);
-					int meta = par2World.getBlockMetadata(x, y, z);
+					Block block = world.getBlock(x, y, z);
+					int meta = world.getBlockMetadata(x, y, z);
 
 					int[] ids = OreDictionary.getOreIDs(new ItemStack(block, 1, meta));
 					for(int id : ids)
@@ -134,8 +134,8 @@ public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockP
 								int y_ = y + dir.offsetY;
 								int z_ = z + dir.offsetZ;
 
-								Block block_ = par2World.getBlock(x_, y_, z_);
-								if(block_.isAir(par2World, x_, y_, z_) || block_.isReplaceable(par2World, x_, y_, z_) || block_ instanceof BlockFlower && !(block_ instanceof ISpecialFlower) || block_ == Blocks.double_plant) {
+								Block block_ = world.getBlock(x_, y_, z_);
+								if(block_.isAir(world, x_, y_, z_) || block_.isReplaceable(world, x_, y_, z_) || block_ instanceof BlockFlower && !(block_ instanceof ISpecialFlower) || block_ == Blocks.double_plant) {
 									airBlocks.add(new ChunkCoordinates(x_, y_, z_));
 									hasAir = true;
 								}
@@ -145,7 +145,7 @@ public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockP
 								if(y > yCenter)
 									blocks.add(new CoordsWithBlock(x, y, z, Blocks.air));
 								else for(ChunkCoordinates coords : airBlocks) {
-									if(par2World.getBlock(coords.posX, coords.posY - 1, coords.posZ) != Blocks.air)
+									if(world.getBlock(coords.posX, coords.posY - 1, coords.posZ) != Blocks.air)
 										blocks.add(new CoordsWithBlock(coords.posX, coords.posY, coords.posZ, Blocks.dirt));
 								}
 							}
@@ -157,16 +157,16 @@ public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockP
 
 		int cost = COST_PER * blocks.size();
 
-		if(par2World.isRemote || ManaItemHandler.requestManaExactForTool(par1ItemStack, par3EntityPlayer, cost, true)) {
-			if(!par2World.isRemote)
+		if(world.isRemote || ManaItemHandler.requestManaExactForTool(stack, player, cost, true)) {
+			if(!world.isRemote)
 				for(CoordsWithBlock block : blocks)
-					par2World.setBlock(block.posX, block.posY, block.posZ, block.block);
+					world.setBlock(block.posX, block.posY, block.posZ, block.block);
 
 			if(!blocks.isEmpty()) {
 				for(int i = 0; i < 10; i++)
-					par2World.playSoundAtEntity(par3EntityPlayer, "step.sand", 1F, 0.4F);
+					world.playSoundAtEntity(player, "step.sand", 1F, 0.4F);
 				for(int i = 0; i < 120; i++)
-					Botania.proxy.sparkleFX(par2World, xCenter - range + range * 2 * Math.random(), yCenter + 2 + (Math.random() - 0.5) * 2, zCenter - range + range * 2 * Math.random(), 0.35F, 0.2F, 0.05F, 2F, 5);
+					Botania.proxy.sparkleFX(world, xCenter - range + range * 2 * Math.random(), yCenter + 2 + (Math.random() - 0.5) * 2, zCenter - range + range * 2 * Math.random(), 0.35F, 0.2F, 0.05F, 2F, 5);
 			}
 		}
 	}

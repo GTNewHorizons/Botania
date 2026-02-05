@@ -59,9 +59,9 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		super.registerIcons(par1IconRegister);
-		willIcon = IconHelper.forName(par1IconRegister, "willFlame");
+	public void registerIcons(IIconRegister register) {
+		super.registerIcons(register);
+		willIcon = IconHelper.forName(register, "willFlame");
 	}
 
 	@Override
@@ -132,9 +132,8 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 
 	public void onEntityAttacked(LivingHurtEvent event) {
 		Entity attacker = event.source.getEntity();
-		if (attacker instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) attacker;
-			if (hasArmorSet(player)) {
+		if (attacker instanceof EntityPlayer player) {
+            if (hasArmorSet(player)) {
 				boolean crit = player.fallDistance > 0.0F && !player.onGround && !player.isOnLadder() && !player.isInWater() && !player.isPotionActive(Potion.blindness) && player.ridingEntity == null;
 				ItemStack stack = player.inventory.armorItemInSlot(3);
 				if (crit && stack != null && stack.getItem() instanceof ItemTerrasteelHelm) {

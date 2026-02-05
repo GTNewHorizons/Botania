@@ -25,37 +25,37 @@ public class ItemOpenBucket extends ItemMod {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
-		MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, true);
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+		MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, player, true);
 
 		if(movingobjectposition == null)
-			return par1ItemStack;
+			return stack;
 		else {
 			if(movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
 				int i = movingobjectposition.blockX;
 				int j = movingobjectposition.blockY;
 				int k = movingobjectposition.blockZ;
 
-				if(!par2World.canMineBlock(par3EntityPlayer, i, j, k))
-					return par1ItemStack;
+				if(!world.canMineBlock(player, i, j, k))
+					return stack;
 
-				if(!par3EntityPlayer.canPlayerEdit(i, j, k, movingobjectposition.sideHit, par1ItemStack))
-					return par1ItemStack;
+				if(!player.canPlayerEdit(i, j, k, movingobjectposition.sideHit, stack))
+					return stack;
 
-				Material material = par2World.getBlock(i, j, k).getMaterial();
-				int l = par2World.getBlockMetadata(i, j, k);
+				Material material = world.getBlock(i, j, k).getMaterial();
+				int l = world.getBlockMetadata(i, j, k);
 
 				if((material == Material.lava || material == Material.water) && l == 0) {
-					par2World.setBlockToAir(i, j, k);
+					world.setBlockToAir(i, j, k);
 					
 					for(int x = 0; x < 5; x++)
-						par2World.spawnParticle("explode", i + Math.random(), j + Math.random(), k + Math.random(), 0, 0, 0);
+						world.spawnParticle("explode", i + Math.random(), j + Math.random(), k + Math.random(), 0, 0, 0);
 					
-					return par1ItemStack;
+					return stack;
 				}
 			}
 
-			return par1ItemStack;
+			return stack;
 		}
 	}
 

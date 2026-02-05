@@ -44,12 +44,12 @@ public class ItemSextant extends ItemMod {
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack stack) {
 		return EnumAction.bow;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack stack) {
 		return 72000;
 	}
 
@@ -90,23 +90,23 @@ public class ItemSextant extends ItemMod {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 		Botania.proxy.removeSextantMultiblock();
 
-		if(!par3EntityPlayer.isSneaking()) {
-			MovingObjectPosition pos = ToolCommons.raytraceFromEntity(par2World, par3EntityPlayer, false, 128);
+		if(!player.isSneaking()) {
+			MovingObjectPosition pos = ToolCommons.raytraceFromEntity(world, player, false, 128);
 			if(pos != null && pos.entityHit == null) {
-				if(!par2World.isRemote) {
-					ItemNBTHelper.setInt(par1ItemStack, TAG_SOURCE_X, pos.blockX);
-					ItemNBTHelper.setInt(par1ItemStack, TAG_SOURCE_Y, pos.blockY);
-					ItemNBTHelper.setInt(par1ItemStack, TAG_SOURCE_Z, pos.blockZ);
+				if(!world.isRemote) {
+					ItemNBTHelper.setInt(stack, TAG_SOURCE_X, pos.blockX);
+					ItemNBTHelper.setInt(stack, TAG_SOURCE_Y, pos.blockY);
+					ItemNBTHelper.setInt(stack, TAG_SOURCE_Z, pos.blockZ);
 				}
-			} else ItemNBTHelper.setInt(par1ItemStack, TAG_SOURCE_Y, -1);
+			} else ItemNBTHelper.setInt(stack, TAG_SOURCE_Y, -1);
 
-			par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
+			player.setItemInUse(stack, getMaxItemUseDuration(stack));
 		}
 
-		return par1ItemStack;
+		return stack;
 	}
 
 	public static double calculateRadius(ItemStack stack, EntityPlayer player) {

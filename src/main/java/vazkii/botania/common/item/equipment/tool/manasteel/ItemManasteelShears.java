@@ -53,20 +53,20 @@ public class ItemManasteelShears extends ItemShears implements IManaUsingItem {
 	}
 
 	@Override
-	public Item setUnlocalizedName(String par1Str) {
-		GameRegistry.registerItem(this, par1Str);
-		return super.setUnlocalizedName(par1Str);
+	public Item setUnlocalizedName(String name) {
+		GameRegistry.registerItem(this, name);
+		return super.setUnlocalizedName(name);
 	}
 
 	@Override
-	public String getUnlocalizedNameInefficiently(ItemStack par1ItemStack) {
-		return super.getUnlocalizedNameInefficiently(par1ItemStack).replaceAll("item.", "item." + LibResources.PREFIX_MOD);
+	public String getUnlocalizedNameInefficiently(ItemStack stack) {
+		return super.getUnlocalizedNameInefficiently(stack).replaceAll("item.", "item." + LibResources.PREFIX_MOD);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = IconHelper.forItem(par1IconRegister, this);
+	public void registerIcons(IIconRegister register) {
+		itemIcon = IconHelper.forItem(register, this);
 	}
 
 	@Override
@@ -74,9 +74,8 @@ public class ItemManasteelShears extends ItemShears implements IManaUsingItem {
 		if(entity.worldObj.isRemote)
 			return false;
 
-		if(entity instanceof IShearable) {
-			IShearable target = (IShearable)entity;
-			if(target.isShearable(itemstack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
+		if(entity instanceof IShearable target) {
+            if(target.isShearable(itemstack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
 				ArrayList<ItemStack> drops = target.onSheared(itemstack, entity.worldObj, (int) entity.posX, (int) entity.posY, (int) entity.posZ, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, itemstack));
 
 				Random rand = new Random();
@@ -102,9 +101,8 @@ public class ItemManasteelShears extends ItemShears implements IManaUsingItem {
 			return false;
 
 		Block block = player.worldObj.getBlock(x, y, z);
-		if(block instanceof IShearable) {
-			IShearable target = (IShearable)block;
-			if(target.isShearable(itemstack, player.worldObj, x, y, z)) {
+		if(block instanceof IShearable target) {
+            if(target.isShearable(itemstack, player.worldObj, x, y, z)) {
 				ArrayList<ItemStack> drops = target.onSheared(itemstack, player.worldObj, x, y, z, EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, itemstack));
 				Random rand = new Random();
 
@@ -128,14 +126,14 @@ public class ItemManasteelShears extends ItemShears implements IManaUsingItem {
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity player, int par4, boolean par5) {
-		if(!world.isRemote && player instanceof EntityPlayer && stack.getItemDamage() > 0 && ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) player, MANA_PER_DAMAGE * 2, true))
+	public void onUpdate(ItemStack stack, World world, Entity entity, int invSlot, boolean isHeld) {
+		if(!world.isRemote && entity instanceof EntityPlayer && stack.getItemDamage() > 0 && ManaItemHandler.requestManaExactForTool(stack, (EntityPlayer) entity, MANA_PER_DAMAGE * 2, true))
 			stack.setItemDamage(stack.getItemDamage() - 1);
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack) {
-		return par2ItemStack.getItem() == ModItems.manaResource && par2ItemStack.getItemDamage() == 0 ? true : super.getIsRepairable(par1ItemStack, par2ItemStack);
+	public boolean getIsRepairable(ItemStack stack, ItemStack repairMaterial) {
+		return repairMaterial.getItem() == ModItems.manaResource && repairMaterial.getItemDamage() == 0 ? true : super.getIsRepairable(stack, repairMaterial);
 	}
 
 	@Override
