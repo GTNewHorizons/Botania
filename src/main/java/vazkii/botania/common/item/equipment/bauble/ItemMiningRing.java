@@ -30,26 +30,26 @@ public class ItemMiningRing extends ItemBauble implements IManaUsingItem {
 
 	@Override
 	public void onWornTick(ItemStack stack, EntityLivingBase player) {
-		if (!(player instanceof EntityPlayer) || player.worldObj.isRemote){
+		if (!(player instanceof EntityPlayer) || player.worldObj.isRemote) {
 			return;
 		}
-        final PotionEffect effect = player.getActivePotionEffect(Potion.digSpeed);
-        if (!ManaItemHandler.requestManaExact(stack, (EntityPlayer) player, MANA_COST, player.swingProgress == 0.25F)) {
-            if (effect != null && effect.getAmplifier() == HASTE_AMPLIFIER && effect.getDuration() >= 32767){
+		final PotionEffect effect = player.getActivePotionEffect(Potion.digSpeed);
+		if (!ManaItemHandler.requestManaExact(stack, (EntityPlayer) player, MANA_COST, player.swingProgress == 0.25F)) {
+			if (effect != null && effect.getAmplifier() == HASTE_AMPLIFIER) {
 				player.removePotionEffect(Potion.digSpeed.id);
 			}
-		} else if(effect == null || (effect.getAmplifier() == HASTE_AMPLIFIER && effect.getDuration() < 32767)){
-			if(effect != null) {
+		} else if (effect == null || effect.getDuration() <= 20) {
+			if (effect != null && effect.getAmplifier() == HASTE_AMPLIFIER) {
 				player.removePotionEffect(Potion.digSpeed.id);
 			}
-			player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, Integer.MAX_VALUE, HASTE_AMPLIFIER, true));
+			player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, 200, HASTE_AMPLIFIER, true));
 		}
 	}
 
 	@Override
-	public void onUnequipped(ItemStack stack, EntityLivingBase player){
+	public void onUnequipped(ItemStack stack, EntityLivingBase player) {
 		final PotionEffect effect = player.getActivePotionEffect(Potion.digSpeed);
-		if (effect != null && effect.getAmplifier() == HASTE_AMPLIFIER && effect.getDuration() >= 32767){
+		if (effect != null && effect.getAmplifier() == HASTE_AMPLIFIER) {
 			player.removePotionEffect(Potion.digSpeed.id);
 		}
 	}
