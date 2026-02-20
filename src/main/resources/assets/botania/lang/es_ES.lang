@@ -1471,6 +1471,8 @@ botania.potion.clear=Absolución
 botania.gui.lexicon.header=Lexica Botania, %s edición tabla de contenidos
 botania.gui.lexicon.wip=(Esta entrada es Trabajo en Curso. No está en su forma final)
 
+botania.gui.flowerBag.title=Bolsa de flores
+
 # MUSIC DISCS
 item.record.botania:gaia1.desc=Kain Vinosec - Endure Emptiness
 item.record.botania:gaia2.desc=Kain Vinosec - Fight For Quiescence
