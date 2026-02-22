@@ -1704,6 +1704,8 @@ botania.potion.clear=Очищение
 botania.gui.lexicon.header=Лексика Botania, %s Выберите категорию:
 botania.gui.lexicon.wip=(Эта секция в разработке. Это даже не конечный вариант)
 
+botania.gui.flowerBag.title=Цветочный мешочек
+
 # MUSIC DISCS
 item.record.botania:gaia1.desc=Kain Vinosec - Endure Emptiness
 item.record.botania:gaia2.desc=Kain Vinosec - Fight For Quiescence
