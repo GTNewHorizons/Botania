@@ -1462,6 +1462,9 @@ item.botania:speedUpBelt.name=大地を闊歩するもののたすき
 item.botania:baubleBox.name=装飾品入れ
 item.botania:manaPowder.name=マナの粉末
 
+# GUI TEXT
+botania.gui.flowerBag.title=花入れ小袋
+
 # LEXICON CATEGORIES
 botania.category.basics=基本と機構
 botania.category.mana=マナの取り扱い

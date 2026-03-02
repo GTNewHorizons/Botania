@@ -1653,6 +1653,8 @@ botania.potion.clear=Totaalheid
 botania.gui.lexicon.header=Lexica Botania, %s Editie Inhoudsopgave
 botania.gui.lexicon.wip=(Hier wordt nog aan gewerkt.)
 
+botania.gui.flowerBag.title=Bloementas
+
 # MUSIC DISCS
 item.record.botania:gaia1.desc=Kain Vinosec - Endure Emptiness
 item.record.botania:gaia2.desc=Kain Vinosec - Fight For Quiescence

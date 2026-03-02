@@ -1699,6 +1699,8 @@ botania.potion.clear=赦免
 botania.gui.lexicon.header=植物魔法辞典 第%s版 - 目录
 botania.gui.lexicon.wip=(本条目的编纂工作仍在进行,其当前内容仍未完全定稿)
 
+botania.gui.flowerBag.title=采花袋
+
 # MUSIC DISCS
 item.record.botania:gaia1.desc=Kain Vinosec - Endure Emptiness
 item.record.botania:gaia2.desc=Kain Vinosec - Fight For Quiescence
