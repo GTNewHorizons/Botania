@@ -34,6 +34,7 @@ import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.item.ISequentialBreaker;
 import vazkii.botania.api.mana.IManaGivingItem;
 import vazkii.botania.api.mana.IManaItem;
+import vazkii.botania.api.mana.ITieredManaTooltipDisplay;
 import vazkii.botania.client.core.helper.IconHelper;
 import vazkii.botania.common.achievement.ModAchievements;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
@@ -49,7 +50,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemTerraPick extends ItemManasteelPick implements IManaItem, ISequentialBreaker {
+import javax.annotation.Nonnull;
+
+public class ItemTerraPick extends ItemManasteelPick implements IManaItem, ISequentialBreaker, ITieredManaTooltipDisplay {
 
 	private static final String TAG_ENABLED = "enabled";
 	private static final String TAG_MANA = "mana";
@@ -242,15 +245,11 @@ public class ItemTerraPick extends ItemManasteelPick implements IManaItem, ISequ
 
 	@Override
 	public int getMana(ItemStack stack) {
-		return getMana_(stack);
-	}
-
-	public static int getMana_(ItemStack stack) {
 		return ItemNBTHelper.getInt(stack, TAG_MANA, 0);
 	}
 
-	public static int getLevel(ItemStack stack) {
-		int mana = getMana_(stack);
+	public int getLevel(ItemStack stack) {
+		int mana = getMana(stack);
 		for(int i = LEVELS.length - 1; i > 0; i--)
 			if(mana >= LEVELS[i])
 				return i;
@@ -303,4 +302,45 @@ public class ItemTerraPick extends ItemManasteelPick implements IManaItem, ISequ
 		return isTipped(stack);
 	}
 
+    @Nonnull
+    @Override
+    @SideOnly(Side.CLIENT)
+    public String getLeftManaLabel(@Nonnull ItemStack stack) {
+        int level = getLevel(stack);
+        return StatCollector.translateToLocal("botania.rank" + level);
+    }
+
+    @Nonnull
+    @Override
+    @SideOnly(Side.CLIENT)
+    public String getRightManaLabel(@Nonnull ItemStack stack) {
+        int level = getLevel(stack);
+        return (level + 1 == LEVELS.length) ? "" : StatCollector.translateToLocal("botania.rank" + (level + 1));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean isRainbowEffect(@Nonnull ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public float getManaFractionForDisplay(ItemStack stack) {
+        int level = getLevel(stack);
+        if (level + 1 >= LEVELS.length) return 1;
+
+        int min = LEVELS[level];
+        int max = LEVELS[level + 1];
+        int mana = getMana(stack);
+        float fraction = mana - min;
+        float total = max - min;
+        return fraction / total;
+    }
+
+    @Nonnull
+    @Override
+    public int[] getManaTiers(@Nonnull ItemStack stack) {
+        return LEVELS;
+    }
 }

@@ -16,7 +16,7 @@ botaniamisc.statusUnknown=Onbekende Status
 botaniamisc.color=%s Gekleurd
 botaniamisc.manaUsage=Mana Verbruik
 botaniamisc.shiftToRead=Shift-rechts klikken voor meer
-botaniamisc.clickToRecipe=Shift klikken voor recept
+botaniamisc.clickToSeeRecipe=Shift klikken voor recept
 botaniamisc.clickToIndex=Shift klikken voor index
 botaniamisc.flareColor=%s Ladingen
 botaniamisc.outputtingPower=Geeft Mana af aan items
@@ -1652,6 +1652,8 @@ botania.potion.clear=Totaalheid
 # GUI TEXT
 botania.gui.lexicon.header=Lexica Botania, %s Editie Inhoudsopgave
 botania.gui.lexicon.wip=(Hier wordt nog aan gewerkt.)
+
+botania.gui.flowerBag.title=Bloementas
 
 # MUSIC DISCS
 item.record.botania:gaia1.desc=Kain Vinosec - Endure Emptiness

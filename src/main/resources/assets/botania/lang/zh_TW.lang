@@ -16,7 +16,7 @@ botaniamisc.statusUnknown=未知狀態
 botaniamisc.color=%s 染色
 botaniamisc.manaUsage=瑪那消耗
 botaniamisc.shiftToRead=Shift並右擊瞭解更多
-botaniamisc.clickToRecipe=Shift點擊查看合成
+botaniamisc.clickToSeeRecipe=Shift點擊查看合成
 botaniamisc.clickToIndex=Shift點擊查看目錄
 botaniamisc.flareColor=%s 彈藥
 botaniamisc.outputtingPower=給物品輸送能量
@@ -1695,6 +1695,8 @@ botania.potion.clear=赦免
 # GUI TEXT
 botania.gui.lexicon.header=植物魔法辭典 第%s版 - 目錄
 botania.gui.lexicon.wip=(本條目的編纂工作仍在進行,其當前內容仍未完全定稿)
+
+botania.gui.flowerBag.title=採花袋
 
 # MUSIC DISCS
 item.record.botania:gaia1.desc=Kain Vinosec - Endure Emptiness

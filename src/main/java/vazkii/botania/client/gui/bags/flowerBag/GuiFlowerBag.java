@@ -22,6 +22,6 @@ public class GuiFlowerBag extends GuiMagicPlantBag {
 
     @Override
     protected String getLocalizedNameKey() {
-        return "item.botania:flowerBag.name";
+        return "botania.gui.flowerBag.title";
     }
 }
