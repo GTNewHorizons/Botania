@@ -152,7 +152,10 @@ public class SubTileEntropinnyum extends SubTileGenerating {
                 return false;
             }
 
-            if (explosionSource != null) explosionSource.setDead();
+            // ic2 reactor explosion will not be eaten
+            if (explosionSource == null) return false;
+            
+            explosionSource.setDead();
             mana += getMaxMana();
             supertile.getWorldObj().playSoundEffect(posX, posY, posZ, "random.explode", 0.2F, (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
             sync();
