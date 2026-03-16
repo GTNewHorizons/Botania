@@ -1,13 +1,4 @@
-/**
- * This class was created by <Vazkii>. It's distributed as
- * part of the Botania Mod. Get the Source Code in github:
- * https://github.com/Vazkii/Botania
- * 
- * Botania is Open Source and distributed under the
- * Botania License: http://botaniamod.net/license.php
- * 
- * File Created @ [Jun 7, 2014, 10:59:44 PM (GMT)]
- */
+
 package vazkii.botania.common.block.subtile.generating;
 
 import java.util.List;
@@ -28,65 +19,18 @@ import vazkii.botania.common.Botania;
 import vazkii.botania.common.lexicon.LexiconData;
 import ic2.core.block.EntityIC2Explosive;
 
-public class SubTileEntropinnyum extends SubTileGenerating {
-
-    public SubTileEntropinnyum() {
+public class SubTileReiujia extends SubTileEntropinnyum {
+    
+    public SubTileReiujia() {
         MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
-
-	private static final int RANGE = 12;
-
-	@Override
-	public void onUpdate() { 
-        super.onUpdate(); 
-        if(mana == 0) { 
-            AxisAlignedBB box = AxisAlignedBB.getBoundingBox(
-                supertile.xCoord - RANGE, 
-                supertile.yCoord - RANGE, 
-                supertile.zCoord - RANGE, 
-                supertile.xCoord + RANGE + 1, 
-                supertile.yCoord + RANGE + 1, 
-                supertile.zCoord + RANGE + 1); 
-            if (!processVanillaTNT(box)) processIC2Explosive(box); 
-        } 
-    } 
     
-    // can't unify these because something something type safety
-    private boolean processVanillaTNT(AxisAlignedBB box){ 
-        List<EntityTNTPrimed> tntList = supertile.getWorldObj()
-            .getEntitiesWithinAABB(EntityTNTPrimed.class, box); 
-        for (EntityTNTPrimed tnt : tntList) { 
-            if (tnt.fuse == 1 && !tnt.isDead && validLocation(tnt)) { 
-                handleExplosion(tnt); 
-                return true; 
-            } 
-        } return false; 
-    } 
-    
-    // can't unify with vanilla because EntityIC2Explosive directly inherits Entity
-    private boolean processIC2Explosive(AxisAlignedBB box) { 
-    // for iTNT and nukes lul
-        List<EntityIC2Explosive> tntList = supertile.getWorldObj() 
-        .getEntitiesWithinAABB(EntityIC2Explosive.class, box); 
-        for (EntityIC2Explosive tnt : tntList) { 
-            if (tnt.fuse == 1 && !tnt.isDead && validLocation(tnt)) { 
-                handleExplosion(tnt); 
-                return true; 
-            } 
-        } return false; 
-    } 
-    
-    private boolean validLocation(Entity tnt) { 
-        return !supertile.getWorldObj().getBlock( 
-            MathHelper.floor_double(tnt.posX), 
-            MathHelper.floor_double(tnt.posY), 
-            MathHelper.floor_double(tnt.posZ)).getMaterial().isLiquid(); 
-    } 
+    private static final int RANGE = 12;
     
     private void handleExplosion(Entity tnt) { 
         if (!supertile.getWorldObj().isRemote) { 
             tnt.setDead();
-            mana += getMaxMana(); 
+            mana += super.getMaxMana(); 
             supertile.getWorldObj().playSoundEffect( 
                 tnt.posX, tnt.posY, tnt.posZ, 
                 "random.explode", 
@@ -94,7 +38,7 @@ public class SubTileEntropinnyum extends SubTileGenerating {
                 (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
             sync(); 
         } 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 50; i++){
             Botania.proxy.sparkleFX( 
                 tnt.worldObj, 
                 tnt.posX + Math.random() * 4 - 2, 
@@ -109,33 +53,24 @@ public class SubTileEntropinnyum extends SubTileGenerating {
         supertile.getWorldObj().spawnParticle( 
             "hugeexplosion", 
             tnt.posX, tnt.posY, tnt.posZ, 
-            1D, 0D, 0D); 
-        }
-
-	@Override
-	public int getColor() {
-		return 0xcb0000;
-	}
-
-	@Override
+            1D, 0D, 0D);
+    }
+        
+    @Override
 	public int getMaxMana() {
-		return 6500;
+		return 100*super.getMaxMana();
 	}
-
-	@Override
-	public RadiusDescriptor getRadius() {
-		return new RadiusDescriptor.Square(toChunkCoordinates(), RANGE);
-	};
-
-	@Override
+    
+    @Override
 	public LexiconEntry getEntry() {
-		return LexiconData.entropinnyum;
+		return LexiconData.reiujia;
 	}
-
+    
     public class EventHandler {
-
+        
         @SubscribeEvent
         public void consumeExplosion(ExplosionEvent.Start event) {
+            // duplicate code from SubTileEntropinnyum.EventHandler.consumeExplosion
             if(processExplosion(event.world, event.explosion.exploder, event.explosion.explosionX, event.explosion.explosionY, event.explosion.explosionZ)) {
                 event.setCanceled(true);
             }
@@ -144,21 +79,36 @@ public class SubTileEntropinnyum extends SubTileGenerating {
         @SubscribeEvent
         @Optional.Method(modid = "IC2")
         public void consumeExplosionIC2(ic2.api.event.ExplosionEvent event) {
-            if(processExplosion(event.world, event.entity, event.x, event.y, event.z)) {
+            if(processExplosion(event.world, event.entity, event.x, event.y, event.z, event.power)) {
                 event.setCanceled(true);
             }
         }
-
+        
         private boolean processExplosion(World world, Entity explosionSource, double posX, double posY, double posZ) {
+            return processExplosion(world, explosionSource, posX, posY, posZ, 0);
+        }
+            
+        private boolean processExplosion(World world, Entity explosionSource, double posX, double posY, double posZ, double power) {
             if (world.isRemote || mana != 0 || !(Math.abs(supertile.xCoord - posX) <= RANGE && Math.abs(supertile.yCoord - posY) <= RANGE && Math.abs(supertile.zCoord - posZ) <= RANGE)) {
                 return false;
             }
-
-            // ic2 reactor explosion will not be eaten
-            if (explosionSource == null) return false;
             
-            explosionSource.setDead();
-            mana += getMaxMana();
+            int entropinnyumMaxMana = SubTileReiujia.super.getMaxMana();
+            
+            if (explosionSource != null){
+                explosionSource.setDead();
+                mana += entropinnyumMaxMana;
+            } else {
+                // ic2 reactor meltdowns have no explosionSource entity
+                // so assume that that's what happened if we're here
+                //
+                // regarding power
+                // per config nuclear explosion power is capped at 100, where a tnt is 4
+                // the factor of 0.25 is not here because stronger flower and radiation I guess
+                mana += entropinnyumMaxMana * (int)power;
+            }
+            
+            
             supertile.getWorldObj().playSoundEffect(posX, posY, posZ, "random.explode", 0.2F, (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
             sync();
 
@@ -169,5 +119,7 @@ public class SubTileEntropinnyum extends SubTileGenerating {
             supertile.getWorldObj().spawnParticle("hugeexplosion", posX, posY, posZ, 1D, 0D, 0D);
             return true;
         }
+        
     }
+    
 }

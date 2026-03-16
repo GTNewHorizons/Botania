@@ -138,6 +138,7 @@ public final class LexiconData {
 	public static LexiconEntry spectrolus;
 	public static LexiconEntry rafflowsia;
 	public static LexiconEntry dandelifeon;
+	public static LexiconEntry reiujia;
 
 	public static LexiconEntry pylon;
 	public static LexiconEntry manaEnchanting;

@@ -151,7 +151,8 @@ public class SubTileGenerating extends SubTileEntity {
 				if (supertile.getWorldObj().blockExists(
                     cachedCollectorCoordinates.posX,
                     cachedCollectorCoordinates.posY,
-                    cachedCollectorCoordinates.posZ)) {
+                    cachedCollectorCoordinates.posZ)
+                ) {
 					needsNew = true;
 					TileEntity tileAt = supertile.getWorldObj().getTileEntity(
                         cachedCollectorCoordinates.posX,
