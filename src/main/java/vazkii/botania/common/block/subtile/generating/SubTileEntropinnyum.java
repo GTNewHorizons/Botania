@@ -85,7 +85,8 @@ public class SubTileEntropinnyum extends SubTileGenerating {
     
     private void handleExplosion(Entity tnt) { 
         if (!supertile.getWorldObj().isRemote) { 
-            tnt.setDead(); mana += getMaxMana(); 
+            tnt.setDead();
+            mana += getMaxMana(); 
             supertile.getWorldObj().playSoundEffect( 
                 tnt.posX, tnt.posY, tnt.posZ, 
                 "random.explode", 
@@ -93,7 +94,7 @@ public class SubTileEntropinnyum extends SubTileGenerating {
                 (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
             sync(); 
         } 
-        for (int i = 0; i < 50; i++) 
+        for (int i = 0; i < 50; i++){
             Botania.proxy.sparkleFX( 
                 tnt.worldObj, 
                 tnt.posX + Math.random() * 4 - 2, 
@@ -103,12 +104,13 @@ public class SubTileEntropinnyum extends SubTileGenerating {
                 (float) Math.random() * 0.25F, 
                 (float) Math.random() * 0.25F, 
                 (float) (Math.random() * 0.65F + 1.25F),
-                12); 
+                12);
+        }
         supertile.getWorldObj().spawnParticle( 
             "hugeexplosion", 
             tnt.posX, tnt.posY, tnt.posZ, 
             1D, 0D, 0D); 
-        }
+    }
 
 	@Override
 	public int getColor() {
