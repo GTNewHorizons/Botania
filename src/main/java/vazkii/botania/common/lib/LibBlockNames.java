@@ -126,6 +126,7 @@ public final class LibBlockNames {
 	public static final String SUBTILE_SPECTROLUS = "spectrolus";
 	public static final String SUBTILE_DANDELIFEON = "dandelifeon";
 	public static final String SUBTILE_RAFFLOWSIA = "rafflowsia";
+	public static final String SUBTILE_REIUJIA = "reiujia";
 
 	public static final String SUBTILE_BELLETHORN = "bellethorn";
 	public static final String SUBTILE_DREADTHORN = "dreadthorn";

@@ -702,6 +702,9 @@ public final class LexiconData {
 				new PageText("3"), new PageText("4"), new PageText("5"), new PageText("6"), new PageText("10"),
 				new PageText("7"), new PagePetalRecipe<>("8", ModPetalRecipes.dandelifeonRecipe),
 				new PageCraftingRecipe("9", ModCraftingRecipes.recipeCellBlock));
+        
+        reiujia = new BLexiconEntry(LibLexicon.GFLOWER_REIUJIA, categoryGenerationFlowers);
+        reiujia.setLexiconPages(new PageText("0"));
 
 		// DEVICES ENTRIES
 		pylon = new BLexiconEntry(LibLexicon.DEVICE_PYLON, categoryDevices);
