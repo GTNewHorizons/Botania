@@ -33,6 +33,8 @@ import vazkii.botania.api.mana.IManaPool;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
 import vazkii.botania.api.mana.spark.ISparkEntity;
 import vazkii.botania.api.mana.spark.SparkHelper;
+import vazkii.botania.api.subtile.SubTileEntity;
+import vazkii.botania.common.block.tile.TileSpecialFlower;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.core.helper.Vector3;
 import vazkii.botania.common.item.ModItems;
@@ -323,8 +325,13 @@ public class EntitySpark extends Entity implements ISparkEntity {
 		int y = MathHelper.floor_double(posY) - 1;
 		int z = MathHelper.floor_double(posZ);
 		TileEntity tile = worldObj.getTileEntity(x, y, z);
-		if(tile != null && tile instanceof ISparkAttachable)
-			return (ISparkAttachable) tile;
+        if (tile != null){
+            if (tile instanceof ISparkAttachable) return (ISparkAttachable)tile;
+            else if (tile instanceof TileSpecialFlower){
+                SubTileEntity subtile = ((TileSpecialFlower)tile).getSubTile();
+                if (subtile instanceof ISparkAttachable) return (ISparkAttachable)subtile;
+            }
+        }
 
 		return null;
 	}

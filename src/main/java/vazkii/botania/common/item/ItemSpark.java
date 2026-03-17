@@ -21,9 +21,11 @@ import net.minecraft.world.World;
 import vazkii.botania.api.internal.VanillaPacketDispatcher;
 import vazkii.botania.api.mana.IManaGivingItem;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
+import vazkii.botania.api.subtile.SubTileEntity;
 import vazkii.botania.client.core.helper.IconHelper;
 import vazkii.botania.common.achievement.ICraftAchievement;
 import vazkii.botania.common.achievement.ModAchievements;
+import vazkii.botania.common.block.tile.TileSpecialFlower;
 import vazkii.botania.common.entity.EntitySpark;
 import vazkii.botania.common.lib.LibItemNames;
 
@@ -50,7 +52,23 @@ public class ItemSpark extends ItemMod implements ICraftAchievement, IManaGiving
 				}
 				return true;
 			}
-		}
+		} else if (tile instanceof TileSpecialFlower) {
+            SubTileEntity subtile = ((TileSpecialFlower)tile).getSubTile();
+            if(subtile instanceof ISparkAttachable attach) {
+                if(attach.canAttachSpark(stack) && attach.getAttachedSpark() == null) {
+    				stack.stackSize--;
+    				if(!world.isRemote) {
+    					EntitySpark spark = new EntitySpark(world);
+    					spark.setPosition(x + 0.5, y + 1.5, z + 0.5);
+    					world.spawnEntityInWorld(spark);
+    					attach.attachSpark(spark);
+    					VanillaPacketDispatcher.dispatchTEToNearbyPlayers(world, x, y, z);
+    				}
+    				return true;
+    			}
+            }
+        }
+        System.out.println("false");
 		return false;
 	}
 

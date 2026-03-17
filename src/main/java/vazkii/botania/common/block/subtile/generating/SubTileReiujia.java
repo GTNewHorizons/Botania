@@ -5,21 +5,28 @@ import java.util.List;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityTNTPrimed;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ExplosionEvent;
+
+import ic2.core.block.EntityIC2Explosive;
+
 import vazkii.botania.api.lexicon.LexiconEntry;
+import vazkii.botania.api.mana.spark.ISparkAttachable;
+import vazkii.botania.api.mana.spark.ISparkEntity;
 import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileGenerating;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.lexicon.LexiconData;
-import ic2.core.block.EntityIC2Explosive;
 
-public class SubTileReiujia extends SubTileEntropinnyum {
+public class SubTileReiujia extends SubTileEntropinnyum implements ISparkAttachable {
     
     public SubTileReiujia() {
         MinecraftForge.EVENT_BUS.register(new EventHandler());
@@ -62,6 +69,10 @@ public class SubTileReiujia extends SubTileEntropinnyum {
 		return 100*super.getMaxMana();
 	}
     
+    public int getCurrentMana() {
+        return mana;
+    }
+    
     @Override
 	public LexiconEntry getEntry() {
 		return LexiconData.reiujia;
@@ -97,7 +108,12 @@ public class SubTileReiujia extends SubTileEntropinnyum {
                 posY + " " + 
                 posZ + " " + 
                 power);*/
-            if (world.isRemote || mana != 0 || !(Math.abs(supertile.xCoord - posX) <= RANGE && Math.abs(supertile.yCoord - posY) <= RANGE && Math.abs(supertile.zCoord - posZ) <= RANGE)) {
+            if (world.isRemote ||
+                mana != 0 ||
+                !(  Math.abs(supertile.xCoord - posX) <= RANGE &&
+                    Math.abs(supertile.yCoord - posY) <= RANGE &&
+                    Math.abs(supertile.zCoord - posZ) <= RANGE)
+            ) {
                 return false;
             }
             
@@ -118,17 +134,78 @@ public class SubTileReiujia extends SubTileEntropinnyum {
             // load bearing debug print ???
             System.out.println("mana " + mana);
             
-            supertile.getWorldObj().playSoundEffect(posX, posY, posZ, "random.explode", 0.2F, (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
+            supertile.getWorldObj().playSoundEffect(
+                posX,
+                posY,
+                posZ,
+                "random.explode",
+                0.2F,
+                (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
             sync();
 
             for(int i = 0; i < 50; i++) {
-                Botania.proxy.sparkleFX(world, posX + Math.random() * 4 - 2, posY + Math.random() * 4 - 2, posZ + Math.random() * 4 - 2, 1F, (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, (float) (Math.random() * 0.65F + 1.25F), 12);
+                Botania.proxy.sparkleFX(
+                    world,
+                    posX + Math.random() * 4 - 2,
+                    posY + Math.random() * 4 - 2,
+                    posZ + Math.random() * 4 - 2,
+                    1F,
+                    (float) Math.random() * 0.25F,
+                    (float) Math.random() * 0.25F,
+                    (float) (Math.random() * 0.65F + 1.25F),
+                    12);
             }
 
             supertile.getWorldObj().spawnParticle("hugeexplosion", posX, posY, posZ, 1D, 0D, 0D);
             return true;
         }
-        
     }
     
+    //// ISparkAttachable
+    
+    @Override
+	public boolean canAttachSpark(ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	public void attachSpark(ISparkEntity entity) {
+		// NO-OP
+	}
+
+	@Override
+	public ISparkEntity getAttachedSpark() {
+		List<ISparkEntity> sparks = supertile.getWorldObj().getEntitiesWithinAABB(
+            ISparkEntity.class,
+            AxisAlignedBB.getBoundingBox(
+                supertile.xCoord,
+                supertile.yCoord + 1,
+                supertile.zCoord,
+                supertile.xCoord + 1,
+                supertile.yCoord + 2,
+                supertile.zCoord + 1));
+		if(sparks.size() == 1) {
+			Entity e = (Entity) sparks.get(0);
+			return (ISparkEntity) e;
+		}
+
+		return null;
+	}
+    
+    // generating flower should never accept mana
+    @Override
+	public int getAvailableSpaceForMana() { return 0; }
+    @Override
+    public boolean areIncomingTranfersDone() { return true; }
+    
+    //// IManaReceiver
+    
+    @Override
+    public boolean isFull() { return true; }
+    @Override
+	public void recieveMana(int mana) {
+        // NO-OP
+    }
+    @Override
+	public boolean canRecieveManaFromBursts() { return false; }
 }
