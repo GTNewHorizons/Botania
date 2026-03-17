@@ -35,20 +35,20 @@ public class SubTileGourmaryllis extends SubTileGenerating {
 	int storedMana = 0;
 
 	private int getFoodHungerValue(ItemStack stack) {
-    if (stack == null) return -1;
+    	if (stack == null) return -1;
 
-    // Vanilla food
-    if (stack.getItem() instanceof ItemFood) {
-        return ((ItemFood) stack.getItem()).func_150905_g(stack);
-    }
+    	// Vanilla food
+    	if (stack.getItem() instanceof ItemFood) {
+        	return ((ItemFood) stack.getItem()).func_150905_g(stack);
+    	}
 
-    // GregTech food
-    if (Botania.gt5Loaded) {
-        return GTFoodHelper.getFoodHungerValue(stack);
-    }
+    	// GregTech food
+    	if (Botania.gt5Loaded) {
+        	return GTFoodHelper.getFoodHungerValue(stack);
+    	}
 
-    return -1;
-}
+    	return -1;
+	}
 
 	@Override
 	public void onUpdate() {
