@@ -22,14 +22,33 @@ import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileGenerating;
 import vazkii.botania.common.lexicon.LexiconData;
+import vazkii.botania.common.Botania;
+import vazkii.botania.common.block.subtile.generating.compat.GTFoodHelper;
 
 public class SubTileGourmaryllis extends SubTileGenerating {
 
 	private static final String TAG_COOLDOWN = "cooldown";
+	private static final String TAG_STORED_MANA = "storedMana";
 	private static final int RANGE = 1;
 
 	int cooldown = 0;
 	int storedMana = 0;
+
+	private int getFoodHungerValue(ItemStack stack) {
+    	if (stack == null) return -1;
+
+    	// Vanilla food
+    	if (stack.getItem() instanceof ItemFood) {
+        	return ((ItemFood) stack.getItem()).func_150905_g(stack);
+    	}
+
+    	// GregTech food
+    	if (Botania.gt5Loaded) {
+        	return GTFoodHelper.getFoodHungerValue(stack);
+    	}
+
+    	return -1;
+	}
 
 	@Override
 	public void onUpdate() {
@@ -49,28 +68,28 @@ public class SubTileGourmaryllis extends SubTileGenerating {
 		List<EntityItem> items = supertile.getWorldObj().getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(supertile.xCoord - RANGE, supertile.yCoord - RANGE, supertile.zCoord - RANGE, supertile.xCoord + RANGE + 1, supertile.yCoord + RANGE + 1, supertile.zCoord + RANGE + 1));
 		for(EntityItem item : items) {
 			ItemStack stack = item.getEntityItem();
-			if(stack != null && stack.getItem() instanceof ItemFood && !item.isDead && item.age >= slowdown) {
-				if(cooldown == 0) {
-					if(!remote) {
-						int val = ((ItemFood) stack.getItem()).func_150905_g(stack);
-						storedMana = val * val * 64;
-						cooldown = val * 10;
-						supertile.getWorldObj().playSoundEffect(supertile.xCoord, supertile.yCoord, supertile.zCoord, "random.eat", 0.2F, 0.5F + (float) Math.random() * 0.5F);
-						sync();
-					} else 
-						for(int i = 0; i < 10; i++) {
-							float m = 0.2F;
-							float mx = (float) (Math.random() - 0.5) * m;
-							float my = (float) (Math.random() - 0.5) * m;
-							float mz = (float) (Math.random() - 0.5) * m;
-							supertile.getWorldObj().spawnParticle("iconcrack_" + Item.getIdFromItem(stack.getItem()), item.posX, item.posY, item.posZ, mx, my, mz);
-						}
-							
-				}
+			if (stack == null || item.isDead || item.age < slowdown) continue;
 
-				if(!remote)
-					item.setDead();
+			int hungerValue = getFoodHungerValue(stack);
+			if (hungerValue <= 0) continue;
+
+			if (cooldown == 0) {
+				if (!remote) {
+					storedMana = hungerValue * hungerValue * 64;
+					cooldown = hungerValue * 10;
+					supertile.getWorldObj().playSoundEffect(supertile.xCoord, supertile.yCoord, supertile.zCoord, "random.eat", 0.2F, 0.5F + (float) Math.random() * 0.5F);
+					sync();
+				} else {
+					for (int i = 0; i < 10; i++) {
+						float m = 0.2F;
+						float mx = (float) (Math.random() - 0.5) * m;
+						float my = (float) (Math.random() - 0.5) * m;
+						float mz = (float) (Math.random() - 0.5) * m;
+						supertile.getWorldObj().spawnParticle("iconcrack_" + Item.getIdFromItem(stack.getItem()), item.posX, item.posY, item.posZ, mx, my, mz);
+					}
+				}
 			}
+			if (!remote) item.setDead();
 		}
 	}
 
@@ -78,13 +97,14 @@ public class SubTileGourmaryllis extends SubTileGenerating {
 	public void writeToPacketNBT(NBTTagCompound cmp) {
 		super.writeToPacketNBT(cmp);
 		cmp.setInteger(TAG_COOLDOWN, cooldown);
-		cmp.setInteger(TAG_COOLDOWN, cooldown);
+		cmp.setInteger(TAG_STORED_MANA, storedMana);
 	}
 
 	@Override
 	public void readFromPacketNBT(NBTTagCompound cmp) {
 		super.readFromPacketNBT(cmp);
 		cooldown = cmp.getInteger(TAG_COOLDOWN);
+		storedMana = cmp.getInteger(TAG_STORED_MANA);
 	}
 
 	@Override
