@@ -51,7 +51,6 @@ public class SubTileEntropinnyum extends SubTileGenerating {
         } 
     } 
     
-    // can't unify these because something something type safety
     private boolean processVanillaTNT(AxisAlignedBB box){ 
         List<EntityTNTPrimed> tntList = supertile.getWorldObj()
             .getEntitiesWithinAABB(EntityTNTPrimed.class, box); 
@@ -83,7 +82,7 @@ public class SubTileEntropinnyum extends SubTileGenerating {
             MathHelper.floor_double(tnt.posZ)).getMaterial().isLiquid(); 
     } 
     
-    private void handleExplosion(Entity tnt) { 
+    protected void handleExplosion(Entity tnt) {
         if (!supertile.getWorldObj().isRemote) { 
             tnt.setDead();
             mana += getMaxMana(); 

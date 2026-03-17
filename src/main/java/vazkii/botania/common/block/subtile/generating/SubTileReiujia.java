@@ -27,10 +27,11 @@ public class SubTileReiujia extends SubTileEntropinnyum {
     
     private static final int RANGE = 12;
     
-    private void handleExplosion(Entity tnt) { 
+    @Override
+    protected void handleExplosion(Entity tnt) {
         if (!supertile.getWorldObj().isRemote) { 
             tnt.setDead();
-            mana += super.getMaxMana(); 
+            mana += super.getMaxMana();
             supertile.getWorldObj().playSoundEffect( 
                 tnt.posX, tnt.posY, tnt.posZ, 
                 "random.explode", 
@@ -89,6 +90,13 @@ public class SubTileReiujia extends SubTileEntropinnyum {
         }
             
         private boolean processExplosion(World world, Entity explosionSource, double posX, double posY, double posZ, double power) {
+            /*System.out.println(
+                world + " " + 
+                explosionSource + " " + 
+                posX + " " + 
+                posY + " " + 
+                posZ + " " + 
+                power);*/
             if (world.isRemote || mana != 0 || !(Math.abs(supertile.xCoord - posX) <= RANGE && Math.abs(supertile.yCoord - posY) <= RANGE && Math.abs(supertile.zCoord - posZ) <= RANGE)) {
                 return false;
             }
@@ -107,7 +115,8 @@ public class SubTileReiujia extends SubTileEntropinnyum {
                 // the factor of 0.25 is not here because stronger flower and radiation I guess
                 mana += entropinnyumMaxMana * (int)power;
             }
-            
+            // load bearing debug print ???
+            System.out.println("mana " + mana);
             
             supertile.getWorldObj().playSoundEffect(posX, posY, posZ, "random.explode", 0.2F, (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
             sync();
