@@ -82,11 +82,6 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 	}
 
 	@Override
-	public int recipiesPerPage() {
-		return 1;
-	}
-
-	@Override
 	public void loadTransferRects() {
 		transferRects.add(new RecipeTransferRect(new Rectangle(70, 36, 18, 18), "botania.manaPool"));
 	}

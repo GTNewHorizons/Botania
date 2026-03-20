@@ -78,11 +78,6 @@ public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
 	}
 
 	@Override
-	public int recipiesPerPage() {
-		return 1;
-	}
-
-	@Override
 	public void drawBackground(int recipe) {
 		super.drawBackground(recipe);
 		GL11.glEnable(GL11.GL_BLEND);

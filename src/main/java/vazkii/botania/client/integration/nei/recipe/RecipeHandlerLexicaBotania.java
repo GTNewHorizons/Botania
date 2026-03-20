@@ -77,11 +77,6 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
 	public String getGuiTexture() {
 		return LibResources.GUI_NEI_BLANK;
 	}
-
-	@Override
-	public int recipiesPerPage() {
-		return 1;
-	}
 	
 	@Override
 	public void loadTransferRects() {
