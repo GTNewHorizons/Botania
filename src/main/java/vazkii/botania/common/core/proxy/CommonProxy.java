@@ -33,6 +33,7 @@ import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.lexicon.ITwoNamedPage;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.lexicon.LexiconPage;
+import vazkii.botania.client.integration.nei.IMCForNEI;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.achievement.ModAchievements;
 import vazkii.botania.common.block.ModBlocks;
@@ -84,6 +85,7 @@ import vazkii.botania.common.world.SkyblockWorldEvents;
 import vazkii.botania.common.world.WorldTypeSkyblock;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -152,6 +154,10 @@ public class CommonProxy {
 			new StatementAPIPlugin();
 
 		LexiconData.init();
+
+		if (Loader.isModLoaded("NotEnoughItems")) {
+			IMCForNEI.IMCSender();
+		}
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {
