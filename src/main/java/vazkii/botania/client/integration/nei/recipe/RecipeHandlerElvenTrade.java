@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -26,119 +25,129 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 
 public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
 
-	public class CachedElvenTradeRecipe extends CachedRecipe {
+    public class CachedElvenTradeRecipe extends CachedRecipe {
 
-		public List<PositionedStack> inputs = new ArrayList<>();
-		public PositionedStack output;
+        public List<PositionedStack> inputs = new ArrayList<>();
+        public PositionedStack output;
 
-		public CachedElvenTradeRecipe(RecipeElvenTrade recipe) {
-			if(recipe == null)
-				return;
+        public CachedElvenTradeRecipe(RecipeElvenTrade recipe) {
+            if (recipe == null)
+                return;
 
-			setIngredients(recipe.getInputs());
-			output = new PositionedStack(recipe.getOutput(), 107, 46);
-		}
+            setIngredients(recipe.getInputs());
+            output = new PositionedStack(recipe.getOutput(), 107, 46);
+        }
 
-		public void setIngredients(List<Object> inputs) {
-			int i = 0;
-			for(Object o : inputs) {
-				if(o instanceof String)
-					this.inputs.add(new PositionedStack(OreDictionary.getOres((String) o), 60 + i * 18, 6));
-				else this.inputs.add(new PositionedStack(o, 60 + i * 18, 6));
+        public void setIngredients(List<Object> inputs) {
+            int i = 0;
+            for (Object o : inputs) {
+                if (o instanceof String) {
+                    this.inputs.add(new PositionedStack(OreDictionary.getOres((String) o), 60 + i * 18, 6));
+                } else {
+                    this.inputs.add(new PositionedStack(o, 60 + i * 18, 6));
+                }
 
-				i++;
-			}
-		}
+                i++;
+            }
+        }
 
-		@Override
-		public List<PositionedStack> getIngredients() {
-			return inputs;
-		}
+        @Override
+        public List<PositionedStack> getIngredients() {
+            return inputs;
+        }
 
-		@Override
-		public PositionedStack getResult() {
-			return output;
-		}
+        @Override
+        public PositionedStack getResult() {
+            return output;
+        }
 
-	}
+    }
 
-	@Override
-	public String getRecipeName() {
-		return StatCollector.translateToLocal("botania.nei.elvenTrade");
-	}
+    @Override
+    public String getRecipeName() {
+        return StatCollector.translateToLocal("botania.nei.elvenTrade");
+    }
 
-	@Override
-	public String getGuiTexture() {
-		return LibResources.GUI_NEI_BLANK;
-	}
+    @Override
+    public String getOverlayIdentifier() {
+        return "botania.elvenTrade";
+    }
 
-	@Override
-	public void loadTransferRects() {
-		transferRects.add(new RecipeTransferRect(new Rectangle(35, 30, 48, 48), "botania.elvenTrade"));
-	}
+    @Override
+    public String getGuiTexture() {
+        return LibResources.GUI_NEI_BLANK;
+    }
 
-	@Override
-	public void drawBackground(int recipe) {
-		super.drawBackground(recipe);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.7F);
-		GuiDraw.changeTexture(LibResources.GUI_ELVEN_TRADE_OVERLAY);
-		GuiDraw.drawTexturedModalRect(30, 10, 17, 17, 100, 80);
-		GL11.glDisable(GL11.GL_BLEND);
-		GuiDraw.changeTexture(TextureMap.locationBlocksTexture);
-		RenderItem.getInstance().renderIcon(35, 29, BlockAlfPortal.portalTex, 48, 48);
-	}
+    @Override
+    public void loadTransferRects() {
+        transferRects.add(new RecipeTransferRect(new Rectangle(35, 30, 48, 48), getOverlayIdentifier()));
+    }
 
-	@Override
-	public void loadCraftingRecipes(String outputId, Object... results) {
-		if (outputId.equals("botania.elvenTrade")) {
+    @Override
+    public void drawBackground(int recipe) {
+        super.drawBackground(recipe);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.7F);
+        GuiDraw.changeTexture(LibResources.GUI_ELVEN_TRADE_OVERLAY);
+        GuiDraw.drawTexturedModalRect(30, 10, 17, 17, 100, 80);
+        GL11.glDisable(GL11.GL_BLEND);
+        GuiDraw.changeTexture(TextureMap.locationBlocksTexture);
+        RenderItem.getInstance().renderIcon(35, 29, BlockAlfPortal.portalTex, 48, 48);
+    }
+
+    @Override
+    public void loadCraftingRecipes(String outputId, Object... results) {
+        if (outputId.equals(getOverlayIdentifier())) {
             for (RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
                 arecipes.add(new CachedElvenTradeRecipe(recipe));
             }
         } else {
-			super.loadCraftingRecipes(outputId, results);
-		}
-	}
-
-	@Override
-	public void loadCraftingRecipes(ItemStack result) {
-        for (RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
-            if (NEIServerUtils.areStacksSameTypeCrafting(recipe.getOutput(), result))
-                arecipes.add(new CachedElvenTradeRecipe(recipe));
+            super.loadCraftingRecipes(outputId, results);
         }
     }
 
-	@Override
-	public void loadUsageRecipes(ItemStack ingredient) {
+    @Override
+    public void loadCraftingRecipes(ItemStack result) {
+        for (RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
+            if (NEIServerUtils.areStacksSameTypeCrafting(recipe.getOutput(), result)) {
+                arecipes.add(new CachedElvenTradeRecipe(recipe));
+            }
+        }
+    }
+
+    @Override
+    public void loadUsageRecipes(ItemStack ingredient) {
         for (RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
             CachedElvenTradeRecipe crecipe = new CachedElvenTradeRecipe(recipe);
-            if (crecipe.contains(crecipe.inputs, ingredient))
+            if (crecipe.contains(crecipe.inputs, ingredient)) {
                 arecipes.add(crecipe);
+            }
         }
     }
 
-	// hide dummy recipes
-	private List<RecipeElvenTrade> filteredElvenTradeRecipes() {
-		return BotaniaAPI.elvenTradeRecipes
-			.stream()
-			.filter(recipe -> {
-				if (recipe == null) {
-					return false;
-				}
-				if (recipe.getInputs().size() == 1) {
-					return !stackSame(recipe.getOutput(), recipe.getInputs().get(0));
-				}
-				return true;
-			})
-			.collect(Collectors.toList());
-	}
+    private List<RecipeElvenTrade> filteredElvenTradeRecipes() {
+        List<RecipeElvenTrade> result = new ArrayList<>();
 
-	private boolean stackSame(ItemStack stack, Object obj) {
-		if (obj instanceof String) {
-			return OreDictionary.getOres((String) obj).stream().anyMatch(s -> ItemNBTHelper.areStacksSameTypeCraftingWithNBT(stack, s));
-		} else {
-			return Arrays.stream(NEIServerUtils.extractRecipeItems(obj)).anyMatch(s -> ItemNBTHelper.areStacksSameTypeCraftingWithNBT(stack, s));
-		}
-	}
+        for (RecipeElvenTrade recipe : BotaniaAPI.elvenTradeRecipes) {
+            if (recipe == null) {
+                continue;
+            }
+
+            // Don't show dummy recipes where input and output are the same
+            if (recipe.getInputs().size() != 1 || !stackSame(recipe.getOutput(), recipe.getInputs().get(0))) {
+                result.add(recipe);
+            }
+        }
+
+        return result;
+    }
+
+    private boolean stackSame(ItemStack stack, Object obj) {
+        if (obj instanceof String) {
+            return OreDictionary.getOres((String) obj).stream().anyMatch(s -> ItemNBTHelper.areStacksSameTypeCraftingWithNBT(stack, s));
+        } else {
+            return Arrays.stream(NEIServerUtils.extractRecipeItems(obj)).anyMatch(s -> ItemNBTHelper.areStacksSameTypeCraftingWithNBT(stack, s));
+        }
+    }
 
 }
