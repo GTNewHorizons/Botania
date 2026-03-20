@@ -94,53 +94,33 @@ public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
 		RenderItem.getInstance().renderIcon(35, 29, BlockAlfPortal.portalTex, 48, 48);
 	}
 
-	private static boolean hasElvenKnowledge() {
-		/*EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		if (player != null) {
-			for (ItemStack stack : player.inventory.mainInventory) {
-				if (stack != null && stack.getItem() instanceof ILexicon) {
-					ILexicon lexicon = (ILexicon) stack.getItem();
-					if (lexicon.isKnowledgeUnlocked(stack, BotaniaAPI.elvenKnowledge)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;*/
-		return true;
-	}
-
 	@Override
 	public void loadCraftingRecipes(String outputId, Object... results) {
-		if(outputId.equals("botania.elvenTrade") && hasElvenKnowledge()) {
-			if(hasElvenKnowledge()) {
-				for(RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
-					arecipes.add(new CachedElvenTradeRecipe(recipe));
-				}
-			}
-		} else super.loadCraftingRecipes(outputId, results);
+		if (outputId.equals("botania.elvenTrade")) {
+            for (RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
+                arecipes.add(new CachedElvenTradeRecipe(recipe));
+            }
+        } else {
+			super.loadCraftingRecipes(outputId, results);
+		}
 	}
 
 	@Override
 	public void loadCraftingRecipes(ItemStack result) {
-		if(hasElvenKnowledge()) {
-			for(RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
-				if(NEIServerUtils.areStacksSameTypeCrafting(recipe.getOutput(), result))
-					arecipes.add(new CachedElvenTradeRecipe(recipe));
-			}
-		}
-	}
+        for (RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
+            if (NEIServerUtils.areStacksSameTypeCrafting(recipe.getOutput(), result))
+                arecipes.add(new CachedElvenTradeRecipe(recipe));
+        }
+    }
 
 	@Override
 	public void loadUsageRecipes(ItemStack ingredient) {
-		if(hasElvenKnowledge()) {
-			for(RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
-				CachedElvenTradeRecipe crecipe = new CachedElvenTradeRecipe(recipe);
-				if(crecipe.contains(crecipe.inputs, ingredient))
-					arecipes.add(crecipe);
-			}
-		}
-	}
+        for (RecipeElvenTrade recipe : filteredElvenTradeRecipes()) {
+            CachedElvenTradeRecipe crecipe = new CachedElvenTradeRecipe(recipe);
+            if (crecipe.contains(crecipe.inputs, ingredient))
+                arecipes.add(crecipe);
+        }
+    }
 
 	// hide dummy recipes
 	private List<RecipeElvenTrade> filteredElvenTradeRecipes() {
