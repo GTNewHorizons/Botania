@@ -69,11 +69,6 @@ public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
 	}
 
 	@Override
-	public int recipiesPerPage() {
-		return 2;
-	}
-
-	@Override
 	public void loadTransferRects() {
 		transferRects.add(new RecipeTransferRect(new Rectangle(70, 22, 18, 18), "botania.pureDaisy"));
 	}
