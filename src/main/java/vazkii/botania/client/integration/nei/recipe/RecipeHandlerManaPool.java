@@ -56,7 +56,7 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 
 		@Override
 		public List<PositionedStack> getIngredients() {
-			return getCycledIngredients(cycleticks / 20, inputs);
+			return inputs;
 		}
 
 		@Override

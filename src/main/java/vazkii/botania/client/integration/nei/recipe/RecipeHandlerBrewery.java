@@ -65,7 +65,7 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
 
 		@Override
 		public List<PositionedStack> getIngredients() {
-			return getCycledIngredients(cycleticks / 20, inputs);
+			return inputs;
 		}
 
 		@Override
