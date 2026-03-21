@@ -26,16 +26,24 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
     private static final ItemStack altarStack = new ItemStack(ModBlocks.altar);
 
-    public abstract class CachedCircleRecipe extends CachedRecipe {
-
+    public class CachedPetalApothecaryRecipe extends CachedRecipe {
         public List<PositionedStack> inputs = new ArrayList<>();
         public PositionedStack output;
         public boolean renderItem;
 
-        public CachedCircleRecipe(RecipePetals recipe) {
+        public CachedPetalApothecaryRecipe(RecipePetals recipe, boolean addCenterItem) {
             setIngredients(recipe.getInputs());
             output = new PositionedStack(recipe.getOutput(), 111, 21);
-            renderItem = true;
+            renderItem = addCenterItem;
+            if (addCenterItem) {
+                ItemStack seedStack = new ItemStack(Items.wheat_seeds);
+                seedStack.setStackDisplayName(StatCollector.translateToLocal("botania.nei.anySeed"));
+                inputs.add(new PositionedStack(seedStack, 73, 39));
+            }
+        }
+
+        public CachedPetalApothecaryRecipe(RecipePetals recipe) {
+            this(recipe, true);
         }
 
         public void setIngredients(List<Object> inputs) {
@@ -66,23 +74,6 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
         }
     }
 
-    public class CachedPetalApothecaryRecipe extends CachedCircleRecipe {
-        ItemStack seedStack = new ItemStack(Items.wheat_seeds);
-
-        public CachedPetalApothecaryRecipe(RecipePetals recipe) {
-            super(recipe);
-            seedStack.setStackDisplayName(StatCollector.translateToLocal("botania.nei.anySeed"));
-            inputs.add(new PositionedStack(seedStack, 73, 39));
-        }
-
-        // Used by the Alfheim addon
-        @SuppressWarnings("unused")
-        public CachedPetalApothecaryRecipe(RecipePetals recipe, boolean addCenterItem) {
-            super(recipe);
-            renderItem = addCenterItem;
-        }
-    }
-
     @Override
     public String getRecipeName() {
         return StatCollector.translateToLocal("botania.nei.petalApothecary");
@@ -90,6 +81,12 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
 
     @Override
     public String getOverlayIdentifier() {
+        return getRecipeID();
+    }
+
+    // Used by the Alfheim addon
+    @Deprecated
+    public String getRecipeID() {
         return "botania.petalApothecary";
     }
 
@@ -112,7 +109,7 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
         GuiDraw.changeTexture(LibResources.GUI_PETAL_OVERLAY);
         GuiDraw.drawTexturedModalRect(45, 10, 38, 7, 92, 92);
         // Item
-        if (!((CachedCircleRecipe) arecipes.get(recipe)).renderItem) return;
+        if (!((CachedPetalApothecaryRecipe) arecipes.get(recipe)).renderItem) return;
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         NEIHelper.renderItemIntoGUI(getRenderItem(), 73, 55);
@@ -128,8 +125,8 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
         return BotaniaAPI.petalRecipes;
     }
 
-    public CachedCircleRecipe getCachedRecipe(RecipePetals recipe) {
-        return new CachedPetalApothecaryRecipe(recipe);
+    public CachedPetalApothecaryRecipe getCachedRecipe(RecipePetals recipe) {
+        return new CachedPetalApothecaryRecipe(recipe, true);
     }
 
     @Override
@@ -159,7 +156,7 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
         for (RecipePetals recipe : getRecipes()) {
             if (recipe == null) continue;
 
-            CachedCircleRecipe crecipe = getCachedRecipe(recipe);
+            CachedPetalApothecaryRecipe crecipe = getCachedRecipe(recipe);
             if (ItemNBTHelper.cachedRecipeContainsWithNBT(crecipe.inputs, ingredient) && recipe.getOutput().getItem() != Items.skull) {
                 arecipes.add(crecipe);
             }
