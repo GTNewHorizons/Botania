@@ -155,7 +155,7 @@ public class CommonProxy {
 
 		LexiconData.init();
 
-		if (Loader.isModLoaded("NotEnoughItems")) {
+		if (Botania.neiLoaded) {
 			IMCForNEI.IMCSender();
 		}
 	}
