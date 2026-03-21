@@ -115,7 +115,7 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         RenderTilePool.forceMana = true;
-        NEIHelper.renderItem.renderItemIntoGUI(NEIHelper.font, NEIHelper.textureManager, poolStack, 71, 37);
+        NEIHelper.renderItemIntoGUI(poolStack, 71, 37);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         RenderHelper.disableStandardItemLighting();
     }

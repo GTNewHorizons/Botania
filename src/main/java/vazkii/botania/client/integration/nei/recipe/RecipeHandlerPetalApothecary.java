@@ -115,7 +115,7 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
         if (!((CachedCircleRecipe) arecipes.get(recipe)).renderItem) return;
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        NEIHelper.renderItem.renderItemIntoGUI(NEIHelper.font, NEIHelper.textureManager, getRenderItem(), 73, 55);
+        NEIHelper.renderItemIntoGUI(getRenderItem(), 73, 55);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         RenderHelper.disableStandardItemLighting();
     }
