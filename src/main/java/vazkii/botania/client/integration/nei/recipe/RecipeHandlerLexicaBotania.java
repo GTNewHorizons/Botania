@@ -83,7 +83,7 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
 
         CachedLexicaBotaniaRecipe recipeObj = ((CachedLexicaBotaniaRecipe) arecipes.get(recipe));
 
-        NEIHelper.renderItem.renderItemIntoGUI(NEIHelper.font, NEIHelper.textureManager, lexicaStack, 51, 5);
+        NEIHelper.renderItemIntoGUI(lexicaStack, 51, 5);
 
         GuiDraw.drawStringC(
                 EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(recipeObj.entry.getUnlocalizedName()),

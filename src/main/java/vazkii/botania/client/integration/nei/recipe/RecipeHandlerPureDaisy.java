@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.recipe.RecipePureDaisy;
+import vazkii.botania.client.integration.nei.NEIHelper;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.item.block.ItemBlockSpecialFlower;
@@ -23,98 +24,107 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 
 public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
 
-	public class CachedPureDaisyRecipe extends CachedRecipe {
+    private static final ItemStack flowerStack = ItemBlockSpecialFlower.ofType(LibBlockNames.SUBTILE_PUREDAISY);
 
-		public List<PositionedStack> inputs = new ArrayList<>();
-		public PositionedStack output;
-		public List<PositionedStack> otherStacks = new ArrayList<>();
+    public class CachedPureDaisyRecipe extends CachedRecipe {
 
-		public CachedPureDaisyRecipe(RecipePureDaisy recipe) {
-			if(recipe == null)
-				return;
-			inputs.add(new PositionedStack(ItemBlockSpecialFlower.ofType(LibBlockNames.SUBTILE_PUREDAISY), 71, 23));
+        public List<PositionedStack> inputs = new ArrayList<>();
+        public PositionedStack output;
+        public List<PositionedStack> otherStacks = new ArrayList<>();
 
-			if(recipe.getInput() instanceof String)
-				inputs.add(new PositionedStack(OreDictionary.getOres((String) recipe.getInput()), 42, 23));
-			else inputs.add(new PositionedStack(new ItemStack((Block) recipe.getInput()), 42, 23));
+        public CachedPureDaisyRecipe(RecipePureDaisy recipe) {
+            if (recipe == null) return;
 
-			output = new PositionedStack(new ItemStack(recipe.getOutput()), 101, 23);
-		}
+            if (recipe.getInput() instanceof String) {
+                inputs.add(new PositionedStack(OreDictionary.getOres((String) recipe.getInput()), 42, 23));
+            } else {
+                inputs.add(new PositionedStack(new ItemStack((Block) recipe.getInput()), 42, 23));
+            }
 
-		@Override
-		public List<PositionedStack> getIngredients() {
-			return inputs;
-		}
+            output = new PositionedStack(new ItemStack(recipe.getOutput()), 101, 23);
+        }
 
-		@Override
-		public PositionedStack getResult() {
-			return output;
-		}
+        @Override
+        public List<PositionedStack> getIngredients() {
+            return inputs;
+        }
 
-		@Override
-		public List<PositionedStack> getOtherStacks() {
-			return otherStacks;
-		}
+        @Override
+        public PositionedStack getResult() {
+            return output;
+        }
 
-	}
+        @Override
+        public List<PositionedStack> getOtherStacks() {
+            return otherStacks;
+        }
 
-	@Override
-	public String getRecipeName() {
-		return StatCollector.translateToLocal("botania.nei.pureDaisy");
-	}
+    }
 
-	@Override
-	public String getGuiTexture() {
-		return LibResources.GUI_NEI_BLANK;
-	}
+    @Override
+    public String getRecipeName() {
+        return StatCollector.translateToLocal("botania.nei.pureDaisy");
+    }
 
 	@Override
-	public void loadTransferRects() {
-		transferRects.add(new RecipeTransferRect(new Rectangle(70, 22, 18, 18), "botania.pureDaisy"));
+	public String getOverlayIdentifier() {
+		return "botania.pureDaisy";
 	}
 
-	@Override
-	public void drawBackground(int recipe) {
-		super.drawBackground(recipe);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-		GuiDraw.changeTexture(LibResources.GUI_PURE_DAISY_OVERLAY);
-		GuiDraw.drawTexturedModalRect(45, 10, 0, 0, 65, 44);
-	}
+    @Override
+    public String getGuiTexture() {
+        return LibResources.GUI_NEI_BLANK;
+    }
 
-	@Override
-	public void loadCraftingRecipes(String outputId, Object... results) {
-		if(outputId.equals("botania.pureDaisy")) {
-			for(RecipePureDaisy recipe : BotaniaAPI.pureDaisyRecipes) {
-				if(recipe == null)
-					continue;
+    @Override
+    public void loadTransferRects() {
+        transferRects.add(new RecipeTransferRect(new Rectangle(70, 22, 18, 18), getOverlayIdentifier()));
+    }
 
-				arecipes.add(new CachedPureDaisyRecipe(recipe));
-			}
-		} else super.loadCraftingRecipes(outputId, results);
-	}
+    @Override
+    public void drawBackground(int recipe) {
+        super.drawBackground(recipe);
+        // Arrows
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+        GuiDraw.changeTexture(LibResources.GUI_PURE_DAISY_OVERLAY);
+        GuiDraw.drawTexturedModalRect(48, 10, 0, 0, 65, 44);
+        // Flower item
+        NEIHelper.renderItemIntoGUI(flowerStack, 71, 23);
+    }
 
-	@Override
-	public void loadCraftingRecipes(ItemStack result) {
-		for(RecipePureDaisy recipe : BotaniaAPI.pureDaisyRecipes) {
-			if(recipe == null)
-				continue;
+    @Override
+    public void loadCraftingRecipes(String outputId, Object... results) {
+        if (outputId.equals(getOverlayIdentifier())) {
+            for (RecipePureDaisy recipe : BotaniaAPI.pureDaisyRecipes) {
+                if (recipe != null) arecipes.add(new CachedPureDaisyRecipe(recipe));
+            }
+        } else {
+            super.loadCraftingRecipes(outputId, results);
+        }
+    }
 
-			if(ItemNBTHelper.areStacksSameTypeCraftingWithNBT(new ItemStack(recipe.getOutput()), result))
-				arecipes.add(new CachedPureDaisyRecipe(recipe));
-		}
-	}
+    @Override
+    public void loadCraftingRecipes(ItemStack result) {
+        for (RecipePureDaisy recipe : BotaniaAPI.pureDaisyRecipes) {
+            if (recipe == null) continue;
 
-	@Override
-	public void loadUsageRecipes(ItemStack ingredient) {
-		for(RecipePureDaisy recipe : BotaniaAPI.pureDaisyRecipes) {
-			if(recipe == null)
-				continue;
+            if (ItemNBTHelper.areStacksSameTypeCraftingWithNBT(new ItemStack(recipe.getOutput()), result)) {
+                arecipes.add(new CachedPureDaisyRecipe(recipe));
+            }
+        }
+    }
 
-			CachedPureDaisyRecipe crecipe = new CachedPureDaisyRecipe(recipe);
-			if(ItemNBTHelper.cachedRecipeContainsWithNBT(crecipe.getIngredients(), ingredient) || ItemNBTHelper.cachedRecipeContainsWithNBT(crecipe.getOtherStacks(), ingredient))
-				arecipes.add(crecipe);
-		}
-	}
+    @Override
+    public void loadUsageRecipes(ItemStack ingredient) {
+        for (RecipePureDaisy recipe : BotaniaAPI.pureDaisyRecipes) {
+            if (recipe == null) continue;
+
+            CachedPureDaisyRecipe crecipe = new CachedPureDaisyRecipe(recipe);
+            if (ItemNBTHelper.cachedRecipeContainsWithNBT(crecipe.getIngredients(), ingredient) || ItemNBTHelper.cachedRecipeContainsWithNBT(crecipe.getOtherStacks(), ingredient)) {
+                arecipes.add(crecipe);
+            }
+        }
+    }
 
 }
