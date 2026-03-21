@@ -14,44 +14,49 @@ import codechicken.nei.PositionedStack;
 
 public class RecipeHandlerRunicAltar extends RecipeHandlerPetalApothecary {
 
-	public class CachedRunicAltarRecipe extends CachedPetalApothecaryRecipe {
+    private static final ItemStack altarStack = new ItemStack(ModBlocks.runeAltar);
 
-		public int manaUsage;
+    public class CachedRunicAltarRecipe extends CachedCircleRecipe {
 
-		public CachedRunicAltarRecipe(RecipeRuneAltar recipe) {
-			super(recipe, false);
-			if(recipe == null)
-				return;
-			manaUsage = recipe.getManaUsage();
-			inputs.add(new PositionedStack(new ItemStack(ModBlocks.runeAltar), 73, 55));
-		}
+        public int manaUsage;
+		private static final PositionedStack livingrock = new PositionedStack(new ItemStack(ModBlocks.livingrock), 73, 39);
 
-	}
+        public CachedRunicAltarRecipe(RecipeRuneAltar recipe) {
+            super(recipe);
+            inputs.add(livingrock);
+            manaUsage = recipe.getManaUsage();
+        }
+    }
+
+    @Override
+    public String getRecipeName() {
+        return StatCollector.translateToLocal("botania.nei.runicAltar");
+    }
+
+    @Override
+    public String getOverlayIdentifier() {
+        return "botania.runicAltar";
+    }
+
+    @Override
+    public void drawBackground(int recipe) {
+        super.drawBackground(recipe);
+        HUDHandler.renderManaBar(32, 113, 0x0000FF, 0.75F, ((CachedRunicAltarRecipe) arecipes.get(recipe)).manaUsage, TilePool.MAX_MANA / 10);
+    }
+
+    @Override
+    public List<? extends RecipePetals> getRecipes() {
+        return BotaniaAPI.runeAltarRecipes;
+    }
+
+    @Override
+    public CachedCircleRecipe getCachedRecipe(RecipePetals recipe) {
+        return new CachedRunicAltarRecipe((RecipeRuneAltar) recipe);
+    }
 
 	@Override
-	public String getRecipeName() {
-		return StatCollector.translateToLocal("botania.nei.runicAltar");
-	}
-
-	@Override
-	public String getRecipeID() {
-		return "botania.runicAltar";
-	}
-
-	@Override
-	public void drawBackground(int recipe) {
-		super.drawBackground(recipe);
-		HUDHandler.renderManaBar(32, 113, 0x0000FF, 0.75F, ((CachedRunicAltarRecipe) arecipes.get(recipe)).manaUsage, TilePool.MAX_MANA / 10);
-	}
-
-	@Override
-	public List<? extends RecipePetals> getRecipes() {
-		return BotaniaAPI.runeAltarRecipes;
-	}
-
-	@Override
-	public CachedPetalApothecaryRecipe getCachedRecipe(RecipePetals recipe) {
-		return new CachedRunicAltarRecipe((RecipeRuneAltar) recipe);
-	}
+    protected ItemStack getRenderItem() {
+        return altarStack;
+    }
 
 }
