@@ -16,15 +16,16 @@ public class RecipeHandlerRunicAltar extends RecipeHandlerPetalApothecary {
 
     private static final ItemStack altarStack = new ItemStack(ModBlocks.runeAltar);
 
-    public class CachedRunicAltarRecipe extends CachedCircleRecipe {
+    public class CachedRunicAltarRecipe extends CachedPetalApothecaryRecipe {
 
         public int manaUsage;
 		private static final PositionedStack livingrock = new PositionedStack(new ItemStack(ModBlocks.livingrock), 73, 39);
 
         public CachedRunicAltarRecipe(RecipeRuneAltar recipe) {
-            super(recipe);
+            super(recipe, false);
             inputs.add(livingrock);
             manaUsage = recipe.getManaUsage();
+            renderItem = true;
         }
     }
 
@@ -50,7 +51,7 @@ public class RecipeHandlerRunicAltar extends RecipeHandlerPetalApothecary {
     }
 
     @Override
-    public CachedCircleRecipe getCachedRecipe(RecipePetals recipe) {
+    public CachedPetalApothecaryRecipe getCachedRecipe(RecipePetals recipe) {
         return new CachedRunicAltarRecipe((RecipeRuneAltar) recipe);
     }
 
