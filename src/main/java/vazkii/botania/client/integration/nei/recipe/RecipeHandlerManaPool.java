@@ -2,11 +2,8 @@ package vazkii.botania.client.integration.nei.recipe;
 
 import java.awt.Rectangle;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.oredict.OreDictionary;
@@ -16,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.recipe.RecipeManaInfusion;
 import vazkii.botania.client.core.handler.HUDHandler;
+import vazkii.botania.client.integration.nei.NEIHelper;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.client.render.tile.RenderTilePool;
 import vazkii.botania.common.block.ModBlocks;
@@ -27,8 +25,6 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 
 public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 
-    private static final RenderItem renderItem = new RenderItem();
-    private static final Minecraft mc = Minecraft.getMinecraft();
     private static final ItemStack poolStack = new ItemStack(ModBlocks.pool);
 
     public class CachedManaPoolRecipe extends CachedRecipe {
@@ -104,17 +100,22 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
         GuiDraw.drawTexturedModalRect(45, 20, 38, 35, 92, 50);
         // Mana bar
         int tempMana = ((CachedManaPoolRecipe) arecipes.get(recipe)).mana;
-        HUDHandler.renderManaBar(32, 80, 0x0000FF, 0.75F, GuiScreen.isShiftKeyDown() ? tempMana : tempMana * 10, TilePool.MAX_MANA / 10);
-        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+        HUDHandler.renderManaBar(
+                32,
+                80,
+                0x0000FF,
+                0.75F,
+                GuiScreen.isShiftKeyDown() ? tempMana : tempMana * 10,
+                TilePool.MAX_MANA / 10);
         String size = GuiScreen.isShiftKeyDown() ? "1x " : "10x ";
         String localized = StatCollector.translateToLocal("botaniamisc.neiratio");
-        font.drawString(size + localized, 84 - font.getStringWidth(size + localized) / 2, 71, 0x000000);
+        GuiDraw.drawStringC(size + localized, 84, 71, 0x000000, false);
         GL11.glDisable(GL11.GL_BLEND);
         // Mana pool item
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         RenderTilePool.forceMana = true;
-        renderItem.renderItemIntoGUI(font, mc.getTextureManager(), poolStack, 71, 37);
+        NEIHelper.renderItem.renderItemIntoGUI(NEIHelper.font, NEIHelper.textureManager, poolStack, 71, 37);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         RenderHelper.disableStandardItemLighting();
     }

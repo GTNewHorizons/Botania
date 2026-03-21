@@ -15,9 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -26,16 +24,15 @@ import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.lexicon.KnowledgeType;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.lexicon.LexiconRecipeMappings;
+import vazkii.botania.client.integration.nei.NEIHelper;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lexicon.page.PageText;
+import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 
 public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
-
-    private static final RenderItem renderItem = new RenderItem();
-    private static final Minecraft mc = Minecraft.getMinecraft();
     private static final ItemStack lexicaStack = new ItemStack(ModItems.lexicon);
 
     public class CachedLexicaBotaniaRecipe extends CachedRecipe {
@@ -84,35 +81,48 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
     public void drawBackground(int recipe) {
         super.drawBackground(recipe);
 
-        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         CachedLexicaBotaniaRecipe recipeObj = ((CachedLexicaBotaniaRecipe) arecipes.get(recipe));
 
-        renderItem.renderItemAndEffectIntoGUI(font, mc.getTextureManager(), lexicaStack, 51, 5);
+        NEIHelper.renderItem.renderItemIntoGUI(NEIHelper.font, NEIHelper.textureManager, lexicaStack, 51, 5);
 
-        String s = EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(recipeObj.entry.getUnlocalizedName());
-        font.drawString(s, 82 - font.getStringWidth(s) / 2, 30, 0x404040);
+        GuiDraw.drawStringC(
+                EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(recipeObj.entry.getUnlocalizedName()),
+                82,
+                30,
+                0x404040,
+                false);
 
         KnowledgeType type = recipeObj.entry.getKnowledgeType();
-        s = type.color + StatCollector.translateToLocal(type.getUnlocalizedName()).replaceAll("&.", "");
-        font.drawString(s, 82 - font.getStringWidth(s) / 2, 42, 0x404040);
+        GuiDraw.drawStringC(
+                type.color + StatCollector.translateToLocal(type.getUnlocalizedName()).replaceAll("&.", ""),
+                82,
+                42,
+                0x404040,
+                false);
 
-        s = "\"" + StatCollector.translateToLocal(recipeObj.entry.getTagline()) + "\"";
-        PageText.renderText(5, 42, 160, 200, s);
+        PageText.renderText(
+                5,
+                42,
+                160,
+                200,
+                "\"" + StatCollector.translateToLocal(recipeObj.entry.getTagline()) + "\"");
 
         String key = LexiconRecipeMappings.stackToString(recipeObj.item.item);
         String quickInfo = "botania.nei.quickInfo:" + key;
         String quickInfoLocal = StatCollector.translateToLocal(quickInfo);
 
+        String s;
         if (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown() && Minecraft.getMinecraft().gameSettings.advancedItemTooltips)
             s = "name: " + key;
         else if (quickInfo.equals(quickInfoLocal))
             s = StatCollector.translateToLocal("botania.nei.lexicaNoInfo");
         else {
-            font.drawString(
+            GuiDraw.drawStringC(
                     StatCollector.translateToLocal("botania.nei.lexicaSeparator"),
-                    82 - font.getStringWidth(s) / 2,
+                    82,
                     80,
-                    0x404040);
+                    0x404040,
+                    false);
             s = quickInfoLocal;
         }
 
