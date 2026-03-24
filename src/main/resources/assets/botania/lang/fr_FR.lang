@@ -16,7 +16,7 @@ botaniamisc.statusUnknown=Statut inconnu
 botaniamisc.color=%s teinté
 botaniamisc.manaUsage=Utilisation de mana
 botaniamisc.shiftToRead=Maj-cliquez droit pour lire plus
-botaniamisc.clickToRecipe=Maj-cliquez vour voir la recette
+botaniamisc.clickToSeeRecipe=Maj-cliquez vour voir la recette
 botaniamisc.clickToIndex=Maj-cliquez pour l'index
 botaniamisc.flareColor=%s tours
 botaniamisc.outputtingPower=Partage le mana aux éléments
@@ -1493,6 +1493,8 @@ botania.potion.clear=Absolution
 # GUI TEXT
 botania.gui.lexicon.header=Lexica Botania, Edition %s Table des matières
 botania.gui.lexicon.wip=(Ce passage est un travail en cours. Ce n'est même pas sa forme finale)
+
+botania.gui.flowerBag.title=Poche à fleur
 
 # MUSIC DISCS
 item.record.botania:gaia1.desc=Kain Vinosec - Supportez le vide

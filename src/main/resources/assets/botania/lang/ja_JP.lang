@@ -16,7 +16,7 @@ botaniamisc.statusUnknown=不明な状態
 botaniamisc.color=%s Tinted
 botaniamisc.manaUsage=マナ使用量
 botaniamisc.shiftToRead=詳細を読む(シフト＋右クリック)
-botaniamisc.clickToRecipe=レシピを見る(シフトクリック)
+botaniamisc.clickToSeeRecipe=レシピを見る(シフトクリック)
 botaniamisc.clickToIndex=目次へ(シフト＋クリック)
 botaniamisc.flareColor=%s Rounds
 botaniamisc.outputtingPower=アイテムへマナを送る
@@ -1461,6 +1461,9 @@ item.botania:sextant.name=創造主の六分儀
 item.botania:speedUpBelt.name=大地を闊歩するもののたすき
 item.botania:baubleBox.name=装飾品入れ
 item.botania:manaPowder.name=マナの粉末
+
+# GUI TEXT
+botania.gui.flowerBag.title=花入れ小袋
 
 # LEXICON CATEGORIES
 botania.category.basics=基本と機構

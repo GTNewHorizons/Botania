@@ -16,7 +16,7 @@ botaniamisc.statusUnknown=Status desconhecido
 botaniamisc.color=Cor: %s
 botaniamisc.manaUsage=Uso de Mana
 botaniamisc.shiftToRead=Shift-clique direito para ler
-botaniamisc.clickToRecipe=Shift-clique para ver a receita
+botaniamisc.clickToSeeRecipe=Shift-clique para ver a receita
 botaniamisc.clickToIndex=Shift-clique para o índice
 botaniamisc.flareColor=Projéteis: %s
 botaniamisc.outputtingPower=Enviando Mana para Itens
@@ -1692,6 +1692,8 @@ botania.potion.clear=Absolução
 # GUI TEXT
 botania.gui.lexicon.header=Lexica Botania, Edição %s - Índice
 botania.gui.lexicon.wip=(Esse tópico está em progresso. Nem ao menos está na forma final)
+
+botania.gui.flowerBag.title=Cesto de Flores
 
 # MUSIC DISCS
 item.record.botania:gaia1.desc=Kain Vinosec - Endure Emptiness
