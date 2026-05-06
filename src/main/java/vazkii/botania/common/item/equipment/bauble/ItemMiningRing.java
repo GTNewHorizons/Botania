@@ -36,10 +36,9 @@ public class ItemMiningRing extends ItemBauble implements IManaUsingItem {
 			if(!hasMana)
 				onUnequipped(stack, player);
 			else {
-				if(player.getActivePotionEffect(Potion.digSpeed) != null)
-					player.removePotionEffect(Potion.digSpeed.id);
-
-				player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, Integer.MAX_VALUE, 1, true));
+				PotionEffect currentEffect = player.getActivePotionEffect(Potion.digSpeed);
+				if(currentEffect == null || currentEffect.getAmplifier() < 1)
+					player.addPotionEffect(new PotionEffect(Potion.digSpeed.id, Integer.MAX_VALUE, 1, true));
 			}
 
 			if(player.swingProgress == 0.25F)
