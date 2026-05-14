@@ -12,10 +12,8 @@ package vazkii.botania.client.render.item;
 
 import java.awt.Color;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
@@ -26,9 +24,6 @@ import vazkii.botania.api.mana.ILens;
 import vazkii.botania.common.item.lens.ItemLens;
 
 public class RenderLens implements IItemRenderer {
-
-	static RenderItem render = new RenderItem();
-	ItemRenderer renderer  = new ItemRenderer(Minecraft.getMinecraft());
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -52,15 +47,11 @@ public class RenderLens implements IItemRenderer {
 			GL11.glPopMatrix();
 			break;
 		}
-		case EQUIPPED : {
+		case EQUIPPED, EQUIPPED_FIRST_PERSON: {
 			render(item);
 			break;
 		}
-		case EQUIPPED_FIRST_PERSON : {
-			render(item);
-			break;
-		}
-		default : break;
+			default : break;
 		}
 	}
 
