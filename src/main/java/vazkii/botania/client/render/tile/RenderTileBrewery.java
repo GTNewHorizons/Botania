@@ -61,6 +61,7 @@ public class RenderTileBrewery extends TileEntitySpecialRenderer {
 		model.render(this, time);
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		GL11.glPopMatrix();
+		brewery = null;
 	}
 
 	public void renderItemStack(ItemStack stack) {

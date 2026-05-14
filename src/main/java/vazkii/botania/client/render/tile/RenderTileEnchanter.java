@@ -12,11 +12,12 @@ package vazkii.botania.client.render.tile;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
@@ -29,7 +30,7 @@ import vazkii.botania.common.block.tile.TileEnchanter;
 
 public class RenderTileEnchanter extends TileEntitySpecialRenderer {
 
-	EntityItem item;
+	EntityItem item = new EntityItem(null, 0, 0, 0, new ItemStack(Blocks.stone));
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
@@ -44,15 +45,12 @@ public class RenderTileEnchanter extends TileEntitySpecialRenderer {
 			alphaMod = 1F;
 
 		if(enchanter.itemToEnchant != null) {
-			if(item == null)
-				item = new EntityItem(enchanter.getWorldObj(), enchanter.xCoord, enchanter.yCoord + 1, enchanter.zCoord, enchanter.itemToEnchant);
-
 			item.age = ClientTickHandler.ticksInGame;
 			item.setEntityItemStack(enchanter.itemToEnchant);
 
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glTranslatef(0.5F, 1.25F, 0.5F);
-			((Render) RenderManager.instance.entityRenderMap.get(EntityItem.class)).doRender(item, x, y, z, 1F, partialTicks);
+			RenderManager.instance.entityRenderMap.get(EntityItem.class).doRender(item, x, y, z, 1F, partialTicks);
 			GL11.glTranslatef(-0.5F, -1.25F, -0.5F);
 		}
 
