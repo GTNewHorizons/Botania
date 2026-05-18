@@ -37,21 +37,22 @@ public class RenderLens implements IItemRenderer {
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		switch(type) {
-		case ENTITY : {
-			GL11.glPushMatrix();
-			GL11.glTranslatef(-0.5F, 0F, 0F);
-			if(item.isOnItemFrame())
-				GL11.glTranslatef(0F, -0.3F, 0.01F);
-			render(item);
-			GL11.glPopMatrix();
-			break;
-		}
-		case EQUIPPED, EQUIPPED_FIRST_PERSON: {
-			render(item);
-			break;
-		}
-			default : break;
+		switch (type) {
+			case ENTITY: {
+				GL11.glPushMatrix();
+				GL11.glTranslatef(-0.5F, 0F, 0F);
+				if (item.isOnItemFrame())
+					GL11.glTranslatef(0F, -0.3F, 0.01F);
+				render(item);
+				GL11.glPopMatrix();
+				break;
+			}
+			case EQUIPPED, EQUIPPED_FIRST_PERSON: {
+				render(item);
+				break;
+			}
+			default:
+				break;
 		}
 	}
 
@@ -102,7 +103,7 @@ public class RenderLens implements IItemRenderer {
 		float zLevel = 0F;
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		if(shiny)
+		if (shiny)
 			tessellator.setBrightness(240);
 		tessellator.addVertexWithUV(par1 + 0, par2 + par5, zLevel, icon.getMinU(), icon.getMaxV());
 		tessellator.addVertexWithUV(par1 + par4, par2 + par5, zLevel, icon.getMaxU(), icon.getMaxV());
