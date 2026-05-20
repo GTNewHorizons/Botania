@@ -15,8 +15,6 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.passive.EntitySheep;
@@ -44,7 +42,6 @@ public class RenderTilePool extends TileEntitySpecialRenderer {
 	private static final ResourceLocation textureDil = new ResourceLocation(LibResources.MODEL_DILUTED_POOL);
 
 	private static final ModelPool model = new ModelPool();
-	RenderItem renderItem = new RenderItem();
 
 	public static int forceMeta = 0;
 	public static boolean forceMana = false;
