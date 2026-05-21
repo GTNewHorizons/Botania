@@ -11,7 +11,6 @@
 package vazkii.botania.client.render.tile;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
@@ -33,14 +32,11 @@ public class RenderTileCorporeaCrystalCube extends TileEntitySpecialRenderer {
 
 	private static final ResourceLocation texture = new ResourceLocation(LibResources.MODEL_CRYSTAL_CUBE);
 	ModelCrystalCube model = new ModelCrystalCube();
-	EntityItem entity = null;
+	EntityItem entity = new EntityItem(null, 0, 0, 0, new ItemStack(Blocks.stone));
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks) {
 		TileCorporeaCrystalCube cube = (TileCorporeaCrystalCube) tileEntity;
-
-		if(entity == null)
-			entity = new EntityItem(cube.getWorldObj(), cube.xCoord, cube.yCoord, cube.zCoord, new ItemStack(Blocks.stone));
 
 		entity.age = ClientTickHandler.ticksInGame;
 		ItemStack stack = cube.getRequestTarget();
@@ -67,7 +63,7 @@ public class RenderTileCorporeaCrystalCube extends TileEntitySpecialRenderer {
 			GL11.glTranslatef(0F, 0.8F, 0F);
 			GL11.glScalef(s, s, s);
 			GL11.glRotatef(180F, 0F, 0F, 1F);
-			((Render) RenderManager.instance.entityRenderMap.get(EntityItem.class)).doRender(entity, 0, 0, 0, 1F, partialTicks);
+			RenderManager.instance.entityRenderMap.get(EntityItem.class).doRender(entity, 0, 0, 0, 1F, partialTicks);
 			GL11.glPopMatrix();
 			mc.renderEngine.bindTexture(texture);
 		}
