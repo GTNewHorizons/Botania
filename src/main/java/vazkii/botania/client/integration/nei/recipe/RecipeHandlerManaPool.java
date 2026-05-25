@@ -103,9 +103,9 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 		int tempMana = ((CachedManaPoolRecipe) arecipes.get(recipe)).mana;
 		HUDHandler.renderManaBar(32, 80, 0x0000FF, 0.75F, GuiScreen.isShiftKeyDown() ? tempMana : tempMana * 10, TilePool.MAX_MANA / 10);
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-		String size = GuiScreen.isShiftKeyDown() ? "1x " : "10x ";
-		String localized = StatCollector.translateToLocal("botaniamisc.neiratio");
-		font.drawString(size + localized, 84 - font.getStringWidth(size + localized) / 2, 71, 0x000000);
+		String size = GuiScreen.isShiftKeyDown() ? "1x" : "10x";
+		String localized = StatCollector.translateToLocalFormatted("botaniamisc.neiratio", size);
+		font.drawString(localized, 84 - font.getStringWidth(localized) / 2, 71, 0x000000);
 		RenderTilePool.forceMana = true;
 	}
 
