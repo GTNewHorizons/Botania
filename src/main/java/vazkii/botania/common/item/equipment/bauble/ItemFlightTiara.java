@@ -10,13 +10,12 @@
  */
 package vazkii.botania.common.item.equipment.bauble;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HexFormat;
 import java.util.List;
-
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -121,44 +120,47 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 		infoList.add(StatCollector.translateToLocal("botania.wings" + stack.getItemDamage()));
 	}
 
+	/**
+	 * The original solution for "16E1BDFD1D6AE1A954C9C5E1B2D9099780F3E1724541F1F2F77310B769CFFBAC" has been lost
+	 * to time. It's supposed to be a 19 character long Matrix reference, but hash() is broken and gives
+	 * inconsistent output, so it probably wouldn't even be recognized if you got it right. It was later
+	 * replaced with the name of an Aqours single, but the name is too long for anvils in 1.7.10.
+	 * It has been fixed to be consistent (and considerably simplified since doing weird random obfuscation before
+	 * hashing is pointless at best), but it required replacing it with my own solution.
+	 * If you have the original solution, I will gladly replace this one with it.
+	 * Here are a few hints:
+	 * It's the title of a song that aligns with Vazkii's interests.
+	 * For authenticity, this song was released before this secret was originally added (2015).
+	 * This song has a special segment only present in one of the single-member versions.
+	 * -koolkrafter5
+	 */
 	@Override
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {
 		super.onEquipped(stack, player);
-		if(stack.getItemDamage() != WING_TYPES && hash(stack.getDisplayName()).equals("16E1BDFD1D6AE1A954C9C5E1B2D9099780F3E1724541F1F2F77310B769CFFBAC")) {
+		if(stack.getItemDamage() != WING_TYPES && hash(stack.getDisplayName()).equals("04E789FA6BC538F7645606141A1CFECECF4E84C301CB892779E761FD3FFF6386")) {
 			stack.setItemDamage(WING_TYPES);
 			stack.getTagCompound().removeTag("display");
 		}
 	}
 
 	String hash(String str) {
-		if(str != null)
-			try {
-				MessageDigest md = MessageDigest.getInstance("SHA-256");
-				return new HexBinaryAdapter().marshal(md.digest(salt(str).getBytes()));
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			}
-		return "";
+		if (str == null) {
+			return "";
+		}
+
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest(salt(str).getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().withUpperCase().formatHex(digest);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 
 	// Might as well be called sugar given it's not secure at all :D
 	String salt(String str) {
-		str = str += "wowsuchsaltmuchsecurityverywow";
-		SecureRandom rand = new SecureRandom(str.getBytes());
-		int l = str.length();
-		int steps = rand.nextInt(l);
-		char[] chrs = str.toCharArray();
-		for(int i = 0; i < steps; i++) {
-			int indA = rand.nextInt(l);
-			int indB;
-			do {
-				indB = rand.nextInt(l);
-			} while(indB == indA);
-			char c = (char) (chrs[indA] ^ chrs[indB]);
-			chrs[indA] = c;
-		}
-
-		return String.copyValueOf(chrs);
+		return str + "wowsuchsaltmuchsecurityverywow";
 	}
 
 	@Override
