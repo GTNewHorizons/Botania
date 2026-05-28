@@ -23,6 +23,8 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 
 public class RecipeHandlerBrewery extends TemplateRecipeHandler {
 
+    public static final String OVERLAY = "botania.brewery";
+
     public class CachedBreweryRecipe extends CachedRecipe {
 
         public List<PositionedStack> inputs = new ArrayList<>();
@@ -38,8 +40,8 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
                 toVial = new ItemStack(ModItems.vial);
             } else {
                 toVial = vial.copy();
+                toVial.stackSize = 1;
             }
-            toVial.stackSize = 1;
             inputs.add(new PositionedStack(toVial, 39, 42));
 
             output = new PositionedStack(recipe.getOutput(toVial), 87, 42);
@@ -52,14 +54,13 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
         public void setIngredients(List<Object> inputs) {
             int left = 96 - inputs.size() * 18 / 2;
 
-            int i = 0;
-            for (Object o : inputs) {
-                if (o instanceof String) {
-                    this.inputs.add(new PositionedStack(OreDictionary.getOres((String) o), left + i * 18, 6));
+            for (int i = 0; i < inputs.size(); i++) {
+                Object o = inputs.get(i);
+                if (o instanceof String oredict) {
+                    this.inputs.add(new PositionedStack(OreDictionary.getOres(oredict), left + i * 18, 6));
                 } else {
                     this.inputs.add(new PositionedStack(o, left + i * 18, 6));
                 }
-                i++;
             }
         }
 
@@ -82,7 +83,7 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
 
     @Override
     public String getOverlayIdentifier() {
-        return "botania.brewery";
+        return OVERLAY;
     }
 
     @Override
@@ -115,11 +116,9 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
 
     @Override
     public void loadCraftingRecipes(ItemStack result) {
-        if (!(result.getItem() instanceof IBrewItem)) {
-            return;
-        }
+        if (!(result.getItem() instanceof IBrewItem brew)) return;
         for (RecipeBrew recipe : BotaniaAPI.brewRecipes) {
-            if (recipe != null && ((IBrewItem) result.getItem()).getBrew(result) == recipe.getBrew()) {
+            if (recipe != null && brew.getBrew(result) == recipe.getBrew()) {
                 arecipes.add(new CachedBreweryRecipe(recipe));
             }
         }
@@ -135,9 +134,7 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
             }
         } else {
             for (RecipeBrew recipe : BotaniaAPI.brewRecipes) {
-                if (recipe == null)
-                    continue;
-
+                if (recipe == null) continue;
                 CachedBreweryRecipe crecipe = new CachedBreweryRecipe(recipe);
                 if (ItemNBTHelper.cachedRecipeContainsWithNBT(crecipe.inputs, ingredient)) {
                     arecipes.add(crecipe);
