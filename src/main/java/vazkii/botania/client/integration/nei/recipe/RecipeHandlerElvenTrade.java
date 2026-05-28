@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
@@ -25,29 +27,27 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 
 public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
 
+    public static final String OVERLAY = "botania.elvenTrade";
+
     public class CachedElvenTradeRecipe extends CachedRecipe {
 
         public List<PositionedStack> inputs = new ArrayList<>();
         public PositionedStack output;
 
         public CachedElvenTradeRecipe(RecipeElvenTrade recipe) {
-            if (recipe == null)
-                return;
-
+            if (recipe == null) return;
             setIngredients(recipe.getInputs());
             output = new PositionedStack(recipe.getOutput(), 107, 46);
         }
 
         public void setIngredients(List<Object> inputs) {
-            int i = 0;
-            for (Object o : inputs) {
-                if (o instanceof String) {
-                    this.inputs.add(new PositionedStack(OreDictionary.getOres((String) o), 60 + i * 18, 6));
+            for (int i = 0; i < inputs.size(); i++) {
+                Object o = inputs.get(i);
+                if (o instanceof String oreName) {
+                    this.inputs.add(new PositionedStack(OreDictionary.getOres(oreName), 60 + i * 18, 6));
                 } else {
                     this.inputs.add(new PositionedStack(o, 60 + i * 18, 6));
                 }
-
-                i++;
             }
         }
 
@@ -60,7 +60,6 @@ public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
         public PositionedStack getResult() {
             return output;
         }
-
     }
 
     @Override
@@ -70,7 +69,7 @@ public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
 
     @Override
     public String getOverlayIdentifier() {
-        return "botania.elvenTrade";
+        return OVERLAY;
     }
 
     @Override
@@ -126,27 +125,27 @@ public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
     }
 
     private List<RecipeElvenTrade> filteredElvenTradeRecipes() {
-        List<RecipeElvenTrade> result = new ArrayList<>();
-
-        for (RecipeElvenTrade recipe : BotaniaAPI.elvenTradeRecipes) {
-            if (recipe == null) {
-                continue;
-            }
-
-            // Don't show dummy recipes where input and output are the same
-            if (recipe.getInputs().size() != 1 || !stackSame(recipe.getOutput(), recipe.getInputs().get(0))) {
-                result.add(recipe);
-            }
-        }
-
-        return result;
+        return Lists.newArrayList(
+                Iterables.filter(
+                        BotaniaAPI.elvenTradeRecipes,
+                        recipe -> recipe != null
+                                && (recipe.getInputs().size() != 1
+                                || !stackSame(recipe.getOutput(), recipe.getInputs().getFirst()))
+                )
+        );
     }
 
     private boolean stackSame(ItemStack stack, Object obj) {
-        if (obj instanceof String) {
-            return OreDictionary.getOres((String) obj).stream().anyMatch(s -> ItemNBTHelper.areStacksSameTypeCraftingWithNBT(stack, s));
+        if (obj instanceof String oreName) {
+            return Iterables.any(
+                    OreDictionary.getOres(oreName),
+                    s -> ItemNBTHelper.areStacksSameTypeCraftingWithNBT(stack, s)
+            );
         } else {
-            return Arrays.stream(NEIServerUtils.extractRecipeItems(obj)).anyMatch(s -> ItemNBTHelper.areStacksSameTypeCraftingWithNBT(stack, s));
+            return Iterables.any(
+                    Arrays.asList(NEIServerUtils.extractRecipeItems(obj)),
+                    s -> ItemNBTHelper.areStacksSameTypeCraftingWithNBT(stack, s)
+            );
         }
     }
 
