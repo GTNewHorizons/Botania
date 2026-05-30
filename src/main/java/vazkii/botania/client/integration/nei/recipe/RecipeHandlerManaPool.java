@@ -39,11 +39,11 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
         public CachedManaPoolRecipe(RecipeManaInfusion recipe) {
             if (recipe == null) return;
 
-            if (recipe.getInput() instanceof String) {
-                input = new PositionedStack(OreDictionary.getOres((String) recipe.getInput()), 42, 37);
-            } else {
-                input = new PositionedStack(recipe.getInput(), 42, 37);
+            Object o = recipe.getInput();
+            if (o instanceof String oreName) {
+                o = OreDictionary.getOres(oreName);
             }
+            input = new PositionedStack(o, 42, 37);
 
             if (recipe.isAlchemy()) {
                 catalyst = ALCHEMY;

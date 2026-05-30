@@ -57,10 +57,9 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
             for (int i = 0; i < inputs.size(); i++) {
                 Object o = inputs.get(i);
                 if (o instanceof String oreName) {
-                    this.inputs.add(new PositionedStack(OreDictionary.getOres(oreName), left + i * 18, 6));
-                } else {
-                    this.inputs.add(new PositionedStack(o, left + i * 18, 6));
+                    o = OreDictionary.getOres(oreName);
                 }
+                this.inputs.add(new PositionedStack(o, left + i * 18, 6));
             }
         }
 

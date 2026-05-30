@@ -51,10 +51,9 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
                 int posY = (int) Math.round(55 + Math.sin(currentDegree * Math.PI / 180D) * 32);
 
                 if (o instanceof String oreName) {
-                    this.inputs.add(new PositionedStack(OreDictionary.getOres(oreName), posX, posY));
-                } else {
-                    this.inputs.add(new PositionedStack(o, posX, posY));
+                    o = OreDictionary.getOres(oreName);
                 }
+                this.inputs.add(new PositionedStack(o, posX, posY));
                 currentDegree += degreePerInput;
             }
         }
