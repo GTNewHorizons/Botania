@@ -29,21 +29,17 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
     public class CachedPetalApothecaryRecipe extends CachedRecipe {
         public List<PositionedStack> inputs = new ArrayList<>();
         public PositionedStack output;
-        public boolean renderItem;
 
-        public CachedPetalApothecaryRecipe(RecipePetals recipe, boolean addCenterItem) {
+        public CachedPetalApothecaryRecipe(RecipePetals recipe, PositionedStack centerItem) {
             setIngredients(recipe.getInputs());
             output = new PositionedStack(recipe.getOutput(), 111, 21);
-            renderItem = addCenterItem;
-            if (addCenterItem) {
-                ItemStack seedStack = new ItemStack(Items.wheat_seeds);
-                seedStack.setStackDisplayName(StatCollector.translateToLocal("botania.nei.anySeed"));
-                inputs.add(new PositionedStack(seedStack, 73, 39));
+            if (centerItem != null) {
+                inputs.add(centerItem);
             }
         }
 
         public CachedPetalApothecaryRecipe(RecipePetals recipe) {
-            this(recipe, true);
+            this(recipe, null);
         }
 
         public void setIngredients(List<Object> inputs) {
@@ -54,8 +50,8 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
                 int posX = (int) Math.round(73 + Math.cos(currentDegree * Math.PI / 180D) * 32);
                 int posY = (int) Math.round(55 + Math.sin(currentDegree * Math.PI / 180D) * 32);
 
-                if (o instanceof String) {
-                    this.inputs.add(new PositionedStack(OreDictionary.getOres((String) o), posX, posY));
+                if (o instanceof String oreName) {
+                    this.inputs.add(new PositionedStack(OreDictionary.getOres(oreName), posX, posY));
                 } else {
                     this.inputs.add(new PositionedStack(o, posX, posY));
                 }
@@ -109,7 +105,6 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
         GuiDraw.changeTexture(LibResources.GUI_PETAL_OVERLAY);
         GuiDraw.drawTexturedModalRect(45, 10, 38, 7, 92, 92);
         // Item
-        if (!((CachedPetalApothecaryRecipe) arecipes.get(recipe)).renderItem) return;
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         NEIHelper.renderItemIntoGUI(getRenderItem(), 73, 55);
@@ -126,7 +121,9 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
     }
 
     public CachedPetalApothecaryRecipe getCachedRecipe(RecipePetals recipe) {
-        return new CachedPetalApothecaryRecipe(recipe, true);
+        ItemStack seedStack = new ItemStack(Items.wheat_seeds);
+        seedStack.setStackDisplayName(StatCollector.translateToLocal("botania.nei.anySeed"));
+        return new CachedPetalApothecaryRecipe(recipe, new PositionedStack(seedStack, 73, 39));
     }
 
     @Override

@@ -20,13 +20,10 @@ public class RecipeHandlerRunicAltar extends RecipeHandlerPetalApothecary {
     public class CachedRunicAltarRecipe extends CachedPetalApothecaryRecipe {
 
         public int manaUsage;
-		private static final PositionedStack livingrock = new PositionedStack(new ItemStack(ModBlocks.livingrock), 73, 39);
 
-        public CachedRunicAltarRecipe(RecipeRuneAltar recipe) {
-            super(recipe, false);
-            inputs.add(livingrock);
+        public CachedRunicAltarRecipe(RecipeRuneAltar recipe, PositionedStack centerItem) {
+            super(recipe, centerItem);
             manaUsage = recipe.getManaUsage();
-            renderItem = true;
         }
     }
 
