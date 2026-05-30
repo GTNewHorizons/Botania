@@ -12,7 +12,7 @@ public class NEIHelper {
     public static final TextureManager textureManager = mc.getTextureManager();
     public static final FontRenderer font = mc.fontRenderer;
 
-    public static void renderItemIntoGUI(ItemStack flowerStack, int x, int y) {
-        renderItem.renderItemIntoGUI(font, textureManager, flowerStack, x, y);
+    public static void renderItemIntoGUI(ItemStack stack, int x, int y) {
+        renderItem.renderItemIntoGUI(font, textureManager, stack, x, y);
     }
 }
