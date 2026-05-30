@@ -1,8 +1,6 @@
 package vazkii.botania.client.integration.nei.recipe;
 
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -28,35 +26,29 @@ public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
 
     public class CachedPureDaisyRecipe extends CachedRecipe {
 
-        public List<PositionedStack> inputs = new ArrayList<>();
+        public PositionedStack inputs;
         public PositionedStack output;
-        public List<PositionedStack> otherStacks = new ArrayList<>();
 
         public CachedPureDaisyRecipe(RecipePureDaisy recipe) {
             if (recipe == null) return;
 
-            if (recipe.getInput() instanceof String) {
-                inputs.add(new PositionedStack(OreDictionary.getOres((String) recipe.getInput()), 42, 23));
+            if (recipe.getInput() instanceof String oreName) {
+                inputs = new PositionedStack(OreDictionary.getOres(oreName), 42, 23);
             } else {
-                inputs.add(new PositionedStack(new ItemStack((Block) recipe.getInput()), 42, 23));
+                inputs = new PositionedStack(new ItemStack((Block) recipe.getInput()), 42, 23);
             }
 
             output = new PositionedStack(new ItemStack(recipe.getOutput()), 101, 23);
         }
 
         @Override
-        public List<PositionedStack> getIngredients() {
+        public PositionedStack getIngredient() {
             return inputs;
         }
 
         @Override
         public PositionedStack getResult() {
             return output;
-        }
-
-        @Override
-        public List<PositionedStack> getOtherStacks() {
-            return otherStacks;
         }
 
     }
