@@ -94,7 +94,7 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
 
         KnowledgeType type = recipeObj.entry.getKnowledgeType();
         GuiDraw.drawStringC(
-                type.color + StatCollector.translateToLocal(type.getUnlocalizedName()).replaceAll("&.", ""),
+                type.color + StatCollector.translateToLocal(type.getUnlocalizedName()).replaceAll("&[0-9a-fklmnor]", ""),
                 82,
                 42,
                 0x404040,
