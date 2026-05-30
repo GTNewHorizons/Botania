@@ -24,7 +24,7 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 
 public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
 
-    private static final ItemStack flowerStack = ItemBlockSpecialFlower.ofType(LibBlockNames.SUBTILE_PUREDAISY);
+    private static final ItemStack DAISY = ItemBlockSpecialFlower.ofType(LibBlockNames.SUBTILE_PUREDAISY);
 
     public class CachedPureDaisyRecipe extends CachedRecipe {
 
@@ -90,7 +90,7 @@ public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
         GuiDraw.changeTexture(LibResources.GUI_PURE_DAISY_OVERLAY);
         GuiDraw.drawTexturedModalRect(48, 10, 0, 0, 65, 44);
         // Flower item
-        NEIHelper.renderItemIntoGUI(flowerStack, 71, 23);
+        NEIHelper.renderItemIntoGUI(DAISY, 71, 23);
     }
 
     @Override

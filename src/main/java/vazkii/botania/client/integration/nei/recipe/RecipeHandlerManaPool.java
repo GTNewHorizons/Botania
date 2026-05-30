@@ -25,10 +25,12 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 
 public class RecipeHandlerManaPool extends TemplateRecipeHandler {
 
-    private static final ItemStack poolStack = new ItemStack(ModBlocks.pool);
+    private static final ItemStack POOL = new ItemStack(ModBlocks.pool);
 
     public class CachedManaPoolRecipe extends CachedRecipe {
 
+        private static final PositionedStack ALCHEMY = new PositionedStack(new ItemStack(ModBlocks.alchemyCatalyst), 10, 37);
+        private static final PositionedStack CONJURATION = new PositionedStack(new ItemStack(ModBlocks.conjurationCatalyst), 10, 37);
         public PositionedStack input;
         public PositionedStack output;
         public PositionedStack catalyst;
@@ -44,9 +46,9 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
             }
 
             if (recipe.isAlchemy()) {
-                catalyst = new PositionedStack(new ItemStack(ModBlocks.alchemyCatalyst), 10, 37);
+                catalyst = ALCHEMY;
             } else if (recipe.isConjuration()) {
-                catalyst = new PositionedStack(new ItemStack(ModBlocks.conjurationCatalyst), 10, 37);
+                catalyst = CONJURATION;
             }
 
             output = new PositionedStack(recipe.getOutput(), 101, 37);
@@ -115,7 +117,7 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         RenderTilePool.forceMana = true;
-        NEIHelper.renderItemIntoGUI(poolStack, 71, 37);
+        NEIHelper.renderItemIntoGUI(POOL, 71, 37);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         RenderHelper.disableStandardItemLighting();
     }

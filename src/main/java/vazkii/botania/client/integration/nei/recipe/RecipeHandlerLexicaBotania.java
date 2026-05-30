@@ -33,7 +33,7 @@ import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 
 public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
-    private static final ItemStack lexicaStack = new ItemStack(ModItems.lexicon);
+    private static final ItemStack LEXICA = new ItemStack(ModItems.lexicon);
 
     public class CachedLexicaBotaniaRecipe extends CachedRecipe {
 
@@ -83,7 +83,7 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
 
         CachedLexicaBotaniaRecipe recipeObj = ((CachedLexicaBotaniaRecipe) arecipes.get(recipe));
 
-        NEIHelper.renderItemIntoGUI(lexicaStack, 51, 5);
+        NEIHelper.renderItemIntoGUI(LEXICA, 51, 5);
 
         GuiDraw.drawStringC(
                 EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(recipeObj.entry.getUnlocalizedName()),

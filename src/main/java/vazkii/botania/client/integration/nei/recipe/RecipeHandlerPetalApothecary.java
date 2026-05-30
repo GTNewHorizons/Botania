@@ -24,7 +24,7 @@ import codechicken.nei.recipe.TemplateRecipeHandler;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 
 public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
-    private static final ItemStack altarStack = new ItemStack(ModBlocks.altar);
+    private static final ItemStack APOTHECARY = new ItemStack(ModBlocks.altar);
 
     public class CachedPetalApothecaryRecipe extends CachedRecipe {
         public List<PositionedStack> inputs = new ArrayList<>();
@@ -118,7 +118,7 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
     }
 
     protected ItemStack getRenderItem() {
-        return altarStack;
+        return APOTHECARY;
     }
 
     public List<? extends RecipePetals> getRecipes() {

@@ -14,7 +14,8 @@ import codechicken.nei.PositionedStack;
 
 public class RecipeHandlerRunicAltar extends RecipeHandlerPetalApothecary {
 
-    private static final ItemStack altarStack = new ItemStack(ModBlocks.runeAltar);
+    private static final ItemStack ALTAR = new ItemStack(ModBlocks.runeAltar);
+    private static final PositionedStack LIVINGROCK = new PositionedStack(new ItemStack(ModBlocks.livingrock), 73, 39);
 
     public class CachedRunicAltarRecipe extends CachedPetalApothecaryRecipe {
 
@@ -52,12 +53,12 @@ public class RecipeHandlerRunicAltar extends RecipeHandlerPetalApothecary {
 
     @Override
     public CachedPetalApothecaryRecipe getCachedRecipe(RecipePetals recipe) {
-        return new CachedRunicAltarRecipe((RecipeRuneAltar) recipe);
+        return new CachedRunicAltarRecipe((RecipeRuneAltar) recipe, LIVINGROCK);
     }
 
 	@Override
     protected ItemStack getRenderItem() {
-        return altarStack;
+        return ALTAR;
     }
 
 }
