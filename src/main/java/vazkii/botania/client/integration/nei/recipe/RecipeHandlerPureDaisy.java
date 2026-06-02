@@ -32,12 +32,13 @@ public class RecipeHandlerPureDaisy extends TemplateRecipeHandler {
         public CachedPureDaisyRecipe(RecipePureDaisy recipe) {
             if (recipe == null) return;
 
-            if (recipe.getInput() instanceof String oreName) {
-                inputs = new PositionedStack(OreDictionary.getOres(oreName), 42, 23);
+            Object o = recipe.getInput();
+            if (o instanceof String oreName) {
+                o = OreDictionary.getOres(oreName);
             } else {
-                inputs = new PositionedStack(new ItemStack((Block) recipe.getInput()), 42, 23);
+                o = new ItemStack((Block) o);
             }
-
+            inputs = new PositionedStack(o, 42, 23);
             output = new PositionedStack(new ItemStack(recipe.getOutput()), 101, 23);
         }
 
