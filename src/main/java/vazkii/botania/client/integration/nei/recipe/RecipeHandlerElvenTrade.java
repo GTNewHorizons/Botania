@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
@@ -123,15 +122,12 @@ public class RecipeHandlerElvenTrade extends TemplateRecipeHandler {
         }
     }
 
-    private List<RecipeElvenTrade> filteredElvenTradeRecipes() {
-        return Lists.newArrayList(
-                Iterables.filter(
-                        BotaniaAPI.elvenTradeRecipes,
-                        recipe -> recipe != null
-                                && (recipe.getInputs().size() != 1
-                                || !stackSame(recipe.getOutput(), recipe.getInputs().getFirst()))
-                )
-        );
+    private Iterable<RecipeElvenTrade> filteredElvenTradeRecipes() {
+        return Iterables.filter(
+                BotaniaAPI.elvenTradeRecipes,
+                recipe -> recipe != null
+                        && (recipe.getInputs().size() != 1
+                        || !stackSame(recipe.getOutput(), recipe.getInputs().getFirst())));
     }
 
     private boolean stackSame(ItemStack stack, Object obj) {
