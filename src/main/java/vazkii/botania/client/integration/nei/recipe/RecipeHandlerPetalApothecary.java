@@ -74,10 +74,10 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
 
     @Override
     public String getOverlayIdentifier() {
-        return getRecipeID();
+        return "botania.petalApothecary";
     }
 
-    // Used by the Alfheim addon
+    // Used by the Alfheim addon, identical to getOverlayIdentifier()
     @Deprecated
     public String getRecipeID() {
         return "botania.petalApothecary";
