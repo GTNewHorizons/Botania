@@ -31,15 +31,13 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
         public PositionedStack output;
 
         public CachedPetalApothecaryRecipe(RecipePetals recipe, PositionedStack centerItem) {
-            setIngredients(recipe.getInputs());
-            output = new PositionedStack(recipe.getOutput(), 111, 21);
-            if (centerItem != null) {
-                inputs.add(centerItem);
-            }
+            this(recipe);
+            inputs.add(centerItem);
         }
 
         public CachedPetalApothecaryRecipe(RecipePetals recipe) {
-            this(recipe, null);
+            setIngredients(recipe.getInputs());
+            output = new PositionedStack(recipe.getOutput(), 111, 21);
         }
 
         public void setIngredients(List<Object> inputs) {
