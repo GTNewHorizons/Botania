@@ -152,8 +152,8 @@ public class RecipeHandlerManaPool extends TemplateRecipeHandler {
             if (recipe == null) continue;
 
             CachedManaPoolRecipe crecipe = new CachedManaPoolRecipe(recipe);
-            if ((ItemNBTHelper.positionedStackContainsWithNBT(crecipe.input, ingredient)) ||
-                (ItemNBTHelper.positionedStackContainsWithNBT(crecipe.catalyst, ingredient))) {
+            if (ItemNBTHelper.positionedStackContainsWithNBT(crecipe.input, ingredient) ||
+                ItemNBTHelper.positionedStackContainsWithNBT(crecipe.catalyst, ingredient)) {
                 arecipes.add(crecipe);
             }
         }
