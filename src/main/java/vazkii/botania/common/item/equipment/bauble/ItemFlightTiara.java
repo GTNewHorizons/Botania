@@ -137,17 +137,14 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 	@Override
 	public void onEquipped(ItemStack stack, EntityLivingBase player) {
 		super.onEquipped(stack, player);
-		if(stack.getItemDamage() != WING_TYPES && hash(stack.getDisplayName()).equals("04E789FA6BC538F7645606141A1CFECECF4E84C301CB892779E761FD3FFF6386")) {
+		if (stack.getItemDamage() != WING_TYPES &&
+				hash(stack.getDisplayName()).equals("04E789FA6BC538F7645606141A1CFECECF4E84C301CB892779E761FD3FFF6386")) {
 			stack.setItemDamage(WING_TYPES);
 			stack.getTagCompound().removeTag("display");
 		}
 	}
 
 	String hash(String str) {
-		if (str == null) {
-			return "";
-		}
-
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] digest = md.digest(salt(str).getBytes(StandardCharsets.UTF_8));
