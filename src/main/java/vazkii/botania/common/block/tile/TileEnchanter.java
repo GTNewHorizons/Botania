@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.block.tile;
 
+import com.gtnewhorizon.gtnhlib.item.ItemStackNBT;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -277,10 +278,11 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 			break;
 		}
 		case 3 : { // Enchant
-			if(stageTicks >= 100) {
-				for(EnchantmentData data : enchants)
-					if(EnchantmentHelper.getEnchantmentLevel(data.enchant, itemToEnchant) == 0)
-						itemToEnchant.addEnchantment(Enchantment.enchantmentsList[data.enchant], data.level);
+			if (stageTicks >= 100) {
+				for (EnchantmentData data : enchants)
+					if (EnchantmentHelper.getEnchantmentLevel(data.enchant, itemToEnchant) == 0) {
+						ItemStackNBT.enchant(itemToEnchant, data.enchant, data.level);
+					}
 
 				enchants.clear();
 				manaRequired = -1;
@@ -388,12 +390,14 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 
 		enchants.clear();
 		String enchStr = cmp.getString(TAG_ENCHANTS);
-		if(!enchStr.isEmpty()) {
+		if (!enchStr.isEmpty()) {
 			String[] enchTokens = enchStr.split(",");
-			for(String token : enchTokens) {
+			for (String token : enchTokens) {
 				String[] entryTokens = token.split(":");
-				int id = Integer.parseInt(entryTokens[0]);
-				int lvl = Integer.parseInt(entryTokens[1]);
+				short id = Short.parseShort(entryTokens[0]);
+				short lvl = Short.parseShort(entryTokens[1]);
+
+				// Normally, I'd prefer writing these a
 				enchants.add(new EnchantmentData(id, lvl));
 			}
 		}
@@ -479,9 +483,9 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 
 	private static class EnchantmentData {
 
-		public int enchant, level;
+		public short enchant, level;
 
-		public EnchantmentData(int enchant, int level) {
+		public EnchantmentData(short enchant, short level) {
 			this.enchant = enchant;
 			this.level = level;
 		}

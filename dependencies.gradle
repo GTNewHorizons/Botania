@@ -2,7 +2,7 @@
 
 dependencies {
     api('com.github.GTNewHorizons:Baubles-Expanded:2.2.14-GTNH:dev')
-    api('com.github.GTNewHorizons:GTNHLib:0.9.62:dev')
+    api('com.github.GTNewHorizons:GTNHLib:99.0.0:dev')
 
     compileOnly('com.github.GTNewHorizons:BuildCraft:7.1.60:api') {transitive=false}
     compileOnly('com.github.GTNewHorizons:ForgeMultipart:1.7.10:dev') {transitive=false}
