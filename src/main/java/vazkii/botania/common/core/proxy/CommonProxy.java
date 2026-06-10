@@ -33,6 +33,7 @@ import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.lexicon.ITwoNamedPage;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.lexicon.LexiconPage;
+import vazkii.botania.client.integration.nei.IMCForNEI;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.achievement.ModAchievements;
 import vazkii.botania.common.block.ModBlocks;
@@ -152,6 +153,10 @@ public class CommonProxy {
 			new StatementAPIPlugin();
 
 		LexiconData.init();
+
+		if (Botania.neiLoaded) {
+			IMCForNEI.IMCSender();
+		}
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {
