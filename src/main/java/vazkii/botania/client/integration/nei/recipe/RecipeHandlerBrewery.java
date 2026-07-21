@@ -3,6 +3,7 @@ package vazkii.botania.client.integration.nei.recipe;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -11,10 +12,15 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.api.BotaniaAPI;
+import vazkii.botania.api.brew.Brew;
+import vazkii.botania.api.brew.BrewUtilities;
 import vazkii.botania.api.brew.IBrewContainer;
 import vazkii.botania.api.brew.IBrewItem;
 import vazkii.botania.api.recipe.RecipeBrew;
+import vazkii.botania.client.core.handler.HUDHandler;
+import vazkii.botania.client.integration.nei.NEIUtilities;
 import vazkii.botania.client.lib.LibResources;
+import vazkii.botania.common.block.tile.mana.TilePool;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.item.ModItems;
 import codechicken.lib.gui.GuiDraw;
@@ -45,6 +51,7 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
             inputs.add(new PositionedStack(toVial, 39, 42));
 
             output = new PositionedStack(recipe.getOutput(toVial), 87, 42);
+            mana = ((IBrewContainer) toVial.getItem()).getManaCost(recipe.getBrew(), toVial);
         }
 
         public CachedBreweryRecipe(RecipeBrew recipe) {
@@ -98,8 +105,13 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
     @Override
     public void drawBackground(int recipe) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        // Arrows
         GuiDraw.changeTexture(getGuiTexture());
         GuiDraw.drawTexturedModalRect(0, 0, 0, 0, 166, 65);
+
+        // Mana Bar
+        HUDHandler.renderManaBar(32, 67, 0x0000FF, 0.75F, ((CachedBreweryRecipe) arecipes.get(recipe)).mana, TilePool.MAX_MANA / 10);
     }
 
     @Override
@@ -116,22 +128,38 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
     @Override
     public void loadCraftingRecipes(ItemStack result) {
         if (!(result.getItem() instanceof IBrewItem brew)) return;
+        final Brew targetBrew = brew.getBrew(result);
+        if (targetBrew == null || targetBrew == BotaniaAPI.fallbackBrew) return;
+
+        // Find the container(s) that can be filled to produce this result
         for (RecipeBrew recipe : BotaniaAPI.brewRecipes) {
-            if (recipe != null && brew.getBrew(result) == recipe.getBrew()) {
-                arecipes.add(new CachedBreweryRecipe(recipe));
+            if (recipe == null || targetBrew != recipe.getBrew()) continue;
+
+            for (ItemStack emptyContainer : NEIUtilities.getBrewContainers()) {
+                final ItemStack filledContainer = recipe.getOutput(emptyContainer);
+                if (result.isItemEqual(filledContainer) && Objects.equals(result.stackTagCompound, filledContainer.stackTagCompound)) {
+                    arecipes.add(new CachedBreweryRecipe(recipe, emptyContainer));
+                }
             }
         }
     }
 
     @Override
     public void loadUsageRecipes(ItemStack ingredient) {
+        if (BrewUtilities.isFilledBrew(ingredient)) {
+            // Filled brews cannot be inserted into a Botanical Brewery.
+            return;
+        }
+
         if (ingredient.getItem() instanceof IBrewContainer) {
+            // Show all possible brews that can fill this empty container
             for (RecipeBrew recipe : BotaniaAPI.brewRecipes) {
                 if (recipe != null && recipe.getOutput(ingredient) != null) {
                     arecipes.add(new CachedBreweryRecipe(recipe, ingredient));
                 }
             }
         } else {
+            // Show all brew recipes that can use this ingredient
             for (RecipeBrew recipe : BotaniaAPI.brewRecipes) {
                 if (recipe == null) continue;
                 CachedBreweryRecipe crecipe = new CachedBreweryRecipe(recipe);
@@ -142,4 +170,8 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
         }
     }
 
+    @Override
+    public int getRecipeHeight(int recipe) {
+        return 80;
+    }
 }
