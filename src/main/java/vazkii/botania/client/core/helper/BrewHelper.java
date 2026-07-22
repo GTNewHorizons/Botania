@@ -1,15 +1,16 @@
-package vazkii.botania.client.integration.nei;
+package vazkii.botania.client.core.helper;
 
 import codechicken.nei.ItemList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.api.brew.BrewUtilities;
 import vazkii.botania.api.brew.IBrewContainer;
+import vazkii.botania.common.Botania;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NEIUtilities {
+public final class BrewHelper {
 
     public static List<ItemStack> getBrewContainers() {
         class Cache {
@@ -19,12 +20,14 @@ public class NEIUtilities {
         return Cache.BREW_CONTAINERS;
     }
 
-    private synchronized static List<ItemStack> scanBrewContainers() {
+    private static List<ItemStack> scanBrewContainers() {
         ArrayList<ItemStack> containers = new ArrayList<>();
 
-        for (ItemStack item : ItemList.items) {
-            if (item != null && BrewUtilities.isEmptyBrewContainer(item)) {
-                containers.add(item);
+        if (Botania.neiLoaded) {
+            for (ItemStack item : ItemList.items) {
+                if (item != null && BrewUtilities.isEmptyBrewContainer(item)) {
+                    containers.add(item);
+                }
             }
         }
 

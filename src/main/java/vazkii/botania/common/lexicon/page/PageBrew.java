@@ -19,12 +19,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.oredict.OreDictionary;
-import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.brew.Brew;
 import vazkii.botania.api.internal.IGuiLexiconEntry;
 import vazkii.botania.api.lexicon.ILexicon;
 import vazkii.botania.api.lexicon.ITwoNamedPage;
+import vazkii.botania.api.lexicon.LexiconRecipeMappings;
 import vazkii.botania.api.recipe.RecipeBrew;
+import vazkii.botania.client.core.helper.BrewHelper;
 import vazkii.botania.common.item.ModItems;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -51,50 +52,48 @@ public class PageBrew extends PageRecipe implements ITwoNamedPage {
 		FontRenderer renderer = Minecraft.getMinecraft().fontRenderer;
 		boolean unicode = renderer.getUnicodeFlag();
 		renderer.setUnicodeFlag(true);
-		String s = EnumChatFormatting.BOLD + String.format(StatCollector.translateToLocal("botaniamisc.brewOf"), StatCollector.translateToLocal(brew.getUnlocalizedName()));
+		String s = EnumChatFormatting.BOLD + StatCollector.translateToLocalFormatted("botaniamisc.brewOf", StatCollector.translateToLocal(brew.getUnlocalizedName()));
 		renderer.drawString(s, gui.getLeft() + gui.getWidth() / 2 - renderer.getStringWidth(s) / 2, y, 0x222222);
 		renderer.setUnicodeFlag(unicode);
 		PageText.renderText(x, y + 22, width, height, text);
 
 		ItemStack book = Minecraft.getMinecraft().thePlayer.getCurrentEquippedItem();
-		if(book != null && book.getItem() instanceof ILexicon && ((ILexicon) book.getItem()).isKnowledgeUnlocked(book, BotaniaAPI.elvenKnowledge)) {
-			renderItemAtLinePos(gui, 20, 2, y + 12, recipe.getOutput(new ItemStack(ModItems.vial)));
-			renderItemAtLinePos(gui, 20, 3, y + 12, recipe.getOutput(new ItemStack(ModItems.vial, 1, 1)));
-		} else renderItemAtLinePos(gui, 0, -1, y + 12, recipe.getOutput(new ItemStack(ModItems.vial)));
+		renderItemRow(gui, getOutputs(book), y + 12);
 
-		int i = 0;
-		y = gui.getTop() + gui.getHeight() - 54;
+        y = gui.getTop() + gui.getHeight() - 54;
 		List<Object> inputs = new ArrayList<>(recipe.getInputs());
 
-		int offset = gui.getWidth() / 2 - inputs.size() * 9;
-		for(Object input : inputs) {
-			if(input instanceof String)
-				input = OreDictionary.getOres((String) input).get(0);
+        renderItemRow(gui, inputs, y);
 
-			renderItemAtLinePos(gui, offset, i, y, (ItemStack) input);
-			i++;
-		}
-
-		super.renderRecipe(gui, mx, my);
+        super.renderRecipe(gui, mx, my);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void renderItemAtLinePos(IGuiLexiconEntry gui, int offset, int pos, int yPos, ItemStack stack) {
-		if(stack == null || stack.getItem() == null)
-			return;
-		stack = stack.copy();
+    @SideOnly(Side.CLIENT)
+    private void renderItemRow(IGuiLexiconEntry gui, List<?> inputs, int y) {
+        int spacing = Math.min(gui.getWidth() / inputs.size(), 18);
+        int x = gui.getLeft() + (gui.getWidth() - spacing * inputs.size()) / 2;
 
-		if(stack.getItemDamage() == Short.MAX_VALUE)
-			stack.setItemDamage(0);
+        for (Object input : inputs) {
+            ItemStack stack;
+            if (input instanceof String) {
+                stack = OreDictionary.getOres((String) input).get(0);
 
-		int xPos = gui.getLeft() + (pos == -1 ? gui.getWidth() / 2 - 8 : pos * 18) + offset;
+                if (stack.getItemDamage() == Short.MAX_VALUE || stack.getItemDamage() == -1) {
+                    ItemStack newStack = new ItemStack(stack.getItem(), stack.stackSize, 0);
+                    newStack.stackTagCompound = stack.stackTagCompound;
+                    stack = newStack;
+                }
+            } else {
+                stack = (ItemStack) input;
+            }
 
-		ItemStack stack1 = stack.copy();
-		if(stack1.getItemDamage() == -1)
-			stack1.setItemDamage(0);
+            if (stack != null && stack.getItem() != null) {
+                renderItem(gui, x, y, stack, false);
+            }
 
-		renderItem(gui, xPos, yPos, stack1, false);
-	}
+            x += spacing;
+        }
+    }
 
 	@Override
 	public List<ItemStack> getDisplayedRecipes() {
@@ -104,6 +103,27 @@ public class PageBrew extends PageRecipe implements ITwoNamedPage {
 		}
 		return list;
 	}
+
+    private List<ItemStack> getOutputs(ItemStack lexicon) {
+        ArrayList<ItemStack> list = new ArrayList<>();
+
+        for (ItemStack empty : BrewHelper.getBrewContainers()) {
+            if (lexicon != null && lexicon.getItem() instanceof ILexicon lexItem) {
+                // Check if the lexicon has this item unlocked.
+                LexiconRecipeMappings.EntryData entry = LexiconRecipeMappings.getDataForStack(empty);
+                if (entry != null && (!entry.entry.isVisible() || !lexItem.isKnowledgeUnlocked(lexicon, entry.entry.getKnowledgeType()))) {
+                    continue;
+                }
+            }
+
+            ItemStack filled = recipe.getOutput(empty);
+            if (filled != null) {
+                list.add(filled);
+            }
+        }
+
+        return list;
+    }
 
 	@Override
 	public void setSecondUnlocalizedName(String name) {

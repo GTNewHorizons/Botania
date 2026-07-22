@@ -18,7 +18,7 @@ import vazkii.botania.api.brew.IBrewContainer;
 import vazkii.botania.api.brew.IBrewItem;
 import vazkii.botania.api.recipe.RecipeBrew;
 import vazkii.botania.client.core.handler.HUDHandler;
-import vazkii.botania.client.integration.nei.NEIUtilities;
+import vazkii.botania.client.core.helper.BrewHelper;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.block.tile.mana.TilePool;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
@@ -135,7 +135,7 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
         for (RecipeBrew recipe : BotaniaAPI.brewRecipes) {
             if (recipe == null || targetBrew != recipe.getBrew()) continue;
 
-            for (ItemStack emptyContainer : NEIUtilities.getBrewContainers()) {
+            for (ItemStack emptyContainer : BrewHelper.getBrewContainers()) {
                 final ItemStack filledContainer = recipe.getOutput(emptyContainer);
                 if (result.isItemEqual(filledContainer) && Objects.equals(result.stackTagCompound, filledContainer.stackTagCompound)) {
                     arecipes.add(new CachedBreweryRecipe(recipe, emptyContainer));
