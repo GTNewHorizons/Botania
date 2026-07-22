@@ -77,19 +77,19 @@ public class PageBrew extends PageRecipe implements ITwoNamedPage {
             ItemStack stack;
             if (input instanceof String) {
                 stack = OreDictionary.getOres((String) input).get(0);
-
-                if (stack.getItemDamage() == Short.MAX_VALUE || stack.getItemDamage() == -1) {
-                    ItemStack newStack = new ItemStack(stack.getItem(), stack.stackSize, 0);
-                    newStack.stackTagCompound = stack.stackTagCompound;
-                    stack = newStack;
-                }
             } else {
                 stack = (ItemStack) input;
             }
 
-            if (stack != null && stack.getItem() != null) {
-                renderItem(gui, x, y, stack, false);
+            if (stack == null || stack.getItem() == null) continue;
+
+            if (stack.getItemDamage() == Short.MAX_VALUE || stack.getItemDamage() == -1) {
+                ItemStack newStack = new ItemStack(stack.getItem(), stack.stackSize, 0);
+                newStack.stackTagCompound = stack.stackTagCompound;
+                stack = newStack;
             }
+
+            renderItem(gui, x, y, stack, false);
 
             x += spacing;
         }
