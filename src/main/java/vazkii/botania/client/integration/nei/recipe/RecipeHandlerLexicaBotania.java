@@ -26,6 +26,7 @@ import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.lexicon.LexiconRecipeMappings;
 import vazkii.botania.client.integration.nei.NEIHelper;
 import vazkii.botania.client.lib.LibResources;
+import vazkii.botania.common.lib.LibColorUtils;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lexicon.page.PageText;
 import codechicken.lib.gui.GuiDraw;
@@ -89,7 +90,7 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
                 EnumChatFormatting.UNDERLINE + StatCollector.translateToLocal(recipeObj.entry.getUnlocalizedName()),
                 82,
                 30,
-                0x404040,
+                LibColorUtils.neiHandlerBotaniaLexicaTitle.getColor(),
                 false);
 
         KnowledgeType type = recipeObj.entry.getKnowledgeType();
@@ -97,7 +98,7 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
                 type.color + StatCollector.translateToLocal(type.getUnlocalizedName()).replaceAll("&[0-9a-fklmnor]", ""),
                 82,
                 42,
-                0x404040,
+                LibColorUtils.neiHandlerBotaniaLexicaKnowledge.getColor(),
                 false);
 
         PageText.renderText(
@@ -105,6 +106,8 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
                 42,
                 160,
                 200,
+                10,
+                LibColorUtils.neiHandlerBotaniaLexicaTagline.getColor(),
                 "\"" + StatCollector.translateToLocal(recipeObj.entry.getTagline()) + "\"");
 
         String key = LexiconRecipeMappings.stackToString(recipeObj.item.item);
@@ -121,12 +124,12 @@ public class RecipeHandlerLexicaBotania extends TemplateRecipeHandler {
                     StatCollector.translateToLocal("botania.nei.lexicaSeparator"),
                     82,
                     80,
-                    0x404040,
+                    LibColorUtils.neiHandlerBotaniaLexicaExtraInfo.getColor(),
                     false);
             s = quickInfoLocal;
         }
 
-        PageText.renderText(5, 80, 160, 200, s);
+        PageText.renderText(5, 80, 160, 200, 10, LibColorUtils.neiHandlerBotaniaLexicaExtraInfoDesc.getColor(), s);
     }
 
     @Override
