@@ -22,8 +22,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import vazkii.botania.api.BotaniaAPI;
+import vazkii.botania.api.brew.BrewUtilities;
 import vazkii.botania.api.brew.IBrewContainer;
-import vazkii.botania.api.brew.IBrewItem;
 import vazkii.botania.api.internal.VanillaPacketDispatcher;
 import vazkii.botania.api.mana.IManaReceiver;
 import vazkii.botania.api.recipe.RecipeBrew;
@@ -42,7 +42,7 @@ public class TileBrewery extends TileSimpleInventory implements ISidedInventory,
 	public int signal = 0;
 
 	public boolean addItem(EntityPlayer player, ItemStack stack) {
-		if(recipe != null || stack == null || stack.getItem() instanceof IBrewItem && ((IBrewItem) stack.getItem()).getBrew(stack) != null && ((IBrewItem) stack.getItem()).getBrew(stack) != BotaniaAPI.fallbackBrew || getStackInSlot(0) == null != stack.getItem() instanceof IBrewContainer)
+		if (recipe != null || stack == null || BrewUtilities.isFilledBrew(stack) || (getStackInSlot(0) == null) != (stack.getItem() instanceof IBrewContainer))
 			return false;
 
 		boolean did = false;
@@ -153,10 +153,9 @@ public class TileBrewery extends TileSimpleInventory implements ISidedInventory,
 
 	public int getManaCost() {
 		ItemStack stack = getStackInSlot(0);
-		if(recipe == null || stack == null || !(stack.getItem() instanceof IBrewContainer))
+		if(recipe == null || stack == null || !(stack.getItem() instanceof IBrewContainer container))
 			return 0;
-		IBrewContainer container = (IBrewContainer) stack.getItem();
-		return container.getManaCost(recipe.getBrew(), stack);
+        return container.getManaCost(recipe.getBrew(), stack);
 	}
 
 	public void craftingFanciness() {
