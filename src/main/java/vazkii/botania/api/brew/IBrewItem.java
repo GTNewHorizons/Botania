@@ -10,15 +10,26 @@
  */
 package vazkii.botania.api.brew;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import vazkii.botania.api.BotaniaAPI;
 
 /**
- * An Item that implements this is a Brew item, by which it contains
- * a brew. This is only used in vanilla to prevent the brew item
- * from going back into the brewery but other mods might use it for whatever.
+ * An {@link Item} that implements this is an item which can contain a {@link Brew}.
+ * <p>
+ *    This is used in standard Botania to prevent finished brews from going back into the brewery & to enable NEI searches.
+ *    However, other mods might use it for other purposes.
+ * </p>
  */
 public interface IBrewItem {
 
-	public Brew getBrew(ItemStack brew);
+    /**
+     * Get the brew contained within a stack of this item.
+     *
+     * @param brew A stack of this item whose contents are being queried.
+     * @return The brew within this container, or {@link BotaniaAPI#fallbackBrew} or null if the stack does not contain
+     *         a valid brew.
+     */
+    Brew getBrew(ItemStack brew);
 
 }

@@ -18,7 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
 /**
- * The class for a Brew definition, each one is a singleton.
+ * A type of brew that can be created in the Botanical Brewery.
+ *
+ * <p>
+ *     Each instance of this class represents a single <i>type</i> of brew that can be created in the brewery, similarly
+ *     to how {@link net.minecraft.item.Item} and {@link net.minecraft.block.Block} work.
+ * </p>
  */
 public class Brew {
 
@@ -31,11 +36,12 @@ public class Brew {
 	boolean canInfuseIncense = true;
 
 	/**
+     * @param key The key for this brew, used in NBT and the global map.
 	 * @param name The unlocalized name of this potion.
-	 * @param color The color for the potion to be rendered in the bottle, note that it will get
-	 * changed a bit when it renders (for more or less brightness) to give a fancy effect.
-	 * @param cost The cost, in Mana for this brew.
-	 * @param effects A list of effects to apply to the player when they drink it.
+	 * @param color The color for the potion to be rendered in the bottle. Note that it will get
+	 *              changed a bit when it renders (for more or less brightness) to give a fancy effect.
+	 * @param cost The cost, in Mana for this brew. Must be positive.
+	 * @param effects A list of potion effects to apply to the player when they drink it.
 	 */
 	public Brew(String key, String name, int color, int cost, PotionEffect... effects) {
 		this.key = key;
@@ -101,14 +107,14 @@ public class Brew {
 	}
 
 	/**
-	 * Gets the insensitive unlocalized mana cost. This is used for the lexicon.
+	 * Get the item-insensitive mana cost. This is used for the lexicon and for crafting costs.
 	 */
 	public int getManaCost() {
 		return cost;
 	}
 
 	/**
-	 * Gets the mana cost for the ItemStack passed in.
+	 * Gets the mana cost for the ItemStack passed in. In standard Botania, this is used only by the Cursed Blood Pendant.
 	 */
 	public int getManaCost(ItemStack stack) {
 		return getManaCost();
