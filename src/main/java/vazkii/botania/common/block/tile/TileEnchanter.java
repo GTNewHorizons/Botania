@@ -203,97 +203,97 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 			worldObj.playSoundEffect(xCoord, yCoord, zCoord, "botania:enchanterBlock", 0.5F, 10F);
 		}
 
-        switch (stage) {
-            case 1 -> { // Get books
-                if (stageTicks % 20 == 0) {
-                    List<EntityItem> items = worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(xCoord - 2, yCoord, zCoord - 2, xCoord + 3, yCoord + 1, zCoord + 3));
-                    int count = items.size();
-                    boolean addedEnch = false;
+		switch (stage) {
+			case 1 -> { // Get books
+				if (stageTicks % 20 == 0) {
+					List<EntityItem> items = worldObj.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(xCoord - 2, yCoord, zCoord - 2, xCoord + 3, yCoord + 1, zCoord + 3));
+					int count = items.size();
+					boolean addedEnch = false;
 
-                    if (count > 0 && !worldObj.isRemote) {
-                        for (EntityItem entity : items) {
-                            ItemStack item = entity.getEntityItem();
-                            if (item.getItem() == Items.enchanted_book) {
-                                NBTTagList enchants = Items.enchanted_book.func_92110_g(item);
-                                if (enchants != null && enchants.tagCount() > 0) {
-                                    NBTTagCompound enchant = enchants.getCompoundTagAt(0);
-                                    short enchantId = enchant.getShort("id");
-                                    short enchantLvl = enchant.getShort("lvl");
-                                    if (!hasEnchantAlready(enchantId) && isEnchantmentValid(enchantId)) {
-                                        this.enchants.add(new EnchantmentData(enchantId, enchantLvl));
-                                        worldObj.playSoundEffect(xCoord, yCoord, zCoord, "botania:ding", 1F, 1F);
-                                        addedEnch = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
+					if (count > 0 && !worldObj.isRemote) {
+						for (EntityItem entity : items) {
+							ItemStack item = entity.getEntityItem();
+							if (item.getItem() == Items.enchanted_book) {
+								NBTTagList enchants = Items.enchanted_book.func_92110_g(item);
+								if (enchants != null && enchants.tagCount() > 0) {
+									NBTTagCompound enchant = enchants.getCompoundTagAt(0);
+									short enchantId = enchant.getShort("id");
+									short enchantLvl = enchant.getShort("lvl");
+									if (!hasEnchantAlready(enchantId) && isEnchantmentValid(enchantId)) {
+										this.enchants.add(new EnchantmentData(enchantId, enchantLvl));
+										worldObj.playSoundEffect(xCoord, yCoord, zCoord, "botania:ding", 1F, 1F);
+										addedEnch = true;
+										break;
+									}
+								}
+							}
+						}
+					}
 
-                    if (!addedEnch) {
-                        if (enchants.isEmpty())
-                            stage = 0;
-                        else advanceStage();
-                    }
-                }
-            }
-            case 2 -> { // Get Mana
-                for (int[] pylon : PYLON_LOCATIONS[getBlockMetadata()]) {
-                    TilePylon pylonTile = (TilePylon) worldObj.getTileEntity(xCoord + pylon[0], yCoord + pylon[1], zCoord + pylon[2]);
-                    if (pylonTile != null) {
-                        pylonTile.activated = true;
-                        pylonTile.centerX = xCoord;
-                        pylonTile.centerY = yCoord;
-                        pylonTile.centerZ = zCoord;
-                    }
-                }
+					if (!addedEnch) {
+						if (enchants.isEmpty())
+							stage = 0;
+						else advanceStage();
+					}
+				}
+			}
+			case 2 -> { // Get Mana
+				for (int[] pylon : PYLON_LOCATIONS[getBlockMetadata()]) {
+					TilePylon pylonTile = (TilePylon) worldObj.getTileEntity(xCoord + pylon[0], yCoord + pylon[1], zCoord + pylon[2]);
+					if (pylonTile != null) {
+						pylonTile.activated = true;
+						pylonTile.centerX = xCoord;
+						pylonTile.centerY = yCoord;
+						pylonTile.centerZ = zCoord;
+					}
+				}
 
-                if (manaRequired == -1) {
-                    manaRequired = 0;
-                    for (EnchantmentData data : enchants) {
-                        Enchantment ench = Enchantment.enchantmentsList[data.enchant];
-                        manaRequired += (int) (5000F * ((15 - Math.min(15, ench.getWeight())) * 1.05F) * ((3F + data.level * data.level) * 0.25F) * (0.9F + enchants.size() * 0.05F));
-                    }
-                } else if (mana >= manaRequired) {
-                    manaRequired = 0;
-                    for (int[] pylon : PYLON_LOCATIONS[getBlockMetadata()])
-                        ((TilePylon) worldObj.getTileEntity(xCoord + pylon[0], yCoord + pylon[1], zCoord + pylon[2])).activated = false;
+				if (manaRequired == -1) {
+					manaRequired = 0;
+					for (EnchantmentData data : enchants) {
+						Enchantment ench = Enchantment.enchantmentsList[data.enchant];
+						manaRequired += (int) (5000F * ((15 - Math.min(15, ench.getWeight())) * 1.05F) * ((3F + data.level * data.level) * 0.25F) * (0.9F + enchants.size() * 0.05F));
+					}
+				} else if (mana >= manaRequired) {
+					manaRequired = 0;
+					for (int[] pylon : PYLON_LOCATIONS[getBlockMetadata()])
+						((TilePylon) worldObj.getTileEntity(xCoord + pylon[0], yCoord + pylon[1], zCoord + pylon[2])).activated = false;
 
-                    advanceStage();
-                } else {
-                    ISparkEntity spark = getAttachedSpark();
-                    if (spark != null) {
-                        List<ISparkEntity> sparkEntities = SparkHelper.getSparksAround(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
-                        for (ISparkEntity otherSpark : sparkEntities) {
-                            if (spark == otherSpark)
-                                continue;
+					advanceStage();
+				} else {
+					ISparkEntity spark = getAttachedSpark();
+					if (spark != null) {
+						List<ISparkEntity> sparkEntities = SparkHelper.getSparksAround(worldObj, xCoord + 0.5, yCoord + 0.5, zCoord + 0.5);
+						for (ISparkEntity otherSpark : sparkEntities) {
+							if (spark == otherSpark)
+								continue;
 
-                            if (otherSpark.getAttachedTile() != null && otherSpark.getAttachedTile() instanceof IManaPool)
-                                otherSpark.registerTransfer(spark);
-                        }
-                    }
-                }
-            }
-            case 3 -> { // Enchant
-                if (stageTicks >= 100) {
-                    for (EnchantmentData data : enchants)
-                        if (EnchantmentHelper.getEnchantmentLevel(data.enchant, itemToEnchant) == 0) {
-                            ItemStackNBT.enchant(itemToEnchant, data.enchant, data.level);
-                        }
+							if (otherSpark.getAttachedTile() != null && otherSpark.getAttachedTile() instanceof IManaPool)
+								otherSpark.registerTransfer(spark);
+						}
+					}
+				}
+			}
+			case 3 -> { // Enchant
+				if (stageTicks >= 100) {
+					for (EnchantmentData data : enchants)
+						if (EnchantmentHelper.getEnchantmentLevel(data.enchant, itemToEnchant) == 0) {
+							ItemStackNBT.enchant(itemToEnchant, data.enchant, data.level);
+						}
 
-                    enchants.clear();
-                    manaRequired = -1;
-                    mana = 0;
+					enchants.clear();
+					manaRequired = -1;
+					mana = 0;
 
-                    craftingFanciness();
-                    advanceStage();
-                }
-            }
-            case 4 -> { // Reset
-                if (stageTicks >= 20)
-                    advanceStage();
-            }
-        }
+					craftingFanciness();
+					advanceStage();
+				}
+			}
+			case 4 -> { // Reset
+				if (stageTicks >= 20)
+					advanceStage();
+			}
+		}
 
 		if (stage != 0)
 			stageTicks++;
