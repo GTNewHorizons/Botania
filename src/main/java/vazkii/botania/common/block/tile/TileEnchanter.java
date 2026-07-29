@@ -390,8 +390,6 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 				String[] entryTokens = token.split(":");
 				short id = Short.parseShort(entryTokens[0]);
 				short lvl = Short.parseShort(entryTokens[1]);
-
-				// Normally, I'd prefer writing these a
 				enchants.add(new EnchantmentData(id, lvl));
 			}
 		}
