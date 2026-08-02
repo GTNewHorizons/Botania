@@ -10,7 +10,6 @@
  */
 package vazkii.botania.client.core.handler;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -145,7 +144,7 @@ public class LightningHandler {
 			Vector3 endvec = rendersegment.endpoint.point;
 
 			int color = inner ? bolt.colorInner : bolt.colorOuter;
-			tessellator.setColorRGBA_I(color, (int) (mainalpha * rendersegment.light * new Color(color).getAlpha()));
+			tessellator.setColorRGBA_I(color, (int) (mainalpha * rendersegment.light * (inner ? bolt.alphaInner : bolt.alphaOuter)));
 
 			tessellator.addVertexWithUV(endvec.x - diff2.x, endvec.y - diff2.y, endvec.z - diff2.z, 0.5, 0);
 			tessellator.addVertexWithUV(startvec.x - diff1.x, startvec.y - diff1.y, startvec.z - diff1.z, 0.5, 0);
@@ -205,6 +204,8 @@ public class LightningHandler {
 
 		public int colorOuter;
 		public int colorInner;
+		private int alphaOuter;
+		private int alphaInner;
 
 		public class BoltPoint {
 
@@ -316,6 +317,9 @@ public class LightningHandler {
 
 			this.colorOuter = colorOuter;
 			this.colorInner = colorInner;
+
+			alphaOuter = (colorOuter >> 24) & 0xFF;
+			alphaInner = (colorInner >> 24) & 0xFF;
 
 			numsegments0 = 1;
 
