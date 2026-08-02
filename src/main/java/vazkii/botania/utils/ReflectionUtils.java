@@ -30,10 +30,26 @@ public final class ReflectionUtils {
 	}
 
 	public static int getInt(Field field, Object instance) {
+		return getInt(field, instance, 0);
+	}
+
+	public static int getInt(Field field, Object instance, int def) {
 		try {
 			return field.getInt(instance);
 		} catch(Exception e) {
-			return 0;
+			return def;
+		}
+	}
+
+	public static boolean getBoolean(Field field, Object instance) {
+		return getBoolean(field, instance, false);
+	}
+
+	public static boolean getBoolean(Field field, Object instance, boolean def) {
+		try {
+			return field.getBoolean(instance);
+		} catch(Exception e) {
+			return def;
 		}
 	}
 
