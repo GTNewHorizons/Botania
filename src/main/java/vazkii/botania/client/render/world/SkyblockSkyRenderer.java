@@ -10,6 +10,7 @@
  */
 package vazkii.botania.client.render.world;
 
+import java.lang.reflect.Field;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
@@ -28,7 +29,7 @@ import org.lwjgl.opengl.GL11;
 import vazkii.botania.client.core.handler.ClientTickHandler;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.lib.LibObfuscation;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import vazkii.botania.utils.ReflectionUtils;
 
 public class SkyblockSkyRenderer extends IRenderHandler {
 
@@ -45,11 +46,14 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 		new ResourceLocation(LibResources.MISC_PLANET + "5.png")
 	};
 
+	private static final Field GL_SKY_LIST = ReflectionUtils.findField(RenderGlobal.class, LibObfuscation.GL_SKY_LIST);
+	private static final Field STAR_GL_CALL_LIST = ReflectionUtils.findField(RenderGlobal.class, LibObfuscation.STAR_GL_CALL_LIST);
+
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
 
-		int glSkyList = ReflectionHelper.getPrivateValue(RenderGlobal.class, mc.renderGlobal, LibObfuscation.GL_SKY_LIST);
-		int starGLCallList = ReflectionHelper.getPrivateValue(RenderGlobal.class, mc.renderGlobal, LibObfuscation.STAR_GL_CALL_LIST);
+		int glSkyList = ReflectionUtils.getInt(GL_SKY_LIST, mc.renderGlobal);
+		int starGLCallList = ReflectionUtils.getInt(STAR_GL_CALL_LIST, mc.renderGlobal);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		Vec3 vec3 = world.getSkyColor(mc.renderViewEntity, partialTicks);
