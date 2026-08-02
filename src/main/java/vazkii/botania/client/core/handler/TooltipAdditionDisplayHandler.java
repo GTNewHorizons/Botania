@@ -11,6 +11,7 @@
 package vazkii.botania.client.core.handler;
 
 import java.awt.Color;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +40,11 @@ import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.item.ItemLexicon;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lib.LibObfuscation;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import vazkii.botania.utils.ReflectionUtils;
 
 public final class TooltipAdditionDisplayHandler {
+
+	private static final Field THE_SLOT = ReflectionUtils.findField(GuiContainer.class, LibObfuscation.THE_SLOT);
 
 	private static float lexiconLookupTime = 0F;
 
@@ -50,7 +53,7 @@ public final class TooltipAdditionDisplayHandler {
 		GuiScreen gui = mc.currentScreen;
 		if(gui != null && gui instanceof GuiContainer && mc.thePlayer != null && mc.thePlayer.inventory.getItemStack() == null) {
 			GuiContainer container = (GuiContainer) gui;
-			Slot slot = ReflectionHelper.getPrivateValue(GuiContainer.class, container, LibObfuscation.THE_SLOT);
+			Slot slot = (Slot) ReflectionUtils.getObject(THE_SLOT, container);
 			if(slot != null && slot.getHasStack()) {
 				ItemStack stack = slot.getStack();
 				if(stack != null) {
