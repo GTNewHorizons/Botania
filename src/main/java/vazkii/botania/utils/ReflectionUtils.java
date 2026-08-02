@@ -19,6 +19,16 @@ public final class ReflectionUtils {
 		return null;
 	}
 
+	public static Field findField(Class<?> clazz, int index) {
+		try {
+			Field field = clazz.getDeclaredFields()[index];
+			field.setAccessible(true);
+			return field;
+		} catch(Exception e) {
+			return null;
+		}
+	}
+
 	public static int getInt(Field field, Object instance) {
 		try {
 			return field.getInt(instance);
