@@ -27,5 +27,13 @@ public final class ReflectionUtils {
 		}
 	}
 
+	public static Object getObject(Field field, Object instance) {
+		try {
+			return field.get(instance);
+		} catch(Exception e) {
+			return null;
+		}
+	}
+
 
 }
