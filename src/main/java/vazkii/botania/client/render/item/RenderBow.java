@@ -10,6 +10,8 @@
  */
 package vazkii.botania.client.render.item;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,9 +22,12 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.common.lib.LibObfuscation;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import vazkii.botania.utils.ReflectionUtils;
 
 public class RenderBow implements IItemRenderer {
+
+	private static final Field ITEM_IN_USE = ReflectionUtils.findField(EntityPlayer.class, LibObfuscation.ITEM_IN_USE);
+	private static final Field ITEM_IN_USE_COUNT = ReflectionUtils.findField(EntityPlayer.class, LibObfuscation.ITEM_IN_USE_COUNT);
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -62,8 +67,11 @@ public class RenderBow implements IItemRenderer {
 		int dmg = item.getItemDamage();
 		IIcon icon = item.getItem().getIconFromDamageForRenderPass(dmg, 0);
 		if(player != null) {
-			ItemStack using = ReflectionHelper.getPrivateValue(EntityPlayer.class, player, LibObfuscation.ITEM_IN_USE);
-			int time = ReflectionHelper.getPrivateValue(EntityPlayer.class, player, LibObfuscation.ITEM_IN_USE_COUNT);
+			ItemStack using = (ItemStack) ReflectionUtils.getObject(ITEM_IN_USE, player);
+			int time = 0;
+			Object timeObj = ReflectionUtils.getObject(ITEM_IN_USE_COUNT, player);
+			if(timeObj != null)
+				time = (Integer) timeObj;
 			icon = item.getItem().getIcon(item, 0, player, using, time);
 			if(transform) {
 				GL11.glTranslatef(0.2F, -0.3F, 0.1F);
