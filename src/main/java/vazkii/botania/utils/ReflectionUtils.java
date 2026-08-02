@@ -61,5 +61,25 @@ public final class ReflectionUtils {
 		}
 	}
 
+	public static void setInt(Field field, Object instance, int value) {
+		try {
+			field.setInt(instance, value);
+		} catch(Exception e) {
+		}
+	}
+
+	public static void setBoolean(Field field, Object instance, boolean value) {
+		try {
+			field.setBoolean(instance, value);
+		} catch(Exception e) {
+		}
+	}
+
+	public static void setObject(Field field, Object instance, Object value) {
+		try {
+			field.set(instance, value);
+		} catch(Exception e) {
+		}
+	}
 
 }
