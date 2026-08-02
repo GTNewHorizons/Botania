@@ -133,7 +133,8 @@ public class LightningHandler {
 		int renderstart = (int) ((expandTime / 2 - bolt.particleMaxAge + bolt.particleAge) / (float) (expandTime / 2) * bolt.numsegments0);
 		int renderend = (int) ((bolt.particleAge + expandTime) / (float) expandTime * bolt.numsegments0);
 
-		for(Segment rendersegment : bolt.segments) {
+		for(int i = 0; i < bolt.segments.size(); i++) {
+			Segment rendersegment = bolt.segments.get(i);
 			if(rendersegment.segmentno < renderstart || rendersegment.segmentno > renderend)
 				continue;
 
@@ -228,9 +229,9 @@ public class LightningHandler {
 
 			@Override
 			public int compare(Segment o1, Segment o2) {
-				int comp = Integer.valueOf(o1.splitno).compareTo(o2.splitno);
+				int comp = o1.splitno - o2.splitno;
 				if(comp == 0)
-					return Integer.valueOf(o1.segmentno).compareTo(o2.segmentno);
+					return o1.segmentno - o2.segmentno;
 				else return comp;
 			}
 		}
