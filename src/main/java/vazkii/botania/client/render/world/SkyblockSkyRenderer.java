@@ -49,6 +49,10 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 	private static final Field GL_SKY_LIST = ReflectionUtils.findField(RenderGlobal.class, LibObfuscation.GL_SKY_LIST);
 	private static final Field STAR_GL_CALL_LIST = ReflectionUtils.findField(RenderGlobal.class, LibObfuscation.STAR_GL_CALL_LIST);
 
+	// rainbow angles are deterministic per in-game day
+	private static int lastRainbowDay = -1;
+	private static float rainbowAngle1, rainbowAngle2;
+
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
 
@@ -245,9 +249,14 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 
 		long time = world.getWorldTime() + 1000;
 		int day = (int) (time / 24000L);
-		Random rand = new Random(day * 0xFF);
-		float angle1 = rand.nextFloat() * 360F;
-		float angle2 = rand.nextFloat() * 360F;
+		if(lastRainbowDay != day) {
+			Random rand = new Random(day * 0xFF);
+			rainbowAngle1 = rand.nextFloat() * 360F;
+			rainbowAngle2 = rand.nextFloat() * 360F;
+			lastRainbowDay = day;
+		}
+		float angle1 = rainbowAngle1;
+		float angle2 = rainbowAngle2;
 		GL11.glColor4f(1F, 1F, 1F, effCelAng1 * (1F - insideVoid));
 		GL11.glRotatef(angle1, 0F, 1F, 0F);
 		GL11.glRotatef(angle2, 0F, 0F, 1F);
