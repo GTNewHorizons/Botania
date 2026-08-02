@@ -54,9 +54,8 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 	private static int lastRainbowDay = -1;
 	private static float rainbowAngle1, rainbowAngle2;
 
-	// sky color samples (getSkyColor allocates a Vec3 per call); interpolated across ticks by partialTicks
+	// sky color samples, interpolated across ticks by partialTicks
 	private static int lastSkySampleTick = -1;
-	private static int lastSkySamplePos = Integer.MIN_VALUE;
 	private static float skyRed0, skyGreen0, skyBlue0;
 	private static float skyRed1, skyGreen1, skyBlue1;
 
@@ -68,9 +67,8 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		Entity viewEntity = mc.renderViewEntity;
-		int posKey = ((int) viewEntity.posX ^ (int) viewEntity.posZ) * 31 + ((int) viewEntity.posY << 8);
 		int tick = ClientTickHandler.ticksInGame;
-		if(tick != lastSkySampleTick || posKey != lastSkySamplePos) {
+		if(tick != lastSkySampleTick) {
 			if(lastSkySampleTick != -1) {
 				skyRed0 = skyRed1;
 				skyGreen0 = skyGreen1;
@@ -81,7 +79,6 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 			skyGreen1 = (float) sample.yCoord;
 			skyBlue1 = (float) sample.zCoord;
 			lastSkySampleTick = tick;
-			lastSkySamplePos = posKey;
 		}
 		float frac = Math.min(1F, Math.max(0F, partialTicks));
 		float f1 = skyRed0 + (skyRed1 - skyRed0) * frac;
