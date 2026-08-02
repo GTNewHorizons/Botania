@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -53,6 +54,10 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 	private static int lastRainbowDay = -1;
 	private static float rainbowAngle1, rainbowAngle2;
 
+	// sky color cache (getSkyColor allocates a Vec3 per call)
+	private static int lastSkyKey = Integer.MIN_VALUE;
+	private static float skyRed, skyGreen, skyBlue;
+
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
 
@@ -60,10 +65,18 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 		int starGLCallList = ReflectionUtils.getInt(STAR_GL_CALL_LIST, mc.renderGlobal);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		Vec3 vec3 = world.getSkyColor(mc.renderViewEntity, partialTicks);
-		float f1 = (float)vec3.xCoord;
-		float f2 = (float)vec3.yCoord;
-		float f3 = (float)vec3.zCoord;
+		Entity viewEntity = mc.renderViewEntity;
+		int skyKey = ((int) viewEntity.posX ^ (int) viewEntity.posZ) * 31 + ((int) viewEntity.posY << 8) + ClientTickHandler.ticksInGame;
+		if(skyKey != lastSkyKey) {
+			Vec3 vec3 = world.getSkyColor(viewEntity, partialTicks);
+			skyRed = (float) vec3.xCoord;
+			skyGreen = (float) vec3.yCoord;
+			skyBlue = (float) vec3.zCoord;
+			lastSkyKey = skyKey;
+		}
+		float f1 = skyRed;
+		float f2 = skyGreen;
+		float f3 = skyBlue;
 		float f6;
 
 		float insideVoid = 0;
