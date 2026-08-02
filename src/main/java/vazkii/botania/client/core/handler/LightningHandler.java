@@ -50,10 +50,11 @@ public class LightningHandler {
 	static double interpPosY;
 	static double interpPosZ;
 
-	private static Vector3 getRelativeViewVector(Vector3 pos) {
-		Entity renderEntity = Minecraft.getMinecraft().renderViewEntity;
-		return new Vector3((float) renderEntity.posX - pos.x, (float) renderEntity.posY + renderEntity.getEyeHeight() - pos.y, (float) renderEntity.posZ - pos.z);
-	}
+	private final Vector3 scratchView = new Vector3();
+	private final Vector3 scratchPoint = new Vector3();
+	private final Vector3 scratchDiff1 = new Vector3();
+	private final Vector3 scratchDiff2 = new Vector3();
+	private final Vector3 scratchRound = new Vector3();
 
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
@@ -72,6 +73,9 @@ public class LightningHandler {
 		interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * frame;
 		interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * frame;
 		interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * frame;
+
+		Entity viewEntity = Minecraft.getMinecraft().renderViewEntity;
+		scratchView.set(viewEntity.posX, viewEntity.posY + viewEntity.getEyeHeight(), viewEntity.posZ);
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(-interpPosX, -interpPosY, -interpPosZ);
@@ -133,12 +137,12 @@ public class LightningHandler {
 			if(rendersegment.segmentno < renderstart || rendersegment.segmentno > renderend)
 				continue;
 
-			Vector3 playervec = getRelativeViewVector(rendersegment.startpoint.point).multiply(-1);
+			Vector3 playervec = scratchPoint.set(rendersegment.startpoint.point).subtract(scratchView);
 
 			double width = 0.025F * (playervec.mag() / 5 + 1) * (1 + rendersegment.light) * 0.5F;
 
-			Vector3 diff1 = playervec.copy().crossProduct(rendersegment.prevdiff).normalize().multiply(width / rendersegment.sinprev);
-			Vector3 diff2 = playervec.copy().crossProduct(rendersegment.nextdiff).normalize().multiply(width / rendersegment.sinnext);
+			Vector3 diff1 = scratchDiff1.set(playervec).crossProduct(rendersegment.prevdiff).normalize().multiply(width / rendersegment.sinprev);
+			Vector3 diff2 = scratchDiff2.set(playervec).crossProduct(rendersegment.nextdiff).normalize().multiply(width / rendersegment.sinnext);
 
 			Vector3 startvec = rendersegment.startpoint.point;
 			Vector3 endvec = rendersegment.endpoint.point;
@@ -152,7 +156,7 @@ public class LightningHandler {
 			tessellator.addVertexWithUV(endvec.x + diff2.x, endvec.y + diff2.y, endvec.z + diff2.z, 0.5, 1);
 
 			if(rendersegment.next == null) {
-				Vector3 roundend = rendersegment.endpoint.point.copy().add(rendersegment.diff.copy().normalize().multiply(width));
+				Vector3 roundend = scratchRound.set(rendersegment.diff).normalize().multiply(width).add(rendersegment.endpoint.point);
 
 				tessellator.addVertexWithUV(roundend.x - diff2.x, roundend.y - diff2.y, roundend.z - diff2.z, 0, 0);
 				tessellator.addVertexWithUV(endvec.x - diff2.x, endvec.y - diff2.y, endvec.z - diff2.z, 0.5, 0);
@@ -161,7 +165,7 @@ public class LightningHandler {
 			}
 
 			if(rendersegment.prev == null) {
-				Vector3 roundend = rendersegment.startpoint.point.copy().subtract(rendersegment.diff.copy().normalize().multiply(width));
+				Vector3 roundend = scratchRound.set(rendersegment.diff).normalize().multiply(width).multiply(-1).add(rendersegment.startpoint.point);
 
 				tessellator.addVertexWithUV(startvec.x - diff1.x, startvec.y - diff1.y, startvec.z - diff1.z, 0.5, 0);
 				tessellator.addVertexWithUV(roundend.x - diff1.x, roundend.y - diff1.y, roundend.z - diff1.z, 0, 0);
