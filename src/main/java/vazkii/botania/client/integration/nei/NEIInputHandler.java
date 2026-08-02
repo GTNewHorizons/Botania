@@ -26,7 +26,7 @@ public class NEIInputHandler implements IContainerInputHandler {
 	@Override
 	public boolean keyTyped(GuiContainer gui, char c, int i) {
 		Minecraft mc = Minecraft.getMinecraft();
-		if(TileCorporeaIndex.InputHandler.getNearbyIndexes(mc.thePlayer).isEmpty())
+		if(!TileCorporeaIndex.InputHandler.hasNearbyIndexes(mc.thePlayer))
 			return false;
 		
 		int bind = NEIClientConfig.getKeyBinding(NEIBotaniaConfig.CORPOREA_KEY);
