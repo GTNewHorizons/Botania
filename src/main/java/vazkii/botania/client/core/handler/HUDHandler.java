@@ -51,7 +51,6 @@ import vazkii.botania.api.wiki.IWikiProvider;
 import vazkii.botania.api.wiki.WikiHooks;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.lib.LibResources;
-import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.TileAltar;
 import vazkii.botania.common.block.tile.TileRuneAltar;
@@ -67,6 +66,7 @@ import vazkii.botania.common.item.equipment.bauble.ItemFlightTiara;
 import vazkii.botania.common.item.equipment.bauble.ItemMonocle;
 import vazkii.botania.common.lib.LibObfuscation;
 import vazkii.botania.utils.ReflectionUtils;
+import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -162,21 +162,23 @@ public final class HUDHandler {
 				profiler.endSection();
 			}*/
 
-			if(Botania.proxy.isClientPlayerWearingMonocle()) {
+			EntityPlayer player = mc.thePlayer;
+			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
+
+			if(ItemMonocle.hasMonocle(baubles)) {
 				profiler.startSection("monocle");
-				ItemMonocle.renderHUD(event.resolution, mc.thePlayer);
+				ItemMonocle.renderHUD(event.resolution, player);
 				profiler.endSection();
 			}
 
 			profiler.startSection("manaBar");
-			EntityPlayer player = mc.thePlayer;
 			int totalMana = 0;
 			int totalMaxMana = 0;
 			boolean anyRequest = false;
 			boolean creative = false;
 
 			IInventory mainInv = player.inventory;
-			IInventory baublesInv = PlayerHandler.getPlayerBaubles(player);
+			IInventory baublesInv = baubles;
 
 			int invSize = mainInv.getSizeInventory();
 			int size = invSize;
