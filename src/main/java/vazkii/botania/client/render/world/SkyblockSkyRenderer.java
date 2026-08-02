@@ -54,9 +54,11 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 	private static int lastRainbowDay = -1;
 	private static float rainbowAngle1, rainbowAngle2;
 
-	// sky color cache (getSkyColor allocates a Vec3 per call)
-	private static int lastSkyKey = Integer.MIN_VALUE;
-	private static float skyRed, skyGreen, skyBlue;
+	// sky color samples (getSkyColor allocates a Vec3 per call); interpolated across ticks by partialTicks
+	private static int lastSkySampleTick = -1;
+	private static int lastSkySamplePos = Integer.MIN_VALUE;
+	private static float skyRed0, skyGreen0, skyBlue0;
+	private static float skyRed1, skyGreen1, skyBlue1;
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
@@ -66,17 +68,25 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		Entity viewEntity = mc.renderViewEntity;
-		int skyKey = ((int) viewEntity.posX ^ (int) viewEntity.posZ) * 31 + ((int) viewEntity.posY << 8) + ClientTickHandler.ticksInGame;
-		if(skyKey != lastSkyKey) {
-			Vec3 vec3 = world.getSkyColor(viewEntity, partialTicks);
-			skyRed = (float) vec3.xCoord;
-			skyGreen = (float) vec3.yCoord;
-			skyBlue = (float) vec3.zCoord;
-			lastSkyKey = skyKey;
+		int posKey = ((int) viewEntity.posX ^ (int) viewEntity.posZ) * 31 + ((int) viewEntity.posY << 8);
+		int tick = ClientTickHandler.ticksInGame;
+		if(tick != lastSkySampleTick || posKey != lastSkySamplePos) {
+			if(lastSkySampleTick != -1) {
+				skyRed0 = skyRed1;
+				skyGreen0 = skyGreen1;
+				skyBlue0 = skyBlue1;
+			}
+			Vec3 sample = world.getSkyColor(viewEntity, 1.0F);
+			skyRed1 = (float) sample.xCoord;
+			skyGreen1 = (float) sample.yCoord;
+			skyBlue1 = (float) sample.zCoord;
+			lastSkySampleTick = tick;
+			lastSkySamplePos = posKey;
 		}
-		float f1 = skyRed;
-		float f2 = skyGreen;
-		float f3 = skyBlue;
+		float frac = Math.min(1F, Math.max(0F, partialTicks));
+		float f1 = skyRed0 + (skyRed1 - skyRed0) * frac;
+		float f2 = skyGreen0 + (skyGreen1 - skyGreen0) * frac;
+		float f3 = skyBlue0 + (skyBlue1 - skyBlue0) * frac;
 		float f6;
 
 		float insideVoid = 0;
