@@ -11,6 +11,7 @@
 package vazkii.botania.client.core.handler;
 
 import java.awt.Color;
+import java.lang.reflect.Field;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
@@ -65,14 +66,16 @@ import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.bauble.ItemFlightTiara;
 import vazkii.botania.common.item.equipment.bauble.ItemMonocle;
 import vazkii.botania.common.lib.LibObfuscation;
+import vazkii.botania.utils.ReflectionUtils;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public final class HUDHandler {
 
 	public static final ResourceLocation manaBar = new ResourceLocation(LibResources.GUI_MANA_HUD);
+
+	private static final Field REMAINING_HIGHLIGHT_TICKS = ReflectionUtils.findField(GuiIngame.class, LibObfuscation.REMAINING_HIGHLIGHT_TICKS);
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onDrawScreenPre(RenderGameOverlayEvent.Pre event) {
@@ -221,7 +224,7 @@ public final class HUDHandler {
 		Profiler profiler = mc.mcProfiler;
 
 		profiler.startSection("wandMode");
-		int ticks = ReflectionHelper.getPrivateValue(GuiIngame.class, mc.ingameGUI, LibObfuscation.REMAINING_HIGHLIGHT_TICKS);
+		int ticks = ReflectionUtils.getInt(REMAINING_HIGHLIGHT_TICKS, mc.ingameGUI);
 		ticks -= 15;
 		if(ticks > 0) {
 			int alpha = Math.min(255, (int) (ticks * 256.0F / 10.0F));

@@ -11,6 +11,7 @@
 package vazkii.botania.common.entity;
 
 import java.awt.Rectangle;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,11 +75,13 @@ import vazkii.botania.common.core.helper.Vector3;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.relic.ItemRelic;
 import vazkii.botania.common.lib.LibObfuscation;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import vazkii.botania.utils.ReflectionUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWithShader {
+
+	private static final Field IS_BAD_EFFECT = ReflectionUtils.findField(Potion.class, LibObfuscation.IS_BAD_EFFECT);
 
 	public static final int SPAWN_TICKS = 160;
 	private static final float RANGE = 12F;
@@ -587,7 +590,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 				List<PotionEffect> remove = new ArrayList<>();
 				Collection<PotionEffect> active = player.getActivePotionEffects();
 				for(PotionEffect effect : active)
-					if(effect.getDuration() < 200 && effect.getIsAmbient() && !ReflectionHelper.<Boolean, Potion>getPrivateValue(Potion.class, Potion.potionTypes[effect.getPotionID()], LibObfuscation.IS_BAD_EFFECT))
+					if(effect.getDuration() < 200 && effect.getIsAmbient() && !ReflectionUtils.getBoolean(IS_BAD_EFFECT, Potion.potionTypes[effect.getPotionID()], true))
 						remove.add(effect);
 
 				active.removeAll(remove);
