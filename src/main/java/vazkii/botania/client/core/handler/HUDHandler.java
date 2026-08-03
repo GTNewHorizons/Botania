@@ -51,7 +51,6 @@ import vazkii.botania.api.wiki.IWikiProvider;
 import vazkii.botania.api.wiki.WikiHooks;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.lib.LibResources;
-import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.TileAltar;
 import vazkii.botania.common.block.tile.TileRuneAltar;
@@ -67,6 +66,7 @@ import vazkii.botania.common.item.equipment.bauble.ItemFlightTiara;
 import vazkii.botania.common.item.equipment.bauble.ItemMonocle;
 import vazkii.botania.common.lib.LibObfuscation;
 import vazkii.botania.utils.ReflectionUtils;
+import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -131,7 +131,7 @@ public final class HUDHandler {
 					renderCrystalCubeHUD(event.resolution, (TileCorporeaCrystalCube) tile);
 			}
 
-			if(!TileCorporeaIndex.InputHandler.getNearbyIndexes(mc.thePlayer).isEmpty() && mc.currentScreen != null && mc.currentScreen instanceof GuiChat) {
+			if(mc.currentScreen != null && mc.currentScreen instanceof GuiChat && TileCorporeaIndex.InputHandler.hasNearbyIndexes(mc.thePlayer)) {
 				profiler.startSection("nearIndex");
 				renderNearIndexDisplay(event.resolution);
 				profiler.endSection();
@@ -162,21 +162,23 @@ public final class HUDHandler {
 				profiler.endSection();
 			}*/
 
-			if(Botania.proxy.isClientPlayerWearingMonocle()) {
+			EntityPlayer player = mc.thePlayer;
+			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
+
+			if(ItemMonocle.hasMonocle(baubles)) {
 				profiler.startSection("monocle");
-				ItemMonocle.renderHUD(event.resolution, mc.thePlayer);
+				ItemMonocle.renderHUD(event.resolution, player);
 				profiler.endSection();
 			}
 
 			profiler.startSection("manaBar");
-			EntityPlayer player = mc.thePlayer;
 			int totalMana = 0;
 			int totalMaxMana = 0;
 			boolean anyRequest = false;
 			boolean creative = false;
 
 			IInventory mainInv = player.inventory;
-			IInventory baublesInv = PlayerHandler.getPlayerBaubles(player);
+			IInventory baublesInv = baubles;
 
 			int invSize = mainInv.getSizeInventory();
 			int size = invSize;
@@ -260,8 +262,8 @@ public final class HUDHandler {
 			else return;
 		}
 
-		Color color = new Color(Color.HSBtoRGB(0.55F, (float) Math.min(1F, Math.sin(System.currentTimeMillis() / 200D) * 0.5 + 1F), 1F));
-		GL11.glColor4ub((byte) color.getRed(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) (255 - color.getRed()));
+		int rgb = Color.HSBtoRGB(0.55F, (float) Math.min(1F, Math.sin(System.currentTimeMillis() / 200D) * 0.5 + 1F), 1F);
+		GL11.glColor4ub((byte) (rgb >> 16), (byte) (rgb >> 8), (byte) rgb, (byte) (255 - (rgb >> 16)));
 		mc.renderEngine.bindTexture(manaBar);
 
 		GL11.glEnable(GL11.GL_BLEND);
@@ -483,8 +485,7 @@ public final class HUDHandler {
 
 		RenderHelper.drawTexturedModalRect(x + 1, y + 1, 0, 0, 5, 100, 3);
 
-		Color color_ = new Color(color);
-		GL11.glColor4ub((byte) color_.getRed(), (byte) color_.getGreen(),(byte) color_.getBlue(), (byte) (255F * alpha));
+		GL11.glColor4ub((byte) (color >> 16), (byte) (color >> 8), (byte) color, (byte) (255F * alpha));
 		RenderHelper.drawTexturedModalRect(x + 1, y + 1, 0, 0, 5, Math.min(100, manaPercentage), 3);
 	}
 }
