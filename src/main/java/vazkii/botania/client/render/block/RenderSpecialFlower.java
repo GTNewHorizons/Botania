@@ -36,11 +36,11 @@ public class RenderSpecialFlower implements ISimpleBlockRenderingHandler, IMulti
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
-		return renderCrossedSquares(blockAccess, block, x, y, z, renderer);
+		return renderCrossedSquares(blockAccess, block, x, y, z, 1.0F, true, renderer);
 	}
 
 	// Copied from RenderBlocks
-	public static boolean renderCrossedSquares(IBlockAccess blockAccess, Block block, int x, int y, int z, RenderBlocks render) {
+	public static boolean renderCrossedSquares(IBlockAccess blockAccess, Block block, int x, int y, int z, float scale, boolean doRandomShift, RenderBlocks render) {
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x, y, z));
 		float f = 1.0F;
@@ -64,16 +64,17 @@ public class RenderSpecialFlower implements ISimpleBlockRenderingHandler, IMulti
 		double d0 = z;
 		long sh;
 
-		sh = x * 3129871 ^ z * 116129781L ^ y;
-		sh = sh * sh * 42317861L + sh * 11L;
-		d1 += ((sh >> 16 & 15L) / 15.0F - 0.5D) * 0.3D;
-		d2 += (sh >> 32 & 15L) / 15.0F * -0.15D;
-		d0 += ((sh >> 24 & 15L) / 15.0F - 0.5D) * 0.3D;
-
+		if (doRandomShift) {
+			sh = x * 3129871 ^ z * 116129781L ^ y;
+			sh = sh * sh * 42317861L + sh * 11L;
+			d1 += ((sh >> 16 & 15L) / 15.0F - 0.5D) * 0.3D;
+			d2 += (sh >> 32 & 15L) / 15.0F * -0.15D;
+			d0 += ((sh >> 24 & 15L) / 15.0F - 0.5D) * 0.3D;
+		}
 
 		// Only change here, to use xyz rather than side/meta
 		IIcon icon = render.getBlockIcon(block, blockAccess, x, y, z, 0);
-		drawCrossedSquares(blockAccess, block, icon, x, y, z, d1, d2, d0, 1.0F, render);
+		drawCrossedSquares(blockAccess, block, icon, x, y, z, d1, d2, d0, scale, render);
 
 		return true;
 	}
