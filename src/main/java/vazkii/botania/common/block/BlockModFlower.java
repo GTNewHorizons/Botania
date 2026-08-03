@@ -10,12 +10,16 @@
  */
 package vazkii.botania.common.block;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.gtnewhorizon.gtnhlib.api.IFlowerPottable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.IGrowable;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
@@ -23,13 +27,16 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.client.core.helper.IconHelper;
 import vazkii.botania.client.lib.LibRenderIDs;
+import vazkii.botania.client.render.block.RenderSpecialFlower;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.achievement.IPickupAchievement;
 import vazkii.botania.common.achievement.ModAchievements;
@@ -42,7 +49,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockModFlower extends BlockFlower implements ILexiconable, IPickupAchievement, IGrowable {
+public class BlockModFlower extends BlockFlower implements ILexiconable, IPickupAchievement, IGrowable, IFlowerPottable {
 
 	public static IIcon[] icons;
 	public static IIcon[] iconsAlt;
@@ -156,4 +163,12 @@ public class BlockModFlower extends BlockFlower implements ILexiconable, IPickup
 		world.setBlock(x, y + 1, z, flower, placeMeta | 8, flags);
 	}
 
+	@Override
+	public boolean renderFlowerPot(NBTTagCompound compound, IBlockAccess blockAccess, Block block, int x, int y, int z, RenderBlocks render) {
+		Tessellator tess = Tessellator.instance;
+		tess.addTranslation(0, 4F / 16F, 0);
+		boolean b = RenderSpecialFlower.renderCrossedSquares(blockAccess, block, x, y, z, 0.75F, false, render);
+		tess.addTranslation(0, -4F / 16F, 0);
+		return b;
+	}
 }
