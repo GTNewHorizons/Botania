@@ -285,6 +285,13 @@ public class TileCorporeaIndex extends TileCorporeaBase implements ICorporeaRequ
 			}
 		}
 
+		public static boolean hasNearbyIndexes(EntityPlayer player) {
+			for(TileCorporeaIndex index : indexes)
+				if(isInRangeOfIndex(player, index) && index.worldObj.isRemote == player.worldObj.isRemote)
+					return true;
+			return false;
+		}
+
 		public static List<TileCorporeaIndex> getNearbyIndexes(EntityPlayer player) {
 			List<TileCorporeaIndex> indexList = new ArrayList<>();
 			for(TileCorporeaIndex index : indexes)
@@ -296,7 +303,7 @@ public class TileCorporeaIndex extends TileCorporeaBase implements ICorporeaRequ
 		@Override
 		@SideOnly(Side.CLIENT)
 		public boolean shouldAutoComplete() {
-			return !getNearbyIndexes(Minecraft.getMinecraft().thePlayer).isEmpty();
+			return hasNearbyIndexes(Minecraft.getMinecraft().thePlayer);
 		}
 
 	}

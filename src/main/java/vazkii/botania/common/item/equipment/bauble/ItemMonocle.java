@@ -33,6 +33,7 @@ import vazkii.botania.api.item.ICosmeticAttachable;
 import vazkii.botania.api.item.ICosmeticBauble;
 import vazkii.botania.common.lib.LibItemNames;
 import baubles.api.BaubleType;
+import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -104,8 +105,12 @@ public class ItemMonocle extends ItemBauble implements IBurstViewerBauble, ICosm
 	}
 
 	public static boolean hasMonocle(EntityPlayer player) {
+		return hasMonocle(PlayerHandler.getPlayerBaubles(player));
+	}
+
+	public static boolean hasMonocle(InventoryBaubles inv) {
 		for(int i = 0; i < 4; i++) {
-			ItemStack stack = PlayerHandler.getPlayerBaubles(player).getStackInSlot(i);
+			ItemStack stack = inv.getStackInSlot(i);
 			if(stack != null) {
 				Item item = stack.getItem();
 				if(item instanceof IBurstViewerBauble)

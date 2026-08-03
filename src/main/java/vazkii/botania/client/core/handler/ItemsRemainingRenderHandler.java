@@ -33,6 +33,7 @@ public final class ItemsRemainingRenderHandler {
 
 	private static ItemStack stack;
 	private static int ticks, count;
+	private static String cachedText;
 
 	@SideOnly(Side.CLIENT)
 	public static void render(ScaledResolution resolution, float partTicks) {
@@ -62,17 +63,7 @@ public final class ItemsRemainingRenderHandler {
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 			GL11.glEnable(GL11.GL_BLEND);
 
-			String text = EnumChatFormatting.GREEN + stack.getDisplayName();
-			if(count >= 0) {
-				int max = stack.getMaxStackSize();
-				int stacks = count / max;
-				int rem = count % max;
-
-				if(stacks == 0)
-					text = "" + count;
-				else text = count + " (" + EnumChatFormatting.AQUA + stacks + EnumChatFormatting.RESET + "*" + EnumChatFormatting.GRAY + max + EnumChatFormatting.RESET + "+" + EnumChatFormatting.YELLOW + rem + EnumChatFormatting.RESET + ")";
-			} else if(count == -1)
-				text = "\u221E";
+			String text = cachedText;
 
 			int color = 0x00FFFFFF | (int) (alpha * 0xFF) << 24;
 			mc.fontRenderer.drawStringWithShadow(text, x + 20, y + 6, color);
@@ -92,6 +83,22 @@ public final class ItemsRemainingRenderHandler {
 		ItemsRemainingRenderHandler.stack = stack;
 		ItemsRemainingRenderHandler.count = count;
 		ticks = stack == null ? 0 : maxTicks;
+
+		cachedText = "";
+		if(stack != null) {
+			String text = EnumChatFormatting.GREEN + stack.getDisplayName();
+			if(count >= 0) {
+				int max = stack.getMaxStackSize();
+				int stacks = count / max;
+				int rem = count % max;
+
+				if(stacks == 0)
+					text = "" + count;
+				else text = count + " (" + EnumChatFormatting.AQUA + stacks + EnumChatFormatting.RESET + "*" + EnumChatFormatting.GRAY + max + EnumChatFormatting.RESET + "+" + EnumChatFormatting.YELLOW + rem + EnumChatFormatting.RESET + ")";
+			} else if(count == -1)
+				text = "\u221E";
+			cachedText = text;
+		}
 	}
 
 	public static void set(EntityPlayer player, ItemStack displayStack, Pattern pattern) {

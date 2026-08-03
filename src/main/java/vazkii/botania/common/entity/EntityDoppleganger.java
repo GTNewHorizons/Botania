@@ -869,6 +869,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 	private static Rectangle barRect;
 	@SideOnly(Side.CLIENT)
 	private static Rectangle hpBarRect;
+	private static ItemStack skullStack;
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -894,11 +895,12 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 		int py = y + 12;
 
 		Minecraft mc = Minecraft.getMinecraft();
-		ItemStack stack = new ItemStack(Items.skull, 1, 3);
+		if(skullStack == null)
+			skullStack = new ItemStack(Items.skull, 1, 3);
 		mc.renderEngine.bindTexture(TextureMap.locationItemsTexture);
 		net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
 		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-		RenderItem.getInstance().renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, stack, px, py);
+		RenderItem.getInstance().renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, skullStack, px, py);
 		net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
 
 		boolean unicode = mc.fontRenderer.getUnicodeFlag();
