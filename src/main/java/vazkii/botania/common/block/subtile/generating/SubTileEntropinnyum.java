@@ -101,6 +101,7 @@ public class SubTileEntropinnyum extends SubTileGenerating {
             if (world.isRemote || mana != 0 || !(Math.abs(supertile.xCoord - posX) <= RANGE && Math.abs(supertile.yCoord - posY) <= RANGE && Math.abs(supertile.zCoord - posZ) <= RANGE)) {
                 return false;
             }
+			if (explosionSource == null) return false;
 
             explosionSource.setDead();
             mana += getMaxMana();
