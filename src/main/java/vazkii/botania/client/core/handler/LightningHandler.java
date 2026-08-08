@@ -2,10 +2,10 @@
  * This class was created by <Vazkii/ChickenBones>. It's distributed as
  * part of the Botania Mod. Get the Source Code in github:
  * https://github.com/Vazkii/Botania
- * 
+ *
  * Botania is Open Source and distributed under the
  * Botania License: http://botaniamod.net/license.php
- * 
+ *
  * File Created @ [Feb 3, 2014, 9:05:38 PM (GMT)]
  */
 package vazkii.botania.client.core.handler;
@@ -67,14 +67,13 @@ public class LightningHandler {
 		profiler.endStartSection("lightning");
 
 		float frame = event.partialTicks;
-		Entity entity = Minecraft.getMinecraft().thePlayer;
 		TextureManager render = Minecraft.getMinecraft().renderEngine;
 
-		interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * frame;
-		interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * frame;
-		interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * frame;
-
 		Entity viewEntity = Minecraft.getMinecraft().renderViewEntity;
+		interpPosX = viewEntity.lastTickPosX + (viewEntity.posX - viewEntity.lastTickPosX) * frame;
+		interpPosY = viewEntity.lastTickPosY + (viewEntity.posY - viewEntity.lastTickPosY) * frame;
+		interpPosZ = viewEntity.lastTickPosZ + (viewEntity.posZ - viewEntity.lastTickPosZ) * frame;
+
 		scratchView.set(viewEntity.posX, viewEntity.posY + viewEntity.getEyeHeight(), viewEntity.posZ);
 
 		GL11.glPushMatrix();
