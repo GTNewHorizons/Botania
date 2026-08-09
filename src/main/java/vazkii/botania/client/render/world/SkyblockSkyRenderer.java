@@ -87,8 +87,8 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 		float f6;
 
 		float insideVoid = 0;
-		if(mc.thePlayer.posY <= -2)
-			insideVoid = (float) Math.min(1F, -(mc.thePlayer.posY + 2) / 30F);
+		if(viewEntity.posY <= -2)
+			insideVoid = (float) Math.min(1F, -(viewEntity.posY + 2) / 30F);
 		
 		f1 = Math.max(0F, f1 - insideVoid);
 		f2 = Math.max(0F, f2 - insideVoid);
