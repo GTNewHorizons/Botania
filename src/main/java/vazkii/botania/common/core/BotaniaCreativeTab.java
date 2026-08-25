@@ -221,6 +221,7 @@ public final class BotaniaCreativeTab extends CreativeTabs {
 			addItem(ModItems.odinRing);
 			addItem(ModItems.lokiRing);
 			addItem(ModItems.aesirRing);
+            addItem(ModItems.excaliber);
 		}
 
 		addItem(ModItems.baubleBox);
