@@ -69,6 +69,7 @@ public class EntitySpark extends Entity implements ISparkEntity {
 		super.onUpdate();
 
 		ISparkAttachable tile = getAttachedTile();
+        System.out.println("tile " + tile);
 		if(tile == null) {
 			if(!worldObj.isRemote)
 				setDead();
@@ -156,6 +157,7 @@ public class EntitySpark extends Entity implements ISparkEntity {
 				break;
 			}
 			case 3 : { // Recessive
+                System.out.println("Recessive");
 				for(ISparkEntity spark : allSparks) {
 					if(spark == this)
 						continue;
@@ -171,6 +173,7 @@ public class EntitySpark extends Entity implements ISparkEntity {
 
 		if(!transfers.isEmpty()) {
 			int manaTotal = Math.min(TRANSFER_RATE * transfers.size(), tile.getCurrentMana());
+            System.out.println("manaTotal " + (TRANSFER_RATE * transfers.size()) + " " + tile.getCurrentMana());
 			int manaForEach = manaTotal / transfers.size();
 			int manaSpent = 0;
 
@@ -188,13 +191,16 @@ public class EntitySpark extends Entity implements ISparkEntity {
 
 					particlesTowards((Entity) spark);
 				}
+                System.out.println("manaSpent " + manaSpent);
 				tile.recieveMana(-manaSpent);
+                System.out.println("new mana " + tile.getCurrentMana());
 			}
 		}
 
 		if(removeTransferants > 0)
 			removeTransferants--;
 		getTransfers();
+        System.out.println("end");
 	}
 
 	void particlesTowards(Entity e) {
