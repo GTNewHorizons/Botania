@@ -40,6 +40,13 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
             output = new PositionedStack(recipe.getOutput(), 111, 21);
         }
 
+        // Kept for Alfheim, which calls super(recipe, false) from its NEI handler.
+        @Deprecated
+        @SuppressWarnings("unused")
+        public CachedPetalApothecaryRecipe(RecipePetals recipe, boolean addCenterItem) {
+            this(recipe);
+        }
+
         public void setIngredients(List<Object> inputs) {
             float degreePerInput = 360F / inputs.size();
             float currentDegree = -90F;
@@ -74,10 +81,10 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
 
     @Override
     public String getOverlayIdentifier() {
-        return "botania.petalApothecary";
+        return getRecipeID();
     }
 
-    // Used by the Alfheim addon, identical to getOverlayIdentifier()
+    // Kept for Alfheim, which overrides this instead of getOverlayIdentifier().
     @Deprecated
     public String getRecipeID() {
         return "botania.petalApothecary";
