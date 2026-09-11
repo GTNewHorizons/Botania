@@ -42,9 +42,9 @@ public class RecipeHandlerPetalApothecary extends TemplateRecipeHandler {
 
         // Kept for Alfheim, which calls super(recipe, false) from its NEI handler.
         @Deprecated
+        @SuppressWarnings("unused")
         public CachedPetalApothecaryRecipe(RecipePetals recipe, boolean addCenterItem) {
             this(recipe);
-            if (addCenterItem) inputs.add(new PositionedStack(APOTHECARY, 73, 55));
         }
 
         public void setIngredients(List<Object> inputs) {
