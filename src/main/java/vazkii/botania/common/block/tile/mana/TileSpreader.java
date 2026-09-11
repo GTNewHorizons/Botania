@@ -302,7 +302,7 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 			long least = compound.getLong(TAG_UUID_LEAST);
 			UUID identity = getIdentifierUnsafe();
 			if(identity == null || most != identity.getMostSignificantBits() || least != identity.getLeastSignificantBits())
-				identity = new UUID(most, least);
+				this.identity = new UUID(most, least);
 		} else getIdentifier();
 
 		mana = compound.getInteger(TAG_MANA);
