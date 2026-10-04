@@ -22,13 +22,15 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.IShearable;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
@@ -121,22 +123,32 @@ public class BlockForestDrum extends BlockMod implements IManaTrigger, ILexicona
 			List<EntityLiving> shearables = new ArrayList<>();
 			ItemStack stack = new ItemStack(this, 1, 1);
 
+			FakePlayer milker = FakePlayerFactory.getMinecraft((WorldServer) world);
 			for(EntityLiving entity : entities) {
 				if(entity instanceof IShearable && ((IShearable) entity).isShearable(stack, world, (int) entity.posX, (int) entity.posY, (int) entity.posZ)) {
 					shearables.add(entity);
-				} else if(entity instanceof EntityCow) {
-					List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(entity.posX, entity.posY, entity.posZ, entity.posX + entity.width, entity.posY + entity.height, entity.posZ + entity.width));
+				} else if(entity instanceof EntityCow cow) {
+					List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, entity.boundingBox.copy().expand(0.5, 0.5, 0.5));
 					for(EntityItem item : items) {
 						ItemStack itemstack = item.getEntityItem();
-						if(itemstack != null && itemstack.getItem() == Items.bucket && !world.isRemote) {
+						if(itemstack != null && !cow.isBreedingItem(itemstack) && !world.isRemote) {
 							while(itemstack.stackSize > 0) {
-								EntityItem ent = entity.entityDropItem(new ItemStack(Items.milk_bucket), 1.0F);
+								ItemStack copy = itemstack.copy();
+								copy.stackSize = 1;
+								milker.inventory.mainInventory[0] = copy;
+								cow.interact(milker);
+                                if (milker.inventory.mainInventory[0] == null) {
+									itemstack.stackSize--;
+                                    break;
+                                } else if (milker.inventory.mainInventory[0].getItem() == itemstack.getItem()) {
+                                    break;
+                                }
+								EntityItem ent = entity.entityDropItem(milker.inventory.mainInventory[0], 1.0F);
 								ent.motionY += world.rand.nextFloat() * 0.05F;
 								ent.motionX += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.1F;
 								ent.motionZ += (world.rand.nextFloat() - world.rand.nextFloat()) * 0.1F;
-								itemstack.stackSize--;
 							}
-							item.setDead();
+							if (itemstack.stackSize == 0) item.setDead();
 						}
 					}
 				}
