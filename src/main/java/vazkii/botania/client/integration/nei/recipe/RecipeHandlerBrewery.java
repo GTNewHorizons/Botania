@@ -137,7 +137,7 @@ public class RecipeHandlerBrewery extends TemplateRecipeHandler {
 
             for (ItemStack emptyContainer : BrewHelper.getBrewContainers()) {
                 final ItemStack filledContainer = recipe.getOutput(emptyContainer);
-                if (result.isItemEqual(filledContainer) && Objects.equals(result.stackTagCompound, filledContainer.stackTagCompound)) {
+                if (filledContainer != null && result.isItemEqual(filledContainer) && Objects.equals(result.stackTagCompound, filledContainer.stackTagCompound)) {
                     arecipes.add(new CachedBreweryRecipe(recipe, emptyContainer));
                 }
             }
