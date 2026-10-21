@@ -85,6 +85,12 @@ public class ItemBlockSpecialFlower extends ItemBlockMod implements IRecipeKeyPr
 
 		sig.addTooltip(stack, player, infoList);
 
+		// Generation rate line, only present for generating flowers (see en_US.lang)
+		String genKey = "botania.generationRate." + type;
+		String genLoc = StatCollector.translateToLocal(genKey);
+		if(!genLoc.equals(genKey))
+			infoList.add(EnumChatFormatting.GRAY + genLoc);
+
 		if(ConfigHandler.referencesEnabled) {
 			String refUnlocalized = sig.getUnlocalizedLoreTextForStack(stack);
 			String refLocalized = StatCollector.translateToLocal(refUnlocalized);

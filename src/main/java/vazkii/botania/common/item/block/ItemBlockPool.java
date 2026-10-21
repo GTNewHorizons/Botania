@@ -25,9 +25,15 @@ public class ItemBlockPool extends ItemBlockWithMetadataAndName {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
-		if(stack.getItemDamage() == 1)
+		if(stack.getItemDamage() == 1) {
 			for(int i = 0; i < 2; i++)
 				infoList.add(StatCollector.translateToLocal("botaniamisc.creativePool" + i));
+			return;
+		}
+
+		// Mirrors TilePool.MAX_MANA / MAX_MANA_DILLUTED
+		int capacity = stack.getItemDamage() == 2 ? 10000 : 1000000;
+		infoList.add(StatCollector.translateToLocalFormatted("botaniamisc.poolStorage", String.format("%,d", capacity)));
 	}
 
 }
