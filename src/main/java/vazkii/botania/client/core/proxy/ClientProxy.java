@@ -381,24 +381,38 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void setExtraReach(EntityLivingBase entity, float reach) {
 		super.setExtraReach(entity, reach);
+		IExtendedPlayerController controller = getReachController(entity);
+		if(controller != null)
+			controller.setReachDistanceExtension(Math.max(0, controller.getReachDistanceExtension() + reach));
+	}
+
+	@Override
+	public void setClientExtraReach(EntityLivingBase entity, float reach) {
+		IExtendedPlayerController controller = getReachController(entity);
+		if(controller != null)
+			controller.setReachDistanceExtension(Math.max(0, reach));
+	}
+
+	private IExtendedPlayerController getReachController(EntityLivingBase entity) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayer player = mc.thePlayer;
 		// Player object might have changed, need to check the UUID.
-		if(entity.worldObj.isRemote && entity.getUniqueID().equals(player.getUniqueID())) {
-			if(!(mc.playerController instanceof IExtendedPlayerController)) {
-				GameType type = ReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, LibObfuscation.CURRENT_GAME_TYPE);
-				NetHandlerPlayClient net = ReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, LibObfuscation.NET_CLIENT_HANDLER);
-				BotaniaPlayerController controller = new BotaniaPlayerController(mc, net);
-				boolean isFlying = player.capabilities.isFlying;
-				boolean allowFlying = player.capabilities.allowFlying;
-				controller.setGameType(type);
-				player.capabilities.isFlying = isFlying;
-				player.capabilities.allowFlying = allowFlying;
-				mc.playerController = controller;
-			}
+		if(!entity.worldObj.isRemote || !entity.getUniqueID().equals(player.getUniqueID()))
+			return null;
 
-			((IExtendedPlayerController) mc.playerController).setReachDistanceExtension(Math.max(0, ((IExtendedPlayerController) mc.playerController).getReachDistanceExtension() + reach));
+		if(!(mc.playerController instanceof IExtendedPlayerController)) {
+			GameType type = ReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, LibObfuscation.CURRENT_GAME_TYPE);
+			NetHandlerPlayClient net = ReflectionHelper.getPrivateValue(PlayerControllerMP.class, mc.playerController, LibObfuscation.NET_CLIENT_HANDLER);
+			BotaniaPlayerController controller = new BotaniaPlayerController(mc, net);
+			boolean isFlying = player.capabilities.isFlying;
+			boolean allowFlying = player.capabilities.allowFlying;
+			controller.setGameType(type);
+			player.capabilities.isFlying = isFlying;
+			player.capabilities.allowFlying = allowFlying;
+			mc.playerController = controller;
 		}
+
+		return (IExtendedPlayerController) mc.playerController;
 	}
 
 	@Override
