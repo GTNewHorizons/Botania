@@ -171,10 +171,11 @@ public class EntitySpark extends Entity implements ISparkEntity {
 
 		if(!transfers.isEmpty()) {
 			int manaTotal = Math.min(TRANSFER_RATE * transfers.size(), tile.getCurrentMana());
-			int manaForEach = manaTotal / transfers.size();
-			int manaSpent = 0;
-
-			if(manaForEach > transfers.size()) {
+            if (manaTotal > 0){
+    			int manaForEach = manaTotal / transfers.size();
+                if (manaForEach == 0) manaForEach = 1;
+    			int manaSpent = 0;
+                
 				for(ISparkEntity spark : transfers) {
 					if(spark.getAttachedTile() == null || spark.getAttachedTile().isFull() || spark.areIncomingTransfersDone()) {
 						manaTotal -= manaForEach;
@@ -189,7 +190,7 @@ public class EntitySpark extends Entity implements ISparkEntity {
 					particlesTowards((Entity) spark);
 				}
 				tile.recieveMana(-manaSpent);
-			}
+            }
 		}
 
 		if(removeTransferants > 0)
