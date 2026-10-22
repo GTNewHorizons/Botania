@@ -464,8 +464,6 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 	}
 
 	public EntityManaBurst getBurst(boolean fake) {
-		EntityManaBurst burst = new EntityManaBurst(this, fake);
-
 		boolean dreamwood = isDreamwood();
 		boolean ultra = isULTRA_SPREADER();
 		int maxMana = ultra ? 640 : dreamwood ? 240 : 160;
@@ -480,29 +478,31 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 		if(lens != null && lens.getItem() instanceof ILensEffect)
 			((ILensEffect) lens.getItem()).apply(lens, props);
 
-		burst.setSourceLens(lens);
-		if(getCurrentMana() >= props.maxMana || fake) {
-			if(mapmakerOverride) {
-				burst.setColor(mmForcedColor);
-				burst.setMana(mmForcedManaPayload);
-				burst.setStartingMana(mmForcedManaPayload);
-				burst.setMinManaLoss(mmForcedTicksBeforeManaLoss);
-				burst.setManaLossPerTick(mmForcedManaLossPerTick);
-				burst.setGravity(mmForcedGravity);
-				burst.setMotion(burst.motionX * mmForcedVelocityMultiplier, burst.motionY * mmForcedVelocityMultiplier, burst.motionZ * mmForcedVelocityMultiplier);
-			} else {
-				burst.setColor(props.color);
-				burst.setMana(props.maxMana);
-				burst.setStartingMana(props.maxMana);
-				burst.setMinManaLoss(props.ticksBeforeManaLoss);
-				burst.setManaLossPerTick(props.manaLossPerTick);
-				burst.setGravity(props.gravity);
-				burst.setMotion(burst.motionX * props.motionModifier, burst.motionY * props.motionModifier, burst.motionZ * props.motionModifier);
-			}
+		if(getCurrentMana() < props.maxMana && !fake)
+			return null;
 
-			return burst;
+		// Construct the entity only after the mana check, every new Entity takes a global entity ID
+		EntityManaBurst burst = new EntityManaBurst(this, fake);
+		burst.setSourceLens(lens);
+		if(mapmakerOverride) {
+			burst.setColor(mmForcedColor);
+			burst.setMana(mmForcedManaPayload);
+			burst.setStartingMana(mmForcedManaPayload);
+			burst.setMinManaLoss(mmForcedTicksBeforeManaLoss);
+			burst.setManaLossPerTick(mmForcedManaLossPerTick);
+			burst.setGravity(mmForcedGravity);
+			burst.setMotion(burst.motionX * mmForcedVelocityMultiplier, burst.motionY * mmForcedVelocityMultiplier, burst.motionZ * mmForcedVelocityMultiplier);
+		} else {
+			burst.setColor(props.color);
+			burst.setMana(props.maxMana);
+			burst.setStartingMana(props.maxMana);
+			burst.setMinManaLoss(props.ticksBeforeManaLoss);
+			burst.setManaLossPerTick(props.manaLossPerTick);
+			burst.setGravity(props.gravity);
+			burst.setMotion(burst.motionX * props.motionModifier, burst.motionY * props.motionModifier, burst.motionZ * props.motionModifier);
 		}
-		return null;
+
+		return burst;
 	}
 
 	public ILensControl getLensController(ItemStack stack) {
