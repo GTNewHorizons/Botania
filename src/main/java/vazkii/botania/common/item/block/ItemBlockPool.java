@@ -16,6 +16,9 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
+import vazkii.botania.api.subtile.ManaInfoTier;
+import vazkii.botania.common.block.tile.mana.TilePool;
+import vazkii.botania.common.core.handler.ConfigHandler;
 
 public class ItemBlockPool extends ItemBlockWithMetadataAndName {
 
@@ -25,15 +28,25 @@ public class ItemBlockPool extends ItemBlockWithMetadataAndName {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
-		if(stack.getItemDamage() == 1) {
+		int meta = stack.getItemDamage();
+		if(meta == 1) {
 			for(int i = 0; i < 2; i++)
 				infoList.add(StatCollector.translateToLocal("botaniamisc.creativePool" + i));
 			return;
 		}
 
-		// Mirrors TilePool.MAX_MANA / MAX_MANA_DILLUTED
-		int capacity = stack.getItemDamage() == 2 ? 10000 : 1000000;
-		infoList.add(StatCollector.translateToLocalFormatted("botaniamisc.poolStorage", String.format("%,d", capacity)));
+		int mode = ConfigHandler.manaInfoTooltips;
+		if(mode == 0)
+			return;
+
+		boolean diluted = meta == 2;
+		if(mode == 2) {
+			int capacity = diluted ? TilePool.MAX_MANA_DILLUTED : TilePool.MAX_MANA;
+			infoList.add(StatCollector.translateToLocalFormatted("botaniamisc.poolStorage", String.format("%,d", capacity)));
+		} else {
+			ManaInfoTier tier = diluted ? ManaInfoTier.LOW : ManaInfoTier.HIGH;
+			infoList.add(StatCollector.translateToLocalFormatted("botania.manaInfo.storage", StatCollector.translateToLocal(tier.getUnlocalizedName())));
+		}
 	}
 
 }

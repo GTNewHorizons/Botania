@@ -65,6 +65,12 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 
 	private static final int MAX_MANA = 1000;
 	private static final int ULTRA_MAX_MANA = 6400;
+
+	public static final int BURST_MANA = 160;
+	public static final int BURST_MANA_DREAMWOOD = 240;
+	public static final int BURST_MANA_ULTRA = 640;
+	public static final float MANA_LOSS_PER_TICK = 4F;
+	public static final float MANA_LOSS_PER_TICK_ULTRA = 20F;
 	private static final int TICKS_ALLOWED_WITHOUT_PINGBACK = 20;
 	private static final double PINGBACK_EXPIRED_SEARCH_DISTANCE = 0.5;
 
@@ -468,10 +474,10 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 
 		boolean dreamwood = isDreamwood();
 		boolean ultra = isULTRA_SPREADER();
-		int maxMana = ultra ? 640 : dreamwood ? 240 : 160;
+		int maxMana = ultra ? BURST_MANA_ULTRA : dreamwood ? BURST_MANA_DREAMWOOD : BURST_MANA;
 		int color = isRedstone() ? 0xFF2020 : dreamwood ? 0xFF45C4 : 0x20FF20;
 		int ticksBeforeManaLoss = ultra ? 120 : dreamwood ? 80 : 60;
-		float manaLossPerTick = ultra ? 20F : 4F;
+		float manaLossPerTick = ultra ? MANA_LOSS_PER_TICK_ULTRA : MANA_LOSS_PER_TICK;
 		float motionModifier = ultra ? 2F : dreamwood ? 1.25F : 1F;
 		float gravity = 0F;
 		BurstProperties props = new BurstProperties(maxMana, ticksBeforeManaLoss, manaLossPerTick, gravity, motionModifier, color);

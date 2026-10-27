@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.BotaniaAPI;
+import vazkii.botania.api.subtile.ManaInfoTier;
 import vazkii.botania.api.subtile.SubTileEntity;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.block.corporea.BlockCorporeaCrystalCube;
@@ -485,6 +486,24 @@ public final class ModBlocks {
 		BotaniaAPI.registerSubTile(LibBlockNames.SUBTILE_SPECTROLUS, SubTileSpectrolus.class);
 		BotaniaAPI.registerSubTile(LibBlockNames.SUBTILE_DANDELIFEON, SubTileDandelifeon.class);
 		BotaniaAPI.registerSubTile(LibBlockNames.SUBTILE_RAFFLOWSIA, SubTileRafflowsia.class);
+
+		// Relative generation strength shown in Mana info tooltips; addons register their own flowers the same way
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_DAYBLOOM, ManaInfoTier.VERY_LOW);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_DAYBLOOM_PRIME, ManaInfoTier.VERY_LOW);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_NIGHTSHADE, ManaInfoTier.VERY_LOW);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_NIGHTSHADE_PRIME, ManaInfoTier.VERY_LOW);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_ARCANE_ROSE, ManaInfoTier.LOW);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_HYDROANGEAS, ManaInfoTier.LOW);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_ENDOFLAME, ManaInfoTier.MODERATE);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_KEKIMURUS, ManaInfoTier.MODERATE);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_MUNCHDEW, ManaInfoTier.MODERATE);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_SPECTROLUS, ManaInfoTier.MODERATE);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_NARSLIMMUS, ManaInfoTier.MODERATE);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_THERMALILY, ManaInfoTier.HIGH);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_GOURMARYLLIS, ManaInfoTier.HIGH);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_RAFFLOWSIA, ManaInfoTier.HIGH);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_ENTROPINNYUM, ManaInfoTier.HIGH);
+		BotaniaAPI.registerFlowerGenerationTier(LibBlockNames.SUBTILE_DANDELIFEON, ManaInfoTier.VERY_HIGH);
 
 		registerSubTileWithMini(LibBlockNames.SUBTILE_BELLETHORN, SubTileBellethorn.class);
 		BotaniaAPI.registerSubTile(LibBlockNames.SUBTILE_DREADTHORN, SubTileDreadthorn.class);

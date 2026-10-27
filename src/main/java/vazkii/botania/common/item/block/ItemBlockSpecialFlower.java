@@ -24,6 +24,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.lexicon.IRecipeKeyProvider;
+import vazkii.botania.api.subtile.ManaInfoTier;
 import vazkii.botania.api.subtile.SubTileEntity;
 import vazkii.botania.api.subtile.signature.SubTileSignature;
 import vazkii.botania.common.achievement.ModAchievements;
@@ -85,11 +86,22 @@ public class ItemBlockSpecialFlower extends ItemBlockMod implements IRecipeKeyPr
 
 		sig.addTooltip(stack, player, infoList);
 
-		// Generation rate line, only present for generating flowers (see en_US.lang)
-		String genKey = "botania.generationRate." + type;
-		String genLoc = StatCollector.translateToLocal(genKey);
-		if(!genLoc.equals(genKey))
-			infoList.add(EnumChatFormatting.GRAY + genLoc);
+		// Mana info line, driven by the config mode and the registered generation tier
+		int manaInfoMode = ConfigHandler.manaInfoTooltips;
+		ManaInfoTier genTier = BotaniaAPI.getFlowerGenerationTier(type);
+		if(manaInfoMode != 0 && genTier != null) {
+			String line = null;
+			if(manaInfoMode == 2) {
+				String genKey = "botania.generationRate." + type;
+				String genLoc = StatCollector.translateToLocal(genKey);
+				if(!genLoc.equals(genKey))
+					line = genLoc;
+			}
+			// Relative mode, or exact mode with no exact string available, falls back to the tier
+			if(line == null)
+				line = StatCollector.translateToLocalFormatted("botania.manaInfo.generation", StatCollector.translateToLocal(genTier.getUnlocalizedName()));
+			infoList.add(EnumChatFormatting.GRAY + line);
+		}
 
 		if(ConfigHandler.referencesEnabled) {
 			String refUnlocalized = sig.getUnlocalizedLoreTextForStack(stack);

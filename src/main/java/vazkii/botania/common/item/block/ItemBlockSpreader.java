@@ -14,6 +14,9 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
+import vazkii.botania.api.subtile.ManaInfoTier;
+import vazkii.botania.common.block.tile.mana.TileSpreader;
+import vazkii.botania.common.core.handler.ConfigHandler;
 
 public class ItemBlockSpreader extends ItemBlockWithMetadataAndName {
 
@@ -23,12 +26,20 @@ public class ItemBlockSpreader extends ItemBlockWithMetadataAndName {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
+		int mode = ConfigHandler.manaInfoTooltips;
+		if(mode == 0)
+			return;
+
 		int meta = stack.getItemDamage();
-		// Burst payload / mana loss per tick, mirrors TileSpreader.getBurst
-		int transfer = meta == 3 ? 640 : meta == 2 ? 240 : 160;
-		int loss = meta == 3 ? 20 : 4;
-		infoList.add(StatCollector.translateToLocalFormatted("botaniamisc.spreaderTransfer", transfer));
-		infoList.add(StatCollector.translateToLocalFormatted("botaniamisc.spreaderLoss", loss));
+		if(mode == 2) {
+			int transfer = meta == 3 ? TileSpreader.BURST_MANA_ULTRA : meta == 2 ? TileSpreader.BURST_MANA_DREAMWOOD : TileSpreader.BURST_MANA;
+			int loss = (int) (meta == 3 ? TileSpreader.MANA_LOSS_PER_TICK_ULTRA : TileSpreader.MANA_LOSS_PER_TICK);
+			infoList.add(StatCollector.translateToLocalFormatted("botaniamisc.spreaderTransfer", transfer));
+			infoList.add(StatCollector.translateToLocalFormatted("botaniamisc.spreaderLoss", loss));
+		} else {
+			ManaInfoTier tier = meta == 3 ? ManaInfoTier.HIGH : meta == 2 ? ManaInfoTier.MODERATE : ManaInfoTier.LOW;
+			infoList.add(StatCollector.translateToLocalFormatted("botania.manaInfo.transfer", StatCollector.translateToLocal(tier.getUnlocalizedName())));
+		}
 	}
 
 }
