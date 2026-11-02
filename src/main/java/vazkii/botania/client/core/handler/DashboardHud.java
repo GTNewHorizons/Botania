@@ -98,6 +98,14 @@ public final class DashboardHud {
 		return HudRegistry.beginRender(CORPOREA_HINT, resolution);
 	}
 
+	public static boolean beginCrosshairInfo(ScaledResolution resolution) {
+		return HudRegistry.beginRender(CROSSHAIR_INFO, resolution);
+	}
+
+	public static boolean beginFlightBar(ScaledResolution resolution) {
+		return HudRegistry.beginRender(FLIGHT_BAR, resolution);
+	}
+
 	public static void endRender() {
 		HudRegistry.endRender();
 	}

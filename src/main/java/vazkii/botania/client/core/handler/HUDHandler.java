@@ -86,7 +86,7 @@ public final class HUDHandler {
 		if(event.type == ElementType.HEALTH) {
 			profiler.startSection("botania-hud");
 			ItemStack amulet = PlayerHandler.getPlayerBaubles(mc.thePlayer).getStackInSlot(0);
-			if(amulet != null && amulet.getItem() == ModItems.flightTiara) {
+			if(amulet != null && amulet.getItem() == ModItems.flightTiara && !Botania.dashboardLoaded) {
 				profiler.startSection("flugelTiara");
 				ItemFlightTiara.renderHUD(event.resolution, mc.thePlayer, amulet);
 				profiler.endSection();
@@ -113,23 +113,33 @@ public final class HUDHandler {
 					if(pos != null && equippedStack.getItem() == ModItems.twigWand) {
 						renderWandModeDisplay(event.resolution);
 
-						if(block instanceof IWandHUD) {
+						if(block instanceof IWandHUD && beginCrosshairInfo(event.resolution)) {
 							profiler.startSection("wandItem");
 							((IWandHUD) block).renderHUD(mc, event.resolution, mc.theWorld, pos.blockX, pos.blockY, pos.blockZ);
 							profiler.endSection();
+							endCrosshairInfo();
 						}
-					} else if(pos != null && equippedStack.getItem() instanceof ILexicon)
+					} else if(pos != null && equippedStack.getItem() instanceof ILexicon && beginCrosshairInfo(event.resolution)) {
 						drawLexiconHUD(mc.thePlayer.getCurrentEquippedItem(), block, pos, event.resolution);
-					if(tile != null && tile instanceof TilePool)
+						endCrosshairInfo();
+					}
+					if(tile != null && tile instanceof TilePool && beginCrosshairInfo(event.resolution)) {
 						renderPoolRecipeHUD(event.resolution, (TilePool) tile, equippedStack);
+						endCrosshairInfo();
+					}
 				}
-				if(tile != null && tile instanceof TileAltar)
+				if(tile != null && tile instanceof TileAltar && beginCrosshairInfo(event.resolution)) {
 					((TileAltar) tile).renderHUD(mc, event.resolution);
-				else if(tile != null && tile instanceof TileRuneAltar)
+					endCrosshairInfo();
+				} else if(tile != null && tile instanceof TileRuneAltar && beginCrosshairInfo(event.resolution)) {
 					((TileRuneAltar) tile).renderHUD(mc, event.resolution);
+					endCrosshairInfo();
+				}
 
-				if(tile != null && tile instanceof TileCorporeaCrystalCube)
+				if(tile != null && tile instanceof TileCorporeaCrystalCube && beginCrosshairInfo(event.resolution)) {
 					renderCrystalCubeHUD(event.resolution, (TileCorporeaCrystalCube) tile);
+					endCrosshairInfo();
+				}
 			}
 
 			if(mc.currentScreen != null && mc.currentScreen instanceof GuiChat && TileCorporeaIndex.InputHandler.hasNearbyIndexes(mc.thePlayer)) {
@@ -138,23 +148,26 @@ public final class HUDHandler {
 				profiler.endSection();
 			}
 
-			if(MultiblockRenderHandler.currentMultiblock != null && MultiblockRenderHandler.anchor == null) {
+			if(MultiblockRenderHandler.currentMultiblock != null && MultiblockRenderHandler.anchor == null && beginCrosshairInfo(event.resolution)) {
 				profiler.startSection("multiblockRightClick");
 				String s = StatCollector.translateToLocal("botaniamisc.rightClickToAnchor");
 				mc.fontRenderer.drawStringWithShadow(s, event.resolution.getScaledWidth() / 2 - mc.fontRenderer.getStringWidth(s) / 2, event.resolution.getScaledHeight() / 2 - 30, 0xFFFFFF);
 				profiler.endSection();
+				endCrosshairInfo();
 			}
 
-			if(equippedStack != null && equippedStack.getItem() instanceof ItemCraftingHalo) {
+			if(equippedStack != null && equippedStack.getItem() instanceof ItemCraftingHalo && beginCrosshairInfo(event.resolution)) {
 				profiler.startSection("craftingHalo");
 				ItemCraftingHalo.renderHUD(event.resolution, mc.thePlayer, equippedStack);
 				profiler.endSection();
+				endCrosshairInfo();
 			}
 
-			if(equippedStack != null && equippedStack.getItem() instanceof ItemSextant) {
+			if(equippedStack != null && equippedStack.getItem() instanceof ItemSextant && beginCrosshairInfo(event.resolution)) {
 				profiler.startSection("sextant");
 				ItemSextant.renderHUD(event.resolution, mc.thePlayer, equippedStack);
 				profiler.endSection();
+				endCrosshairInfo();
 			}
 
 			/*if(equippedStack != null && equippedStack.getItem() == ModItems.flugelEye) {
@@ -166,10 +179,11 @@ public final class HUDHandler {
 			EntityPlayer player = mc.thePlayer;
 			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
 
-			if(ItemMonocle.hasMonocle(baubles)) {
+			if(ItemMonocle.hasMonocle(baubles) && beginCrosshairInfo(event.resolution)) {
 				profiler.startSection("monocle");
 				ItemMonocle.renderHUD(event.resolution, player);
 				profiler.endSection();
+				endCrosshairInfo();
 			}
 
 			profiler.startSection("manaBar");
@@ -215,11 +229,43 @@ public final class HUDHandler {
 			BossBarHandler.render(event.resolution);
 			profiler.endStartSection("itemsRemaining");
 			ItemsRemainingRenderHandler.render(event.resolution, event.partialTicks);
+			if(Botania.dashboardLoaded) {
+				profiler.endStartSection("flugelTiara");
+				renderFlightBarLast(event.resolution, player, baubles);
+			}
 			profiler.endSection();
 			profiler.endSection();
 
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 		}
+	}
+
+	/** Everything drawn around the crosshair is one element in Dashboard, so it moves together and keeps its layout. */
+	private static boolean beginCrosshairInfo(ScaledResolution res) {
+		return !Botania.dashboardLoaded || DashboardHud.beginCrosshairInfo(res);
+	}
+
+	private static void endCrosshairInfo() {
+		if(Botania.dashboardLoaded)
+			DashboardHud.endRender();
+	}
+
+	/**
+	 * With Dashboard, the flight bar is drawn here instead of with the health bar, so it does not move or hide with
+	 * it. Blending is set up like it is there.
+	 */
+	private void renderFlightBarLast(ScaledResolution res, EntityPlayer player, InventoryBaubles baubles) {
+		ItemStack amulet = baubles.getStackInSlot(0);
+		if(amulet == null || amulet.getItem() != ModItems.flightTiara || !DashboardHud.beginFlightBar(res))
+			return;
+
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		ItemFlightTiara.renderHUD(res, player, amulet);
+		GL11.glPopAttrib();
+		DashboardHud.endRender();
 	}
 
 	private void renderWandModeDisplay(ScaledResolution res) {
