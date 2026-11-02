@@ -27,6 +27,7 @@ import vazkii.botania.api.internal.ShaderCallback;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.core.helper.ShaderHelper;
 import vazkii.botania.client.lib.LibResources;
+import vazkii.botania.common.Botania;
 import vazkii.botania.common.core.helper.MathHelper;
 
 public final class BossBarHandler {
@@ -64,15 +65,19 @@ public final class BossBarHandler {
 		int fw = (int) ((double) fgRect.width * (currentBoss.getHealth() / currentBoss.getMaxHealth()));
 		int tx = c - mc.fontRenderer.getStringWidth(name) / 2;
 
-		GL11.glColor4f(1F, 1F, 1F, 1F);
-		currentBoss.bossBarRenderCallback(res, x, y);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		mc.renderEngine.bindTexture(currentBoss.getBossBarTexture());
-		drawBar(x, y, bgRect.x, bgRect.y, bgRect.width, bgRect.height, true);
-		drawBar(xf, yf, fgRect.x, fgRect.y, fw, fgRect.height, false);
-		mc.fontRenderer.drawStringWithShadow(name, tx, y - 10, 0xA2018C);
-		GL11.glEnable(GL11.GL_BLEND);
+		if(!Botania.dashboardLoaded || DashboardHud.beginBossBar(res)) {
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+			currentBoss.bossBarRenderCallback(res, x, y);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			mc.renderEngine.bindTexture(currentBoss.getBossBarTexture());
+			drawBar(x, y, bgRect.x, bgRect.y, bgRect.width, bgRect.height, true);
+			drawBar(xf, yf, fgRect.x, fgRect.y, fw, fgRect.height, false);
+			mc.fontRenderer.drawStringWithShadow(name, tx, y - 10, 0xA2018C);
+			GL11.glEnable(GL11.GL_BLEND);
+			if(Botania.dashboardLoaded)
+				DashboardHud.endRender();
+		}
 
 		EntityPlayer p = mc.thePlayer;
 		if(e.isDead || !p.worldObj.loadedEntityList.contains(e) || MathHelper.pointDistanceSpace(e.posX, e.posY, e.posZ, p.posX, p.posY, p.posZ) > 32)

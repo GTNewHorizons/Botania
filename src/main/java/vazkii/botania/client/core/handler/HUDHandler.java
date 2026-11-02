@@ -51,6 +51,7 @@ import vazkii.botania.api.wiki.IWikiProvider;
 import vazkii.botania.api.wiki.WikiHooks;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.lib.LibResources;
+import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.TileAltar;
 import vazkii.botania.common.block.tile.TileRuneAltar;
@@ -236,10 +237,14 @@ public final class HUDHandler {
 			int x = res.getScaledWidth() / 2 - mc.fontRenderer.getStringWidth(disp) / 2;
 			int y = res.getScaledHeight() - 70;
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			mc.fontRenderer.drawStringWithShadow(disp, x, y, color);
-			GL11.glDisable(GL11.GL_BLEND);
+			if(!Botania.dashboardLoaded || DashboardHud.beginWandMode(res)) {
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				mc.fontRenderer.drawStringWithShadow(disp, x, y, color);
+				GL11.glDisable(GL11.GL_BLEND);
+				if(Botania.dashboardLoaded)
+					DashboardHud.endRender();
+			}
 		}
 		profiler.endSection();
 	}
@@ -262,6 +267,9 @@ public final class HUDHandler {
 			else return;
 		}
 
+		if(Botania.dashboardLoaded && !DashboardHud.beginManaBar(res))
+			return;
+
 		int rgb = Color.HSBtoRGB(0.55F, (float) Math.min(1F, Math.sin(System.currentTimeMillis() / 200D) * 0.5 + 1F), 1F);
 		GL11.glColor4ub((byte) (rgb >> 16), (byte) (rgb >> 8), (byte) rgb, (byte) (255 - (rgb >> 16)));
 		mc.renderEngine.bindTexture(manaBar);
@@ -270,6 +278,8 @@ public final class HUDHandler {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		RenderHelper.drawTexturedModalRect(x, y, 0, 0, 251, width, 5);
 		GL11.glDisable(GL11.GL_BLEND);
+		if(Botania.dashboardLoaded)
+			DashboardHud.endRender();
 	}
 
 	private void renderPoolRecipeHUD(ScaledResolution res, TilePool tile, ItemStack stack) {
@@ -402,6 +412,9 @@ public final class HUDHandler {
 	}
 
 	static void renderNearIndexDisplay(ScaledResolution res) {
+		if(Botania.dashboardLoaded && !DashboardHud.beginCorporeaHint(res))
+			return;
+
 		Minecraft mc = Minecraft.getMinecraft();
 		String txt0 = StatCollector.translateToLocal("botaniamisc.nearIndex0");
 		String txt1 = EnumChatFormatting.GRAY + StatCollector.translateToLocal("botaniamisc.nearIndex1");
@@ -421,6 +434,8 @@ public final class HUDHandler {
 		mc.fontRenderer.drawStringWithShadow(txt0, x + 20, y, 0xFFFFFF);
 		mc.fontRenderer.drawStringWithShadow(txt1, x + 20, y + 14, 0xFFFFFF);
 		mc.fontRenderer.drawStringWithShadow(txt2, x + 20, y + 24, 0xFFFFFF);
+		if(Botania.dashboardLoaded)
+			DashboardHud.endRender();
 	}
 
 	public static void drawSimpleManaHUD(int color, int mana, int maxMana, String name, ScaledResolution res) {

@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -71,11 +72,34 @@ public final class DashboardHud {
 		setSample(FLIGHT_BAR, DashboardHud::drawFlightBarSample);
 		setSample(BOSS_BAR, DashboardHud::drawBossBarSample);
 		setSample(WAND_MODE, DashboardHud::drawWandModeSample);
-		setSample(CORPOREA_HINT, bounds -> HUDHandler.renderNearIndexDisplay(HudRegistry.getResolution()));
+		// Botania's own drawing, which moves itself
+		CORPOREA_HINT.setPreview((screenWidth, screenHeight) -> HUDHandler.renderNearIndexDisplay(HudRegistry.getResolution()));
 		setSample(CROSSHAIR_INFO, bounds -> drawCrosshairInfoSample());
 
 		for(HudElement element : new HudElement[] { MANA_BAR, FLIGHT_BAR, BOSS_BAR, WAND_MODE, CORPOREA_HINT, CROSSHAIR_INFO })
 			HudRegistry.register(element);
+	}
+
+	// False means the player hid the element, so skip drawing it and do not call endRender()
+
+	public static boolean beginManaBar(ScaledResolution resolution) {
+		return HudRegistry.beginRender(MANA_BAR, resolution);
+	}
+
+	public static boolean beginBossBar(ScaledResolution resolution) {
+		return HudRegistry.beginRender(BOSS_BAR, resolution);
+	}
+
+	public static boolean beginWandMode(ScaledResolution resolution) {
+		return HudRegistry.beginRender(WAND_MODE, resolution);
+	}
+
+	public static boolean beginCorporeaHint(ScaledResolution resolution) {
+		return HudRegistry.beginRender(CORPOREA_HINT, resolution);
+	}
+
+	public static void endRender() {
+		HudRegistry.endRender();
 	}
 
 	/** Drawn at the element's default place, and moved like the real one. */
