@@ -44,6 +44,7 @@ public class Botania {
 	public static boolean storageDrawersLoaded = false;
 	public static boolean structureLibLoaded = false;
 	public static boolean neiLoaded = false;
+	public static boolean dashboardLoaded = false;
 
 	public static ILightHelper lightHelper;
 
@@ -65,6 +66,7 @@ public class Botania {
 		storageDrawersLoaded = Loader.isModLoaded("StorageDrawers");
 		structureLibLoaded = Loader.isModLoaded("structurelib");
 		neiLoaded = Loader.isModLoaded("NotEnoughItems");
+		dashboardLoaded = Loader.isModLoaded("dashboard");
 		
 		lightHelper = coloredLightsLoaded ? new LightHelperColored() : new LightHelperVanilla();
 		proxy.preInit(event);

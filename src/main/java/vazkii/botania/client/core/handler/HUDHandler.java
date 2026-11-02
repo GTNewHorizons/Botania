@@ -401,7 +401,7 @@ public final class HUDHandler {
 		profiler.endSection();
 	}
 
-	private void renderNearIndexDisplay(ScaledResolution res) {
+	static void renderNearIndexDisplay(ScaledResolution res) {
 		Minecraft mc = Minecraft.getMinecraft();
 		String txt0 = StatCollector.translateToLocal("botaniamisc.nearIndex0");
 		String txt1 = EnumChatFormatting.GRAY + StatCollector.translateToLocal("botaniamisc.nearIndex1");

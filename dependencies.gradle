@@ -15,5 +15,6 @@ dependencies {
     compileOnly("net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev")
 
     compileOnly("com.github.GTNewHorizons:StructureLib:1.4.42:dev")
+    compileOnly("com.github.GTNewHorizons:Dashboard:1.0.10:api")
 }
 
