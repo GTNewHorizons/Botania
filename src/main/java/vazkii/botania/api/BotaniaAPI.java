@@ -46,6 +46,7 @@ import vazkii.botania.api.recipe.RecipeMiniFlower;
 import vazkii.botania.api.recipe.RecipePetals;
 import vazkii.botania.api.recipe.RecipePureDaisy;
 import vazkii.botania.api.recipe.RecipeRuneAltar;
+import vazkii.botania.api.subtile.ManaInfoTier;
 import vazkii.botania.api.subtile.SubTileEntity;
 import vazkii.botania.api.subtile.signature.BasicSignature;
 import vazkii.botania.api.subtile.signature.SubTileSignature;
@@ -82,6 +83,7 @@ public final class BotaniaAPI {
 	private static final Map<Class<? extends SubTileEntity>, SubTileSignature> subTileSignatures = new HashMap<>();
 	public static Set<String> subtilesForCreativeMenu = new LinkedHashSet<>();
 	public static Map<String, String> subTileMods = new HashMap<>();
+	public static Map<String, ManaInfoTier> flowerGenerationTiers = new HashMap<>();
 	public static BiMap<String, String> miniFlowers = HashBiMap.create();
 
 	public static Map<String, Integer> oreWeights = new HashMap<>();
@@ -491,6 +493,20 @@ public final class BotaniaAPI {
 	public static void registerSubTile(String key, Class<? extends SubTileEntity> subtileClass) {
 		subTiles.put(key, subtileClass);
 		subTileMods.put(key, Loader.instance().activeModContainer().getModId());
+	}
+
+	/**
+	 * Registers the relative generation strength of a generating flower, shown in Mana info tooltips.
+	 */
+	public static void registerFlowerGenerationTier(String key, ManaInfoTier tier) {
+		flowerGenerationTiers.put(key, tier);
+	}
+
+	/**
+	 * Gets the registered generation tier for a flower type, or null if none was registered.
+	 */
+	public static ManaInfoTier getFlowerGenerationTier(String key) {
+		return flowerGenerationTiers.get(key);
 	}
 
 	/**
