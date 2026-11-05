@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.block.subtile.functional;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +28,13 @@ import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileFunctional;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibObfuscation;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import vazkii.botania.utils.ReflectionUtils;
 
 public class SubTileTigerseye extends SubTileFunctional {
+
+	private static final Field TIME_SINCE_IGNITED = ReflectionUtils.findField(EntityCreeper.class, LibObfuscation.TIME_SINCE_IGNITED);
+	private static final Field TARGET_ENTITY_CLASS = ReflectionUtils.findField(EntityAIAvoidEntity.class, LibObfuscation.TARGET_ENTITY_CLASS);
+	private static final Field TARGET_CLASS = ReflectionUtils.findField(EntityAINearestAttackableTarget.class, LibObfuscation.TARGET_CLASS);
 
 	private static final int RANGE = 10;
 	private static final int RANGE_Y = 4;
@@ -58,7 +63,7 @@ public class SubTileTigerseye extends SubTileFunctional {
 				}
 
 			if(entity instanceof EntityCreeper) {
-				ReflectionHelper.setPrivateValue(EntityCreeper.class, (EntityCreeper) entity, 2, LibObfuscation.TIME_SINCE_IGNITED);
+				ReflectionUtils.setInt(TIME_SINCE_IGNITED, entity, 2);
 				entity.setAttackTarget(null);
 			}
 
@@ -71,16 +76,16 @@ public class SubTileTigerseye extends SubTileFunctional {
 	}
 
 	private boolean messWithRunAwayAI(EntityAIAvoidEntity aiEntry) {
-		if(ReflectionHelper.getPrivateValue(EntityAIAvoidEntity.class, aiEntry, LibObfuscation.TARGET_ENTITY_CLASS) == EntityOcelot.class) {
-			ReflectionHelper.setPrivateValue(EntityAIAvoidEntity.class, aiEntry, EntityPlayer.class, LibObfuscation.TARGET_ENTITY_CLASS);
+		if(ReflectionUtils.getObject(TARGET_ENTITY_CLASS, aiEntry) == EntityOcelot.class) {
+			ReflectionUtils.setObject(TARGET_ENTITY_CLASS, aiEntry, EntityPlayer.class);
 			return true;
 		}
 		return false;
 	}
 
 	private void messWithGetTargetAI(EntityAINearestAttackableTarget aiEntry) {
-		if(ReflectionHelper.getPrivateValue(EntityAINearestAttackableTarget.class, aiEntry, LibObfuscation.TARGET_CLASS) == EntityPlayer.class)
-			ReflectionHelper.setPrivateValue(EntityAINearestAttackableTarget.class, aiEntry, EntityEnderCrystal.class, LibObfuscation.TARGET_CLASS); // Something random that won't be around
+		if(ReflectionUtils.getObject(TARGET_CLASS, aiEntry) == EntityPlayer.class)
+			ReflectionUtils.setObject(TARGET_CLASS, aiEntry, EntityEnderCrystal.class); // Something random that won't be around
 	}
 
 	@Override

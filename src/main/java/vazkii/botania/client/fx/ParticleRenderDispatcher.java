@@ -28,6 +28,14 @@ public final class ParticleRenderDispatcher {
 	// Called from LightningHandler.onRenderWorldLast since that was
 	// already registered. /shrug
 	public static void dispatch() {
+		if(FXSparkle.queuedRenders.isEmpty() && FXSparkle.queuedCorruptRenders.isEmpty() && FXWisp.queuedRenders.isEmpty() && FXWisp.queuedDepthIgnoringRenders.isEmpty()) {
+			sparkleFxCount = 0;
+			fakeSparkleFxCount = 0;
+			wispFxCount = 0;
+			depthIgnoringWispFxCount = 0;
+			return;
+		}
+
 		Tessellator tessellator = Tessellator.instance;
 
 		Profiler profiler = Minecraft.getMinecraft().mcProfiler;

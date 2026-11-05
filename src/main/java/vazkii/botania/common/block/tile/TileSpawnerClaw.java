@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.block.tile;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -24,11 +25,18 @@ import net.minecraft.util.WeightedRandom;
 import vazkii.botania.api.mana.IManaReceiver;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.lib.LibObfuscation;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import vazkii.botania.utils.ReflectionUtils;
 
 public class TileSpawnerClaw extends TileMod implements IManaReceiver {
 
 	private static final String TAG_MANA = "mana";
+
+	private static final Field SPAWN_COUNT = ReflectionUtils.findField(MobSpawnerBaseLogic.class, LibObfuscation.SPAWN_COUNT);
+	private static final Field SPAWN_RANGE = ReflectionUtils.findField(MobSpawnerBaseLogic.class, LibObfuscation.SPAWN_RANGE);
+	private static final Field MAX_NEARBY_ENTITIES = ReflectionUtils.findField(MobSpawnerBaseLogic.class, LibObfuscation.MAX_NEARBY_ENTITIES);
+	private static final Field MAX_SPAWN_DELAY = ReflectionUtils.findField(MobSpawnerBaseLogic.class, LibObfuscation.MAX_SPAWN_DELAY);
+	private static final Field MIN_SPAWN_DELAY = ReflectionUtils.findField(MobSpawnerBaseLogic.class, LibObfuscation.MIN_SPAWN_DELAY);
+	private static final Field POTENTIAL_ENTITY_SPAWNS = ReflectionUtils.findField(MobSpawnerBaseLogic.class, LibObfuscation.POTENTIAL_ENTITY_SPAWNS);
 
 	int mana = 0;
 
@@ -61,9 +69,9 @@ public class TileSpawnerClaw extends TileMod implements IManaReceiver {
 
 				boolean flag = false;
 
-				int spawnCount = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.SPAWN_COUNT);
-				int spawnRange = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.SPAWN_RANGE);
-				int maxNearbyEntities = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.MAX_NEARBY_ENTITIES);
+				int spawnCount = ReflectionUtils.getInt(SPAWN_COUNT, logic);
+				int spawnRange = ReflectionUtils.getInt(SPAWN_RANGE, logic);
+				int maxNearbyEntities = ReflectionUtils.getInt(MAX_NEARBY_ENTITIES, logic);
 
 				for(int i = 0; i < spawnCount; ++i) {
 					Entity entity = EntityList.createEntityByName(logic.getEntityNameToSpawn(), logic.getSpawnerWorld());
@@ -103,9 +111,9 @@ public class TileSpawnerClaw extends TileMod implements IManaReceiver {
 	}
 
 	private void resetTimer(MobSpawnerBaseLogic logic) {
-		int maxSpawnDelay = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.MAX_SPAWN_DELAY);
-		int minSpawnDelay = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.MIN_SPAWN_DELAY);
-		List<MobSpawnerBaseLogic.WeightedRandomMinecart> potentialEntitySpawns = ReflectionHelper.getPrivateValue(MobSpawnerBaseLogic.class, logic, LibObfuscation.POTENTIAL_ENTITY_SPAWNS);
+		int maxSpawnDelay = ReflectionUtils.getInt(MAX_SPAWN_DELAY, logic);
+		int minSpawnDelay = ReflectionUtils.getInt(MIN_SPAWN_DELAY, logic);
+		List<MobSpawnerBaseLogic.WeightedRandomMinecart> potentialEntitySpawns = (List<MobSpawnerBaseLogic.WeightedRandomMinecart>) ReflectionUtils.getObject(POTENTIAL_ENTITY_SPAWNS, logic);
 
 		if(maxSpawnDelay <= minSpawnDelay)
 			logic.spawnDelay = minSpawnDelay;

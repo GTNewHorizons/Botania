@@ -10,6 +10,7 @@
  */
 package vazkii.botania.client.render.world;
 
+import java.lang.reflect.Field;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -28,7 +30,7 @@ import org.lwjgl.opengl.GL11;
 import vazkii.botania.client.core.handler.ClientTickHandler;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.lib.LibObfuscation;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import vazkii.botania.utils.ReflectionUtils;
 
 public class SkyblockSkyRenderer extends IRenderHandler {
 
@@ -45,25 +47,48 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 		new ResourceLocation(LibResources.MISC_PLANET + "5.png")
 	};
 
+	private static final Field GL_SKY_LIST = ReflectionUtils.findField(RenderGlobal.class, LibObfuscation.GL_SKY_LIST);
+	private static final Field STAR_GL_CALL_LIST = ReflectionUtils.findField(RenderGlobal.class, LibObfuscation.STAR_GL_CALL_LIST);
+
+	// rainbow angles are deterministic per in-game day
+	private static int lastRainbowDay = -1;
+	private static float rainbowAngle1, rainbowAngle2;
+
+	// sky color samples, interpolated across ticks by partialTicks
+	private static int lastSkySampleTick = -1;
+	private static float skyRed0, skyGreen0, skyBlue0;
+	private static float skyRed1, skyGreen1, skyBlue1;
+
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc) {
-		boolean test = false;
-		if(test)
-			return;
 
-		int glSkyList = ReflectionHelper.getPrivateValue(RenderGlobal.class, mc.renderGlobal, LibObfuscation.GL_SKY_LIST);
-		int starGLCallList = ReflectionHelper.getPrivateValue(RenderGlobal.class, mc.renderGlobal, LibObfuscation.STAR_GL_CALL_LIST);
+		int glSkyList = ReflectionUtils.getInt(GL_SKY_LIST, mc.renderGlobal);
+		int starGLCallList = ReflectionUtils.getInt(STAR_GL_CALL_LIST, mc.renderGlobal);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		Vec3 vec3 = world.getSkyColor(mc.renderViewEntity, partialTicks);
-		float f1 = (float)vec3.xCoord;
-		float f2 = (float)vec3.yCoord;
-		float f3 = (float)vec3.zCoord;
+		Entity viewEntity = mc.renderViewEntity;
+		int tick = ClientTickHandler.ticksInGame;
+		if(tick != lastSkySampleTick) {
+			if(lastSkySampleTick != -1) {
+				skyRed0 = skyRed1;
+				skyGreen0 = skyGreen1;
+				skyBlue0 = skyBlue1;
+			}
+			Vec3 sample = world.getSkyColor(viewEntity, 1.0F);
+			skyRed1 = (float) sample.xCoord;
+			skyGreen1 = (float) sample.yCoord;
+			skyBlue1 = (float) sample.zCoord;
+			lastSkySampleTick = tick;
+		}
+		float frac = Math.min(1F, Math.max(0F, partialTicks));
+		float f1 = skyRed0 + (skyRed1 - skyRed0) * frac;
+		float f2 = skyGreen0 + (skyGreen1 - skyGreen0) * frac;
+		float f3 = skyBlue0 + (skyBlue1 - skyBlue0) * frac;
 		float f6;
 
 		float insideVoid = 0;
-		if(mc.thePlayer.posY <= -2)
-			insideVoid = (float) Math.min(1F, -(mc.thePlayer.posY + 2) / 30F);
+		if(viewEntity.posY <= -2)
+			insideVoid = (float) Math.min(1F, -(viewEntity.posY + 2) / 30F);
 		
 		f1 = Math.max(0F, f1 - insideVoid);
 		f2 = Math.max(0F, f2 - insideVoid);
@@ -244,9 +269,14 @@ public class SkyblockSkyRenderer extends IRenderHandler {
 
 		long time = world.getWorldTime() + 1000;
 		int day = (int) (time / 24000L);
-		Random rand = new Random(day * 0xFF);
-		float angle1 = rand.nextFloat() * 360F;
-		float angle2 = rand.nextFloat() * 360F;
+		if(lastRainbowDay != day) {
+			Random rand = new Random(day * 0xFF);
+			rainbowAngle1 = rand.nextFloat() * 360F;
+			rainbowAngle2 = rand.nextFloat() * 360F;
+			lastRainbowDay = day;
+		}
+		float angle1 = rainbowAngle1;
+		float angle2 = rainbowAngle2;
 		GL11.glColor4f(1F, 1F, 1F, effCelAng1 * (1F - insideVoid));
 		GL11.glRotatef(angle1, 0F, 1F, 0F);
 		GL11.glRotatef(angle2, 0F, 0F, 1F);

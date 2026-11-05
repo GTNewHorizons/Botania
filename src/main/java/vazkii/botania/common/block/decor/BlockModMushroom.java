@@ -13,6 +13,7 @@ package vazkii.botania.common.block.decor;
 import java.util.List;
 import java.util.Random;
 
+import com.gtnewhorizon.gtnhlib.api.IFlowerPottable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockMushroom;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -44,7 +45,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @Optional.Interface(modid = "Thaumcraft", iface = "thaumcraft.api.crafting.IInfusionStabiliser", striprefs = true)
-public class BlockModMushroom extends BlockMushroom implements IInfusionStabiliser, IHornHarvestable, ILexiconable {
+public class BlockModMushroom extends BlockMushroom implements IInfusionStabiliser, IHornHarvestable, ILexiconable, IFlowerPottable {
 
 	public static IIcon[] icons;
 	public int originalLight;

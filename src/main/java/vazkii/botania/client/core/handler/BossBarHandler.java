@@ -32,7 +32,9 @@ import vazkii.botania.common.core.helper.MathHelper;
 public final class BossBarHandler {
 
 	public static final ResourceLocation defaultBossBar = new ResourceLocation(LibResources.GUI_BOSS_BAR);
-	static IBotaniaBoss currentBoss;
+	private static IBotaniaBoss currentBoss;
+	private static Entity lastBossEntity;
+	private static String lastBossName;
 
 	private static final BarCallback barUniformCallback = new BarCallback();
 
@@ -47,7 +49,13 @@ public final class BossBarHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		Rectangle bgRect = currentBoss.getBossBarTextureRect();
 		Rectangle fgRect = currentBoss.getBossBarHPTextureRect();
-		String name = currentBoss.func_145748_c_().getFormattedText();
+		Entity e = (Entity) currentBoss;
+		String name;
+		if(lastBossEntity != e) {
+			name = currentBoss.func_145748_c_().getFormattedText();
+			lastBossEntity = e;
+			lastBossName = name;
+		} else name = lastBossName;
 		int c = res.getScaledWidth() / 2;
 		int x = c - bgRect.width / 2;
 		int y = 20;
@@ -66,7 +74,6 @@ public final class BossBarHandler {
 		mc.fontRenderer.drawStringWithShadow(name, tx, y - 10, 0xA2018C);
 		GL11.glEnable(GL11.GL_BLEND);
 
-		Entity e = (Entity) currentBoss;
 		EntityPlayer p = mc.thePlayer;
 		if(e.isDead || !p.worldObj.loadedEntityList.contains(e) || MathHelper.pointDistanceSpace(e.posX, e.posY, e.posZ, p.posX, p.posY, p.posZ) > 32)
 			currentBoss = null;

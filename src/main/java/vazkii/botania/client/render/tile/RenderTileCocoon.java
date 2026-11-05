@@ -33,7 +33,8 @@ public class RenderTileCocoon extends TileEntitySpecialRenderer {
 
 		float rot = 0F;
 		float modval = 60F - (float) cocoon.timePassed / (float) TileCocoon.TOTAL_TIME * 30F;
-		if(cocoon.timePassed % modval < 10) {
+		// At timePassed 0 with partialTicks 0 (inventory/NEI render), log(0) makes rot NaN and the model disappears.
+		if(cocoon.timePassed > 0 && cocoon.timePassed % modval < 10) {
 			float mod = (cocoon.timePassed + partialTicks) % modval;
 			float v = mod / 5 * (float) Math.PI * 2;
 			rot = (float) Math.sin(v) * (float) Math.log(cocoon.timePassed + partialTicks);

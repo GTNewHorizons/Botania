@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.block.subtile.functional;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import net.minecraft.entity.item.EntityItem;
@@ -21,9 +22,11 @@ import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileFunctional;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibObfuscation;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import vazkii.botania.utils.ReflectionUtils;
 
 public class SubTilePollidisiac extends SubTileFunctional {
+
+	private static final Field IN_LOVE = ReflectionUtils.findField(EntityAnimal.class, LibObfuscation.IN_LOVE);
 
 	private static final int RANGE = 6;
 
@@ -42,7 +45,7 @@ public class SubTilePollidisiac extends SubTileFunctional {
 				if(mana < manaCost)
 					break;
 
-				int love = ReflectionHelper.getPrivateValue(EntityAnimal.class, animal, LibObfuscation.IN_LOVE);
+				int love = ReflectionUtils.getInt(IN_LOVE, animal);
 				if(animal.getGrowingAge() == 0 && love <= 0) {
 					for(EntityItem item : items) {
 						if(item.age < (60 + slowdown) || item.isDead)
@@ -56,7 +59,7 @@ public class SubTilePollidisiac extends SubTileFunctional {
 
 							mana -= manaCost;
 
-							ReflectionHelper.setPrivateValue(EntityAnimal.class, animal, 1200, LibObfuscation.IN_LOVE);
+							ReflectionUtils.setInt(IN_LOVE, animal, 1200);
 							animal.setTarget(null);
 							supertile.getWorldObj().setEntityState(animal, (byte)18);
 						}

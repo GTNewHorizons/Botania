@@ -62,10 +62,13 @@ public class BlockAlfPortal extends BlockModContainer<TileAlfPortal> implements 
 
 	@Override
 	public boolean onUsedByWand(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, int side) {
-		boolean did = ((TileAlfPortal) world.getTileEntity(x, y, z)).onWanded();
-		if(did && player != null)
-			player.addStat(ModAchievements.elfPortalOpen, 1);
-		return did;
+		if(!world.isRemote) {
+			boolean did = ((TileAlfPortal) world.getTileEntity(x, y, z)).onWanded();
+			if(did && player != null)
+				player.addStat(ModAchievements.elfPortalOpen, 1);
+			return did;
+		}
+		return true;
 	}
 
 	@Override

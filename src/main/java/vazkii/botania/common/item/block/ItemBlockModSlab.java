@@ -21,14 +21,16 @@ import vazkii.botania.common.core.handler.ConfigHandler;
 import java.util.List;
 
 public class ItemBlockModSlab extends ItemSlab {
+	private final String unlocalizedName;
 
 	public ItemBlockModSlab(Block blockSlab) {
 		super(blockSlab, ((BlockModSlab)blockSlab).getSingleBlock(), ((BlockModSlab)blockSlab).getFullBlock(), false);
+		unlocalizedName = blockSlab.getUnlocalizedName().replace("tile.", "tile.botania:");
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return field_150939_a.getUnlocalizedName().replaceAll("tile.", "tile.botania:");
+		return unlocalizedName;
 	}
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {

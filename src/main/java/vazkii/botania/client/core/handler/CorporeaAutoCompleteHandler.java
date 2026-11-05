@@ -10,6 +10,7 @@
  */
 package vazkii.botania.client.core.handler;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -30,12 +31,15 @@ import org.lwjgl.input.Keyboard;
 
 import vazkii.botania.api.corporea.CorporeaHelper;
 import vazkii.botania.common.lib.LibObfuscation;
+import vazkii.botania.utils.ReflectionUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class CorporeaAutoCompleteHandler {
+
+	private static final Field COMPLETE_FLAG = ReflectionUtils.findField(GuiChat.class, LibObfuscation.COMPLETE_FLAG);
+	private static final Field INPUT_FIELD = ReflectionUtils.findField(GuiChat.class, LibObfuscation.INPUT_FIELD);
 
 	boolean isAutoCompleted = false;
 	String originalString = "";
@@ -83,7 +87,7 @@ public class CorporeaAutoCompleteHandler {
 		}
 		GuiChat chat = (GuiChat) screen;
 		if(isAutoCompleted) {
-			boolean valid = ReflectionHelper.getPrivateValue(GuiChat.class, chat, LibObfuscation.COMPLETE_FLAG);
+			boolean valid = ReflectionUtils.getBoolean(COMPLETE_FLAG, chat);
 			if(!valid)
 				isAutoCompleted = false;
 		}
@@ -99,7 +103,7 @@ public class CorporeaAutoCompleteHandler {
 		if(!CorporeaHelper.shouldAutoComplete())
 			return;
 
-		GuiTextField inputField = ReflectionHelper.getPrivateValue(GuiChat.class, chat, LibObfuscation.INPUT_FIELD);
+		GuiTextField inputField = (GuiTextField) ReflectionUtils.getObject(INPUT_FIELD, chat);
 		if(!isAutoCompleted)
 			buildAutoCompletes(inputField, chat);
 		if(isAutoCompleted && !completions.isEmpty())
@@ -127,7 +131,7 @@ public class CorporeaAutoCompleteHandler {
 		if(completions.isEmpty())
 			return;
 		position = -1;
-		ReflectionHelper.setPrivateValue(GuiChat.class, chat, true, LibObfuscation.COMPLETE_FLAG);
+		ReflectionUtils.setBoolean(COMPLETE_FLAG, chat, true);
 		StringBuilder stringbuilder = new StringBuilder();
 		CompletionData data;
 		for(Iterator<CompletionData> iterator = completions.iterator(); iterator.hasNext(); stringbuilder.append(data.string)) {

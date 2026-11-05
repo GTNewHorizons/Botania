@@ -22,7 +22,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Set;
 
 public final class ItemNBTHelper {
 
@@ -221,6 +220,7 @@ public final class ItemNBTHelper {
 	 * NBT-friendly version of {@link codechicken.nei.recipe.TemplateRecipeHandler.CachedRecipe#contains(Collection, ItemStack)}
 	 */
 	public static boolean cachedRecipeContainsWithNBT(Collection<PositionedStack> ingredients, ItemStack ingredient) {
+		if (ingredients == null) return false;
 		for (PositionedStack stack : ingredients)
 			if (positionedStackContainsWithNBT(stack, ingredient))
 				return true;
@@ -232,6 +232,7 @@ public final class ItemNBTHelper {
 	 * NBT-friendly version of {@link codechicken.nei.PositionedStack#contains(ItemStack)}
 	 */
 	public static boolean positionedStackContainsWithNBT(PositionedStack stack, ItemStack ingredient) {
+		if (stack == null) return false;
 		for(ItemStack item : stack.items)
 			if(areStacksSameTypeCraftingWithNBT(item, ingredient))
 				return true;

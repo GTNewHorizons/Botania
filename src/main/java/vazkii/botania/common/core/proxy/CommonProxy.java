@@ -256,6 +256,13 @@ public class CommonProxy {
 			((EntityPlayerMP) entity).theItemInWorldManager.setBlockReachDistance(Math.max(5, ((EntityPlayerMP) entity).theItemInWorldManager.getBlockReachDistance() + reach));
 	}
 
+	/**
+	 * Sets (instead of adds to) the extra reach of the client player. No-op on the server.
+	 */
+	public void setClientExtraReach(EntityLivingBase entity, float reach) {
+		// NO-OP
+	}
+
 	public boolean openWikiPage(World world, Block block, MovingObjectPosition pos) {
 		return false;
 	}

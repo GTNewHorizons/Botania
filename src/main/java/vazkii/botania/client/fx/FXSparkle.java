@@ -68,16 +68,20 @@ public class FXSparkle extends EntityFX {
 		Minecraft.getMinecraft().renderEngine.bindTexture(ConfigHandler.matrixMode ? ObfuscationHelper.getParticleTexture() : particles);
 
 		tessellator.startDrawingQuads();
-		for(FXSparkle sparkle : queuedRenders)
-			sparkle.renderQueued(tessellator);
+		if(!queuedRenders.isEmpty()) {
+			for(FXSparkle sparkle : queuedRenders)
+				sparkle.renderQueued(tessellator);
+		}
 		tessellator.draw();
 
-		ShaderHelper.useShader(ShaderHelper.filmGrain);
-		tessellator.startDrawingQuads();
-		for(FXSparkle sparkle : queuedCorruptRenders)
-			sparkle.renderQueued(tessellator);
-		tessellator.draw();
-		ShaderHelper.releaseShader();
+		if(!queuedCorruptRenders.isEmpty()) {
+			ShaderHelper.useShader(ShaderHelper.filmGrain);
+			tessellator.startDrawingQuads();
+			for(FXSparkle sparkle : queuedCorruptRenders)
+				sparkle.renderQueued(tessellator);
+			tessellator.draw();
+			ShaderHelper.releaseShader();
+		}
 
 		queuedRenders.clear();
 		queuedCorruptRenders.clear();

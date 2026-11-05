@@ -13,6 +13,7 @@ package vazkii.botania.common.lexicon.page;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.lang.reflect.Field;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -33,14 +34,17 @@ import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.lexicon.LexiconRecipeMappings;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.lib.LibResources;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import vazkii.botania.common.core.helper.InventoryHelper;
+import vazkii.botania.utils.ReflectionUtils;
 
 public class PageCraftingRecipe extends PageRecipe {
 
 	private static final ResourceLocation craftingOverlay = new ResourceLocation(LibResources.GUI_CRAFTING_OVERLAY);
+
+	private static final Field RECIPE_WIDTH = ReflectionUtils.findField(ShapedOreRecipe.class, 4);
+	private static final Field RECIPE_HEIGHT = ReflectionUtils.findField(ShapedOreRecipe.class, 5);
 
 	List<IRecipe> recipes;
 	int ticksElapsed = 0;
@@ -134,8 +138,8 @@ public class PageCraftingRecipe extends PageRecipe {
 					renderItemAtGridPos(gui, 1 + x, 1 + y, shaped.recipeItems[y * shaped.recipeWidth + x], true);
 		} else if(recipe instanceof ShapedOreRecipe) {
 			ShapedOreRecipe shaped = (ShapedOreRecipe) recipe;
-			int width = (Integer) ReflectionHelper.getPrivateValue(ShapedOreRecipe.class, shaped, 4);
-			int height = (Integer) ReflectionHelper.getPrivateValue(ShapedOreRecipe.class, shaped, 5);
+			int width = ReflectionUtils.getInt(RECIPE_WIDTH, shaped);
+			int height = ReflectionUtils.getInt(RECIPE_HEIGHT, shaped);
 
 			for(int y = 0; y < height; y++)
 				for(int x = 0; x < width; x++) {

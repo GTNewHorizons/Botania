@@ -50,7 +50,7 @@ botaniamisc.clickToSee=Click to read
 botaniamisc.shiftToRemove=Shift-click to remove
 botaniamisc.clickToAdd=Add Bookmark
 botaniamisc.ratio=%sx Zoom (hover to zoom out)
-botaniamisc.neiratio=Zoom (shift to zoom out)
+botaniamisc.neiratio=%s Zoom (shift to zoom out)
 botaniamisc.bottleTooltip=It has an acquired taste
 botaniamisc.coarseDirt0=Coarse Dirt, grass
 botaniamisc.coarseDirt1=won't grow on it
@@ -160,6 +160,7 @@ botaniamisc.keyCategory=Botania
 #LOKI
 botaniamisc.toggleLoki=Ring of Loki Switch Key
 botaniamisc.ringOfLokiClear=Clear Ring of Loki Selection
+botaniamisc.ringOfLokiMirror=Toggle Ring of Loki Mirroring
 botaniamisc.lokiOn=On
 botaniamisc.lokiOff=Off
 botaniamisc.breaking=Breaking
@@ -183,6 +184,8 @@ botania.nei.runicAltar=Runic Altar
 botania.nei.pureDaisy=Pure Daisy
 botania.nei.lexica=Lexica Botania
 nei.options.keys.gui.botania_corporea_request=Corporea Request
+
+botania.nei.anySeed=Any Seed
 
 botania.nei.lexicaSeparator=Extra Info:
 botania.nei.lexicaNoInfo=(there's no Extra Info for this entry, sorry!)
