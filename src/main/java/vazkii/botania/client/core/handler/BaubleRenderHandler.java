@@ -35,6 +35,7 @@ import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.equipment.armor.terrasteel.ItemTerrasteelHelm;
 import baubles.common.container.InventoryBaubles;
+import baubles.api.BaublesApi;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -49,7 +50,7 @@ public final class BaubleRenderHandler {
 		InventoryBaubles inv = PlayerHandler.getPlayerBaubles(player);
 
 		dispatchRenders(inv, event, RenderType.BODY);
-		if(inv.getStackInSlot(3) != null)
+		if(BaublesApi.getRenderedBauble(inv, 3) != null)
 			renderManaTablet(event);
 
 		float yaw = player.prevRotationYawHead + (player.rotationYawHead - player.prevRotationYawHead) * event.partialRenderTick;
@@ -72,7 +73,7 @@ public final class BaubleRenderHandler {
 
 	private void dispatchRenders(InventoryBaubles inv, RenderPlayerEvent event, RenderType type) {
 		for(int i = 0; i < inv.getSizeInventory(); i++) {
-			ItemStack stack = inv.getStackInSlot(i);
+			ItemStack stack = BaublesApi.getRenderedBauble(inv, i);
 			if(stack != null) {
 				Item item = stack.getItem();
 

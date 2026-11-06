@@ -11,6 +11,7 @@
 package vazkii.botania.client.gui.box;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -27,6 +28,7 @@ public class ContainerBaubleBox extends Container {
 
 	InventoryBaubleBox baubleBoxInv;
 	InventoryBaubles baubles;
+	private final ItemStack[] baubleStacks;
 
 	public ContainerBaubleBox(EntityPlayer player) {
 		int i;
@@ -36,15 +38,13 @@ public class ContainerBaubleBox extends Container {
 		IInventory playerInv = player.inventory;
 		baubleBoxInv = new InventoryBaubleBox(player, slot);
 
-		baubles = new InventoryBaubles(player);
-		baubles.setEventHandler(this);
-		if(!player.worldObj.isRemote)
-			baubles.stackList = PlayerHandler.getPlayerBaubles(player).stackList;
+		baubles = PlayerHandler.getPlayerBaubles(player);
+		baubleStacks = baubles.stackList;
 
-		addSlotToContainer(new SlotBauble(baubles, BaubleType.AMULET, 0, 8, 8 + 0 * 18));
-		addSlotToContainer(new SlotBauble(baubles, BaubleType.RING,   1, 8, 8 + 1 * 18));
-		addSlotToContainer(new SlotBauble(baubles, BaubleType.RING,   2, 8, 8 + 2 * 18));
-		addSlotToContainer(new SlotBauble(baubles, BaubleType.BELT,   3, 8, 8 + 3 * 18));
+		addBaubleSlot(BaubleType.AMULET, 0);
+		addBaubleSlot(BaubleType.RING, 1);
+		addBaubleSlot(BaubleType.RING, 2);
+		addBaubleSlot(BaubleType.BELT, 3);
 
 		for(i = 0; i < 4; ++i)
 			for(j = 0; j < 6; ++j) {
@@ -66,11 +66,34 @@ public class ContainerBaubleBox extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		boolean can = baubleBoxInv.isUseableByPlayer(player);
-		if(!can)
-			onContainerClosed(player);
+		return baubleStacks == baubles.stackList && baubleBoxInv.isUseableByPlayer(player);
+	}
 
-		return can;
+	private void addBaubleSlot(BaubleType type, int index) {
+		addSlotToContainer(new SlotBauble(baubles, type, index, 8, 8 + index * 18) {
+			@Override
+			public boolean isItemValid(ItemStack stack) {
+				return baubleStacks == baubles.stackList && baubles.isItemValidForSlot(index, stack)
+						&& super.isItemValid(stack);
+			}
+		});
+	}
+
+	@Override
+	public void detectAndSendChanges() {
+		EntityPlayer player = baubleBoxInv.player;
+		if(!canInteractWith(player)) {
+			if(!player.worldObj.isRemote && player.openContainer == this)
+				player.closeScreen();
+			return;
+		}
+		super.detectAndSendChanges();
+	}
+
+	@Override
+	public ItemStack slotClick(int slot, int button, int mode, EntityPlayer player) {
+		if(!canInteractWith(player)) return null;
+		return super.slotClick(slot, button, mode, player);
 	}
 
 	@Override
@@ -78,22 +101,28 @@ public class ContainerBaubleBox extends Container {
 		super.onContainerClosed(player);
 		baubleBoxInv.pushInventory();
 
-		if(!player.worldObj.isRemote)
-			PlayerHandler.setPlayerBaubles(player, baubles);
+		if(player instanceof EntityPlayerMP serverPlayer && baubleStacks != baubles.stackList)
+			serverPlayer.sendContainerToPlayer(serverPlayer.inventoryContainer);
 	}
 
 	@Override
 	public void putStacksInSlots(ItemStack[] stacks) {
+		boolean previous = baubles.blockEvents;
 		baubles.blockEvents = true;
-		super.putStacksInSlots(stacks);
+		try {
+			super.putStacksInSlots(stacks);
+		} finally {
+			baubles.blockEvents = previous;
+		}
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+		if(!canInteractWith(player) || index < 0 || index >= inventorySlots.size()) return null;
 		ItemStack itemstack = null;
 		Slot slot = (Slot)inventorySlots.get(index);
 
-		if(slot != null && slot.getHasStack()) {
+		if(slot != null && slot.getHasStack() && slot.canTakeStack(player)) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
