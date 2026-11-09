@@ -42,7 +42,7 @@ import vazkii.botania.common.block.BlockModContainer;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.mana.TileSpreader;
 import vazkii.botania.common.item.ModItems;
-import vazkii.botania.common.item.block.ItemBlockWithMetadataAndName;
+import vazkii.botania.common.item.block.ItemBlockSpreader;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -67,7 +67,7 @@ public class BlockSpreader extends BlockModContainer<TileSpreader> implements IW
 
 	@Override
 	public Block setBlockName(String name) {
-		GameRegistry.registerBlock(this, ItemBlockWithMetadataAndName.class, name);
+		GameRegistry.registerBlock(this, ItemBlockSpreader.class, name);
 		return super.setBlockName(name);
 	}
 
