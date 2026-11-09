@@ -19,7 +19,7 @@ public final class LibMisc {
 	public static final String MOD_ID = "Botania";
 	public static final String MOD_NAME = MOD_ID;
 	public static final String VERSION = Tags.VERSION;
-	public static final String DEPENDENCIES = "required-after:Baubles;after:Thaumcraft;required-after:gtnhlib@[0.5.22,)";
+	public static final String DEPENDENCIES = "required-after:Baubles;after:Thaumcraft;required-after:gtnhlib@[0.5.22,);after:dashboard@[1.0.10,)";
 
 	// Network Contants
 	public static final String NETWORK_CHANNEL = MOD_ID;
