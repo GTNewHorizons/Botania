@@ -2,10 +2,10 @@
  * This class was created by <Vazkii>. It's distributed as
  * part of the Botania Mod. Get the Source Code in github:
  * https://github.com/Vazkii/Botania
- * 
+ *
  * Botania is Open Source and distributed under the
  * Botania License: http://botaniamod.net/license.php
- * 
+ *
  * File Created @ [Aug 21, 2014, 5:43:44 PM (GMT)]
  */
 package vazkii.botania.common.entity;
@@ -80,9 +80,6 @@ public class EntitySpark extends Entity implements ISparkEntity {
 		List<ISparkEntity> allSparks = null;
 		if(first || upgrade == 2 || upgrade == 3)
 			allSparks = SparkHelper.getSparksAround(worldObj, posX, posY, posZ);
-
-		if(first)
-			first = true;
 
 		Collection<ISparkEntity> transfers = getTransfers();
 
@@ -171,10 +168,11 @@ public class EntitySpark extends Entity implements ISparkEntity {
 
 		if(!transfers.isEmpty()) {
 			int manaTotal = Math.min(TRANSFER_RATE * transfers.size(), tile.getCurrentMana());
-			int manaForEach = manaTotal / transfers.size();
-			int manaSpent = 0;
+            if (manaTotal > 0){
+    			int manaForEach = manaTotal / transfers.size();
+                if (manaForEach == 0) manaForEach = 1;
+    			int manaSpent = 0;
 
-			if(manaForEach > transfers.size()) {
 				for(ISparkEntity spark : transfers) {
 					if(spark.getAttachedTile() == null || spark.getAttachedTile().isFull() || spark.areIncomingTransfersDone()) {
 						manaTotal -= manaForEach;
@@ -187,9 +185,13 @@ public class EntitySpark extends Entity implements ISparkEntity {
 					manaSpent += spend;
 
 					particlesTowards((Entity) spark);
+
+					if (manaSpent >= manaTotal) {
+						break;
+					}
 				}
 				tile.recieveMana(-manaSpent);
-			}
+            }
 		}
 
 		if(removeTransferants > 0)

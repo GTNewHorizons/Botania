@@ -167,7 +167,8 @@ public class TileAlfPortal extends TileMod {
 		} else closeNow = false;
 
 		if(closeNow) {
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 1 | 2);
+			if(!worldObj.isRemote)
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 1 | 2);
 			for(int i = 0; i < 36; i++)
 				blockParticle(meta);
 			closeNow = false;
@@ -175,7 +176,8 @@ public class TileAlfPortal extends TileMod {
 			if(newMeta == 0)
 				for(int i = 0; i < 36; i++)
 					blockParticle(meta);
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, newMeta, 1 | 2);
+			if(!worldObj.isRemote)
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, newMeta, 1 | 2);
 		} else if(explode) {
 			worldObj.createExplosion(null, xCoord + .5, yCoord + 2.0, zCoord + .5, 3f, true);
 			explode = false;
