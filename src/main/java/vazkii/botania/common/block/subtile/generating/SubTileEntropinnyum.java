@@ -27,11 +27,21 @@ import ic2.core.block.EntityIC2Explosive;
 public class SubTileEntropinnyum extends SubTileGenerating {
 
 	private static final int RANGE = 12;
+  private AxisAlignedBB box = null;
 
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-    AxisAlignedBB box = AxisAlignedBB.getBoundingBox(supertile.xCoord - RANGE, supertile.yCoord - RANGE, supertile.zCoord - RANGE, supertile.xCoord + RANGE + 1, supertile.yCoord + RANGE + 1, supertile.zCoord + RANGE + 1);
+    
+    if (box == null)
+      box = AxisAlignedBB.getBoundingBox(
+        supertile.xCoord - RANGE, 
+        supertile.yCoord - RANGE, 
+        supertile.zCoord - RANGE, 
+        supertile.xCoord + RANGE + 1, 
+        supertile.yCoord + RANGE + 1, 
+        supertile.zCoord + RANGE + 1
+      );
 
 		if(mana == 0) {
 			List<EntityTNTPrimed> tnts = supertile.getWorldObj().getEntitiesWithinAABB(EntityTNTPrimed.class, box);
@@ -81,14 +91,31 @@ public class SubTileEntropinnyum extends SubTileGenerating {
     if(!supertile.getWorldObj().isRemote) {
       e.setDead();
       mana += getMaxMana();
-      supertile.getWorldObj().playSoundEffect(e.posX, e.posY, e.posZ, "random.explode", 0.2F, (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
+      supertile.getWorldObj().playSoundEffect(
+        e.posX, 
+        e.posY, 
+        e.posZ, 
+        "random.explode", 
+        0.2F, 
+        (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F
+      );
       sync();
     }
   }
   
   private void showParticles(World world, double x, double y, double z) {
     for(int i = 0; i < 50; i++)
-      Botania.proxy.sparkleFX(world, x + Math.random() * 4 - 2, y+ Math.random() * 4 - 2, z + Math.random() * 4 - 2, 1F, (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, (float) (Math.random() * 0.65F + 1.25F), 12);
+      Botania.proxy.sparkleFX(
+        world, 
+        x + Math.random() * 4 - 2, 
+        y+ Math.random() * 4 - 2, 
+        z + Math.random() * 4 - 2, 
+        1F, 
+        (float) Math.random() * 0.25F, 
+        (float) Math.random() * 0.25F, 
+        (float) (Math.random() * 0.65F + 1.25F), 
+        12
+      );
 
     supertile.getWorldObj().spawnParticle("hugeexplosion", x, y, z, 1D, 0D, 0D);
     return;
