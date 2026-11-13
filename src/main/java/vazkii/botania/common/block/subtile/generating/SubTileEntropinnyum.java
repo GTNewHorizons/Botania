@@ -20,6 +20,7 @@ import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileGenerating;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.lexicon.LexiconData;
+import ic2.core.block.EntityIC2Explosive;
 
 public class SubTileEntropinnyum extends SubTileGenerating {
 
@@ -44,6 +45,23 @@ public class SubTileEntropinnyum extends SubTileGenerating {
 						Botania.proxy.sparkleFX(tnt.worldObj, tnt.posX + Math.random() * 4 - 2, tnt.posY + Math.random() * 4 - 2, tnt.posZ + Math.random() * 4 - 2, 1F, (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, (float) (Math.random() * 0.65F + 1.25F), 12);
 
 					supertile.getWorldObj().spawnParticle("hugeexplosion", tnt.posX, tnt.posY, tnt.posZ, 1D, 0D, 0D);
+					return;
+				}
+			}
+			List<EntityIC2Explosive> itnts = supertile.getWorldObj().getEntitiesWithinAABB(EntityIC2Explosive.class, AxisAlignedBB.getBoundingBox(supertile.xCoord - RANGE, supertile.yCoord - RANGE, supertile.zCoord - RANGE, supertile.xCoord + RANGE + 1, supertile.yCoord + RANGE + 1, supertile.zCoord + RANGE + 1));
+			for(EntityIC2Explosive itnt : itnts) {
+				if(itnt.fuse == 1 && !itnt.isDead && !supertile.getWorldObj().getBlock(MathHelper.floor_double(itnt.posX), MathHelper.floor_double(itnt.posY), MathHelper.floor_double(itnt.posZ)).getMaterial().isLiquid()) {
+					if(!supertile.getWorldObj().isRemote) {
+						itnt.setDead();
+						mana += getMaxMana();
+						supertile.getWorldObj().playSoundEffect(itnt.posX, itnt.posY, itnt.posZ, "random.explode", 0.2F, (1F + (supertile.getWorldObj().rand.nextFloat() - supertile.getWorldObj().rand.nextFloat()) * 0.2F) * 0.7F);
+						sync();
+					}
+
+					for(int i = 0; i < 50; i++)
+						Botania.proxy.sparkleFX(itnt.worldObj, itnt.posX + Math.random() * 4 - 2, itnt.posY + Math.random() * 4 - 2, itnt.posZ + Math.random() * 4 - 2, 1F, (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, (float) (Math.random() * 0.65F + 1.25F), 12);
+
+					supertile.getWorldObj().spawnParticle("hugeexplosion", itnt.posX, itnt.posY, itnt.posZ, 1D, 0D, 0D);
 					return;
 				}
 			}
