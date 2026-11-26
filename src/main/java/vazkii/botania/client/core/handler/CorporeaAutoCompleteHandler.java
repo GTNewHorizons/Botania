@@ -12,12 +12,14 @@ package vazkii.botania.client.core.handler;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,7 +28,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
-
+import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
 
 import vazkii.botania.api.corporea.CorporeaHelper;
@@ -36,30 +38,26 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
-public class CorporeaAutoCompleteHandler {
+@SideOnly(Side.CLIENT)
+public final class CorporeaAutoCompleteHandler {
 
 	private static final Field COMPLETE_FLAG = ReflectionUtils.findField(GuiChat.class, LibObfuscation.COMPLETE_FLAG);
 	private static final Field INPUT_FIELD = ReflectionUtils.findField(GuiChat.class, LibObfuscation.INPUT_FIELD);
 
-	boolean isAutoCompleted = false;
-	String originalString = "";
-	List<CompletionData> completions = new ArrayList<>();
-	int position;
+	private final TreeSet<String> itemNames = new TreeSet<>(String::compareToIgnoreCase);
+	private boolean hasItemList = false;
 
-	static TreeSet<String> itemNames = new TreeSet<>(
-			new Comparator<String>() {
-				@Override
-				public int compare(String arg0, String arg1) {
-					return arg0.compareToIgnoreCase(arg1);
-				}
-			});
-
+	private boolean isAutoCompleted = false;
+	private String originalString = "";
+	private List<CompletionData> completions = new ArrayList<>();
+	private int position;
 	private boolean tabLastTick = false;
 
-	public static void updateItemList() {
-		itemNames.clear();
-		Iterator<Item> iterator = Item.itemRegistry.iterator();
-		ArrayList<ItemStack> curList = new ArrayList<>();
+	private void generateItemList() {
+		hasItemList = true;
+		//noinspection unchecked
+		final Iterator<Item> iterator = Item.itemRegistry.iterator();
+		final ArrayList<ItemStack> curList = new ArrayList<>();
 
 		while(iterator.hasNext()) {
 			Item item = iterator.next();
@@ -69,9 +67,9 @@ public class CorporeaAutoCompleteHandler {
 				try {
 					item.getSubItems(item, (CreativeTabs) null, curList);
 					for(ItemStack stack : curList)
-						itemNames.add(CorporeaHelper.stripControlCodes(stack.getDisplayName().trim()));
+						itemNames.add(EnumChatFormatting.getTextWithoutFormattingCodes(stack.getDisplayName().trim()));
 				}
-				catch (Exception e) {}
+				catch (Exception _) {}
 			}
 		}
 	}
@@ -81,17 +79,16 @@ public class CorporeaAutoCompleteHandler {
 		if(event.phase != Phase.END)
 			return;
 		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-		if(!(screen instanceof GuiChat)) {
+		if(!(screen instanceof GuiChat chat)) {
 			isAutoCompleted = false;
 			return;
 		}
-		GuiChat chat = (GuiChat) screen;
 		if(isAutoCompleted) {
 			boolean valid = ReflectionUtils.getBoolean(COMPLETE_FLAG, chat);
 			if(!valid)
 				isAutoCompleted = false;
 		}
-		if(Keyboard.isKeyDown(15)) {
+		if(Keyboard.isKeyDown(Keyboard.KEY_TAB)) {
 			if(tabLastTick)
 				return;
 			tabLastTick = true;
@@ -104,10 +101,12 @@ public class CorporeaAutoCompleteHandler {
 			return;
 
 		GuiTextField inputField = (GuiTextField) ReflectionUtils.getObject(INPUT_FIELD, chat);
-		if(!isAutoCompleted)
-			buildAutoCompletes(inputField, chat);
-		if(isAutoCompleted && !completions.isEmpty())
-			advanceAutoComplete(inputField, chat);
+		if (inputField != null) {
+			if (!isAutoCompleted)
+				buildAutoCompletes(inputField, chat);
+			if (isAutoCompleted && !completions.isEmpty())
+				advanceAutoComplete(inputField, chat);
+		}
 	}
 
 	private void advanceAutoComplete(GuiTextField inputField, GuiChat chat) {
@@ -125,7 +124,7 @@ public class CorporeaAutoCompleteHandler {
 			leftOfCursor = "";
 		else
 			leftOfCursor = inputField.getText().substring(0, inputField.getCursorPosition());
-		if(leftOfCursor.length() == 0 || leftOfCursor.charAt(0) == '/')
+		if(leftOfCursor.isEmpty() || leftOfCursor.charAt(0) == '/')
 			return;
 		completions = getNames(leftOfCursor);
 		if(completions.isEmpty())
@@ -136,7 +135,7 @@ public class CorporeaAutoCompleteHandler {
 		CompletionData data;
 		for(Iterator<CompletionData> iterator = completions.iterator(); iterator.hasNext(); stringbuilder.append(data.string)) {
 			data = iterator.next();
-			if(stringbuilder.length() > 0)
+			if(!stringbuilder.isEmpty())
 				stringbuilder.append(", ");
 		}
 
@@ -145,20 +144,20 @@ public class CorporeaAutoCompleteHandler {
 		originalString = inputField.getText();
 	}
 
-	private ArrayList<CompletionData> getNames(String prefix) {
+	private List<CompletionData> getNames(String prefix) {
 		String s = prefix.trim();
 		if(s.isEmpty())
-			return new ArrayList<>();
-				
+			return Collections.emptyList();
+		if (!hasItemList) generateItemList();
 		TreeSet<CompletionData> result = new TreeSet<>();
 		String[] words = s.split(" ");
 		int i = words.length - 1;
-		String curPrefix = words[i];
+		StringBuilder curPrefix = new StringBuilder(words[i]);
 		while(i >= 0) {
-			result.addAll(getNamesStartingWith(curPrefix.toLowerCase()));
+			result.addAll(getNamesStartingWith(curPrefix.toString().toLowerCase()));
 			i--;
 			if(i >= 0)
-				curPrefix = words[i] + " " + curPrefix;
+				curPrefix.insert(0, words[i] + " ");
 		}
 		return new ArrayList<>(result);
 	}
@@ -177,8 +176,8 @@ public class CorporeaAutoCompleteHandler {
 
 	private static class CompletionData implements Comparable<CompletionData> {
 
-		private String string;
-		private int prefixLength;
+		private final String string;
+		private final int prefixLength;
 
 		public CompletionData(String string, int prefixLength) {
 			this.string = string;

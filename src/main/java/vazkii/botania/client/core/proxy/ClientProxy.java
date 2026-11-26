@@ -174,7 +174,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy {
@@ -225,12 +224,6 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		initRenderers();
-	}
-
-	@Override
-	public void postInit(FMLPostInitializationEvent event) {
-		super.postInit(event);
-		CorporeaAutoCompleteHandler.updateItemList();
 	}
 
 	private void initRenderers() {
