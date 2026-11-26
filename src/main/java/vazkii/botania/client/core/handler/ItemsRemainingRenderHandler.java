@@ -25,6 +25,7 @@ import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import vazkii.botania.common.Botania;
 
 public final class ItemsRemainingRenderHandler {
 
@@ -37,7 +38,7 @@ public final class ItemsRemainingRenderHandler {
 
 	@SideOnly(Side.CLIENT)
 	public static void render(ScaledResolution resolution, float partTicks) {
-		if(ticks > 0 && stack != null) {
+		if(ticks > 0 && stack != null && (!Botania.dashboardLoaded || DashboardHud.beginCrosshairInfo(resolution))) {
 			int pos = maxTicks - ticks;
 			Minecraft mc = Minecraft.getMinecraft();
 			int x = resolution.getScaledWidth() / 2 + 10 + Math.max(0, pos - leaveTicks);
@@ -70,6 +71,8 @@ public final class ItemsRemainingRenderHandler {
 
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			if(Botania.dashboardLoaded)
+				DashboardHud.endRender();
 		}
 	}
 

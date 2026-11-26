@@ -51,6 +51,7 @@ import vazkii.botania.api.wiki.IWikiProvider;
 import vazkii.botania.api.wiki.WikiHooks;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.lib.LibResources;
+import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.TileAltar;
 import vazkii.botania.common.block.tile.TileRuneAltar;
@@ -85,7 +86,7 @@ public final class HUDHandler {
 		if(event.type == ElementType.HEALTH) {
 			profiler.startSection("botania-hud");
 			ItemStack amulet = PlayerHandler.getPlayerBaubles(mc.thePlayer).getStackInSlot(0);
-			if(amulet != null && amulet.getItem() == ModItems.flightTiara) {
+			if(amulet != null && amulet.getItem() == ModItems.flightTiara && !Botania.dashboardLoaded) {
 				profiler.startSection("flugelTiara");
 				ItemFlightTiara.renderHUD(event.resolution, mc.thePlayer, amulet);
 				profiler.endSection();
@@ -112,23 +113,33 @@ public final class HUDHandler {
 					if(pos != null && equippedStack.getItem() == ModItems.twigWand) {
 						renderWandModeDisplay(event.resolution);
 
-						if(block instanceof IWandHUD) {
+						if(block instanceof IWandHUD && beginCrosshairInfo(event.resolution)) {
 							profiler.startSection("wandItem");
 							((IWandHUD) block).renderHUD(mc, event.resolution, mc.theWorld, pos.blockX, pos.blockY, pos.blockZ);
 							profiler.endSection();
+							endCrosshairInfo();
 						}
-					} else if(pos != null && equippedStack.getItem() instanceof ILexicon)
+					} else if(pos != null && equippedStack.getItem() instanceof ILexicon && beginCrosshairInfo(event.resolution)) {
 						drawLexiconHUD(mc.thePlayer.getCurrentEquippedItem(), block, pos, event.resolution);
-					if(tile != null && tile instanceof TilePool)
+						endCrosshairInfo();
+					}
+					if(tile != null && tile instanceof TilePool && beginCrosshairInfo(event.resolution)) {
 						renderPoolRecipeHUD(event.resolution, (TilePool) tile, equippedStack);
+						endCrosshairInfo();
+					}
 				}
-				if(tile != null && tile instanceof TileAltar)
+				if(tile != null && tile instanceof TileAltar && beginCrosshairInfo(event.resolution)) {
 					((TileAltar) tile).renderHUD(mc, event.resolution);
-				else if(tile != null && tile instanceof TileRuneAltar)
+					endCrosshairInfo();
+				} else if(tile != null && tile instanceof TileRuneAltar && beginCrosshairInfo(event.resolution)) {
 					((TileRuneAltar) tile).renderHUD(mc, event.resolution);
+					endCrosshairInfo();
+				}
 
-				if(tile != null && tile instanceof TileCorporeaCrystalCube)
+				if(tile != null && tile instanceof TileCorporeaCrystalCube && beginCrosshairInfo(event.resolution)) {
 					renderCrystalCubeHUD(event.resolution, (TileCorporeaCrystalCube) tile);
+					endCrosshairInfo();
+				}
 			}
 
 			if(mc.currentScreen != null && mc.currentScreen instanceof GuiChat && TileCorporeaIndex.InputHandler.hasNearbyIndexes(mc.thePlayer)) {
@@ -137,23 +148,26 @@ public final class HUDHandler {
 				profiler.endSection();
 			}
 
-			if(MultiblockRenderHandler.currentMultiblock != null && MultiblockRenderHandler.anchor == null) {
+			if(MultiblockRenderHandler.currentMultiblock != null && MultiblockRenderHandler.anchor == null && beginCrosshairInfo(event.resolution)) {
 				profiler.startSection("multiblockRightClick");
 				String s = StatCollector.translateToLocal("botaniamisc.rightClickToAnchor");
 				mc.fontRenderer.drawStringWithShadow(s, event.resolution.getScaledWidth() / 2 - mc.fontRenderer.getStringWidth(s) / 2, event.resolution.getScaledHeight() / 2 - 30, 0xFFFFFF);
 				profiler.endSection();
+				endCrosshairInfo();
 			}
 
-			if(equippedStack != null && equippedStack.getItem() instanceof ItemCraftingHalo) {
+			if(equippedStack != null && equippedStack.getItem() instanceof ItemCraftingHalo && beginCrosshairInfo(event.resolution)) {
 				profiler.startSection("craftingHalo");
 				ItemCraftingHalo.renderHUD(event.resolution, mc.thePlayer, equippedStack);
 				profiler.endSection();
+				endCrosshairInfo();
 			}
 
-			if(equippedStack != null && equippedStack.getItem() instanceof ItemSextant) {
+			if(equippedStack != null && equippedStack.getItem() instanceof ItemSextant && beginCrosshairInfo(event.resolution)) {
 				profiler.startSection("sextant");
 				ItemSextant.renderHUD(event.resolution, mc.thePlayer, equippedStack);
 				profiler.endSection();
+				endCrosshairInfo();
 			}
 
 			/*if(equippedStack != null && equippedStack.getItem() == ModItems.flugelEye) {
@@ -165,10 +179,11 @@ public final class HUDHandler {
 			EntityPlayer player = mc.thePlayer;
 			InventoryBaubles baubles = PlayerHandler.getPlayerBaubles(player);
 
-			if(ItemMonocle.hasMonocle(baubles)) {
+			if(ItemMonocle.hasMonocle(baubles) && beginCrosshairInfo(event.resolution)) {
 				profiler.startSection("monocle");
 				ItemMonocle.renderHUD(event.resolution, player);
 				profiler.endSection();
+				endCrosshairInfo();
 			}
 
 			profiler.startSection("manaBar");
@@ -214,11 +229,43 @@ public final class HUDHandler {
 			BossBarHandler.render(event.resolution);
 			profiler.endStartSection("itemsRemaining");
 			ItemsRemainingRenderHandler.render(event.resolution, event.partialTicks);
+			if(Botania.dashboardLoaded) {
+				profiler.endStartSection("flugelTiara");
+				renderFlightBarLast(event.resolution, player, baubles);
+			}
 			profiler.endSection();
 			profiler.endSection();
 
 			GL11.glColor4f(1F, 1F, 1F, 1F);
 		}
+	}
+
+	/** Everything drawn around the crosshair is one element in Dashboard, so it moves together and keeps its layout. */
+	private static boolean beginCrosshairInfo(ScaledResolution res) {
+		return !Botania.dashboardLoaded || DashboardHud.beginCrosshairInfo(res);
+	}
+
+	private static void endCrosshairInfo() {
+		if(Botania.dashboardLoaded)
+			DashboardHud.endRender();
+	}
+
+	/**
+	 * With Dashboard, the flight bar is drawn here instead of with the health bar, so it does not move or hide with
+	 * it. Blending is set up like it is there.
+	 */
+	private void renderFlightBarLast(ScaledResolution res, EntityPlayer player, InventoryBaubles baubles) {
+		ItemStack amulet = baubles.getStackInSlot(0);
+		if(amulet == null || amulet.getItem() != ModItems.flightTiara || !DashboardHud.beginFlightBar(res))
+			return;
+
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_COLOR_BUFFER_BIT | GL11.GL_CURRENT_BIT);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		ItemFlightTiara.renderHUD(res, player, amulet);
+		GL11.glPopAttrib();
+		DashboardHud.endRender();
 	}
 
 	private void renderWandModeDisplay(ScaledResolution res) {
@@ -236,10 +283,14 @@ public final class HUDHandler {
 			int x = res.getScaledWidth() / 2 - mc.fontRenderer.getStringWidth(disp) / 2;
 			int y = res.getScaledHeight() - 70;
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			mc.fontRenderer.drawStringWithShadow(disp, x, y, color);
-			GL11.glDisable(GL11.GL_BLEND);
+			if(!Botania.dashboardLoaded || DashboardHud.beginWandMode(res)) {
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				mc.fontRenderer.drawStringWithShadow(disp, x, y, color);
+				GL11.glDisable(GL11.GL_BLEND);
+				if(Botania.dashboardLoaded)
+					DashboardHud.endRender();
+			}
 		}
 		profiler.endSection();
 	}
@@ -262,6 +313,9 @@ public final class HUDHandler {
 			else return;
 		}
 
+		if(Botania.dashboardLoaded && !DashboardHud.beginManaBar(res))
+			return;
+
 		int rgb = Color.HSBtoRGB(0.55F, (float) Math.min(1F, Math.sin(System.currentTimeMillis() / 200D) * 0.5 + 1F), 1F);
 		GL11.glColor4ub((byte) (rgb >> 16), (byte) (rgb >> 8), (byte) rgb, (byte) (255 - (rgb >> 16)));
 		mc.renderEngine.bindTexture(manaBar);
@@ -270,6 +324,8 @@ public final class HUDHandler {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		RenderHelper.drawTexturedModalRect(x, y, 0, 0, 251, width, 5);
 		GL11.glDisable(GL11.GL_BLEND);
+		if(Botania.dashboardLoaded)
+			DashboardHud.endRender();
 	}
 
 	private void renderPoolRecipeHUD(ScaledResolution res, TilePool tile, ItemStack stack) {
@@ -401,7 +457,10 @@ public final class HUDHandler {
 		profiler.endSection();
 	}
 
-	private void renderNearIndexDisplay(ScaledResolution res) {
+	static void renderNearIndexDisplay(ScaledResolution res) {
+		if(Botania.dashboardLoaded && !DashboardHud.beginCorporeaHint(res))
+			return;
+
 		Minecraft mc = Minecraft.getMinecraft();
 		String txt0 = StatCollector.translateToLocal("botaniamisc.nearIndex0");
 		String txt1 = EnumChatFormatting.GRAY + StatCollector.translateToLocal("botaniamisc.nearIndex1");
@@ -421,6 +480,8 @@ public final class HUDHandler {
 		mc.fontRenderer.drawStringWithShadow(txt0, x + 20, y, 0xFFFFFF);
 		mc.fontRenderer.drawStringWithShadow(txt1, x + 20, y + 14, 0xFFFFFF);
 		mc.fontRenderer.drawStringWithShadow(txt2, x + 20, y + 24, 0xFFFFFF);
+		if(Botania.dashboardLoaded)
+			DashboardHud.endRender();
 	}
 
 	public static void drawSimpleManaHUD(int color, int mana, int maxMana, String name, ScaledResolution res) {
