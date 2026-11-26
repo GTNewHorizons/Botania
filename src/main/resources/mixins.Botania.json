@@ -5,7 +5,9 @@
   "refmap": "mixins.Botania.refmap.json",
   "target": "@env(DEFAULT)",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [],
+  "mixins": [
+    "MixinPotion"
+  ],
   "client": [
     "client.MixinPlayerControllerMP"
   ],
