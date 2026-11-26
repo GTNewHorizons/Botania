@@ -12,7 +12,8 @@ package vazkii.botania.api.item;
 
 /**
  * An interface that defines an instance of PlayerControllerMP with
- * the ability to modify reach. See vazkii.botania.client.core.handler.BotaniaPlayerController
+ * the ability to modify reach. PlayerControllerMP implements it through
+ * a mixin, see vazkii.botania.mixins.client.MixinPlayerControllerMP
  */
 public interface IExtendedPlayerController {
 

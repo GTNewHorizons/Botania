@@ -52,10 +52,6 @@ public final class LibObfuscation {
 	public static final String[] HORSE_JUMP_STRENGTH = new String[] { "horseJumpStrength", "field_110271_bv", "bv" };
 	public static final String[] HORSE_CHEST = new String[] { "horseChest", "field_110296_bG", "bG" };
 
-	// PlayerControllerMP
-	public static final String[] NET_CLIENT_HANDLER = new String[] { "netClientHandler", "field_78774_b", "b" };
-	public static final String[] CURRENT_GAME_TYPE = new String[] { "currentGameType", "field_78779_k", "k" };
-
 	// MobSpawnerBaseLogic
 	public static final String[] SPAWN_RANGE = new String[] { "spawnRange", "field_98290_m", "m" };
 	public static final String[] SPAWN_COUNT = new String[] { "spawnCount", "field_98294_i", "i" };
