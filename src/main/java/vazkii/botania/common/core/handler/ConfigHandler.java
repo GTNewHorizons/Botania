@@ -84,6 +84,8 @@ public final class ConfigHandler {
 	public static boolean matrixMode = false;
 	public static boolean referencesEnabled = true;
 
+	public static int manaInfoTooltips = 0;
+
 	public static int spreaderPositionShift = 1;
 	public static boolean flowerForceCheck = true;
 	public static boolean enderPickpocketEnabled = true;
@@ -236,6 +238,9 @@ public final class ConfigHandler {
 		desc = "Set this to false to disable the references in the flower tooltips. (You monster D:)";
 		referencesEnabled = loadPropBool("references.enabled", desc, referencesEnabled);
 
+		desc = "Mana info in pool, spreader and generating flower tooltips.\nOff = vanilla (no numbers). Relative = wording like \"High\". Exact = precise numbers.\nClient-side display only.";
+		manaInfoTooltips = loadPropManaInfoMode(desc);
+
 		desc = "Do not ever touch this value if not asked to. Possible symptoms of doing so include your head turning backwards, the appearance of Titans near the walls or you being trapped in a game of Sword Art Online.";
 		spreaderPositionShift = loadPropInt("spreader.posShift", desc, spreaderPositionShift);
 
@@ -339,6 +344,22 @@ public final class ConfigHandler {
 
 		if(config.hasChanged())
 			config.save();
+	}
+
+	// Valid values are lang keys so the config GUI button shows localized wording (GuiConfigEntries runs them through I18n)
+	public static final String[] MANA_INFO_MODES = { "botania.manaInfo.mode.off", "botania.manaInfo.mode.relative", "botania.manaInfo.mode.exact" };
+
+	// Enum-style config choice so the GUI shows a word cycle instead of a raw number; stored as an int for the tooltip code
+	private static int loadPropManaInfoMode(String desc) {
+		Property prop = config.get(Configuration.CATEGORY_GENERAL, "manaInfoTooltips.mode", MANA_INFO_MODES[0]);
+		prop.comment = desc;
+		prop.setValidValues(MANA_INFO_MODES);
+
+		String value = prop.getString();
+		for(int i = 0; i < MANA_INFO_MODES.length; i++)
+			if(MANA_INFO_MODES[i].equalsIgnoreCase(value))
+				return i;
+		return 0;
 	}
 
 	public static int loadPropInt(String propName, String desc, int default_) {
