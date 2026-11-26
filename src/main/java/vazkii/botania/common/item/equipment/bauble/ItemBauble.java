@@ -13,7 +13,6 @@ package vazkii.botania.common.item.equipment.bauble;
 import java.util.List;
 import java.util.UUID;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,12 +22,15 @@ import net.minecraft.world.World;
 import thaumcraft.api.IRunicArmor;
 import vazkii.botania.api.item.ICosmeticAttachable;
 import vazkii.botania.api.item.IPhantomInkable;
+import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.common.achievement.ModAchievements;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.entity.EntityDoppleganger;
 import vazkii.botania.common.item.ItemMod;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
+import baubles.api.expanded.BaubleExpandedSlots;
+import baubles.api.expanded.BaubleItemHelper;
 import baubles.common.container.InventoryBaubles;
 import baubles.common.lib.PlayerHandler;
 import cpw.mods.fml.common.Optional;
@@ -68,7 +70,6 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 						}
 
 						if(stackInSlot != null) {
-							((IBauble) stackInSlot.getItem()).onUnequipped(stackInSlot, player);
 							return stackInSlot.copy();
 						}
 						break;
@@ -83,16 +84,13 @@ public abstract class ItemBauble extends ItemMod implements IBauble, ICosmeticAt
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> infoList, boolean advanced) {
-		if(GuiScreen.isShiftKeyDown())
+		if (BaubleItemHelper.addSlotInformation(infoList,
+				new String[] {BaubleExpandedSlots.getTypeFromBaubleType(getBaubleType(stack))}))
 			addHiddenTooltip(stack, player, infoList, advanced);
-		else addStringToTooltip(StatCollector.translateToLocal("botaniamisc.shiftinfo"), infoList);
 	}
 
 	public void addHiddenTooltip(ItemStack stack, EntityPlayer player, List<String> infoList, boolean adv) {
-		BaubleType type = getBaubleType(stack);
-		addStringToTooltip(StatCollector.translateToLocal("botania.baubletype." + type.name().toLowerCase()), infoList);
-
-		String key = vazkii.botania.client.core.helper.RenderHelper.getKeyDisplayString("Baubles Inventory");
+		String key = RenderHelper.getKeyDisplayString("Baubles Inventory");
 
 		if(key != null && !key.equals("NONE")) {
 			addStringToTooltip(StatCollector.translateToLocal("botania.baubletooltip").replaceAll("%key%", key), infoList);
